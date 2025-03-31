@@ -108,35 +108,42 @@ const ThemeGallery = () => {
     const handleScroll = () => {
       const middleY = window.innerHeight / 2;
       let foundIndex = -1;
+      let newDotTop = 0;
 
       for (let i = 0; i < sectionRefs.current.length; i++) {
         const el = sectionRefs.current[i];
         const rect = el.getBoundingClientRect();
+        const gridRect = gridRef.current.getBoundingClientRect();
 
         if (rect.top <= middleY && rect.bottom >= middleY) {
           foundIndex = i;
-          const dotPosition = rect.top + rect.height / 2;
+          newDotTop = rect.top + rect.height / 2 - gridRect.top;
           setDotTop(dotPosition);
           break;
         }
       }
 
-      setShowDot(foundIndex >= 1);
+      setDotTop(newDotTop);
+      setShowDot(foundIndex >= 0);
     };
 
     const calculateLinePosition = () => {
+      if (!gridRef.current || sectionRefs.current.length === 0) return;
       const firstItem = sectionRefs.current[0];
-      const grid = gridRef.current;
-      if (firstItem && grid) {
-        const offset = firstItem.offsetTop + firstItem.offsetHeight; // ✅ "이미지 바로 아래부터" 시작!
-        const gridHeight = grid.offsetHeight;
-        setLineTop(offset);
-        setLineHeight(gridHeight - offset);
-      }
+      const gridRect = gridRef.current.getBoundingClientRect();
+
+      const offset = firstItem.getBoundingClientRect().top - gridRect.top + firstItem.offsetHeight; 
+      const gridHeight = gridRef.current.offsetHeight;
+
+      setLineTop(offset);
+      setLineHeight(gridHeight - offset);
     };
+
+    const onScroll = () => requestAnimationFrame(handleScroll);
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", calculateLinePosition);
+    
     handleScroll();
     calculateLinePosition();
 

@@ -20,7 +20,7 @@ const Card = styled.div`
   border-radius: 12px;
   background: #f2f6ff;
   text-align: center;
-  border: 2px solid transparent; // ✅ 항상 border 유지
+  border: 2px solid transparent;
   transition: 0.2s;
   cursor: pointer;
   &:hover {
