@@ -3,6 +3,7 @@ import Header from '../Header';
 import Footer from '../Footer';
 import styled from 'styled-components';
 import AdminMenu from './components/AdminMenu';
+import AdminArtList from './components/AdminArtList';
 
 
 const Container = styled.div`
@@ -38,7 +39,7 @@ const AdminPage = () => {
                 <Title>관리자 페이지</Title>
                 <Wrapper>
                     <AdminMenu tab={tab} setTab={setTab} />
-
+                <AdminArtList />
                 </Wrapper>
             </Container>
             <Footer />
