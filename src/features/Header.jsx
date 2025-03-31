@@ -177,7 +177,7 @@ const Header = () => {
             >
               FAQ
               <DropdownMenu show={showDropdown === "FAQ"}>
-                <DropdownItem onClick={() => navigate("/notice")}>
+                <DropdownItem>
                   Notice
                 </DropdownItem>
                 <DropdownItem onClick={() => navigate("/guide")}>

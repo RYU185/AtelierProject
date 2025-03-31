@@ -62,7 +62,7 @@ const DropdownItem = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: #f0f0f0;
+    background: #007bff;
   }
 `;
 
