@@ -68,7 +68,7 @@ const MenuIcon = styled.div`
   padding-left: 10px;
   border-left: 1px solid #666;
   padding: 8px 12px;
-  cursor: pointer; // ✅ 마우스 올렸을 때 버튼 느낌!
+  cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
   margin-top: -33px;
