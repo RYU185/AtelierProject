@@ -30,6 +30,7 @@ const AppRoutes = () => {
       <Route path="/usergallerydetail" element={<UserGalleryDetail />} />
       <Route path="/directions" element={<Directions />} />
       <Route path="/guide" element={<Guide />} />
+      <Route path="/mypage" element={<MyPage />} />
     </Routes>
   );
 };
