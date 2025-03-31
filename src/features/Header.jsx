@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const HeaderWrapper = styled.header`
-  height: 250px;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -97,7 +96,6 @@ const DropdownMenu = styled.ul`
   list-style: none;
   display: ${(props) => (props.show ? "flex" : "none")};
   gap: 20px;
-  z-index: 10;
 `;
 
 const DropdownItem = styled(NavItem)`
@@ -105,6 +103,7 @@ const DropdownItem = styled(NavItem)`
   font-size: 1rem; // 크기 조정
   padding: 0; // 패딩 제거
   position: static; // position 속성 제거
+  z-index: 10;
   &:hover {
     color: #60d2ff;
   }
@@ -193,7 +192,10 @@ const Header = () => {
         <RightNavItem onClick={() => navigate("/mypage")}>
           마이페이지
         </RightNavItem>
-        <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
+        <RightNavItem onClick={() => navigate("/adminpage")}>
+          {" "}
+          관리자페이지
+        </RightNavItem>
         <RightNavItem>장바구니</RightNavItem>
         <MenuIcon>MENU</MenuIcon>
       </Right>
