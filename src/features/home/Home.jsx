@@ -1,12 +1,11 @@
 import React from "react";
-import Header from "./components/Header";
+import Header from "../Header";
 import WhatsOn from "./components/WhatsOn";
 import HighlightExhibition from "./components/HighlightExhibition";
 import ThemeGallery from "./components/ThemeGallery";
 import ServiceMenu from "./components/ServiceMenu";
-import Footer from "./components/Footer";
+import Footer from "../Footer";
 import TopButton from "./components/TopButton";
-import Join from "./components/Join";
 
 const Home = () => {
   return (
@@ -18,7 +17,6 @@ const Home = () => {
       <ServiceMenu />
       <Footer />
       <TopButton />
-      <Join />
     </>
   );
 };
