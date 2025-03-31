@@ -11,6 +11,7 @@ const HeaderWrapper = styled.header`
   background-color: #080101;
   color: #fff;
   overflow: visible;
+  z-index: 10;
 `;
 
 const Left = styled.div`
@@ -36,7 +37,7 @@ const NavWrapper = styled.div`
 
 const NavList = styled.ul`
   display: flex;
-  gap: 80px;
+  gap: 2rem;
   padding: 14px 60px;
   list-style: none;
 `;
@@ -66,7 +67,7 @@ const RightNavItem = styled.div`
   font-weight: 500;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
-  transition: 0.2s;
+  transition: 0.5s;
 
   &:hover {
     color: #60d2ff;
@@ -80,32 +81,40 @@ const NavItem = styled.li`
   color: white;
   transition: 0.2s;
   position: relative;
-
+  border-radius: 99px;
+  padding: 0.1rem 1.6rem;
+  
   &:hover {
-    color: #60d2ff;
+    background-color: #15b8f8;
+    color: #ffffff;
   }
 `;
 
-const DropdownMenu = styled.ul`
+const DropdownMenu = styled.ul`  
+  margin-top: 20px;
   position: absolute;
   top: 100%;
-  left: 0;
+  ${({align}) => (align === "right" ? "right: 0;" : "left: 0;")}
   background-color: rgba(47, 47, 47, 1);
-  border-radius: 5px;
+  border-radius: 999px;
   padding: 10px;
   list-style: none;
   display: ${(props) => (props.show ? "flex" : "none")};
-  gap: 20px;
+  padding: 2rem 3rem;
+  gap: 1.25rem;
 `;
 
 const DropdownItem = styled(NavItem)`
-  // NavItem 스타일 재사용
-  font-size: 1rem; // 크기 조정
-  padding: 0; // 패딩 제거
-  position: static; // position 속성 제거
+  display: block;
+  white-space: nowrap; // 스페이스바 섞인거면 줄바꿈 X
+  font-size: 1rem;
+  padding: 0;
+  position: static;
+  transition: 0.5s ease;
 
   &:hover {
-    color: #60d2ff;
+    background-color: #666666;
+    color: #ffffff;
   }
 `;
 
@@ -167,7 +176,7 @@ const Header = () => {
               onClick={() => navigate("/goods")}
             >
               Goods
-              <DropdownMenu show={showDropdown === "Goods"}>
+              <DropdownMenu show={showDropdown === "Goods"} align = "right">
                 <DropdownItem>Goods Shop</DropdownItem>
               </DropdownMenu>
             </NavItem>
@@ -176,7 +185,7 @@ const Header = () => {
               onMouseLeave={handleMouseLeave}
             >
               FAQ
-              <DropdownMenu show={showDropdown === "FAQ"}>
+              <DropdownMenu show={showDropdown === "FAQ"} align = "right">
                 <DropdownItem>
                   Notice
                 </DropdownItem>

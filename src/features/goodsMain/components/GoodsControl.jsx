@@ -4,7 +4,7 @@ import styled from "styled-components";
 const ControlContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 20px 22rem;
+  margin: 20px 26.3rem;
 `;
 
 const SearchInput = styled.input`
@@ -60,9 +60,11 @@ const DropdownItem = styled.button`
   text-align: left;
   width: 100%;
   cursor: pointer;
+  transition: 0.5s ease;
 
   &:hover {
     background: #007bff;
+    color: #ffffff;
   }
 `;
 
@@ -80,7 +82,7 @@ const GoodsControl = ({ setSortOption, setSearchTerm }) => {
   return (
     <ControlContainer>
       <SearchInput type="text" placeholder="검색어를 입력해 주세요" onChange={handleSearchChange} />
-      <Filter>
+      <Filter onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
         <SortButton>Sort By</SortButton>
         <DropdownMenu>
           <DropdownItem onClick={() => setSortOption("newest")}>신상품</DropdownItem>
