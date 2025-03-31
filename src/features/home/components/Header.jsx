@@ -25,40 +25,31 @@ const CenterContainer = styled.div`
 `;
 
 const NavWrapper = styled.div`
-  width: 65rem;
-  height: 5rem;
   display: flex;
-  gap: 48px;
+  gap: 80px;
+  padding: 14px 60px;
   background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
   justify-content: center;
   align-items: center;
-
-  &:hover {
-
-  }
 `;
 
 const Right = styled.div`
   display: flex;
-  align-items: flex-start; // 👈 위쪽 정렬
+  align-items: flex-start;
   gap: 18px;
 `;
 
 const NavItem = styled.div`
-  font-size: 1.5rem; // ✅ 20px (큰 사이즈)
+  font-size: 1.5rem;
   font-weight: 600;
   cursor: pointer;
   color: white;
-  transition: 0.5s;
-  letter-spacing: 0.5px; // ✅ 더 정갈한 느낌
-  padding: 1rem 2rem 1rem 2rem;
-  border: none;
-  border-radius: 999px;
+  transition: 0.2s;
+  letter-spacing: 0.5px;
 
   &:hover {
-    color: #ffffff;
-    background-color: #40a8d1;
+    color: #60d2ff;
   }
 `;
 
@@ -91,10 +82,8 @@ const RightNavItem = styled.div`
   }
 `;
 
-// src/components/Header.jsx ✅ 여기 중요!
-
 const Header = () => {
-  const navigate = useNavigate(); // ✅ 훅 선언
+  const navigate = useNavigate();
 
   return (
     <HeaderWrapper>
@@ -109,9 +98,11 @@ const Header = () => {
         </NavWrapper>
       </CenterContainer>
       <Right>
-        <RightNavItem>회원가입</RightNavItem>
+        <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
         <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
-        <RightNavItem>마이페이지</RightNavItem>
+        <RightNavItem onClick={() => navigate("/mypage")}>
+          마이페이지
+        </RightNavItem>
         <RightNavItem>장바구니</RightNavItem>
         <MenuIcon>MENU</MenuIcon>
       </Right>
