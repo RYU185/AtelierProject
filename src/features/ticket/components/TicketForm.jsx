@@ -133,7 +133,7 @@ const TicketForm = () => {
         총 <strong>{total.toLocaleString()}</strong> 원
       </Total>
 
-      <ReserveButton onClick={handleReserve}>예매하기</ReserveButton>
+      <ReserveButton onClick={handleReserve} >예매하기</ReserveButton>
     </Wrapper>
   );
 };

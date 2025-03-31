@@ -12,6 +12,7 @@ import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDe
 import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import Directions from "../features/Directions/Directions";
 import Guide from "../features/Guide/Guide";
+import TicketComplete from "../features/ticket/TicketComplete";
 
 const AppRoutes = () => {
   return (
@@ -28,6 +29,8 @@ const AppRoutes = () => {
       <Route path="/usergallerydetail" element={<UserGalleryDetail />} />
       <Route path="/directions" element={<Directions />} />
       <Route path="/guide" element={<Guide />} />
+      <Route path="/ticket" element={<TicketMain />} />
+      <Route path="/ticketcomplete" element={<TicketComplete />}/>
     </Routes>
   );
 };
