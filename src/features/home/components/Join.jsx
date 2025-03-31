@@ -126,7 +126,6 @@ const Join = () => {
             </Label>
             <BirthInput />
           </FormItem>
-
           <SubmitButton>가입하기</SubmitButton>
         </Form>
       </Wrapper>

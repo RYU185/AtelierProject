@@ -93,7 +93,7 @@ const Header = () => {
           <NavItem>Gallery</NavItem>
           <NavItem>Artist</NavItem>
           <NavItem>Community</NavItem>
-          <NavItem>Goods</NavItem>
+          <NavItem onClick={()=> navigate("/GoodsMain")}>Goods</NavItem>
           <NavItem>FAQ</NavItem>
         </NavWrapper>
       </CenterContainer>
