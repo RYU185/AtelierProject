@@ -90,8 +90,6 @@ const Divider = styled.span`
   margin: 0 6px;
 `;
 
-// src/components/Login.jsx
-
 const Login = () => {
   return (
     <Container>
@@ -117,5 +115,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// 스타일 컴포넌트는 그대로 복붙 (Container ~ Divider)

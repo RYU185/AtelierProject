@@ -1,0 +1,78 @@
+.canvas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.canvas-wrapper {
+  width: 1800px;
+  height: 700px;
+  overflow: hidden;
+  border-radius: 30px; /* 둥근 모서리 */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+
+.tools {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.color-picker {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.color-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"] {
+  width: 200px;
+  margin-bottom: 15px;
+}
+
+.buttons button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  border-radius: 10px;
+  background-color: #4f46e5;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.buttons button:hover {
+  background-color: #3730a3;
+}
+.color-picker-btn {
+  padding: 5px 10px;
+  margin-left: 10px;
+  border-radius: 8px;
+  background-color: #14b8a6;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.color-picker-btn:hover {
+  background-color: #0f766e;
+}
+
+.picker-popup {
+  margin-top: 15px;
+  z-index: 10;
+  position: absolute;
+  transform: translateY(50px);
+}

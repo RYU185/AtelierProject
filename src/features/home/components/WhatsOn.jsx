@@ -83,7 +83,7 @@ const ArrowButton = styled.button`
 const BottomInfo = styled.div`
   margin-top: 40px;
   padding: 40px 100px;
-  background: rgba(0, 34, 254, 0.76); // 🔥 반투명 어두운 배경
+  background: rgba(0, 34, 254, 0.76);
   color: #fff;
   font-weight: 600;
   font-size: 20px;

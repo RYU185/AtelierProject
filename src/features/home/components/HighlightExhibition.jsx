@@ -15,8 +15,8 @@ const LeftBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end; // ✅ 오른쪽 정렬 핵심
-  padding-right: 60px; // ✅ 오른쪽 여백 확보
+  align-items: flex-end; 
+  padding-right: 60px; 
   padding-left: 50px;
 `;
 

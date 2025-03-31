@@ -5,7 +5,8 @@ import HighlightExhibition from "./components/HighlightExhibition";
 import ThemeGallery from "./components/ThemeGallery";
 import ServiceMenu from "./components/ServiceMenu";
 import Footer from "./components/Footer";
-import TopButton from './components/TopButton';
+import TopButton from "./components/TopButton";
+import Join from "./components/Join";
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <ServiceMenu />
       <Footer />
       <TopButton />
+      <Join />
     </>
   );
 };

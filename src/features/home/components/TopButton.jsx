@@ -28,7 +28,7 @@ const TopButton = () => {
   // 스크롤 감지
   const handleScroll = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    setIsVisible(scrollTop > 300); // 300px 이상일 때만 보여줌
+    setIsVisible(scrollTop > 300); 
   };
 
   useEffect(() => {
@@ -36,7 +36,6 @@ const TopButton = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 스크롤 최상단 이동
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
