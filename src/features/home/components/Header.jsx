@@ -25,14 +25,18 @@ const CenterContainer = styled.div`
 `;
 
 const NavWrapper = styled.div`
-  width: 60rem;
-  height: 4rem;
+  width: 65rem;
+  height: 5rem;
   display: flex;
-  gap: 80px;
+  gap: 48px;
   background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
   justify-content: center;
   align-items: center;
+
+  &:hover {
+
+  }
 `;
 
 const Right = styled.div`
@@ -48,13 +52,13 @@ const NavItem = styled.div`
   color: white;
   transition: 0.5s;
   letter-spacing: 0.5px; // ✅ 더 정갈한 느낌
-  padding: 0 1rem 0 1rem;
+  padding: 1rem 2rem 1rem 2rem;
+  border: none;
+  border-radius: 999px;
 
   &:hover {
     color: #ffffff;
     background-color: #40a8d1;
-    border: none;
-    border-radius: 999px;
   }
 `;
 
