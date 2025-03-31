@@ -25,9 +25,10 @@ const CenterContainer = styled.div`
 `;
 
 const NavWrapper = styled.div`
+  width: 60rem;
+  height: 4rem;
   display: flex;
   gap: 80px;
-  padding: 14px 60px;
   background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
   justify-content: center;
@@ -45,11 +46,15 @@ const NavItem = styled.div`
   font-weight: 600;
   cursor: pointer;
   color: white;
-  transition: 0.2s;
+  transition: 0.5s;
   letter-spacing: 0.5px; // ✅ 더 정갈한 느낌
+  padding: 0 1rem 0 1rem;
 
   &:hover {
-    color: #60d2ff;
+    color: #ffffff;
+    background-color: #40a8d1;
+    border: none;
+    border-radius: 999px;
   }
 `;
 
