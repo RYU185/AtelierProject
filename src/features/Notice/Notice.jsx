@@ -1,18 +1,17 @@
 import React from "react";
-import Header from "../Header";
-import Footer from "../Footer";
-import FAQNAVbar from "./components/FAQNAVbar";
-import NoticeList from "./components/NoticeList";
 
-function NoticeMain() {
+function Notice() {
+  const [tab, setTab] = useState("ticket");
+
   return (
-    <div>
-      <Header />
-      <FAQNAVbar />
-      <NoticeList />
-      <Footer />
-    </div>
+    <Container>
+      <Title>공지사항</Title>
+
+      <Tabs tab={tab} setTab={setTab} />
+
+      <MainSection></MainSection>
+    </Container>
   );
 }
 
-export default NoticeMain;
+export default Notice;
