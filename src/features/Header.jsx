@@ -83,25 +83,30 @@ const NavItem = styled.li`
   position: relative;
   border-radius: 99px;
   padding: 0.1rem 1.6rem;
-  
+
   &:hover {
     background-color: #15b8f8;
     color: #ffffff;
   }
 `;
 
-const DropdownMenu = styled.ul`  
+const DropdownMenu = styled.ul`
   margin-top: 20px;
   position: absolute;
   top: 100%;
-  ${({align}) => (align === "right" ? "right: 0;" : "left: 0;")}
+  ${({ align }) => (align === "right" ? "right: 0;" : "left: 0;")}
   background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
-  padding: 10px;
   list-style: none;
-  display: ${(props) => (props.show ? "flex" : "none")};
-  padding: 2rem 3rem;
+  padding: 1.2rem 3rem;
   gap: 1.25rem;
+  display: flex;
+
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  visibility: ${(props) => (props.show ? "visible" : "hidden")};
+  transform: ${(props) => (props.show ? "translateY(0px)" : "translateY(-10px)")};
+  transition: all 0.3s ease;
+  pointer-events: ${(props) => (props.show ? "auto" : "none")};
 `;
 
 const DropdownItem = styled(NavItem)`
@@ -142,15 +147,21 @@ const Header = () => {
               onClick={() => navigate("/artistgallery")}
             >
               Gallery
-              <DropdownMenu show={showDropdown === "Gallery"}>
+            </NavItem>
+            {showDropdown === "Gallery" && (
+              <DropdownMenu
+                onMouseEnter={() => handleMouseEnter("Gallery")}
+                onMouseLeave={handleMouseLeave}
+                align="left"
+              >
                 <DropdownItem onClick={() => navigate("/artistgallery")}>
                   Artist Gallery
                 </DropdownItem>
-                <DropdownItem onClick={() => navigate("/usergallery")}>
-                  User Gallery
-                </DropdownItem>
+                <DropdownItem onClick={() => navigate("/usergallery")}>User Gallery</DropdownItem>
               </DropdownMenu>
-            </NavItem>
+            )}
+
+            
             <NavItem
               onMouseEnter={() => handleMouseEnter("Artist")}
               onMouseLeave={handleMouseLeave}
@@ -176,25 +187,16 @@ const Header = () => {
               onClick={() => navigate("/goods")}
             >
               Goods
-              <DropdownMenu show={showDropdown === "Goods"} align = "right">
+              <DropdownMenu show={showDropdown === "Goods"} align="right">
                 <DropdownItem>Goods Shop</DropdownItem>
               </DropdownMenu>
             </NavItem>
-            <NavItem
-              onMouseEnter={() => handleMouseEnter("FAQ")}
-              onMouseLeave={handleMouseLeave}
-            >
+            <NavItem onMouseEnter={() => handleMouseEnter("FAQ")} onMouseLeave={handleMouseLeave}>
               FAQ
-              <DropdownMenu show={showDropdown === "FAQ"} align = "right">
-                <DropdownItem>
-                  Notice
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate("/guide")}>
-                  Guide
-                </DropdownItem>
-                <DropdownItem onClick={() => navigate("/directions")}>
-                  Directions
-                </DropdownItem>
+              <DropdownMenu show={showDropdown === "FAQ"} align="right">
+                <DropdownItem>Notice</DropdownItem>
+                <DropdownItem onClick={() => navigate("/guide")}>Guide</DropdownItem>
+                <DropdownItem onClick={() => navigate("/directions")}>Directions</DropdownItem>
               </DropdownMenu>
             </NavItem>
           </NavList>
@@ -203,13 +205,8 @@ const Header = () => {
       <Right>
         <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
         <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
-        <RightNavItem onClick={() => navigate("/mypage")}>
-          마이페이지
-        </RightNavItem>
-        <RightNavItem onClick={() => navigate("/adminpage")}>
-          {" "}
-          관리자페이지
-        </RightNavItem>
+        <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
+        <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
         <RightNavItem>장바구니</RightNavItem>
         <MenuIcon>MENU</MenuIcon>
       </Right>
