@@ -13,6 +13,7 @@ import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import Directions from "../features/Directions/Directions";
 import Guide from "../features/Guide/Guide";
 import TicketComplete from "../features/ticket/TicketComplete";
+import TicketMain from "../features/ticket/TicketMain";
 
 const AppRoutes = () => {
   return (
