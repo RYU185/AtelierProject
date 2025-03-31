@@ -74,6 +74,19 @@ const RightNavItem = styled.div`
   }
 `;
 
+const NavItemContainer = styled.div`
+  position: relative;
+`;
+
+const HoverArea = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: transparent;
+`;
+
 const NavItem = styled.li`
   font-size: 1.5rem;
   font-weight: 600;
@@ -91,29 +104,40 @@ const NavItem = styled.li`
 `;
 
 const DropdownMenu = styled.ul`
-  margin-top: 20px;
   position: absolute;
   top: 100%;
   ${({ align }) => (align === "right" ? "right: 0;" : "left: 0;")}
   background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
   list-style: none;
-  padding: 1.2rem 3rem;
+  padding: 0.9rem 3rem;
   gap: 1.25rem;
   display: flex;
+  margin-top: 20px;
 
+  //transition은 display: none -> display: block같은 속성에는 애니메이션이 적용되지 않는다
   opacity: ${(props) => (props.show ? 1 : 0)};
   visibility: ${(props) => (props.show ? "visible" : "hidden")};
   transform: ${(props) => (props.show ? "translateY(0px)" : "translateY(-10px)")};
   transition: all 0.3s ease;
   pointer-events: ${(props) => (props.show ? "auto" : "none")};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: transparent;
+  }
 `;
 
 const DropdownItem = styled(NavItem)`
   display: block;
-  white-space: nowrap; // 스페이스바 섞인거면 줄바꿈 X
+  white-space: nowrap;
   font-size: 1rem;
-  padding: 0;
+  padding: 0.5rem;
   position: static;
   transition: 0.5s ease;
 
@@ -126,14 +150,49 @@ const DropdownItem = styled(NavItem)`
 const Header = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const timeoutRef = React.useRef(null);
 
   const handleMouseEnter = (itemName) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsHovering(true);
     setShowDropdown(itemName);
   };
 
   const handleMouseLeave = () => {
-    setShowDropdown(null);
+    setIsHovering(false);
+    timeoutRef.current = setTimeout(() => {
+      if (!isHovering) {
+        setShowDropdown(null);
+      }
+    }, 150);
   };
+
+  const handleDropdownMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsHovering(true);
+  };
+
+  const handleDropdownMouseLeave = () => {
+    setIsHovering(false);
+    timeoutRef.current = setTimeout(() => {
+      if (!isHovering) {
+        setShowDropdown(null);
+      }
+    }, 150);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <HeaderWrapper>
@@ -141,64 +200,90 @@ const Header = () => {
       <CenterContainer>
         <NavWrapper>
           <NavList>
-            <NavItem
+            <NavItemContainer
               onMouseEnter={() => handleMouseEnter("Gallery")}
               onMouseLeave={handleMouseLeave}
-              onClick={() => navigate("/artistgallery")}
             >
-              Gallery
-            </NavItem>
-            {showDropdown === "Gallery" && (
-              <DropdownMenu
-                onMouseEnter={() => handleMouseEnter("Gallery")}
-                onMouseLeave={handleMouseLeave}
-                align="left"
-              >
+              <NavItem onClick={() => navigate("/artistgallery")}>
+                Gallery
+              </NavItem>
+              <HoverArea 
+                onMouseEnter={handleDropdownMouseEnter}
+                onMouseLeave={handleDropdownMouseLeave}
+              />
+              <DropdownMenu show={showDropdown === "Gallery"}>
                 <DropdownItem onClick={() => navigate("/artistgallery")}>
                   Artist Gallery
                 </DropdownItem>
                 <DropdownItem onClick={() => navigate("/usergallery")}>User Gallery</DropdownItem>
               </DropdownMenu>
-            )}
+            </NavItemContainer>
 
-            
-            <NavItem
+            <NavItemContainer
               onMouseEnter={() => handleMouseEnter("Artist")}
               onMouseLeave={handleMouseLeave}
-              onClick={() => navigate("/artist")}
             >
-              Artist
+              <NavItem onClick={() => navigate("/artist")}>
+                Artist
+              </NavItem>
+              <HoverArea 
+                onMouseEnter={handleDropdownMouseEnter}
+                onMouseLeave={handleDropdownMouseLeave}
+              />
               <DropdownMenu show={showDropdown === "Artist"}>
                 <DropdownItem>작가 소개</DropdownItem>
               </DropdownMenu>
-            </NavItem>
-            <NavItem
+            </NavItemContainer>
+
+            <NavItemContainer
               onMouseEnter={() => handleMouseEnter("Community")}
               onMouseLeave={handleMouseLeave}
             >
-              Community
+              <NavItem>
+                Community
+              </NavItem>
+              <HoverArea 
+                onMouseEnter={handleDropdownMouseEnter}
+                onMouseLeave={handleDropdownMouseLeave}
+              />
               <DropdownMenu show={showDropdown === "Community"}>
                 <DropdownItem>Community</DropdownItem>
               </DropdownMenu>
-            </NavItem>
-            <NavItem
+            </NavItemContainer>
+
+            <NavItemContainer
               onMouseEnter={() => handleMouseEnter("Goods")}
               onMouseLeave={handleMouseLeave}
-              onClick={() => navigate("/goods")}
             >
-              Goods
+              <NavItem onClick={() => navigate("/goods")}>
+                Goods
+              </NavItem>
+              <HoverArea 
+                onMouseEnter={handleDropdownMouseEnter}
+                onMouseLeave={handleDropdownMouseLeave}
+              />
               <DropdownMenu show={showDropdown === "Goods"} align="right">
                 <DropdownItem>Goods Shop</DropdownItem>
               </DropdownMenu>
-            </NavItem>
-            <NavItem onMouseEnter={() => handleMouseEnter("FAQ")} onMouseLeave={handleMouseLeave}>
-              FAQ
+            </NavItemContainer>
+
+            <NavItemContainer
+              onMouseEnter={() => handleMouseEnter("FAQ")}
+              onMouseLeave={handleMouseLeave}
+            >
+              <NavItem>
+                FAQ
+              </NavItem>
+              <HoverArea 
+                onMouseEnter={handleDropdownMouseEnter}
+                onMouseLeave={handleDropdownMouseLeave}
+              />
               <DropdownMenu show={showDropdown === "FAQ"} align="right">
                 <DropdownItem>Notice</DropdownItem>
                 <DropdownItem onClick={() => navigate("/guide")}>Guide</DropdownItem>
                 <DropdownItem onClick={() => navigate("/directions")}>Directions</DropdownItem>
               </DropdownMenu>
-            </NavItem>
+            </NavItemContainer>
           </NavList>
         </NavWrapper>
       </CenterContainer>
