@@ -9,6 +9,8 @@ import ArtistGallery from "../features/ArtistGallery/ArtistGallery";
 import UserGallery from "../features/UserGallery/UserGallery";
 import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
 import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
+import Directions from "../features/Directions/Directions";
+import Guide from "../features/Guide/Guide";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +24,8 @@ const AppRoutes = () => {
       <Route path="/usergallery" element={<UserGallery />} />
       <Route path="/artistgallerydetail" element={<ArtistGalleryDetail />} />
       <Route path="/usergallerydetail" element={<UserGalleryDetail />} />
+      <Route path="/directions" element={<Directions />} />
+      <Route path="/guide" element={<Guide />} />
     </Routes>
   );
 };

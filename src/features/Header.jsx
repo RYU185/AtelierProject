@@ -124,9 +124,7 @@ const Header = () => {
 
   return (
     <HeaderWrapper>
-      <Left
-      onClick={()=>navigate("/")}
-      >LOGO</Left>
+      <Left>LOGO</Left>
       <CenterContainer>
         <NavWrapper>
           <NavList>
@@ -165,13 +163,10 @@ const Header = () => {
             <NavItem
               onMouseEnter={() => handleMouseEnter("Goods")}
               onMouseLeave={handleMouseLeave}
-              onClick={()=>navigate("/goods")}
             >
               Goods
               <DropdownMenu show={showDropdown === "Goods"}>
-                <DropdownItem
-                  onClick={()=>navigate("/goods")}
-                >Goods Shop</DropdownItem>
+                <DropdownItem>Goods Shop</DropdownItem>
               </DropdownMenu>
             </NavItem>
             <NavItem
@@ -181,8 +176,12 @@ const Header = () => {
               FAQ
               <DropdownMenu show={showDropdown === "FAQ"}>
                 <DropdownItem>Notice</DropdownItem>
-                <DropdownItem>Guide</DropdownItem>
-                <DropdownItem>Contact Us</DropdownItem>
+                <DropdownItem onClick={() => navigate("/guide")}>
+                  Guide
+                </DropdownItem>
+                <DropdownItem onClick={() => navigate("/directions")}>
+                  Directions
+                </DropdownItem>
               </DropdownMenu>
             </NavItem>
           </NavList>
