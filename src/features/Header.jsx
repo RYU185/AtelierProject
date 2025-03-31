@@ -103,7 +103,7 @@ const DropdownItem = styled(NavItem)`
   font-size: 1rem; // 크기 조정
   padding: 0; // 패딩 제거
   position: static; // position 속성 제거
-  z-index: 10;
+
   &:hover {
     color: #60d2ff;
   }
