@@ -6,11 +6,12 @@ const Wrapper = styled.div``;
 
 const SummaryBox = styled.div`
   padding: 16px 20px;
-  background: #fff;
+  background: #ffffff;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.05);
   font-size: 14px;
-  margin-bottom: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
 `;
 
 const TicketList = styled.div`
@@ -44,7 +45,6 @@ const TicketTab = () => {
       <SummaryBox>
         총 {dummyTickets.length}개의 티켓이 활성화 되어 있습니다.
       </SummaryBox>
-
       <TicketList>
         {dummyTickets.map((ticket, i) => (
           <TicketItem key={i} ticket={ticket} />

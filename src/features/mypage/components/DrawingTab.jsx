@@ -24,19 +24,34 @@ const Grid = styled.div`
 
 const dummyDrawings = [
   {
-    title: "2025년 드로잉 응모전",
+    title: "내가 그린 그림1",
     status: "미완료",
-    image: "",
+    image: "./images/poster1.jpg",
   },
   {
-    title: "전시 기념 한정 굿즈",
+    title: "내가 그린 그림2",
     status: "완료",
-    image: "",
+    image: "./images/poster1.jpg",
   },
   {
-    title: "캘리포니아 아트페어",
+    title: "내가 그린 그림3",
     status: "완료",
-    image: "",
+    image: "./images/poster1.jpg",
+  },
+  {
+    title: "내가 그린 그림4",
+    status: "완료",
+    image: "./images/poster1.jpg",
+  },
+  {
+    title: "내가 그린 그림5",
+    status: "완료",
+    image: "./images/poster1.jpg",
+  },
+  {
+    title: "내가 그린 그림6",
+    status: "완료",
+    image: "./images/poster1.jpg",
   },
 ];
 
