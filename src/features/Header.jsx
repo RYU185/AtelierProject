@@ -193,6 +193,7 @@ const Header = () => {
         <RightNavItem onClick={() => navigate("/mypage")}>
           마이페이지
         </RightNavItem>
+        <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
         <RightNavItem>장바구니</RightNavItem>
         <MenuIcon>MENU</MenuIcon>
       </Right>
