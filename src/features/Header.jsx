@@ -167,7 +167,7 @@ const Header = () => {
       if (!isHovering) {
         setShowDropdown(null);
       }
-    }, 100);
+    }, 50);
   };
 
   const handleDropdownMouseEnter = () => {
@@ -183,7 +183,7 @@ const Header = () => {
       if (!isHovering) {
         setShowDropdown(null);
       }
-    }, 100);
+    }, 50);
   };
 
   React.useEffect(() => {
