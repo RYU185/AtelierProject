@@ -1,6 +1,5 @@
 import React from "react";
-
-eimport styled from "styled-components";
+import styled from "styled-components";
 
 const TabGroup = styled.div`
   display: flex;
@@ -24,22 +23,21 @@ const Tab = styled.button`
   }
 `;
 
-const Tabs = ({ tab, setTab }) => {
+const TabBar = ({ tab, setTab }) => {
   return (
     <TabGroup>
-      <Tab active={tab === "ticket"} onClick={() => setTab("NOTICE")}>
+      <Tab active={tab === "notice"} onClick={() => setTab("notice")}>
         공지사항
       </Tab>
-      <Tab active={tab === "goods"} onClick={() => setTab("GUIDE")}>
+      <Tab active={tab === "direction"} onClick={() => setTab("direction")}>
         시설안내
       </Tab>
-      <Tab active={tab === "draw"} onClick={() => setTab("draw")}>
+      <Tab active={tab === "guide"} onClick={() => setTab("guide")}>
         오시는 길
       </Tab>
-      <Tab active={tab === "draw"} onClick={() => setTab("CONNTACT")}>
+      <Tab active={tab === "contact"} onClick={() => setTab("contact")}>
         고객센터
       </Tab>
     </TabGroup>
   );
 };
-
