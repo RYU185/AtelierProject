@@ -1,10 +1,11 @@
 import React from "react";
-import ArtistGallers from "./ArtistGallers";
+import ArtistGallerys from "./ArtistGallerys";
 
 function ArtistGalleryLsit() {
   return (
     <div>
-      <ArtistGallers />
+      <h1>갤러리 포스터 리스트</h1>
+      <ArtistGallerys />
     </div>
   );
 }

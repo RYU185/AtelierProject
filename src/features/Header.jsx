@@ -134,8 +134,12 @@ const Header = () => {
             >
               Gallery
               <DropdownMenu show={showDropdown === "Gallery"}>
-                <DropdownItem>Artist Gallery</DropdownItem>
-                <DropdownItem>User Gallery</DropdownItem>
+                <DropdownItem onClick={() => navigate("/artistgallery")}>
+                  Artist Gallery
+                </DropdownItem>
+                <DropdownItem onClick={() => navigate("/usergallery")}>
+                  User Gallery
+                </DropdownItem>
               </DropdownMenu>
             </NavItem>
             <NavItem
