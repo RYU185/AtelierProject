@@ -137,7 +137,7 @@ const DropdownItem = styled(NavItem)`
   display: block;
   white-space: nowrap;
   font-size: 1rem;
-  padding: 0.5rem;
+  padding: 0.5rem 2rem;
   position: static;
   transition: 0.5s ease;
 
