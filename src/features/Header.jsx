@@ -123,7 +123,7 @@ const DropdownMenu = styled.ul`
   pointer-events: ${(props) => (props.show ? "auto" : "none")};
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -30px;
     left: 0;
@@ -205,10 +205,8 @@ const Header = () => {
               onMouseEnter={() => handleMouseEnter("Gallery")}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem onClick={() => navigate("/artistgallery")}>
-                Gallery
-              </NavItem>
-              <HoverArea 
+              <NavItem onClick={() => navigate("/artistgallery")}>Gallery</NavItem>
+              <HoverArea
                 onMouseEnter={handleDropdownMouseEnter}
                 onMouseLeave={handleDropdownMouseLeave}
               />
@@ -224,10 +222,8 @@ const Header = () => {
               onMouseEnter={() => handleMouseEnter("Artist")}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem onClick={() => navigate("/artist")}>
-                Artist
-              </NavItem>
-              <HoverArea 
+              <NavItem onClick={() => navigate("/artist")}>Artist</NavItem>
+              <HoverArea
                 onMouseEnter={handleDropdownMouseEnter}
                 onMouseLeave={handleDropdownMouseLeave}
               />
@@ -240,10 +236,8 @@ const Header = () => {
               onMouseEnter={() => handleMouseEnter("Community")}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem>
-                Community
-              </NavItem>
-              <HoverArea 
+              <NavItem>Community</NavItem>
+              <HoverArea
                 onMouseEnter={handleDropdownMouseEnter}
                 onMouseLeave={handleDropdownMouseLeave}
               />
@@ -256,15 +250,13 @@ const Header = () => {
               onMouseEnter={() => handleMouseEnter("Goods")}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem onClick={() => navigate("/goods")}>
-                Goods
-              </NavItem>
-              <HoverArea 
+              <NavItem onClick={() => navigate("/goods")}>Goods</NavItem>
+              <HoverArea
                 onMouseEnter={handleDropdownMouseEnter}
                 onMouseLeave={handleDropdownMouseLeave}
               />
               <DropdownMenu show={showDropdown === "Goods"} align="right">
-                <DropdownItem>Goods Shop</DropdownItem>
+                <DropdownItem onClick={()=> navigate("/goods")}>Goods Shop</DropdownItem>
               </DropdownMenu>
             </NavItemContainer>
 
@@ -272,15 +264,13 @@ const Header = () => {
               onMouseEnter={() => handleMouseEnter("FAQ")}
               onMouseLeave={handleMouseLeave}
             >
-              <NavItem>
-                FAQ
-              </NavItem>
-              <HoverArea 
+              <NavItem>FAQ</NavItem>
+              <HoverArea
                 onMouseEnter={handleDropdownMouseEnter}
                 onMouseLeave={handleDropdownMouseLeave}
               />
               <DropdownMenu show={showDropdown === "FAQ"} align="right">
-                <DropdownItem>Notice</DropdownItem>
+                <DropdownItem onClick={()=> navigate("/notice")}>Notice</DropdownItem>
                 <DropdownItem onClick={() => navigate("/guide")}>Guide</DropdownItem>
                 <DropdownItem onClick={() => navigate("/directions")}>Directions</DropdownItem>
               </DropdownMenu>
