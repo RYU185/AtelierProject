@@ -4,7 +4,7 @@ import Home from "../features/home/Home";
 import Login from "../features/home/Login";
 import Join from "../features/home/components/Join";
 import MyPage from "../features/mypage/MyPage";
-import Adminpage from "../features/adminpage/AdminPage"
+import Adminpage from "../features/adminpage/AdminPage";
 import GoodsMain from "../features/goodsMain/GoodsMain";
 import ArtistGallery from "../features/ArtistGallery/ArtistGallery";
 import UserGallery from "../features/UserGallery/UserGallery";
@@ -13,6 +13,7 @@ import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import Directions from "../features/Directions/Directions";
 import Guide from "../features/Guide/Guide";
 import ArtistMain from "../features/artistMain/ArtistMain";
+import Notice from "../features/Notice/Notice";
 
 const AppRoutes = () => {
   return (
@@ -30,7 +31,7 @@ const AppRoutes = () => {
       <Route path="/usergallerydetail" element={<UserGalleryDetail />} />
       <Route path="/directions" element={<Directions />} />
       <Route path="/guide" element={<Guide />} />
-      <Route path="/guide" element={<Guide />} />
+      <Route path="/notice" element={<Notice />} />
     </Routes>
   );
 };
