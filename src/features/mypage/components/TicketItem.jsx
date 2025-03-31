@@ -3,95 +3,90 @@ import styled from "styled-components";
 
 const Card = styled.div`
   display: flex;
-  align-items: center;
   padding: 20px;
   background: #fff;
-  border-radius: 10px;
   border: 1px solid #ddd;
-  margin-bottom: 20px;
+  border-radius: 10px;
+  align-items: center;
 `;
 
 const Image = styled.img`
-  width: 100px;
-  height: 140px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   border-radius: 8px;
   margin-right: 20px;
 `;
 
-const InfoSection = styled.div`
+const Info = styled.div`
   flex: 1;
 `;
 
-const Date = styled.div`
-  font-size: 13px;
-  color: #888;
-`;
-
 const Title = styled.h3`
-  margin: 6px 0 4px;
-  font-size: 17px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 8px;
 `;
 
 const Cast = styled.div`
   font-size: 13px;
   color: #666;
+  margin-bottom: 6px;
 `;
 
-const Meta = styled.div`
+const Date = styled.div`
+  font-size: 13px;
+  margin-bottom: 6px;
+`;
+
+const People = styled.div`
+  font-size: 13px;
+  margin-bottom: 6px;
+`;
+
+const Price = styled.div`
   font-size: 14px;
-  font-weight: 500;
-  margin-top: 8px;
+  font-weight: bold;
 `;
 
-const DashedDivider = styled.div`
-  width: 1px;
-  height: 100%;
-  background-image: linear-gradient(#aaa 40%, rgba(255, 255, 255, 0) 0%);
-  background-position: right;
-  background-size: 1px 10px;
-  background-repeat: repeat-y;
-  margin: 0 20px;
-`;
-
-const ButtonSection = styled.div`
+const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-left: 24px;
 `;
 
-const ActionBtn = styled.button`
-  padding: 10px 12px;
+const Button = styled.button`
+  padding: 10px 14px;
   font-size: 13px;
-  border: 1px solid ${({ secondary }) => (secondary ? "#999" : "#007bff")};
-  background: ${({ secondary }) => (secondary ? "white" : "#007bff")};
-  color: ${({ secondary }) => (secondary ? "#333" : "white")};
   border-radius: 6px;
+  border: none;
   cursor: pointer;
-  font-weight: bold;
+  background: ${(props) => (props.$secondary ? "#eee" : "#339dff")};
+  color: ${(props) => (props.$secondary ? "#333" : "#fff")};
 
   &:hover {
-    background: ${({ secondary }) => (secondary ? "#f2f2f2" : "#0056b3")};
+    opacity: 0.9;
   }
 `;
 
 const TicketItem = ({ ticket }) => {
-  const { date, title, cast, people, price, image } = ticket;
+  const { title, cast, date, people, price, image } = ticket;
 
   return (
     <Card>
-      <Image src={image} alt="포스터" />
-      <InfoSection>
-        <Date>{date}</Date>
+      <Image src={image} alt={title} />
+      <Info>
         <Title>{title}</Title>
         <Cast>{cast}</Cast>
-        <Meta>{`${price.toLocaleString()}원 · ${people}`}</Meta>
-      </InfoSection>
-      <DashedDivider />
-      <ButtonSection>
-        <ActionBtn>티켓 확인하기</ActionBtn>
-        <ActionBtn secondary>환불 신청</ActionBtn>
-      </ButtonSection>
+        <Date>{date}</Date>
+        <People>{people}</People>
+        <Price>{price.toLocaleString()}원</Price>
+      </Info>
+      <ButtonGroup>
+        <Button>티켓 보기</Button>
+        <Button $secondary>교환 / 환불</Button>
+      </ButtonGroup>
     </Card>
   );
 };

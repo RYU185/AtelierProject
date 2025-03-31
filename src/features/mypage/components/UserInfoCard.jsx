@@ -2,110 +2,95 @@ import React from "react";
 import styled from "styled-components";
 
 const Card = styled.div`
-  width: 280px;
-  background: #f1f7ff;
-  border-radius: 12px;
+  width: 260px;
   padding: 24px;
+  background: #f6f9fc;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
 `;
 
-const ProfileSection = styled.div`
-  text-align: center;
-  margin-bottom: 16px;
+const Profile = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 `;
 
-const Circle = styled.div`
-  width: 70px;
-  height: 70px;
-  background: #ddd;
+const Avatar = styled.div`
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
-  margin: 0 auto 10px;
-`;
-
-const UserName = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const UserEmail = styled.div`
-  font-size: 12px;
-  color: #555;
-`;
-
-const Divider = styled.hr`
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 16px 0;
-`;
-
-const Label = styled.div`
-  font-size: 12px;
-  font-weight: bold;
-  color: #444;
+  background: #d4e4f4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #2b7bb9;
   margin-bottom: 8px;
 `;
 
-const InfoGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+const Name = styled.div`
+  font-size: 16px;
+  font-weight: bold;
 `;
 
-const InfoItem = styled.div`
-  display: flex;
-  justify-content: space-between;
+const Email = styled.div`
+  font-size: 13px;
+  color: #666;
+`;
+
+const InfoList = styled.div`
+  font-size: 13px;
+  margin-top: 20px;
+`;
+
+const InfoRow = styled.div`
+  margin-bottom: 10px;
+  line-height: 1.4;
 
   span {
-    font-size: 13px;
-    color: #666;
-  }
-
-  p {
-    font-size: 13px;
     font-weight: bold;
-    color: #222;
-    margin: 0;
+    display: inline-block;
+    width: 70px;
+    color: #444;
   }
 `;
 
 const UserInfoCard = ({ user }) => {
   return (
     <Card>
-      <ProfileSection>
-        <Circle />
-        <UserName>{user.name}</UserName>
-        <UserEmail>{user.email}</UserEmail>
-      </ProfileSection>
+      <Profile>
+        <Avatar>👤</Avatar>
+        <Name>RYU</Name>
+        <Email>{user.email}</Email>
+      </Profile>
 
-      <Divider />
-
-      <Label>ACCOUNT</Label>
-
-      <InfoGroup>
-        <InfoItem>
+      <InfoList>
+        <InfoRow>
           <span>이름</span>
-          <p>{user.name}</p>
-        </InfoItem>
-        <InfoItem>
+          {user.name}
+        </InfoRow>
+        <InfoRow>
           <span>연락처</span>
-          <p>{user.phone}</p>
-        </InfoItem>
-        <InfoItem>
+          {user.phone}
+        </InfoRow>
+        <InfoRow>
           <span>생년월일</span>
-          <p>{user.birth}</p>
-        </InfoItem>
-        <InfoItem>
+          {user.birth}
+        </InfoRow>
+        <InfoRow>
           <span>이메일</span>
-          <p>{user.email}</p>
-        </InfoItem>
-        <InfoItem>
+          {user.email}
+        </InfoRow>
+        <InfoRow>
           <span>주소</span>
-          <p>{user.address}</p>
-        </InfoItem>
-        <InfoItem>
-          <span>현재 포인트</span>
-          <p>{user.points}</p>
-        </InfoItem>
-      </InfoGroup>
+          {user.address}
+        </InfoRow>
+        <InfoRow>
+          <span>포인트</span>
+          {user.points}
+        </InfoRow>
+      </InfoList>
     </Card>
   );
 };

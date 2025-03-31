@@ -6,63 +6,52 @@ const Card = styled.div`
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Image = styled.img`
   width: 100%;
-  height: 160px;
+  height: 180px;
   object-fit: cover;
-  background: #eee;
 `;
 
-const Info = styled.div`
-  padding: 14px;
+const Content = styled.div`
+  padding: 14px 16px;
 `;
 
-const TopRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Title = styled.div`
+const Title = styled.h4`
+  font-size: 15px;
   font-weight: bold;
+  margin-bottom: 8px;
 `;
 
-const Status = styled.span`
-  font-size: 12px;
-  font-weight: bold;
-  color: ${({ status }) => (status === "완성" ? "#3da9fc" : "#ff5a5a")};
+const Status = styled.div`
+  font-size: 13px;
+  font-weight: 500;
+  color: ${(props) =>
+    props.status === "당첨"
+      ? "#2e87ff"
+      : props.status === "미당첨"
+      ? "#ff4c4c"
+      : "#555"};
 `;
-
-const Description = styled.div`
-  font-size: 12px;
-  color: #666;
-  margin: 6px 0;
-`;
-
-const Date = styled.div`
-  font-size: 12px;
-  color: #999;
-`;
-
 
 const DrawingItem = ({ item }) => {
-  const { image, title, status, description, updatedAt } = item;
+  const { title, status, image } = item;
 
   return (
     <Card>
-      <Image src={image} alt="드로잉" />
-      <Info>
-        <TopRow>
-          <Title>{title}</Title>
-          <Status status={status}>{status}</Status>
-        </TopRow>
-        <Description>{description}</Description>
-        <Date>최근 수정일: {updatedAt}</Date>
-      </Info>
+      <Image src={image} alt={title} />
+      <Content>
+        <Title>{title}</Title>
+        <Status status={status}>{status}</Status>
+      </Content>
     </Card>
   );
 };

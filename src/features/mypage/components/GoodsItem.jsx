@@ -78,7 +78,6 @@ const Button = styled.button`
   }
 `;
 
-
 const GoodsItem = ({ item }) => {
   const { date, image, status, title, price, quantity } = item;
 
