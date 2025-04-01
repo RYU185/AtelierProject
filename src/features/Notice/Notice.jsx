@@ -1,25 +1,31 @@
 import React from "react";
-
-const Container = styled.div`
-  padding: 60px 80px;
-`;
-
-const Title = styled.h1`
-  font-size: 32px;
-  margin-bottom: 30px;
-`;
+import Header from "../Header";
+import Footer from "../Footer";
 
 function Notice() {
-  const [tab, setTab] = useState("ticket");
-
+  const navigate = useNavigate();
   return (
-    <Container>
-      <Title>공지사항</Title>
+    <div>
+      <Header />
 
-      <Tabs tab={tab} setTab={setTab} />
+      <Container>
+        <NavList>
+          <Button onClick={() => navigate("/notice")}>공지사항</Button>
+          <Button onClick={() => navigate("/guide")}>시설안내</Button>
+          <Button onClick={() => navigate("/contactus")}>오시는 길</Button>
+          <Button onClick={() => navigate("/faq")}>고객센터</Button>
+        </NavList>
 
-      <MainSection></MainSection>
-    </Container>
+        <Search>
+          <Button></Button>
+          <Button></Button>
+        </Search>
+
+        <NoticeList />
+      </Container>
+
+      <Footer />
+    </div>
   );
 }
 

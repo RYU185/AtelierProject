@@ -23,21 +23,23 @@ const Tab = styled.button`
   }
 `;
 
+const tabs = [
+  { key: "notice", label: "공지사항" },
+  { key: "direction", label: "시설안내" },
+  { key: "guide", label: "오시는 길" },
+  { key: "contact", label: "고객센터" },
+];
+
 const TabBar = ({ tab, setTab }) => {
   return (
     <TabGroup>
-      <Tab active={tab === "notice"} onClick={() => setTab("notice")}>
-        공지사항
-      </Tab>
-      <Tab active={tab === "direction"} onClick={() => setTab("direction")}>
-        시설안내
-      </Tab>
-      <Tab active={tab === "guide"} onClick={() => setTab("guide")}>
-        오시는 길
-      </Tab>
-      <Tab active={tab === "contact"} onClick={() => setTab("contact")}>
-        고객센터
-      </Tab>
+      {tabs.map(({ key, label }) => (
+        <Tab key={key} active={tab === key} onClick={() => setTab(key)}>
+          {label}
+        </Tab>
+      ))}
     </TabGroup>
   );
 };
+
+export default TabBar;
