@@ -30,12 +30,63 @@ const GalleryGrid = styled.div`
   }
 `;
 
-function ArtistGalleryLsit({ galleryItems = [] }) {
+function ArtistGalleryLsit() {
+  const galleryItems = [
+    {
+      id: 1,
+      imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
+      title: "삶의 예찬",
+      date: "2025.01.20 ~ 2025.02.01",
+      artists: "곽두팔 화백, 김철용 화백",
+      description:
+        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+    },
+    {
+      id: 1,
+      imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
+      title: "삶의 예찬",
+      date: "2025.01.20 ~ 2025.02.01",
+      artists: "곽두팔 화백, 김철용 화백",
+      description:
+        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+    },
+
+    {
+      id: 1,
+      imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
+      title: "삶의 예찬",
+      date: "2025.01.20 ~ 2025.02.01",
+      artists: "곽두팔 화백, 김철용 화백",
+      description:
+        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+    },
+
+    {
+      id: 1,
+      imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
+      title: "삶의 예찬",
+      date: "2025.01.20 ~ 2025.02.01",
+      artists: "곽두팔 화백, 김철용 화백",
+      description:
+        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+    },
+
+    {
+      id: 1,
+      imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
+      title: "삶의 예찬",
+      date: "2025.01.20 ~ 2025.02.01",
+      artists: "곽두팔 화백, 김철용 화백",
+      description:
+        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+    },
+  ];
+
   return (
     <Container>
       <GalleryGrid>
         {galleryItems.map((item, index) => (
-          <ArtistGallerys key={index} {...item} />
+          <ArtistGallerys key={index} {...item} /> // ArtistGallerys 컴포넌트 사용
         ))}
       </GalleryGrid>
     </Container>
