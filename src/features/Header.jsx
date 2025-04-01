@@ -27,7 +27,7 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(5px);
   /* backdrop-filter: blur 라는 기능 기억하기 */
   opacity: ${(props) => (props.show ? 1 : 0)};
@@ -112,7 +112,7 @@ const NavItem = styled.li`
   padding: 0.1rem 1.6rem;
 
   &:hover {
-    background-color: rgba(21, 184, 248, 0.8);
+    background-color: #0f85b4;
     color: #ffffff;
   }
 `;
@@ -134,7 +134,7 @@ const DropdownMenu = styled.ul`
       // props로 align 줬을때 기본 왼쪽에 맞추기
     }
   }}
-  background-color: #0097d3;
+  background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
   list-style: none;
   display: flex;
@@ -162,12 +162,12 @@ const DropdownItem = styled(NavItem)`
   padding: 0.9rem 3rem;
   position: static;
   transition: 0.5s ease;
-  color: #ffffff;
+  color: #f3f3f3;
   height: 100%;
 
   &:hover {
-    background-color: #ffffff;
-    color: #1b1b1b;
+    background-color: #424242;
+    color: #f3f3f3;
   }
 `;
 
