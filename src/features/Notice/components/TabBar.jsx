@@ -1,43 +1,63 @@
-import React from "react";
 import styled from "styled-components";
+import React, { useState } from "react";
 
-const TabGroup = styled.div`
+const TabBarBox = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 50px;
   display: flex;
-  gap: 8px;
-  margin-bottom: 30px;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #bababa;
+`;
+const SearchBox = styled.div`
+  width: 500px;
+  display: flex;
+  justify-content: space-around;
 `;
 
-const Tab = styled.button`
-  padding: 10px 22px;
-  font-size: 14px;
-  background-color: ${(props) => (props.$active ? "#f0f0f0" : "#fff")};
-  border-style: none none 1px;
+const Button = styled.div`
+  padding: 10px 20px;
   cursor: pointer;
-  transition: background 0.2s;
-  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
-
+  font-size: 16px;
+  color: #606060;
+  transition: 0.3s ease;
+  border-bottom: 3px solid #ffffff;
   &:hover {
-    font-weight: bold;
+    color: #000;
   }
 `;
 
-const tabs = [
-  { key: "notice", label: "공지사항" },
-  { key: "direction", label: "시설안내" },
-  { key: "guide", label: "오시는 길" },
-  { key: "contact", label: "고객센터" },
-];
+function TabBar() {
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
 
-const TabBar = ({ tab = "notice", setTab = () => {} }) => {
+  const handleButtonClick = (index) => {
+    setSelectedButtonIndex(index);
+  };
+
+  const buttonNames = ["공지사항", "시설안내", "오시는 길", "고객센터"];
+
   return (
-    <TabGroup>
-      {tabs.map(({ key, label }) => (
-        <Tab key={key} $active={tab === key} onClick={() => setTab(key)}>
-          {label}
-        </Tab>
-      ))}
-    </TabGroup>
+    <div>
+      <TabBarBox>
+        <SearchBox>
+          {buttonNames.map((name, index) => (
+            <Button
+              key={index}
+              onClick={() => handleButtonClick(index)}
+              style={
+                selectedButtonIndex === index
+                  ? { borderBottom: "2px solid #000", color: "#000" }
+                  : {}
+              }
+            >
+              {name}
+            </Button>
+          ))}
+        </SearchBox>
+      </TabBarBox>
+    </div>
   );
-};
+}
 
 export default TabBar;
