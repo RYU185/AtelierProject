@@ -22,6 +22,7 @@ import AdminGoods from "../features/adminpage/components/AdminGoods";
 import AdminTicketList from "../features/adminpage/components/AdminTicketList";
 import AdminUser from "../features/adminpage/components/AdminUser";
 import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
+import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 
 function AppRoutes() {
   return (
@@ -42,7 +43,7 @@ function AppRoutes() {
         <Route path="artistgallery" element={<ArtistGallery />} />
         <Route path="artistgallery/:id" element={<ArtistGalleryDetail />} />
         <Route path="usergallery" element={<UserGallery />} />
-        <Route path="usergallery/:id" element={<UserGallery />} />
+        <Route path="usergallery/:id" element={<UserGalleryDetail />} />
       </Route>
 
       <Route path="/artist" element={<Artist />} />
