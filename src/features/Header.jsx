@@ -214,7 +214,6 @@ const Header = () => {
                         // 드롭다운 메뉴를 클릭하면 그 이벤트 대상이 부모요소로 전파되서
                         // 그 어떤 자식을 눌러도 부모 메뉴의 클릭이벤트가 실행되는 문제
                         // stopPropagation()은 이 함수를 막아준다.
-                        // 하......
                         navigate("/gallery/artistgallery");
                       }}
                     >
