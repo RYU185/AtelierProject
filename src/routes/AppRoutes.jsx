@@ -17,6 +17,7 @@ import ArtistMain from "../features/artistMain/ArtistMain";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
 import Notice from "../features/Notice/Notice";
+import AddminArtAdd from "../features/adminpage/components/AdminArtAdd";
 
 const AppRoutes = () => {
   return (
@@ -39,6 +40,8 @@ const AppRoutes = () => {
       <Route path="/ticketpage" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/notice" element={<Notice />} />
+      <Route path="/AdminArtAdd" element={<AddminArtAdd />}></Route>
+      
     </Routes>
   );
 };
