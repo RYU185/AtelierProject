@@ -99,19 +99,26 @@ const MoreOptions = styled.div`
   top: 10px;
   right: 10px;
   margin-top: 300px;
+  
 `;
 
 const OptionsMenu = styled.div`
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   position: absolute;
   top: 100%;
+  margin-top: -43px;
   right: 0;
-  background: white;
+  background: rgba(255, 255, 255, 0.9); /* 불투명도 추가 (0.9로 설정) */
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100px;
   z-index: 10;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  
+  /* hover 시에도 불투명도 유지 */
+  &:hover {
+    background: rgba(255, 255, 255, 0.9); /* hover시 배경 색상과 불투명도 동일 */
+  }
 `;
 
 const OptionButton = styled.button`
