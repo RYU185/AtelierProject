@@ -14,10 +14,37 @@ import goods8 from "../../assets/GoodsIMG/goods8.jpg";
 import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 
+const TitleContainer = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px
+`;
+
+const BackTitle = styled.h1`
+  font-size: 80px;
+  text-align: center;
+  color: #deeaff;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 1;
+`;
+
+const Title = styled.h1`
+  font-size: 50px;
+  text-align: center;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+`;
+
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 80px 20px;
 `;
 
 const ProductContainer = styled.div`
@@ -28,12 +55,14 @@ const ProductContainer = styled.div`
 
 const ImageSection = styled.div`
   flex: 1;
+   
 `;
 
 const ProductImage = styled.img`
   width: 100%;
   height: auto;
   border-radius: 8px;
+   margin: 10px 0;
 `;
 
 const InfoSection = styled.div`
@@ -147,6 +176,10 @@ function GoodsDetail() {
     return (
       <>
         <Header />
+        <TitleContainer>
+          <BackTitle>Gallery Goods</BackTitle>
+          <Title>Gallery Goods</Title>
+        </TitleContainer>
         <Container>
           <ProductTitle>상품을 찾을 수 없습니다.</ProductTitle>
         </Container>
@@ -158,9 +191,17 @@ function GoodsDetail() {
   return (
     <>
       <Header />
+      <TitleContainer>
+        <BackTitle>Gallery Goods</BackTitle>
+        <Title>Gallery Goods</Title>
+      </TitleContainer>
       <Container>
         <ProductContainer>
           <ImageSection>
+            <ProductImage src={product.image} alt={product.name} />
+            <ProductImage src={product.image} alt={product.name} />
+            <ProductImage src={product.image} alt={product.name} />
+            <ProductImage src={product.image} alt={product.name} />
             <ProductImage src={product.image} alt={product.name} />
           </ImageSection>
           <InfoSection>

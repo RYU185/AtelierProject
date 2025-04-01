@@ -24,21 +24,29 @@ const Container = styled.div`
 const TitleContainer = styled.div`
   width: 100%;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 50px;
 `;
 
 const BackTitle = styled.h1`
-  font-size: 140px;
+  font-size: 80px;
   text-align: center;
   color: #deeaff;
-  padding-top: 100px;
-  margin-bottom: 0px;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  z-index: 1;
 `;
 
 const Title = styled.h1`
-  font-size: 90px;
+  font-size: 50px;
   text-align: center;
-  margin-top: -130px;
-  margin-bottom: 150px;
+  margin: 0;
+  position: relative;
+  z-index: 2;
 `;
 
 const DataController = styled.div`
@@ -91,6 +99,7 @@ const ProductImage = styled.img`
   height: 200px;
   object-fit: cover;
   transition: all 0.3s ease;
+
 `;
 
 const ProductInfo = styled.div`
@@ -217,8 +226,8 @@ function Goods() {
       <Header />
       <Container>
         <TitleContainer>
-          <BackTitle>GALLERY GOODS</BackTitle>
-          <Title>GALLERY GOODS</Title>
+          <BackTitle>Gallery Goods</BackTitle>
+          <Title>Gallery Goods</Title>
         </TitleContainer>
         <DataController>
           <SearchContainer>
