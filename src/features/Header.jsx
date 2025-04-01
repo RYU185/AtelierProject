@@ -29,16 +29,15 @@ const HeaderSpacer = styled.div`
 // 나머지 1은 뒤에 있는 포스터 이미지 + 배경
 const Overlay = styled.div`
   position: fixed;
-  top: 0;
+  top: 80px;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(5px);
-  /* backdrop-filter: blur 라는 기능 기억하기 */
-  opacity: ${(props) => (props.$show ? 1 : 0)};
-  visibility: ${(props) => (props.$show ? "visible" : "hidden")};
-  transition: all 0.3s ease;
+  transform-origin: top;
+  transform: ${(props) => props.$show ? "scaleY(1)" : "scaleY(0)"};
+  transition: transform 0.4s ease;
   z-index: 999;
 `;
 
@@ -57,7 +56,7 @@ const CenterContainer = styled.div`
 const NavWrapper = styled.div`
   position: relative;
   background-color: rgba(47, 47, 47, 1);
-  border-radius: 999px;
+  border-radius: 25px;
   transition: all 0.3s ease;
   z-index: 1001;
 `;
@@ -114,7 +113,7 @@ const NavItem = styled.li`
   color: white;
   transition: 0.2s;
   position: relative;
-  border-radius: 99px;
+  border-radius: 25px;
   padding: 0.1rem 1.2rem;
 
   &:hover {
@@ -129,11 +128,11 @@ const DropdownMenu = styled.ul`
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(47, 47, 47, 1);
-  border-radius: 30px;
+  border-radius: 23px;
   list-style: none;
   display: flex;
   flex-direction: column;
-  min-width: 175px;
+  min-width: 160px;
   margin-top: 20px;
 
   // transition은 display: none -> display: block같은 속성을 처리할수 없다...
