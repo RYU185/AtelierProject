@@ -250,7 +250,7 @@ const Header = () => {
                 >
                   Artist
                   <DropdownMenu show={showDropdown === "Artist"}>
-                    <DropdownItem>작가 소개</DropdownItem>
+                    <DropdownItem onClick={() => navigate("/artist")}>작가 소개</DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>
