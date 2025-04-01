@@ -4,7 +4,11 @@ export default function NoticeList() {
   return (
     <div>
       <Container>
-        <Box></Box>
+        <Box>
+          <div>날짜</div>
+          <div>제목</div>
+          <div>ㄷ</div>
+        </Box>
       </Container>
     </div>
   );
