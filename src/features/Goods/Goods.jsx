@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
+import { FaSearch } from "react-icons/fa";
 import goods1 from "../../assets/GoodsIMG/goods1.jpg";
 import goods2 from "../../assets/GoodsIMG/goods2.jpg";
 import goods3 from "../../assets/GoodsIMG/goods3.jpg";
@@ -39,6 +40,43 @@ const Title = styled.h1`
   margin-bottom: 150px;
 `;
 
+const DataController = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+`;
+
+const SearchContainer = styled.div`
+  position: relative;
+  width: 300px;
+`;
+
+const SearchBar = styled.input`
+  width: 100%;
+  height: 40px;
+  border: 1px solid #0068ca;
+  padding-left: 40px;
+  outline: none;
+`;
+
+// 라이브러리 사용 - react-icons
+//import { FaSearch } from "react-icons/fa" => Fa:
+const SearchIcon = styled(FaSearch)`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #0068ca;
+  font-size: 16px;
+`;
+
+const SortBar = styled.select`
+  width: 150px;
+  height: 40px;
+  border: 1px solid #0068ca;
+  outline: none;
+`;
+
 // 그리드 설정
 const ProductGrid = styled.div`
   display: grid;
@@ -69,15 +107,15 @@ const ProductName = styled.h3`
 const ProductPrice = styled.div`
   font-size: 16px;
   color: #333;
-  font-weight: bold;
+  font-weight: 400;
   transition: all 0.3s ease;
 `;
 
 const ProductCard = styled.div`
   border: 1px solid #eee;
-  border-radius: 8px;
+  border-radius: 5px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
   cursor: pointer;
   position: relative;
 
@@ -86,6 +124,8 @@ const ProductCard = styled.div`
 
     ${ProductImage} {
       filter: brightness(1.1);
+      // filter 옵션 기억! : brightness 이미지 밝기 올리기
+      // filter: blur는 이미지 블러 처리
     }
 
     ${ProductInfo} {
@@ -174,6 +214,19 @@ function Goods() {
           <BackTitle>GALLERY GOODS</BackTitle>
           <Title>GALLERY GOODS</Title>
         </TitleContainer>
+        <DataController>
+          <SearchContainer>
+            <SearchIcon />
+            <SearchBar placeholder="검색어를 입력하세요" />
+          </SearchContainer>
+          <SortBar>
+            <option value="">정렬</option>
+            <option value="price_asc">가격 낮은순</option>
+            <option value="price_desc">가격 높은순</option>
+            <option value="name_asc">이름순</option>
+          </SortBar>
+        </DataController>
+
         <ProductGrid>
           {products.map((product) => (
             <ProductCard key={product.id}>
