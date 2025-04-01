@@ -274,7 +274,10 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/community")}>
                   Community
-                  <DropdownMenu $show={showDropdown === "Community"} $align="center">
+                  <DropdownMenu
+                    $show={showDropdown === "Community"}
+                    $align="center"
+                  >
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -344,11 +347,21 @@ const Header = () => {
           </NavWrapper>
         </CenterContainer>
         <Right>
-          <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
+          <RightNavItem onClick={() => navigate("/join")}>
+            회원가입
+          </RightNavItem>
           <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
-          <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
-          <RightNavItem>장바구니</RightNavItem>
+          <RightNavItem onClick={() => navigate("/mypage")}>
+            마이페이지
+          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/adminpage")}>
+            {" "}
+            관리자페이지
+          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/cart")}>
+            {" "}
+            장바구니
+          </RightNavItem>
           <MenuIcon>MENU</MenuIcon>
         </Right>
       </HeaderWrapper>

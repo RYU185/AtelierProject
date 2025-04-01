@@ -8,6 +8,7 @@ import MyDrawing from "./components/MyDrawing";
 import RefundModal from "./components/RefundModal";
 import TicketCheckModal from "./components/TicketCheckModal";
 import EditProfile from "./components/EditProfile";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -197,7 +198,11 @@ const Price = styled.div`
 `;
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState("ticket");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "ticket"
+  );
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showTicketModal, setShowTicketModal] = useState(false);
@@ -211,6 +216,17 @@ const MyPage = () => {
     address: "서울시 동작구",
     points: "200",
   });
+
+  // location.state가 변경될 때마다 activeTab 업데이트
+  React.useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
   const handleTicketClick = (ticket) => {
     setSelectedTicket(ticket);
@@ -262,19 +278,19 @@ const MyPage = () => {
         <TabContainer>
           <TabButton
             active={activeTab === "ticket"}
-            onClick={() => setActiveTab("ticket")}
+            onClick={() => handleTabChange("ticket")}
           >
             나의 티켓 현황
           </TabButton>
           <TabButton
             active={activeTab === "purchase"}
-            onClick={() => setActiveTab("purchase")}
+            onClick={() => handleTabChange("purchase")}
           >
             굿즈 구매내역
           </TabButton>
           <TabButton
             active={activeTab === "drawing"}
-            onClick={() => setActiveTab("drawing")}
+            onClick={() => handleTabChange("drawing")}
           >
             나의 드로잉
           </TabButton>
