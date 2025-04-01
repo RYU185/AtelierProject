@@ -3,15 +3,37 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const HeaderWrapper = styled.header`
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 40px 40px;
   background-color: #080101;
   color: #fff;
-  overflow: visible;
-  z-index: 10;
+  z-index: 1000;
+  transition: all 0.3s ease;
+`;
+
+// 전체화면 덮는 오버레이 z-index 999
+// 1000은 헤더
+// 1001은 드롭다운
+// 나머지 1은 뒤에 있는 포스터 이미지 + 배경
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  /* backdrop-filter: blur 라는 기능 기억하기 */
+  opacity: ${(props) => (props.show ? 1 : 0)};
+  visibility: ${(props) => (props.show ? "visible" : "hidden")};
+  transition: all 0.3s ease;
+  z-index: 999;
 `;
 
 const Left = styled.div`
@@ -27,12 +49,11 @@ const CenterContainer = styled.div`
 `;
 
 const NavWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
   background-color: rgba(47, 47, 47, 1);
   border-radius: 999px;
-  margin: 0 auto;
+  transition: all 0.3s ease;
+  z-index: 1001;
 `;
 
 const NavList = styled.ul`
@@ -46,6 +67,7 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   gap: 18px;
+  white-space: nowrap;
 `;
 
 const MenuIcon = styled.div`
@@ -68,6 +90,7 @@ const RightNavItem = styled.div`
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
   transition: 0.5s;
+  white-space: nowrap;
 
   &:hover {
     color: #60d2ff;
@@ -76,15 +99,6 @@ const RightNavItem = styled.div`
 
 const NavItemContainer = styled.div`
   position: relative;
-`;
-
-const HoverArea = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  height: 20px;
-  background: transparent;
 `;
 
 const NavItem = styled.li`
@@ -98,7 +112,7 @@ const NavItem = styled.li`
   padding: 0.1rem 1.6rem;
 
   &:hover {
-    background-color: #15b8f8;
+    background-color: rgba(21, 184, 248, 0.8);
     color: #ffffff;
   }
 `;
@@ -110,17 +124,17 @@ const DropdownMenu = styled.ul`
     switch (align) {
       case "right":
         return "right: 0;";
-        // props로 align 줬을때 right면 오른쪽에 맞추기
+      // props로 align 줬을때 right면 오른쪽에 맞추기
       case "center":
         return "left: 50%; transform: translateX(-50%);";
       // left : 부모의 중앙 = 왼쪽 끝부터 시작
       // transform : 절반만큼만 왼쪽으로 이동
       default:
         return "left: 0;";
-        // props로 align 줬을때 기본 왼쪽에 맞추기
+      // props로 align 줬을때 기본 왼쪽에 맞추기
     }
   }}
-  background-color: rgba(47, 47, 47, 1);
+  background-color: #ffffff;
   border-radius: 999px;
   list-style: none;
   padding: 0.9rem 3rem;
@@ -139,19 +153,21 @@ const DropdownMenu = styled.ul`
   }};
   transition: all 0.3s ease;
   pointer-events: ${(props) => (props.show ? "auto" : "none")};
+  z-index: 1001;
 `;
 
 const DropdownItem = styled(NavItem)`
-// 부모 스타일 따라감
+  // 부모 스타일 따라감
   display: block;
   white-space: nowrap;
   font-size: 1rem;
   padding: 0.5rem 2rem;
   position: static;
   transition: 0.5s ease;
+  color: #000000;
 
   &:hover {
-    background-color: #666666;
+    background-color: #212121;
     color: #ffffff;
   }
 `;
@@ -171,7 +187,7 @@ const Header = () => {
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setShowDropdown(null);
-    }, 300);
+    }, 200);
   };
 
   React.useEffect(() => {
@@ -184,86 +200,92 @@ const Header = () => {
   }, []);
 
   return (
-    <HeaderWrapper>
-      <Left onClick={() => navigate("/")}>LOGO</Left>
-      <CenterContainer>
-        <NavWrapper>
-          <NavList>
-            <NavItemContainer
-              onMouseEnter={() => handleMouseEnter("Gallery")}
-              onMouseLeave={handleMouseLeave}
-            >
-              <NavItem onClick={() => navigate("/artistgallery")}>
-                Gallery
-                <DropdownMenu show={showDropdown === "Gallery"}>
-                  <DropdownItem onClick={() => navigate("/artistgallery")}>
-                    Artist Gallery
-                  </DropdownItem>
-                  <DropdownItem onClick={() => navigate("/usergallery")}>User Gallery</DropdownItem>
-                </DropdownMenu>
-              </NavItem>
-            </NavItemContainer>
+    // 오버레이만 추가하고 나머지 옮겨넣기
+    <>
+      <Overlay show={showDropdown !== null} />
+      <HeaderWrapper>
+        <Left onClick={() => navigate("/")}>LOGO</Left>
+        <CenterContainer>
+          <NavWrapper>
+            <NavList>
+              <NavItemContainer
+                onMouseEnter={() => handleMouseEnter("Gallery")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <NavItem onClick={() => navigate("/artistgallery")}>
+                  Gallery
+                  <DropdownMenu show={showDropdown === "Gallery"}>
+                    <DropdownItem onClick={() => navigate("/artistgallery")}>
+                      Artist Gallery
+                    </DropdownItem>
+                    <DropdownItem onClick={() => navigate("/usergallery")}>
+                      User Gallery
+                    </DropdownItem>
+                  </DropdownMenu>
+                </NavItem>
+              </NavItemContainer>
 
-            <NavItemContainer
-              onMouseEnter={() => handleMouseEnter("Artist")}
-              onMouseLeave={handleMouseLeave}
-            >
-              <NavItem onClick={() => navigate("/artist")}>
-                Artist
-                <DropdownMenu show={showDropdown === "Artist"}>
-                  <DropdownItem>작가 소개</DropdownItem>
-                </DropdownMenu>
-              </NavItem>
-            </NavItemContainer>
+              <NavItemContainer
+                onMouseEnter={() => handleMouseEnter("Artist")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <NavItem onClick={() => navigate("/artist")}>
+                  Artist
+                  <DropdownMenu show={showDropdown === "Artist"}>
+                    <DropdownItem>작가 소개</DropdownItem>
+                  </DropdownMenu>
+                </NavItem>
+              </NavItemContainer>
 
-            <NavItemContainer
-              onMouseEnter={() => handleMouseEnter("Community")}
-              onMouseLeave={handleMouseLeave}
-            >
-              <NavItem onClick={() => navigate("/community")}>
-                Community
-                <DropdownMenu show={showDropdown === "Community"} align="center">
-                  <DropdownItem onClick={() => navigate("/community")}>Community</DropdownItem>
-                </DropdownMenu>
-              </NavItem>
-            </NavItemContainer>
+              <NavItemContainer
+                onMouseEnter={() => handleMouseEnter("Community")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <NavItem onClick={() => navigate("/community")}>
+                  Community
+                  <DropdownMenu show={showDropdown === "Community"} align="center">
+                    <DropdownItem onClick={() => navigate("/community")}>Community</DropdownItem>
+                  </DropdownMenu>
+                </NavItem>
+              </NavItemContainer>
 
-            <NavItemContainer
-              onMouseEnter={() => handleMouseEnter("Goods")}
-              onMouseLeave={handleMouseLeave}
-            >
-              <NavItem onClick={() => navigate("/goods")}>
-                Goods
-                <DropdownMenu show={showDropdown === "Goods"} align="right">
-                  <DropdownItem onClick={() => navigate("/goods")}>굿즈샵</DropdownItem>
-                </DropdownMenu>
-              </NavItem>
-            </NavItemContainer>
+              <NavItemContainer
+                onMouseEnter={() => handleMouseEnter("Goods")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <NavItem onClick={() => navigate("/goods")}>
+                  Goods
+                  <DropdownMenu show={showDropdown === "Goods"} align="right">
+                    <DropdownItem onClick={() => navigate("/goods")}>굿즈샵</DropdownItem>
+                  </DropdownMenu>
+                </NavItem>
+              </NavItemContainer>
 
-            <NavItemContainer
-              onMouseEnter={() => handleMouseEnter("Guide")}
-              onMouseLeave={handleMouseLeave}
-            >
-              <NavItem onClick={() => navigate("/guide")}>
-                Guide
-                <DropdownMenu show={showDropdown === "Guide"} align="right">
-                  <DropdownItem onClick={() => navigate("/guide")}>이용안내</DropdownItem>
-                  <DropdownItem onClick={() => navigate("/directions")}>오시는길</DropdownItem>
-                </DropdownMenu>
-              </NavItem>
-            </NavItemContainer>
-          </NavList>
-        </NavWrapper>
-      </CenterContainer>
-      <Right>
-        <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
-        <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
-        <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
-        <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
-        <RightNavItem>장바구니</RightNavItem>
-        <MenuIcon>MENU</MenuIcon>
-      </Right>
-    </HeaderWrapper>
+              <NavItemContainer
+                onMouseEnter={() => handleMouseEnter("Guide")}
+                onMouseLeave={handleMouseLeave}
+              >
+                <NavItem onClick={() => navigate("/guide")}>
+                  Guide
+                  <DropdownMenu show={showDropdown === "Guide"} align="right">
+                    <DropdownItem onClick={() => navigate("/guide")}>이용안내</DropdownItem>
+                    <DropdownItem onClick={() => navigate("/directions")}>오시는길</DropdownItem>
+                  </DropdownMenu>
+                </NavItem>
+              </NavItemContainer>
+            </NavList>
+          </NavWrapper>
+        </CenterContainer>
+        <Right>
+          <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
+          <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
+          <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
+          <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
+          <RightNavItem>장바구니</RightNavItem>
+          <MenuIcon>MENU</MenuIcon>
+        </Right>
+      </HeaderWrapper>
+    </>
   );
 };
 
