@@ -317,7 +317,7 @@ const Header = () => {
                         navigate("/faq/guide");
                       }}
                     >
-                      이용안내
+                      오시는길
                     </DropdownItem>
                     <DropdownItem
                       onClick={(e) => {
