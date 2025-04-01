@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 import Home from "../features/home/Home";
 import Login from "../features/home/Login";
 import Join from "../features/home/components/Join";
@@ -34,14 +34,12 @@ const AppRoutes = () => {
       <Route path="/artist" element={<ArtistMain />} />
       <Route path="/artistgallerydetail" element={<ArtistGalleryDetail />} />
       <Route path="/usergallerydetail" element={<UserGalleryDetail />} />
-      <Route path="/directions" element={<Directions />} />
       <Route path="/guide" element={<Guide />} />
-      <Route path="/mypage" element={<MyPage />} />
+      <Route path="/directions" element={<Directions />} />
+      <Route path="/notice" element={<Notice />} />
       <Route path="/ticketpage" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
-      <Route path="/notice" element={<Notice />} />
-      <Route path="/AdminArtAdd" element={<AddminArtAdd />}></Route>
-      
+      <Route path="/AdminArtAdd" element={<AddminArtAdd />} />
     </Routes>
   );
 };
