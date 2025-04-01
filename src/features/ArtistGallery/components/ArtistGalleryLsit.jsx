@@ -12,6 +12,19 @@ const GalleryGrid = styled.div`
   max-height: 1200px;
   margin-top: 70px;
   margin-bottom: 70px;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #eaeaea;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #018ec8;
+    border-radius: 5px;
+    max-height: 30px;
+  }
 `;
 
 function ArtistGalleryLsit() {
