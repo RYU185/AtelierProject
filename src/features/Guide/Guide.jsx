@@ -1,4 +1,5 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import FAQNAVBar from "../Directions/components/FAQNAVBar";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -8,7 +9,7 @@ function Guide() {
     <div>
       <Header />
       <FAQNAVBar />
-      <h1>가이드 유니티</h1>
+      <Outlet />
       <Footer />
     </div>
   );
