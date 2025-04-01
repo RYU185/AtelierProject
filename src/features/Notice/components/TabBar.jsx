@@ -11,7 +11,7 @@ const Tab = styled.button`
   padding: 10px 22px;
   font-size: 14px;
   background-color: #fff;
-  /* border-style: none none 1px; */
+  border-style: none none 1px;
   cursor: pointer;
   transition: background 0.2s;
 
