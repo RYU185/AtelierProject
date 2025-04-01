@@ -1,5 +1,5 @@
-import React from "react";
 import styled from "styled-components";
+import React, { useState } from "react";
 
 const DataControlBox = styled.div`
   width: 80%;
@@ -8,7 +8,7 @@ const DataControlBox = styled.div`
   display: flex;
   justify-content: space-between;
   padding-bottom: 20px;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #bababa;
 `;
 const SearchBox = styled.div`
   width: 500px;
@@ -16,16 +16,20 @@ const SearchBox = styled.div`
   justify-content: space-around;
 `;
 
-const Button = styled.div`
-  font-size: 20px;
-  padding: 15px;
-  border-radius: 5px;
+const Button = styled.button`
+  background: none;
+  border: none;
+  padding: 10px 20px;
   cursor: pointer;
+  font-size: 16px;
+  color: #606060;
+  transition: 0.3s ease;
+  border-bottom: 3px solid #ffffff;
   &:hover {
-    color: #f8f8ff;
-    background-color: #018ec8;
+    color: #018ec8;
   }
 `;
+
 const Input = styled.input`
   width: 400px;
   border: 2px solid #018ec8;
@@ -37,14 +41,31 @@ const Input = styled.input`
 `;
 
 function Datacontrol() {
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+
+  const handleButtonClick = (index) => {
+    setSelectedButtonIndex(index);
+  };
+
+  const buttonNames = ["전체", "현재 전시", "과거 전시", "예정 전시"];
+
   return (
     <div>
       <DataControlBox>
         <SearchBox>
-          <Button>전체</Button>
-          <Button>현재 전시</Button>
-          <Button>과거 전시</Button>
-          <Button>예정 전시</Button>
+          {buttonNames.map((name, index) => (
+            <Button
+              key={index}
+              onClick={() => handleButtonClick(index)}
+              style={
+                selectedButtonIndex === index
+                  ? { borderBottom: "2px solid #018ec8", color: "#018ec8" }
+                  : {}
+              }
+            >
+              {name}
+            </Button>
+          ))}
         </SearchBox>
         <Input type="text" placeholder="검색어를 입력해 주세요" />
       </DataControlBox>

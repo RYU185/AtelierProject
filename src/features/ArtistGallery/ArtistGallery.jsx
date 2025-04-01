@@ -13,7 +13,7 @@ const BackTitle = styled.h1`
   font-size: 140px;
   text-align: center;
   color: #deeaff;
-  padding-top: 200px;
+  padding-top: 100px;
   margin-bottom: 0px;
 `;
 const Title = styled.h1`
