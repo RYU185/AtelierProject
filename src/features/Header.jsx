@@ -15,6 +15,12 @@ const HeaderWrapper = styled.header`
   color: #fff;
   z-index: 1000;
   transition: all 0.3s ease;
+  height: 120px;
+`;
+
+const HeaderSpacer = styled.div`
+  height: 120px;
+  width: 100%;
 `;
 
 // 전체화면 덮는 오버레이 z-index 999
@@ -201,6 +207,7 @@ const Header = () => {
   return (
     // 오버레이만 추가하고 나머지 옮겨넣기
     <>
+      <HeaderSpacer />
       <Overlay show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>LOGO</Left>
