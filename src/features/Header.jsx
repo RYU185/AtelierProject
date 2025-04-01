@@ -10,16 +10,16 @@ const HeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px 40px;
+  padding: 20px 40px;
   background-color: #080101;
   color: #fff;
   z-index: 1000;
   transition: all 0.3s ease;
-  height: 120px;
+  height: 80px;
 `;
 
 const HeaderSpacer = styled.div`
-  height: 120px;
+  height: 80px;
   width: 100%;
 `;
 
@@ -64,8 +64,8 @@ const NavWrapper = styled.div`
 
 const NavList = styled.ul`
   display: flex;
-  gap: 2rem;
-  padding: 14px 60px;
+  gap: 1.5rem;
+  padding: 8px 40px;
   list-style: none;
 `;
 
@@ -76,22 +76,8 @@ const Right = styled.div`
   white-space: nowrap;
 `;
 
-const MenuIcon = styled.div`
-  font-weight: bold;
-  font-size: 15px;
-  padding-left: 10px;
-  border-left: 1px solid #666;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    color: #60d2ff;
-  }
-`;
-
 const RightNavItem = styled.div`
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
@@ -103,19 +89,33 @@ const RightNavItem = styled.div`
   }
 `;
 
+const MenuIcon = styled.div`
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding-left: 10px;
+  border-left: 1px solid #666;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #60d2ff;
+  }
+`;
+
 const NavItemContainer = styled.div`
   position: relative;
 `;
 
 const NavItem = styled.li`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   color: white;
   transition: 0.2s;
   position: relative;
   border-radius: 99px;
-  padding: 0.1rem 1.6rem;
+  padding: 0.1rem 1.2rem;
 
   &:hover {
     background-color: #0f85b4;
@@ -133,7 +133,7 @@ const DropdownMenu = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 175px;
   margin-top: 20px;
 
   // transition은 display: none -> display: block같은 속성을 처리할수 없다...
@@ -148,11 +148,10 @@ const DropdownMenu = styled.ul`
 `;
 
 const DropdownItem = styled(NavItem)`
-  // 부모 스타일 따라감
   display: block;
   white-space: nowrap;
-  font-size: 1rem;
-  padding: 0.9rem 3rem;
+  font-size: 0.9rem;
+  padding: 0.7rem 1.5rem;
   position: static;
   transition: 0.5s ease;
   color: #f3f3f3;
