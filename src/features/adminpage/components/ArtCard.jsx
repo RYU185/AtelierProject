@@ -5,17 +5,17 @@ const CardWrap = styled.div`
   width: 280px;
   border: none;
   margin: 0 auto;
-  cursor: pointer;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.05);
-  }
+ 
 `;
 
 const Img = styled.img`
   object-fit: cover;
   width: 100%;
+  transition: transform 0.2s;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const Info = styled.div`

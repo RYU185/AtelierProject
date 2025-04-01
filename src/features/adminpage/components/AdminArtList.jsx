@@ -12,27 +12,25 @@ const PageContainer = styled.div`
 const ArtListTitle = styled.h2`
   font-size: 20px;
   font-weight: bold;
-  background: #3DA9FC; /* ✅ 배경 유지 */
-  color: #dee2e6; /* ✅ 텍스트 색상 */
+  background: #3DA9FC;
+  color: #dee2e6;
   text-align: center;
   padding: 12px;
   border-radius: 6px;
-  width: 200px; /* ✅ 길이 줄이기 */
+  width: 200px;
   margin-top: -50px;
-  margin-left: 80px;
+  margin-left: 30px;
 `;
-
 
 const ArtListContainer = styled.div`
   width: 100%;
-  width: 1200px; /* ✅ 넓이 조정 */
+  width: 1200px;
   margin: 0 auto;
   margin-left: 100px;
   background: #fff;
   padding: 10px;
   border-radius: 8px;
-  margin-top: 20px; /* ✅ 컨테이너는 원래 위치 유지 */
-  
+  margin-top: 20px;
 `;
 
 const ArtListHeader = styled.div`
@@ -45,10 +43,11 @@ const ArtListHeader = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   gap: 10px;
+  margin-left: -80px;
 `;
 
 const SearchInput = styled.input`
-  width:300px;
+  width: 300px;
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -80,10 +79,9 @@ const AddButton = styled.button`
 
 const ArtGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* ✅ 4개씩 배치 */
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-
-  
+  margin-left: -80px;
 `;
 
 const ArtItem = styled.div`
@@ -94,43 +92,19 @@ const ArtItem = styled.div`
   position: relative;
 `;
 
-const ArtImage = styled.div`
-  width: 100%;
-  height: 150px;
-  background: #f0f0f0;
-  margin-bottom: 10px;
-`;
-
-const ArtTitle = styled.h3`
-  font-size: 16px;
-  margin: 5px 0;
-`;
-
-const ArtArtist = styled.p`
-  font-size: 14px;
-  color: #666;
-  margin: 5px 0;
-`;
-
-const ArtDate = styled.p`
-  font-size: 12px;
-  color: #999;
-  margin: 5px 0;
-`;
-
 const MoreOptions = styled.div`
   cursor: pointer;
   font-size: 20px;
   position: absolute;
-  margin-top:160px;
   top: 10px;
   right: 10px;
+  margin-top: 300px;
 `;
 
 const OptionsMenu = styled.div`
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   position: absolute;
-  top: 100%;  
+  top: 100%;
   right: 0;
   background: white;
   border: 1px solid #ccc;
@@ -150,17 +124,19 @@ const OptionButton = styled.button`
   transition: background 0.2s ease-in-out;
 
   &:hover {
-    background: ${({ danger }) => (danger ? "#e74c3c" : "#3da9fc")}; /* 삭제 버튼만 빨간색 */
+    background: ${({ danger }) => (danger ? "#e74c3c" : "#3da9fc")};
     color: white;
   }
 `;
 
-
 const AdminArtList = () => {
-  const [menuOpen, setMenuOpen] = useState(null);
+  const [menuOpen, setMenuOpen] = useState({});
 
   const toggleMenu = (id) => {
-    setMenuOpen(menuOpen === id ? null : id);
+    setMenuOpen((prev) => ({
+      ...prev,
+      [id]: !prev[id], // 해당 ID에 대한 토글만 관리
+    }));
   };
 
   const artData = [
@@ -179,49 +155,47 @@ const AdminArtList = () => {
       imageUrl: '/src/assets/ArtIMG/1.jpg',
     },
     {
-      id: 2,
+      id: 3,
+      title: 'The Persistence of Memory',
+      artist: 'Salvador Dalí',
+      date: '1931',
+      imageUrl: '/src/assets/ArtIMG/1.jpg',
+    },
+    {
+      id: 4,
+      title: 'The Scream',
+      artist: 'Edvard Munch',
+      date: '1893',
+      imageUrl: '/src/assets/ArtIMG/1.jpg',
+    },
+    {
+      id: 5,
+      title: 'Starry Night',
+      artist: 'Vincent van Gogh',
+      date: '1889',
+      imageUrl: '/src/assets/ArtIMG/1.jpg',
+    },
+    {
+      id: 6,
       title: 'Mona Lisa',
       artist: 'Leonardo da Vinci',
       date: '1503',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
     },
     {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
+      id: 7,
+      title: 'The Persistence of Memory',
+      artist: 'Salvador Dalí',
+      date: '1931',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
     },
     {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
+      id: 8,
+      title: 'The Scream',
+      artist: 'Edvard Munch',
+      date: '1893',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
     },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-    },
-
-    // 추가 데이터...
   ];
 
   return (
@@ -244,7 +218,7 @@ const AdminArtList = () => {
           {artData.map((art) => (
             <ArtItem key={art.id}>
               <MoreOptions onClick={() => toggleMenu(art.id)}>⋮</MoreOptions>
-              <OptionsMenu visible={menuOpen === art.id}>
+              <OptionsMenu visible={menuOpen[art.id]}>
                 <OptionButton onClick={() => console.log('수정 클릭')}>수정</OptionButton>
                 <OptionButton danger onClick={() => console.log('삭제 클릭')}>삭제</OptionButton>
               </OptionsMenu>

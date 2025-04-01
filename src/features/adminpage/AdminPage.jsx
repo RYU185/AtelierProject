@@ -22,13 +22,6 @@ const Wrapper = styled.div`
 
 
 
-const Title = styled.h1`
-  font-size: 35px;
-  margin-bottom: 20px;
-    margin-left: 10px;
-`;
-
-
 const AdminPage = () => {
     const [tab, setTab] = useState('check');
 
@@ -36,7 +29,7 @@ const AdminPage = () => {
         <>
             <Header />
             <Container>
-                <Title>관리자 페이지</Title>
+                
                 <Wrapper>
                     <AdminMenu tab={tab} setTab={setTab} />
                 <AdminArtList />
