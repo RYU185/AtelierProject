@@ -276,6 +276,7 @@ const Header = () => {
                   <DropdownMenu show={showDropdown === "Guide"} align="right">
                     <DropdownItem onClick={() => navigate("/guide")}>이용안내</DropdownItem>
                     <DropdownItem onClick={() => navigate("/directions")}>오시는길</DropdownItem>
+                    <DropdownItem onClick={() => navigate("/notice")}>공지사항</DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>

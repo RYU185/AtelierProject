@@ -16,6 +16,7 @@ import Guide from "../features/Guide/Guide";
 import ArtistMain from "../features/artistMain/ArtistMain";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
+import Notice from "../features/Notice/Notice";
 
 const AppRoutes = () => {
   return (
@@ -37,6 +38,7 @@ const AppRoutes = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/ticketpage" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
+      <Route path="/notice" element={<Notice />} />
     </Routes>
   );
 };
