@@ -218,13 +218,13 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Gallery")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem onClick={() => navigate("/gallery/artist")}>
+                <NavItem onClick={() => navigate("/gallery/artistgallery")}>
                   Gallery
                   <DropdownMenu show={showDropdown === "Gallery"}>
-                    <DropdownItem onClick={() => navigate("/gallery/artist")}>
+                    <DropdownItem onClick={() => navigate("/gallery/artistgallery")}>
                       Artist Gallery
                     </DropdownItem>
-                    <DropdownItem onClick={() => navigate("/gallery/user")}>
+                    <DropdownItem onClick={() => navigate("/gallery/usergallery")}>
                       User Gallery
                     </DropdownItem>
                   </DropdownMenu>

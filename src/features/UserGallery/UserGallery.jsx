@@ -1,8 +1,6 @@
-import React from "react";
-import Header from "../Header";
+import React, { useEffect } from "react";
 import DataControlUser from "./components/DataControlUser";
 import UserGalleryList from "./components/UserGalleryList";
-import Footer from "../Footer";
 import styled from "styled-components";
 
 const TitleContainer = styled.div`
@@ -24,16 +22,18 @@ const Title = styled.h1`
 `;
 
 function UserGallery() {
+  useEffect(() => {
+    console.log("UserGallery 컴포넌트가 렌더링되었습니다.");
+  }, []);
+
   return (
     <div>
-      <Header />
       <TitleContainer>
         <BackTitle>User GALLERY</BackTitle>
         <Title>User GALLERY</Title>
       </TitleContainer>
       <DataControlUser />
       <UserGalleryList />
-      <Footer />
     </div>
   );
 }

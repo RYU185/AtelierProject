@@ -1,8 +1,6 @@
 import React from "react";
-import Header from "../Header";
 import Datacontrol from "./components/Datacontrol";
 import ArtistGalleryLsit from "./components/ArtistGalleryLsit";
-import Footer from "../Footer";
 import styled from "styled-components";
 
 const TitleContainer = styled.div`
@@ -26,14 +24,12 @@ const Title = styled.h1`
 function ArtistGallery() {
   return (
     <div>
-      <Header />
       <TitleContainer>
         <BackTitle>ARTIST GALLERY</BackTitle>
         <Title>ARTIST GALLERY</Title>
       </TitleContainer>
       <Datacontrol />
       <ArtistGalleryLsit />
-      <Footer />
     </div>
   );
 }
