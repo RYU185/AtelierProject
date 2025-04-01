@@ -36,8 +36,8 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(5px);
   /* backdrop-filter: blur 라는 기능 기억하기 */
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  visibility: ${(props) => (props.show ? "visible" : "hidden")};
+  opacity: ${(props) => (props.$show ? 1 : 0)};
+  visibility: ${(props) => (props.$show ? "visible" : "hidden")};
   transition: all 0.3s ease;
   z-index: 999;
 `;
@@ -126,8 +126,8 @@ const NavItem = styled.li`
 const DropdownMenu = styled.ul`
   position: absolute;
   top: 100%;
-  ${({ align }) => {
-    switch (align) {
+  ${({ $align }) => {
+    switch ($align) {
       case "right":
         return "right: 0;";
       // props로 align 줬을때 right면 오른쪽에 맞추기
@@ -147,16 +147,18 @@ const DropdownMenu = styled.ul`
   margin-top: 20px;
 
   // transition은 display: none -> display: block같은 속성을 처리할수 없다...
-  opacity: ${(props) => (props.show ? 1 : 0)};
-  visibility: ${(props) => (props.show ? "visible" : "hidden")};
+  opacity: ${(props) => (props.$show ? 1 : 0)};
+  visibility: ${(props) => (props.$show ? "visible" : "hidden")};
   transform: ${(props) => {
-    if (props.align === "center") {
-      return props.show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)";
+    if (props.$align === "center") {
+      return props.$show
+        ? "translateX(-50%) translateY(0px)"
+        : "translateX(-50%) translateY(-10px)";
     }
-    return props.show ? "translateY(0px)" : "translateY(-10px)";
+    return props.$show ? "translateY(0px)" : "translateY(-10px)";
   }};
   transition: all 0.3s ease;
-  pointer-events: ${(props) => (props.show ? "auto" : "none")};
+  pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   z-index: 1001;
 `;
 
@@ -208,7 +210,7 @@ const Header = () => {
     // 오버레이만 추가하고 나머지 옮겨넣기
     <>
       <HeaderSpacer />
-      <Overlay show={showDropdown !== null} />
+      <Overlay $show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>LOGO</Left>
         <CenterContainer>
@@ -220,7 +222,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/gallery/artistgallery")}>
                   Gallery
-                  <DropdownMenu show={showDropdown === "Gallery"}>
+                  <DropdownMenu $show={showDropdown === "Gallery"}>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -253,7 +255,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/artist")}>
                   Artist
-                  <DropdownMenu show={showDropdown === "Artist"}>
+                  <DropdownMenu $show={showDropdown === "Artist"}>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -272,7 +274,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/community")}>
                   Community
-                  <DropdownMenu show={showDropdown === "Community"} align="center">
+                  <DropdownMenu $show={showDropdown === "Community"} $align="center">
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -291,7 +293,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/goods")}>
                   Goods
-                  <DropdownMenu show={showDropdown === "Goods"} align="right">
+                  <DropdownMenu $show={showDropdown === "Goods"} $align="right">
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -310,7 +312,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/faq/guide")}>
                   FAQ
-                  <DropdownMenu show={showDropdown === "Guide"} align="right">
+                  <DropdownMenu $show={showDropdown === "Guide"} $align="right">
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();

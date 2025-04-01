@@ -30,7 +30,7 @@ const GalleryGrid = styled.div`
   }
 `;
 
-function ArtistGalleryLsit() {
+function ArtistGalleryLsit({ galleryItems = [] }) {
   return (
     <Container>
       <GalleryGrid>
