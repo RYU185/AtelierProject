@@ -16,9 +16,7 @@ const SearchBox = styled.div`
   justify-content: space-around;
 `;
 
-const Button = styled.button`
-  background: none;
-  border: none;
+const Button = styled.div`
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
