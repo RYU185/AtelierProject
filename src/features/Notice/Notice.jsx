@@ -3,7 +3,7 @@ import TabBar from "./components/TabBar";
 import NoticeList from "./components/NoticeList";
 
 function Notice() {
-  const [currentTab, setCurrentTab] = useState("notice");
+  const [currentTab, setCurrentTab] = useState("");
 
   return (
     <div className="notice-container">

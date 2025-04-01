@@ -34,6 +34,25 @@ const NoticeItem = styled(Box)`
   }
 `;
 
+const Search = styled.div`
+
+`;
+
+const Input = styled.input`
+  width: 400px;
+  border: 2px solid #018ec8;
+  border-radius: 7px;
+  padding-left: 10px;
+  &:focus {
+    outline: none;
+    border-color: #018ec8;
+  }
+`;
+
+const Button = styled.button`
+  
+`
+
 export default function NoticeList() {
   return (
     <div>
@@ -41,9 +60,15 @@ export default function NoticeList() {
         <Box>
           <div>날짜</div>
           <div>제목</div>
-          <div>ㄷ</div>
+          <div>O</div>
         </Box>
       </Container>
+      <Search>
+        <Button>
+          <h2>검색정렬</h2>
+        </Button>
+        <Input type="text" placeholder="검색어를 입력해 주세요" />
+      </Search>
     </div>
   );
 }
