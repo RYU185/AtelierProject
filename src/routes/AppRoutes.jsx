@@ -6,6 +6,7 @@ import Join from "../features/home/components/Join";
 import MyPage from "../features/mypage/MyPage";
 import AdminPage from "../features/adminpage/AdminPage";
 import Goods from "../features/Goods/Goods";
+import GoodsDetail from "../features/Goods/GoodsDetail";
 import Gallery from "../features/Gallery/Gallery";
 import ArtistGallery from "../features/ArtistGallery/ArtistGallery";
 import UserGallery from "../features/UserGallery/UserGallery";
@@ -38,6 +39,7 @@ function AppRoutes() {
       <Route path="/AdminUser" element={<AdminUser />} />
 
       <Route path="/goods" element={<Goods />} />
+      <Route path="/goods/:id" element={<GoodsDetail />} />
 
       <Route path="/gallery" element={<Gallery />}>
         <Route path="artistgallery" element={<ArtistGallery />} />
