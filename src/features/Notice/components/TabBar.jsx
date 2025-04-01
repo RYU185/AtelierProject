@@ -10,10 +10,11 @@ const TabGroup = styled.div`
 const Tab = styled.button`
   padding: 10px 22px;
   font-size: 14px;
-  background-color: #fff;
+  background-color: ${(props) => (props.$active ? "#f0f0f0" : "#fff")};
   border-style: none none 1px;
   cursor: pointer;
   transition: background 0.2s;
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
 
   &:hover {
     font-weight: bold;
@@ -27,11 +28,11 @@ const tabs = [
   { key: "contact", label: "고객센터" },
 ];
 
-const TabBar = ({ tab, setTab }) => {
+const TabBar = ({ tab = "notice", setTab = () => {} }) => {
   return (
     <TabGroup>
       {tabs.map(({ key, label }) => (
-        <Tab key={key} active={tab === key} onClick={() => setTab(key)}>
+        <Tab key={key} $active={tab === key} onClick={() => setTab(key)}>
           {label}
         </Tab>
       ))}

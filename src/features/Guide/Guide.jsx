@@ -4,14 +4,15 @@ import FAQNAVBar from "../Directions/components/FAQNAVBar";
 import Header from "../Header";
 import Footer from "../Footer";
 
-function Guide() {
+function FAQ() {
   return (
     <div>
       <Header />
       <FAQNAVBar />
+      <Outlet />
       <Footer />
     </div>
   );
 }
 
-export default Guide;
+export default FAQ;

@@ -1,17 +1,15 @@
-import React from "react";
-import Header from "../Header";
-import Footer from "../Footer";
+import React, { useState } from "react";
 import TabBar from "./components/TabBar";
 import NoticeList from "./components/NoticeList";
 
 function Notice() {
+  const [currentTab, setCurrentTab] = useState("notice");
+
   return (
-    <div>
-      <Header />
-      <h1>Notice</h1>
-      <TabBar />
+    <div className="notice-container">
+      <h2>공지사항</h2>
+      <TabBar tab={currentTab} setTab={setCurrentTab} />
       <NoticeList />
-      <Footer />
     </div>
   );
 }

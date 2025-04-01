@@ -308,13 +308,13 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Guide")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem onClick={() => navigate("/guide")}>
-                  Guide
+                <NavItem onClick={() => navigate("/faq/guide")}>
+                  FAQ
                   <DropdownMenu show={showDropdown === "Guide"} align="right">
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/guide");
+                        navigate("/faq/guide");
                       }}
                     >
                       이용안내
@@ -322,15 +322,15 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/directions");
+                        navigate("/faq/contactus");
                       }}
                     >
-                      오시는길
+                      문의하기
                     </DropdownItem>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/notice");
+                        navigate("/faq/notice");
                       }}
                     >
                       공지사항

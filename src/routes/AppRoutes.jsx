@@ -15,6 +15,7 @@ import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDe
 import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import Directions from "../features/Directions/Directions";
 import Guide from "../features/Guide/Guide";
+import GuideMain from "../features/Guide/components/GuideMain";
 import Artist from "../features/Artist/Artist";
 import ArtistMain from "../features/artistMain/ArtistMain";
 import Community from "../features/Community/Community";
@@ -50,9 +51,12 @@ const AppRoutes = () => {
       <Route path="/community" element={<Community />}>
         <Route index element={<Community />} />
       </Route>
-      <Route path="/guide" element={<Guide />} />
-      <Route path="/directions" element={<Directions />} />
-      <Route path="/notice" element={<Notice />} />
+      <Route path="/faq" element={<Guide />}>
+        <Route index element={<GuideMain />} />
+        <Route path="guide" element={<GuideMain />} />
+        <Route path="contactus" element={<Directions />} />
+        <Route path="notice" element={<Notice />} />
+      </Route>
       <Route path="/ticketpage" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/AdminArtAdd" element={<AddminArtAdd />} />
