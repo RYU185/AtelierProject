@@ -6,7 +6,7 @@ function GoodsDetail() {
   return (
     <div>
       <Header />
-      <h1>굿즈 상세 페이지</h1>
+      <H1>Gallery Goods</H1>
       {/* <GoodsInfomation /> */}
 
       <Footer />
