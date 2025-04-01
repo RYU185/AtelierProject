@@ -43,27 +43,20 @@ const ArtistGalleryIntro = styled.div`
   }
 `;
 
-function UserGallerys() {
+function UserGallerys({ imageUrl, title, date, artists, description }) {
+  console.log("UserGallerys 컴포넌트 렌더링:", { imageUrl, title, date, artists, description });
   return (
     <div>
       <Container>
         <Img
-          src="/src/assets/ArtistGalleryIMG/산업디자인.jpg"
-          alt="유저저 갤러리 "
+          src={imageUrl || "/src/assets/ArtistGalleryIMG/산업디자인.jpg"}
+          alt={title || "유저 갤러리"}
         />
         <ArtistGalleryIntro>
-          <h1>산업 디자인</h1>
-          <h2>2025.01.20 ~ 2025.02.01</h2>
-          <h3>곽두팔 화백, 김철용 화백</h3>
-          <p>
-            아티스트 갤러리 포스터 설명아티스트 갤러리 포스터 설명 아티스트
-            갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리
-            포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명
-            아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트
-            갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리
-            포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명
-            아티스트 갤러리 포스터 설명
-          </p>
+          <h1>{title || "산업 디자인"}</h1>
+          <h2>{date || "2025.01.20 ~ 2025.02.01"}</h2>
+          <h3>{artists || "곽두팔 화백, 김철용 화백"}</h3>
+          <p>{description || "아티스트 갤러리 포스터 설명..."}</p>
         </ArtistGalleryIntro>
       </Container>
     </div>

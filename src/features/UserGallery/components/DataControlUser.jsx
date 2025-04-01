@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const DataControlBox = styled.div`
@@ -39,6 +39,10 @@ const Input = styled.input`
 
 function DataControlUser() {
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+
+  useEffect(() => {
+    console.log("DataControlUser 컴포넌트가 렌더링되었습니다.");
+  }, []);
 
   const handleButtonClick = (index) => {
     setSelectedButtonIndex(index);

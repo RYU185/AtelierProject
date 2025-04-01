@@ -221,10 +221,26 @@ const Header = () => {
                 <NavItem onClick={() => navigate("/gallery/artistgallery")}>
                   Gallery
                   <DropdownMenu show={showDropdown === "Gallery"}>
-                    <DropdownItem onClick={() => navigate("/gallery/artistgallery")}>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // 이벤트 버블링 현상
+                        // 드롭다운 메뉴를 클릭하면 그 이벤트 대상이 부모요소로 전파되서
+                        // 그 어떤 자식을 눌러도 부모 메뉴의 클릭이벤트가 실행되는 문제
+                        // stopPropagation()은 이 함수를 막아준다.
+                        // 하......
+                        navigate("/gallery/artistgallery");
+                      }}
+                    >
                       Artist Gallery
                     </DropdownItem>
-                    <DropdownItem onClick={() => navigate("/gallery/usergallery")}>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("User Gallery 클릭됨");
+                        navigate("/gallery/usergallery");
+                      }}
+                    >
                       User Gallery
                     </DropdownItem>
                   </DropdownMenu>
@@ -238,7 +254,14 @@ const Header = () => {
                 <NavItem onClick={() => navigate("/artist")}>
                   Artist
                   <DropdownMenu show={showDropdown === "Artist"}>
-                    <DropdownItem onClick={() => navigate("/artist")}>작가 소개</DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/artist");
+                      }}
+                    >
+                      작가 소개
+                    </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>
@@ -250,7 +273,14 @@ const Header = () => {
                 <NavItem onClick={() => navigate("/community")}>
                   Community
                   <DropdownMenu show={showDropdown === "Community"} align="center">
-                    <DropdownItem onClick={() => navigate("/community")}>Community</DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/community");
+                      }}
+                    >
+                      Community
+                    </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>
@@ -262,7 +292,14 @@ const Header = () => {
                 <NavItem onClick={() => navigate("/goods")}>
                   Goods
                   <DropdownMenu show={showDropdown === "Goods"} align="right">
-                    <DropdownItem onClick={() => navigate("/goods")}>굿즈샵</DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/goods");
+                      }}
+                    >
+                      굿즈샵
+                    </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>
@@ -274,11 +311,30 @@ const Header = () => {
                 <NavItem onClick={() => navigate("/guide")}>
                   Guide
                   <DropdownMenu show={showDropdown === "Guide"} align="right">
-                    <DropdownItem onClick={() => navigate("/guide")}>이용안내</DropdownItem>
-                    <DropdownItem onClick={() => navigate("/guide/directions")}>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/guide");
+                      }}
+                    >
+                      이용안내
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/guide/directions");
+                      }}
+                    >
                       오시는길
                     </DropdownItem>
-                    <DropdownItem onClick={() => navigate("/guide/notice")}>공지사항</DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/guide/notice");
+                      }}
+                    >
+                      공지사항
+                    </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>
