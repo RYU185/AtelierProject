@@ -21,6 +21,7 @@ import AdminArtAdd from "../features/adminpage/components/AdminArtAdd";
 import AdminGoods from "../features/adminpage/components/AdminGoods";
 import AdminTicketList from "../features/adminpage/components/AdminTicketList";
 import AdminUser from "../features/adminpage/components/AdminUser";
+import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
 
 function AppRoutes() {
   return (
@@ -32,26 +33,28 @@ function AppRoutes() {
       <Route path="/adminpage" element={<AdminPage />} />
       <Route path="/AdminArtAdd" element={<AdminArtAdd />} />
       <Route path="/AdminGoods" element={<AdminGoods />} />
-      <Route path="/AdminTicketList" element={<AdminTicketList />}></Route>
-      <Route path="AdminUser" element={<AdminUser />}></Route>
+      <Route path="/AdminTicketList" element={<AdminTicketList />} />
+      <Route path="/AdminUser" element={<AdminUser />} />
 
       <Route path="/goods" element={<Goods />} />
+
       <Route path="/gallery" element={<Gallery />}>
-        <Route path="artistgallery" element={<ArtistGallery />}>
-          <Route path=":id" element={<ArtistGallery />} />
-        </Route>
-        <Route path="usergallery" element={<UserGallery />}>
-          <Route path=":id" element={<UserGallery />} />
-        </Route>
+        <Route path="artistgallery" element={<ArtistGallery />} />
+        <Route path="artistgallery/:id" element={<ArtistGalleryDetail />} />
+        <Route path="usergallery" element={<UserGallery />} />
+        <Route path="usergallery/:id" element={<UserGallery />} />
       </Route>
+
       <Route path="/artist" element={<Artist />} />
       <Route path="/community" element={<Community />} />
+
       <Route path="/faq" element={<FAQ />}>
         <Route index element={<Guide />} />
         <Route path="guide" element={<Guide />} />
         <Route path="contactus" element={<ContactUs />} />
         <Route path="notice" element={<Notice />} />
       </Route>
+
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
     </Routes>
