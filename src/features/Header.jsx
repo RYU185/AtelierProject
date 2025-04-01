@@ -218,13 +218,13 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Gallery")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem onClick={() => navigate("/artistgallery")}>
+                <NavItem onClick={() => navigate("/gallery/artist")}>
                   Gallery
                   <DropdownMenu show={showDropdown === "Gallery"}>
-                    <DropdownItem onClick={() => navigate("/artistgallery")}>
+                    <DropdownItem onClick={() => navigate("/gallery/artist")}>
                       Artist Gallery
                     </DropdownItem>
-                    <DropdownItem onClick={() => navigate("/usergallery")}>
+                    <DropdownItem onClick={() => navigate("/gallery/user")}>
                       User Gallery
                     </DropdownItem>
                   </DropdownMenu>
@@ -275,8 +275,10 @@ const Header = () => {
                   Guide
                   <DropdownMenu show={showDropdown === "Guide"} align="right">
                     <DropdownItem onClick={() => navigate("/guide")}>이용안내</DropdownItem>
-                    <DropdownItem onClick={() => navigate("/directions")}>오시는길</DropdownItem>
-                    <DropdownItem onClick={() => navigate("/notice")}>공지사항</DropdownItem>
+                    <DropdownItem onClick={() => navigate("/guide/directions")}>
+                      오시는길
+                    </DropdownItem>
+                    <DropdownItem onClick={() => navigate("/guide/notice")}>공지사항</DropdownItem>
                   </DropdownMenu>
                 </NavItem>
               </NavItemContainer>
