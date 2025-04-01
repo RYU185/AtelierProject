@@ -28,13 +28,17 @@ function AppRoutes() {
       <Route path="/join" element={<Join />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/adminpage" element={<AdminPage />} />
-      <Route path="/AdminArtAdd" element={<AdminArtAdd/>} />
-      <Route path="/AdminGoods" element={<AdminGoods/>} />
-      
+      <Route path="/AdminArtAdd" element={<AdminArtAdd />} />
+      <Route path="/AdminGoods" element={<AdminGoods />} />
+
       <Route path="/goods" element={<Goods />} />
       <Route path="/gallery" element={<Gallery />}>
-        <Route path="artist/:id" element={<ArtistGallery />} />
-        <Route path="user/:id" element={<UserGallery />} />
+        <Route path="artistgallery" element={<ArtistGallery />}>
+          <Route path=":id" element={<ArtistGallery />} />
+        </Route>
+        <Route path="usergallery" element={<UserGallery />}>
+          <Route path=":id" element={<UserGallery />} />
+        </Route>
       </Route>
       <Route path="/artist" element={<Artist />} />
       <Route path="/community" element={<Community />} />
@@ -46,7 +50,6 @@ function AppRoutes() {
       </Route>
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
-
     </Routes>
   );
 }
