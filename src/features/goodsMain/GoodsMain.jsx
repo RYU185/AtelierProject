@@ -4,7 +4,6 @@ import GoodsList from "./components/GoodsList";
 import Header from "../Header";
 import Footer from "../Footer";
 import styled from "styled-components";
-import GoodsCard from "./components/GoodsCard";
 
 const H1 = styled.button`
   font-size: 80px;
@@ -28,7 +27,7 @@ function GoodsMain() {
       <H1>Gallery Goods</H1>
       <GoodsControl />
       <HR />
-      <GoodsList></GoodsList>
+      <GoodsList />
       <Footer />
     </div>
   );

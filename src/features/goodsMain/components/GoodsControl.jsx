@@ -43,7 +43,7 @@ const DropdownMenu = styled.div`
   border: 1px solid #007bff;
   border-radius: 4px;
   z-index: 1;
-  margin-top: 5px;
+  margin-top: 2px;
   transition: 0.5s ease;
 
   ${Filter}:hover & {
@@ -57,10 +57,11 @@ const DropdownItem = styled.button`
   padding: 10px;
   border: none;
   background: white;
-  text-align: left;
+  text-align: center;
   width: 100%;
   cursor: pointer;
   transition: 0.5s ease;
+  
 
   &:hover {
     background: #007bff;
