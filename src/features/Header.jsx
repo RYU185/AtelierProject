@@ -317,7 +317,7 @@ const Header = () => {
                         navigate("/faq/guide");
                       }}
                     >
-                      오시는길
+                      문의하기
                     </DropdownItem>
                     <DropdownItem
                       onClick={(e) => {
@@ -325,7 +325,7 @@ const Header = () => {
                         navigate("/faq/contactus");
                       }}
                     >
-                      문의하기
+                      오시는길
                     </DropdownItem>
                     <DropdownItem
                       onClick={(e) => {
