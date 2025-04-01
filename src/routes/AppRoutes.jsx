@@ -4,64 +4,45 @@ import Home from "../features/home/Home";
 import Login from "../features/home/Login";
 import Join from "../features/home/components/Join";
 import MyPage from "../features/mypage/MyPage";
-import Adminpage from "../features/adminpage/AdminPage";
+import AdminPage from "../features/adminpage/AdminPage";
 import Goods from "../features/Goods/Goods";
-import GoodsMain from "../features/goodsMain/GoodsMain";
-import GoodsDetail from "../features/goodsDetail/GoodsDetail";
 import Gallery from "../features/Gallery/Gallery";
 import ArtistGallery from "../features/ArtistGallery/ArtistGallery";
 import UserGallery from "../features/UserGallery/UserGallery";
-import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
-import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
-import Directions from "../features/Directions/Directions";
-import Guide from "../features/Guide/Guide";
-import GuideMain from "../features/Guide/components/GuideMain";
 import Artist from "../features/Artist/Artist";
-import ArtistMain from "../features/artistMain/ArtistMain";
 import Community from "../features/Community/Community";
+import FAQ from "../features/faq/FAQ";
+import Guide from "../features/faq/components/Guide";
+import ContactUs from "../features/faq/components/ContactUs";
+import Notice from "../features/Notice/Notice";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
-import Notice from "../features/Notice/Notice";
-import AddminArtAdd from "../features/adminpage/components/AdminArtAdd";
 
-const AppRoutes = () => {
+function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
       <Route path="/mypage" element={<MyPage />} />
-      <Route path="/adminpage" element={<Adminpage />} />
-      <Route path="/goods" element={<Goods />}>
-        <Route index element={<GoodsMain />} />
-        <Route path="detail" element={<GoodsDetail />} />
-      </Route>
+      <Route path="/adminpage" element={<AdminPage />} />
+      <Route path="/goods" element={<Goods />} />
       <Route path="/gallery" element={<Gallery />}>
-        <Route index element={<ArtistGallery />} />
-        <Route path="artistgallery" element={<ArtistGallery />}>
-          <Route path=":id" element={<ArtistGalleryDetail />} />
-        </Route>
-        <Route path="usergallery" element={<UserGallery />}>
-          <Route path=":id" element={<UserGalleryDetail />} />
-        </Route>
+        <Route path="artist/:id" element={<ArtistGallery />} />
+        <Route path="user/:id" element={<UserGallery />} />
       </Route>
-      <Route path="/artist" element={<Artist />}>
-        <Route index element={<ArtistMain />} />
-      </Route>
-      <Route path="/community" element={<Community />}>
-        <Route index element={<Community />} />
-      </Route>
-      <Route path="/faq" element={<Guide />}>
-        <Route index element={<GuideMain />} />
-        <Route path="guide" element={<GuideMain />} />
-        <Route path="contactus" element={<Directions />} />
+      <Route path="/artist" element={<Artist />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/faq" element={<FAQ />}>
+        <Route index element={<Guide />} />
+        <Route path="guide" element={<Guide />} />
+        <Route path="contactus" element={<ContactUs />} />
         <Route path="notice" element={<Notice />} />
       </Route>
-      <Route path="/ticketpage" element={<TicketPage />} />
+      <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
-      <Route path="/AdminArtAdd" element={<AddminArtAdd />} />
     </Routes>
   );
-};
+}
 
 export default AppRoutes;

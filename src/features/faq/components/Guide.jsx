@@ -1,6 +1,6 @@
 import React from "react";
 
-function GuideMain() {
+function Guide() {
   return (
     <div className="guide-main">
       <h2>이용 안내</h2>
@@ -16,4 +16,4 @@ function GuideMain() {
   );
 }
 
-export default GuideMain;
+export default Guide;
