@@ -24,9 +24,9 @@ import AdminTicketList from "../features/adminpage/components/AdminTicketList";
 import AdminUser from "../features/adminpage/components/AdminUser";
 import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
 import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
-import PurchaseCompletePage from '../features/cart/PurchaseCompletePage';
-import DrawingCanvas from '../features/Drawing/DrawingCanvas';
-import CartPage from '../features/cart/CartPage';
+import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
+import DrawingCanvas from "../features/Drawing/DrawingCanvas";
+import CartPage from "../features/cart/CartPage";
 
 function AppRoutes() {
   return (
@@ -61,7 +61,7 @@ function AppRoutes() {
       </Route>
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
-      <Route path="/cartpage" element={<CartPage />} />
+      <Route path="/cart" element={<CartPage />} />
       <Route path="/purchase-complete" element={<PurchaseCompletePage />} />
       <Route path="/drawingcanvas" element={<DrawingCanvas />} />
     </Routes>
