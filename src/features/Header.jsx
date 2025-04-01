@@ -322,7 +322,7 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/guide/directions");
+                        navigate("/directions");
                       }}
                     >
                       오시는길
@@ -330,7 +330,7 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/guide/notice");
+                        navigate("/notice");
                       }}
                     >
                       공지사항

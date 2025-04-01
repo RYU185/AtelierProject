@@ -37,24 +37,8 @@ const AppRoutes = () => {
       </Route>
       <Route path="/gallery" element={<Gallery />}>
         <Route index element={<ArtistGallery />} />
-        <Route
-          path="artistgallery"
-          element={
-            <React.Fragment>
-              {console.log("ArtistGallery 라우트가 렌더링 시도됨")}
-              <ArtistGallery />
-            </React.Fragment>
-          }
-        />
-        <Route
-          path="usergallery"
-          element={
-            <React.Fragment>
-              {console.log("UserGallery 라우트가 렌더링 시도됨")}
-              <UserGallery />
-            </React.Fragment>
-          }
-        />
+        <Route path="artistgallery" element={<ArtistGallery />} />
+        <Route path="usergallery" element={<UserGallery />} />
       </Route>
       <Route path="/artist" element={<Artist />}>
         <Route index element={<ArtistMain />} />
@@ -62,11 +46,9 @@ const AppRoutes = () => {
       <Route path="/community" element={<Community />}>
         <Route index element={<Community />} />
       </Route>
-      <Route path="/guide" element={<Guide />}>
-        <Route index element={<Guide />} />
-        <Route path="directions" element={<Directions />} />
-        <Route path="notice" element={<Notice />} />
-      </Route>
+      <Route path="/guide" element={<Guide />} />
+      <Route path="/directions" element={<Directions />} />
+      <Route path="/notice" element={<Notice />} />
       <Route path="/ticketpage" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/AdminArtAdd" element={<AddminArtAdd />} />

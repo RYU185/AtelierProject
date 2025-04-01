@@ -7,7 +7,6 @@ const Goods = () => {
   return (
     <div>
       <Header />
-      <h1>Goods</h1>
       <Outlet />
       <Footer />
     </div>
