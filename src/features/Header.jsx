@@ -126,37 +126,22 @@ const NavItem = styled.li`
 const DropdownMenu = styled.ul`
   position: absolute;
   top: 100%;
-  ${({ $align }) => {
-    switch ($align) {
-      case "right":
-        return "right: 0;";
-      // props로 align 줬을때 right면 오른쪽에 맞추기
-      case "center":
-        return "left: 50%; transform: translateX(-50%);";
-      // left : 부모의 중앙 = 왼쪽 끝부터 시작
-      // transform : 절반만큼만 왼쪽으로 이동
-      default:
-        return "left: 0;";
-      // props로 align 줬을때 기본 왼쪽에 맞추기
-    }
-  }}
+  left: 50%;
+  transform: translateX(-50%);
   background-color: rgba(47, 47, 47, 1);
-  border-radius: 999px;
+  border-radius: 30px;
   list-style: none;
   display: flex;
+  flex-direction: column;
+  min-width: 200px;
   margin-top: 20px;
 
   // transition은 display: none -> display: block같은 속성을 처리할수 없다...
   opacity: ${(props) => (props.$show ? 1 : 0)};
   visibility: ${(props) => (props.$show ? "visible" : "hidden")};
-  transform: ${(props) => {
-    if (props.$align === "center") {
-      return props.$show
-        ? "translateX(-50%) translateY(0px)"
-        : "translateX(-50%) translateY(-10px)";
-    }
-    return props.$show ? "translateY(0px)" : "translateY(-10px)";
-  }};
+  transform: ${(props) => props.$show 
+    ? "translateX(-50%) translateY(0px)"
+    : "translateX(-50%) translateY(-10px)"};
   transition: all 0.3s ease;
   pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   z-index: 1001;
@@ -172,6 +157,7 @@ const DropdownItem = styled(NavItem)`
   transition: 0.5s ease;
   color: #f3f3f3;
   height: 100%;
+  text-align: center;
 
   &:hover {
     background-color: #424242;
@@ -274,10 +260,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/community")}>
                   Community
-                  <DropdownMenu
-                    $show={showDropdown === "Community"}
-                    $align="center"
-                  >
+                  <DropdownMenu $show={showDropdown === "Community"}>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -296,7 +279,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/goods")}>
                   Goods
-                  <DropdownMenu $show={showDropdown === "Goods"} $align="right">
+                  <DropdownMenu $show={showDropdown === "Goods"}>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -315,7 +298,7 @@ const Header = () => {
               >
                 <NavItem onClick={() => navigate("/faq/guide")}>
                   FAQ
-                  <DropdownMenu $show={showDropdown === "Guide"} $align="right">
+                  <DropdownMenu $show={showDropdown === "Guide"}>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -339,6 +322,14 @@ const Header = () => {
                       }}
                     >
                       공지사항
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/faq/customersupport");
+                      }}
+                    >
+                      고객센터
                     </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
