@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import TicketCalendar from "./components/TicketCalendar";
 import TicketInfo from "./components/TicketInfo";
 import Header from "../Header";
@@ -55,6 +56,7 @@ const ExhibitionCapacity = styled.p`
 `;
 
 const TicketPage = () => {
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
   const [count, setCount] = useState(1);
   const [isReserving, setIsReserving] = useState(false);
@@ -78,10 +80,18 @@ const TicketPage = () => {
     setIsReserving(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("예매가 완료되었습니다!");
+
+      navigate("/ticket/complete", {
+        state: {
+          title: "GRAPHIC",
+          price: 30000 * count,
+          memberName: "홍길동",
+          date: selectedDate,
+          count: count,
+        },
+      });
     } catch (error) {
       alert("예매 처리 중 오류가 발생했습니다.");
-    } finally {
       setIsReserving(false);
     }
   };
