@@ -1,9 +1,71 @@
 import React from "react";
+import styled from "styled-components";
+
+const Container = styled.div`
+  width: 95%;
+  border: none;
+  margin-top: 40px;
+  display: flex;
+`;
+
+const Img = styled.img`
+  width: 250px;
+  object-fit: cover;
+  border-radius: 20px;
+  margin-right: 40px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  &:hover {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+`;
+
+const ArtistGalleryIntro = styled.div`
+  & h1 {
+    font-size: 45px;
+    color: #1e1e1e;
+  }
+  & h2 {
+    font-size: 25px;
+    color: #606060;
+    margin-top: 10px;
+  }
+  & h3 {
+    font-size: 20px;
+    color: #606060;
+    margin-top: 10px;
+  }
+  & p {
+    font-size: 15px;
+    color: #606060;
+    margin-top: 10px;
+  }
+`;
 
 function UserGallerys() {
   return (
     <div>
-      <h2>갤러리 포스터터</h2>
+      <Container>
+        <Img
+          src="/src/assets/ArtistGalleryIMG/산업디자인.jpg"
+          alt="유저저 갤러리 "
+        />
+        <ArtistGalleryIntro>
+          <h1>산업 디자인</h1>
+          <h2>2025.01.20 ~ 2025.02.01</h2>
+          <h3>곽두팔 화백, 김철용 화백</h3>
+          <p>
+            아티스트 갤러리 포스터 설명아티스트 갤러리 포스터 설명 아티스트
+            갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리
+            포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명
+            아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트
+            갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리
+            포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명
+            아티스트 갤러리 포스터 설명
+          </p>
+        </ArtistGalleryIntro>
+      </Container>
     </div>
   );
 }
