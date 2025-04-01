@@ -134,11 +134,9 @@ const DropdownMenu = styled.ul`
       // props로 align 줬을때 기본 왼쪽에 맞추기
     }
   }}
-  background-color: #ffffff;
+  background-color: #0097d3;
   border-radius: 999px;
   list-style: none;
-  padding: 0.9rem 3rem;
-  gap: 1.25rem;
   display: flex;
   margin-top: 20px;
 
@@ -161,14 +159,15 @@ const DropdownItem = styled(NavItem)`
   display: block;
   white-space: nowrap;
   font-size: 1rem;
-  padding: 0.5rem 2rem;
+  padding: 0.9rem 3rem;
   position: static;
   transition: 0.5s ease;
-  color: #000000;
+  color: #ffffff;
+  height: 100%;
 
   &:hover {
-    background-color: #212121;
-    color: #ffffff;
+    background-color: #ffffff;
+    color: #1b1b1b;
   }
 `;
 
