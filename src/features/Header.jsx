@@ -218,13 +218,7 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Gallery")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem
-                  onClick={(e) => {
-                    if (showDropdown !== "Gallery") {
-                      navigate("/artistgallery");
-                    }
-                  }}
-                >
+                <NavItem onClick={() => navigate("/artistgallery")}>
                   Gallery
                   <DropdownMenu show={showDropdown === "Gallery"}>
                     <DropdownItem onClick={() => navigate("/artistgallery")}>
@@ -241,13 +235,7 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Artist")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem
-                  onClick={(e) => {
-                    if (showDropdown !== "Artist") {
-                      navigate("/artist");
-                    }
-                  }}
-                >
+                <NavItem onClick={() => navigate("/artist")}>
                   Artist
                   <DropdownMenu show={showDropdown === "Artist"}>
                     <DropdownItem onClick={() => navigate("/artist")}>작가 소개</DropdownItem>
@@ -259,13 +247,7 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Community")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem
-                  onClick={(e) => {
-                    if (showDropdown !== "Community") {
-                      navigate("/community");
-                    }
-                  }}
-                >
+                <NavItem onClick={() => navigate("/community")}>
                   Community
                   <DropdownMenu show={showDropdown === "Community"} align="center">
                     <DropdownItem onClick={() => navigate("/community")}>Community</DropdownItem>
@@ -277,13 +259,7 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Goods")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem
-                  onClick={(e) => {
-                    if (showDropdown !== "Goods") {
-                      navigate("/goods");
-                    }
-                  }}
-                >
+                <NavItem onClick={() => navigate("/goods")}>
                   Goods
                   <DropdownMenu show={showDropdown === "Goods"} align="right">
                     <DropdownItem onClick={() => navigate("/goods")}>굿즈샵</DropdownItem>
@@ -295,13 +271,7 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Guide")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem
-                  onClick={(e) => {
-                    if (showDropdown !== "Guide") {
-                      navigate("/guide");
-                    }
-                  }}
-                >
+                <NavItem onClick={() => navigate("/guide")}>
                   Guide
                   <DropdownMenu show={showDropdown === "Guide"} align="right">
                     <DropdownItem onClick={() => navigate("/guide")}>이용안내</DropdownItem>
