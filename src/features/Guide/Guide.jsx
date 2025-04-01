@@ -9,7 +9,6 @@ function Guide() {
     <div>
       <Header />
       <FAQNAVBar />
-      <Outlet />
       <Footer />
     </div>
   );
