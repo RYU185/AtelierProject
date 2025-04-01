@@ -2,9 +2,9 @@ import React from 'react'
 
 function AdminGoods() {
   return (
-    <div>
-      
-    </div>
+    <>
+    <h1>굿즈</h1>
+    </>
   )
 }
 

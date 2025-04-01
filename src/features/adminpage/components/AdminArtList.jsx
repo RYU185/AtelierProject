@@ -10,16 +10,16 @@ const PageContainer = styled.div`
 `;
 
 const ArtListTitle = styled.h2`
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
-  background: #3DA9FC;
-  color: #dee2e6;
+ 
+  color: #222;
   text-align: center;
   padding: 12px;
   border-radius: 6px;
   width: 200px;
   margin-top: -50px;
-  margin-left: 30px;
+  margin-left: 15px;
 `;
 
 const ArtListContainer = styled.div`

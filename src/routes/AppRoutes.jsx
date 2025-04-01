@@ -17,6 +17,7 @@ import ContactUs from "../features/faq/components/ContactUs";
 import Notice from "../features/Notice/Notice";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
+import AdminArtAdd from "../features/adminpage/components/AdminArtAdd";
 
 function AppRoutes() {
   return (
@@ -26,6 +27,7 @@ function AppRoutes() {
       <Route path="/join" element={<Join />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/adminpage" element={<AdminPage />} />
+      <Route path="/AdminArtAdd" element={<AdminArtAdd/>} />
       <Route path="/goods" element={<Goods />} />
       <Route path="/gallery" element={<Gallery />}>
         <Route path="artist/:id" element={<ArtistGallery />} />
@@ -41,6 +43,7 @@ function AppRoutes() {
       </Route>
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
+
     </Routes>
   );
 }
