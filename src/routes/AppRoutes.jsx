@@ -37,8 +37,12 @@ const AppRoutes = () => {
       </Route>
       <Route path="/gallery" element={<Gallery />}>
         <Route index element={<ArtistGallery />} />
-        <Route path="artistgallery" element={<ArtistGallery />} />
-        <Route path="usergallery" element={<UserGallery />} />
+        <Route path="artistgallery" element={<ArtistGallery />}>
+          <Route path=":id" element={<ArtistGalleryDetail />} />
+        </Route>
+        <Route path="usergallery" element={<UserGallery />}>
+          <Route path=":id" element={<UserGalleryDetail />} />
+        </Route>
       </Route>
       <Route path="/artist" element={<Artist />}>
         <Route index element={<ArtistMain />} />
