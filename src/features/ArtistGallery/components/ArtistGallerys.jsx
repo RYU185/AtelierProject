@@ -13,6 +13,12 @@ const Img = styled.img`
   object-fit: cover;
   border-radius: 20px;
   margin-right: 40px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  &:hover {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
 `;
 
 const ArtistGalleryIntro = styled.div`
