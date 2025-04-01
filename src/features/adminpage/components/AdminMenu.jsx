@@ -69,7 +69,10 @@ const AdminMenu = ({ tab, setTab }) => {
             </Link>
           </MenuItem>
           <MenuItem active={tab === 'goods'} onClick={() => setTab('goods')}>
+            <Link to="/AdminGoods" style={{textDecoration: 'none',color: 'inherit', display: 'block', width: '100%', height: '100%'}}>
+        
             굿즈 판매 내역
+            </Link>
           </MenuItem>
           <MenuItem active={tab === 'tickets'} onClick={() => setTab('tickets')}>
             티켓 판매 내역

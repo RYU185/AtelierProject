@@ -18,6 +18,7 @@ import Notice from "../features/Notice/Notice";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
 import AdminArtAdd from "../features/adminpage/components/AdminArtAdd";
+import AdminGoods from "../features/adminpage/components/AdminGoods";
 
 function AppRoutes() {
   return (
@@ -28,6 +29,8 @@ function AppRoutes() {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/adminpage" element={<AdminPage />} />
       <Route path="/AdminArtAdd" element={<AdminArtAdd/>} />
+      <Route path="/AdminGoods" element={<AdminGoods/>} />
+      
       <Route path="/goods" element={<Goods />} />
       <Route path="/gallery" element={<Gallery />}>
         <Route path="artist/:id" element={<ArtistGallery />} />
