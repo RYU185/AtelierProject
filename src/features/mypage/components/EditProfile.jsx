@@ -309,32 +309,6 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
               </RadioLabel>
             </GenderGroup>
           </FormGroup>
-
-          <FormGroup>
-            <Label>생년월일</Label>
-            <BirthGroup>
-              <Input
-                type="text"
-                name="birthYear"
-                placeholder="YYYY"
-                maxLength="4"
-              />
-              <Separator>/</Separator>
-              <Input
-                type="text"
-                name="birthMonth"
-                placeholder="MM"
-                maxLength="2"
-              />
-              <Separator>/</Separator>
-              <Input
-                type="text"
-                name="birthDay"
-                placeholder="DD"
-                maxLength="2"
-              />
-            </BirthGroup>
-          </FormGroup>
           <ButtonGroup>
             <SubmitButton type="submit">수정 완료</SubmitButton>
           </ButtonGroup>

@@ -128,10 +128,10 @@ const GoodsPurchase = () => {
   const purchases = [
     {
       id: 1,
-      title: "구매한 굿즈",
+      title: "빈가사유실 미니어쳐 vol.5 (8종중)",
       date: "2025.03.02",
       image: "/images/goods1.jpg",
-      description: "빈가사유실 미니어쳐 vol.5 (8종중)",
+      description: "",
       price: "42000원 · 1개",
     },
   ];
