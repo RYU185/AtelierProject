@@ -2,17 +2,18 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 95%;
+  width: 90%;
   border: none;
   margin-top: 40px;
   display: flex;
 `;
 
 const Img = styled.img`
-  width: 250px;
+  width: 180px;
   object-fit: cover;
   border-radius: 20px;
   margin-right: 40px;
+  margin-left: 100px;
   transition: transform 0.3s ease;
   cursor: pointer;
   &:hover {
@@ -21,30 +22,36 @@ const Img = styled.img`
   }
 `;
 
-const ArtistGalleryIntro = styled.div`
+const UserGalleryIntro = styled.div`
   & h1 {
-    font-size: 45px;
+    font-size: 35px;
     color: #1e1e1e;
   }
   & h2 {
-    font-size: 25px;
-    color: #606060;
-    margin-top: 10px;
-  }
-  & h3 {
     font-size: 20px;
     color: #606060;
     margin-top: 10px;
   }
+  & h3 {
+    font-size: 18px;
+    color: #606060;
+    margin-top: 10px;
+  }
   & p {
-    font-size: 15px;
+    font-size: 14px;
     color: #606060;
     margin-top: 10px;
   }
 `;
 
 function UserGallerys({ imageUrl, title, date, artists, description }) {
-  console.log("UserGallerys 컴포넌트 렌더링:", { imageUrl, title, date, artists, description });
+  console.log("UserGallerys 컴포넌트 렌더링:", {
+    imageUrl,
+    title,
+    date,
+    artists,
+    description,
+  });
   return (
     <div>
       <Container>
@@ -52,12 +59,12 @@ function UserGallerys({ imageUrl, title, date, artists, description }) {
           src={imageUrl || "/src/assets/ArtistGalleryIMG/산업디자인.jpg"}
           alt={title || "유저 갤러리"}
         />
-        <ArtistGalleryIntro>
+        <UserGalleryIntro>
           <h1>{title || "산업 디자인"}</h1>
           <h2>{date || "2025.01.20 ~ 2025.02.01"}</h2>
           <h3>{artists || "곽두팔 화백, 김철용 화백"}</h3>
           <p>{description || "아티스트 갤러리 포스터 설명..."}</p>
-        </ArtistGalleryIntro>
+        </UserGalleryIntro>
       </Container>
     </div>
   );

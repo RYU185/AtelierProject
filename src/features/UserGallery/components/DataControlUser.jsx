@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const DataControlBox = styled.div`
-  width: 80%;
+  width: 65%;
   margin: 0 auto;
   margin-top: 50px;
   display: flex;
@@ -11,15 +11,15 @@ const DataControlBox = styled.div`
   border-bottom: 2px solid #bababa;
 `;
 const SearchBox = styled.div`
-  width: 500px;
+  width: 400px;
   display: flex;
   justify-content: space-around;
 `;
 
 const Button = styled.div`
-  padding: 10px 20px;
+  padding: 10px 15px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   color: #606060;
   transition: 0.3s ease;
   border-bottom: 3px solid #ffffff;

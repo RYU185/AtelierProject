@@ -2,6 +2,10 @@ import React from "react";
 import UserGallerys from "./UserGallerys";
 import styled from "styled-components";
 
+const Container = styled.div`
+  width: 94%;
+`;
+
 const GalleryGrid = styled.div`
   display: flex;
   flex-direction: column;
@@ -9,7 +13,7 @@ const GalleryGrid = styled.div`
   width: 75%;
   margin: 0 auto;
   overflow-y: auto;
-  max-height: 1200px;
+  max-height: 1000px;
   margin-top: 70px;
   margin-bottom: 70px;
   &::-webkit-scrollbar {
@@ -67,13 +71,13 @@ function UserGalleryList() {
   ];
 
   return (
-    <div>
+    <Container>
       <GalleryGrid>
         {galleryItems.map((item, index) => (
           <UserGallerys key={index} {...item} />
         ))}
       </GalleryGrid>
-    </div>
+    </Container>
   );
 }
 

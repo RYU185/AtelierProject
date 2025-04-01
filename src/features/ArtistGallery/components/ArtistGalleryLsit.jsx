@@ -2,6 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import ArtistGallerys from "./ArtistGallerys";
 
+const Container = styled.div`
+  width: 94%;
+`;
 const GalleryGrid = styled.div`
   display: flex;
   flex-direction: column;
@@ -9,7 +12,7 @@ const GalleryGrid = styled.div`
   width: 75%;
   margin: 0 auto;
   overflow-y: auto;
-  max-height: 1200px;
+  max-height: 1000px;
   margin-top: 70px;
   margin-bottom: 70px;
   &::-webkit-scrollbar {
@@ -61,13 +64,13 @@ function ArtistGalleryLsit() {
   ];
 
   return (
-    <div>
+    <Container>
       <GalleryGrid>
         {galleryItems.map((item, index) => (
           <ArtistGallerys key={index} {...item} />
         ))}
       </GalleryGrid>
-    </div>
+    </Container>
   );
 }
 

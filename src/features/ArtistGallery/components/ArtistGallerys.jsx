@@ -2,17 +2,18 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  width: 95%;
+  width: 90%;
   border: none;
   margin-top: 40px;
   display: flex;
 `;
 
 const Img = styled.img`
-  width: 250px;
+  width: 180px;
   object-fit: cover;
   border-radius: 20px;
   margin-right: 40px;
+  margin-left: 100px;
   transition: transform 0.3s ease;
   cursor: pointer;
   &:hover {
@@ -23,21 +24,21 @@ const Img = styled.img`
 
 const ArtistGalleryIntro = styled.div`
   & h1 {
-    font-size: 45px;
+    font-size: 35px;
     color: #1e1e1e;
   }
   & h2 {
-    font-size: 25px;
-    color: #606060;
-    margin-top: 10px;
-  }
-  & h3 {
     font-size: 20px;
     color: #606060;
     margin-top: 10px;
   }
+  & h3 {
+    font-size: 18px;
+    color: #606060;
+    margin-top: 10px;
+  }
   & p {
-    font-size: 15px;
+    font-size: 14px;
     color: #606060;
     margin-top: 10px;
   }
