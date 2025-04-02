@@ -333,9 +333,6 @@ function GoodsDetail() {
     });
   };
 
-
-  
-
   const products = {
     1: {
       name: "전시 굿즈 1",
