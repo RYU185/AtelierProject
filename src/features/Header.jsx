@@ -36,8 +36,11 @@ const Overlay = styled.div`
   background-color: rgba(0, 0, 0, 0.95);
   backdrop-filter: blur(5px);
   transform-origin: top;
-  transform: ${(props) => props.$show ? "scaleY(1)" : "scaleY(0)"};
-  transition: transform 0.4s ease;
+  transform: ${(props) => (props.$show ? "scaleY(1)" : "scaleY(0)")};
+  transition-property: transform; // transform 속성만 변경
+  transition-duration: 0.5s; // 애니메이션 속도
+  transition-timing-function: ease; // 부드러운 감속/가속 효과
+  transition-delay: 0s; // 지연시간 없음
   z-index: 999;
 `;
 
@@ -138,9 +141,8 @@ const DropdownMenu = styled.ul`
   // transition은 display: none -> display: block같은 속성을 처리할수 없다...
   opacity: ${(props) => (props.$show ? 1 : 0)};
   visibility: ${(props) => (props.$show ? "visible" : "hidden")};
-  transform: ${(props) => props.$show 
-    ? "translateX(-50%) translateY(0px)"
-    : "translateX(-50%) translateY(-10px)"};
+  transform: ${(props) =>
+    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
   transition: all 0.3s ease;
   pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   z-index: 1001;
@@ -335,21 +337,11 @@ const Header = () => {
           </NavWrapper>
         </CenterContainer>
         <Right>
-          <RightNavItem onClick={() => navigate("/join")}>
-            회원가입
-          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
           <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
-          <RightNavItem onClick={() => navigate("/mypage")}>
-            마이페이지
-          </RightNavItem>
-          <RightNavItem onClick={() => navigate("/adminpage")}>
-            {" "}
-            관리자페이지
-          </RightNavItem>
-          <RightNavItem onClick={() => navigate("/cart")}>
-            {" "}
-            장바구니
-          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
+          <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
+          <RightNavItem onClick={() => navigate("/cart")}> 장바구니</RightNavItem>
           <MenuIcon>MENU</MenuIcon>
         </Right>
       </HeaderWrapper>
