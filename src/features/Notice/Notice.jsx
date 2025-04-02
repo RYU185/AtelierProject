@@ -7,7 +7,6 @@ function Notice() {
 
   return (
     <div className="notice-container">
-      <TabBar />
       <NoticeList />
     </div>
   );

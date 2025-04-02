@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import TabBar from "./TabBar";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -30,17 +31,17 @@ const Title = styled.h1`
   z-index: 2;
 `;
 
-const TabBar = styled.div`
+const TabBars = styled.div`
   width: 80%;
   display: flex;
   margin: 0 auto;
   justify-content: space-between;
-  margin-bottom: 30px;
 `;
 
 const SearchContainer = styled.div`
-  position: relative;
   width: 300px;
+  margin-top: 15px;
+  position: relative;
 `;
 
 const SearchBar = styled.input`
@@ -65,9 +66,22 @@ const SearchIcon = styled(FaSearch)`
 const SortBar = styled.select`
   width: 150px;
   height: 40px;
+  margin-top: 15px;
+  text-align: center;
+  font-size: 15px;
+  color: #0068ca;
   border: 1px solid #0068ca;
   border-radius: 2px;
   outline: none;
+`;
+const option = styled.select`
+margin-top: 15px;
+text-align: center;
+font-size: 15px;
+color: #0068ca;
+border: 1px solid #0068ca;
+border-radius: 5px;
+outline: none;
 `;
 
 const Container = styled.div`
@@ -76,17 +90,33 @@ const Container = styled.div`
   padding: 20px;
 `;
 
-const Box = styled.div`
+const Box = styled.button`
+  width: 100%;
   display: grid;
-  grid-template-columns: 25% 65% 10%;
   padding: 10px;
-  border-bottom: 1px solid #ddd;
+  margin: 0 auto;
+  grid-template-columns: 25% 65% 10%;
   font-size: 20px;
+  border-bottom: 1px solid #ddd;
+  border-style: none;
+  background-color: #fff;
+  color: #414141;
 
   & > div {
     padding: 8px;
   }
+  &:hover {
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #000;
+  }
 `;
+
+// const Img = styled.button`
+//   border-style: none;
+//   background-color: #fff;
+//   cursor: pointer;
+// `;
 
 export default function NoticeList() {
   return (
@@ -95,7 +125,8 @@ export default function NoticeList() {
         <BackTitle>Notice</BackTitle>
         <Title>Notice</Title>
       </TitleContainer>
-      <TabBar>
+      <TabBar />
+      <TabBars>
         <SearchContainer>
           <SearchIcon />
           <SearchBar placeholder="검색어를 입력하세요" />
@@ -105,28 +136,32 @@ export default function NoticeList() {
           <option value="price_asc">가격 낮은순</option>
           <option value="price_desc">가격 높은순</option>
         </SortBar>
-      </TabBar>
+      </TabBars>
       <Container>
         <Box>
           <div>2025.03.03</div>
           <div>업데이트..</div>
           <img src="/src/assets/Icon/bord_right_icon.png"></img>
         </Box>
+        <hr />
         <Box>
           <div>2025.03.03</div>
           <div>업데이트..</div>
           <img src="/src/assets/Icon/bord_right_icon.png"></img>
         </Box>
+        <hr />
         <Box>
           <div>2025.03.03</div>
           <div>업데이트..</div>
           <img src="/src/assets/Icon/bord_right_icon.png"></img>
         </Box>
+        <hr />
         <Box>
           <div>2025.03.03</div>
           <div>업데이트..</div>
           <img src="/src/assets/Icon/bord_right_icon.png"></img>
         </Box>
+        <hr />
       </Container>
     </div>
   );
