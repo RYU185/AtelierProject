@@ -224,7 +224,6 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("User Gallery 클릭됨");
                         navigate("/gallery/usergallery");
                       }}
                     >
@@ -267,6 +266,14 @@ const Header = () => {
                       }}
                     >
                       Community
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/drawingcanvas");
+                      }}
+                    >
+                      나만의 작품 그리기
                     </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
