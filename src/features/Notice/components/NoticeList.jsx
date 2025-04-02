@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import TabBar from "./TabBar";
 
 const TitleContainer = styled.div`
@@ -92,40 +93,71 @@ const StyledImg = styled.img`
 `;
 
 const NoticeListGrid = styled.div`
-
+  width: 80%;
+  margin: 0 auto;
 `;
 
 const Container = styled.div`
-  width: 80%;
+  width: 100%;
   margin: 20px auto;
   padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
 `;
 
-const Box = styled.button`
+const NoticeImage = styled.img`
   width: 100%;
-  display: grid;
-  padding: 10px;
-  margin: 0 auto;
-  grid-template-columns: 25% 65% 10%;
-  font-size: 20px;
-  border-bottom: 1px solid #ddd;
-  border-style: none;
-  background-color: #fff;
-  color: #414141;
-  transition: transform 0.2s ease-out-in;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px;
+`;
 
-  & > div {
-    padding: 8px;
-  }
-  &:hover {
-    transform: scale(1.023); /* 호버 시 크기 확대 */
-    font-size: 1.1rem;
-    cursor: pointer;
-    color: #000;
-  }
+const NoticeInfo = styled.div`
+  padding: 15px 0;
+`;
+
+const NoticeDate = styled.div`
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 8px;
+`;
+
+const NoticeName = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
 `;
 
 export default function NoticeList() {
+  const navigate = useNavigate();
+  const [notices, setNotices] = useState([
+    {
+      id: 1,
+      title: "공지사항 1",
+      date: "2024-03-20",
+      content: "첫 번째 공지사항입니다.",
+      image: "/src/assets/notice1.jpg",
+    },
+    {
+      id: 2,
+      title: "공지사항 2",
+      date: "2024-03-19",
+      content: "두 번째 공지사항입니다.",
+      image: "/src/assets/notice2.jpg",
+    },
+  ]);
+
+  const handleProductClick = (id) => {
+    navigate(`/faq/notice/${id}`);
+  };
+
   return (
     <div>
       <TitleContainer>
@@ -145,32 +177,16 @@ export default function NoticeList() {
         </SortBar>
       </TabBars>
       <NoticeListGrid>
-        {Notice.map((Notice) => (
-          <Container
-            key={Notice.id}
-            onClick={() => handleProductClick(Notice.id)}
-          >
-            <NoticeImage src={Notice.image} alt={Notice.name} />
+        {notices.map((notice) => (
+          <Container key={notice.id} onClick={() => handleProductClick(notice.id)}>
+            <NoticeImage src={notice.image} alt={notice.title} />
             <NoticeInfo>
-              <NoticeDate>{Notice.date}</NoticeDate>
-              <NoticeName>{Notice.name}</NoticeName>
-              <NoticeImage>{Notice.image}</NoticeImage>
+              <NoticeDate>{notice.date}</NoticeDate>
+              <NoticeName>{notice.title}</NoticeName>
             </NoticeInfo>
           </Container>
         ))}
       </NoticeListGrid>
-      <Container>
-        <Box>
-          <div>2025.03.03</div>
-          <div>업데이트..</div>
-          <StyledImg
-            src="/src/assets/Icon/bord_right_icon.png"
-            alt="이동 아이콘"
-            onClick={() => navigate("/NoticeDetail")}
-          />
-        </Box>
-        <hr />
-      </Container>
     </div>
   );
 }

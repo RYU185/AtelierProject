@@ -27,7 +27,7 @@ import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
-import NoticeDetail from "../features/NoticeDetail/NoticeDetail";
+import NoticeDetail from "../features/Notice/components/NoticeDetail";
 
 function AppRoutes() {
   return (
