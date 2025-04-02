@@ -8,7 +8,6 @@ function FAQ() {
   return (
     <div>
       <Header />
-      <FAQNAVBar />
       <Outlet />
       <Footer />
     </div>
