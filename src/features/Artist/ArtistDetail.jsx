@@ -1,9 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "../Header";
-import Footer from "../Footer";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import ArtistDetail from "./ArtistDetail";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -34,33 +31,16 @@ const Title = styled.h1`
   z-index: 2;
 `;
 
-const ArtistContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-`;
-
-const Artist = () => {
-  const navigate = useNavigate();
+const ArtistDetail = () => {
+  const { id } = useParams();
   return (
     <div>
-      <Header />
       <TitleContainer>
-        <BackTitle>ARTIST</BackTitle>
-        <Title>ARTIST</Title>
+        <BackTitle>ARTIST {id}</BackTitle>
+        <Title>ARTIST {id}</Title>
       </TitleContainer>
-      <ArtistContainer>
-        
-      </ArtistContainer>
-
-      <Footer />
     </div>
   );
 };
 
-export default Artist;
+export default ArtistDetail;

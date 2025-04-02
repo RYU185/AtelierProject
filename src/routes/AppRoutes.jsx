@@ -11,6 +11,7 @@ import Gallery from "../features/Gallery/Gallery";
 import ArtistGallery from "../features/ArtistGallery/ArtistGallery";
 import UserGallery from "../features/UserGallery/UserGallery";
 import Artist from "../features/Artist/Artist";
+import ArtistDetail from "../features/Artist/ArtistDetail";
 import Community from "../features/Community/Community";
 import FAQ from "../features/faq/FAQ";
 import Guide from "../features/faq/components/Guide";
@@ -59,6 +60,7 @@ function AppRoutes() {
       </Route>
 
       <Route path="/artist" element={<Artist />} />
+      <Route path="/artist/:id" element={<ArtistDetail />} />
       <Route path="/community" element={<Community />} />
       <Route path="/faq" element={<FAQ />}>
         <Route index element={<Guide />} />
