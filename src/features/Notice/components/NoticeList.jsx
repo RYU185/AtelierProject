@@ -112,6 +112,21 @@ export default function NoticeList() {
           <div>업데이트..</div>
           <img src="/src/assets/Icon/bord_right_icon.png"></img>
         </Box>
+        <Box>
+          <div>2025.03.03</div>
+          <div>업데이트..</div>
+          <img src="/src/assets/Icon/bord_right_icon.png"></img>
+        </Box>
+        <Box>
+          <div>2025.03.03</div>
+          <div>업데이트..</div>
+          <img src="/src/assets/Icon/bord_right_icon.png"></img>
+        </Box>
+        <Box>
+          <div>2025.03.03</div>
+          <div>업데이트..</div>
+          <img src="/src/assets/Icon/bord_right_icon.png"></img>
+        </Box>
       </Container>
     </div>
   );
