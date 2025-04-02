@@ -5,7 +5,7 @@ import ReviewBlock from "./ReviewBlock";
 const ReviewListWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 50px;
 `;
 
 const ReviewList = styled.div`
@@ -21,6 +21,7 @@ const ReviewInputTextarea = styled.textarea`
   height: 100px;
   padding: 10px;
   margin-bottom: 10px;
+  resize: none; // 크기조정 불가능
 `;
 
 const ReviewInputButton = styled.button`
