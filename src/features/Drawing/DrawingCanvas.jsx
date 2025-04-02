@@ -7,7 +7,6 @@ const Container = styled.div`
   height: calc(100vh - 80px);
   overflow: hidden;
   position: relative;
-  margin-top: 80px;
   background: #f5f5f5;
 `;
 
@@ -104,6 +103,29 @@ const TopToolBar = styled.div`
   background: rgba(34, 34, 34, 0.9);
   padding: 10px;
   border-radius: 8px;
+`;
+
+const TopButton = styled.button`
+  font-size: 24px;
+  padding: 8px 12px;
+  background: transparent;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 `;
 
 const CanvasContainer = styled.div`
@@ -695,6 +717,7 @@ const DrawingCanvas = () => {
             </CustomColorButton>
           </ColorPalette>
         </LeftToolBar>
+
         <CanvasContainer ref={containerRef} onWheel={handleWheel}>
           <CanvasWrapper
             ref={canvasWrapperRef}
