@@ -74,15 +74,15 @@ const SortBar = styled.select`
   border-radius: 2px;
   outline: none;
 `;
-const option = styled.select`
-margin-top: 15px;
-text-align: center;
-font-size: 15px;
-color: #0068ca;
-border: 1px solid #0068ca;
-border-radius: 5px;
-outline: none;
-`;
+// const option = styled.select`
+// margin-top: 15px;
+// text-align: center;
+// font-size: 15px;
+// color: #0068ca;
+// border: 1px solid #0068ca;
+// border-radius: 5px;
+// outline: none;
+// `;
 
 const Container = styled.div`
   width: 80%;
