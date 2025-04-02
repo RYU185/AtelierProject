@@ -24,7 +24,7 @@ const Button = styled.div`
   transition: 0.3s ease;
   border-bottom: 3px solid #ffffff;
   &:hover {
-    color: #000;
+    color: #0068ca;
   }
 `;
 
@@ -47,7 +47,7 @@ function TabBar() {
               onClick={() => handleButtonClick(index)}
               style={
                 selectedButtonIndex === index
-                  ? { borderBottom: "2px solid #000", color: "#000" }
+                  ? { borderBottom: "2px solid #0068ca", color: "#0068ca" }
                   : {}
               }
             >

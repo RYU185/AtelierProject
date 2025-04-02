@@ -48,7 +48,7 @@ const SearchContainer = styled.div`
 const SearchBar = styled.input`
   width: 100%;
   height: 40px;
-  border: 1px solid #626262;
+  border: 1px solid #0068ca;
   padding-left: 40px;
   outline: none;
 `;
@@ -60,7 +60,7 @@ const SearchIcon = styled(FaSearch)`
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #626262;
+  color: #0068ca;
   font-size: 16px;
 `;
 
