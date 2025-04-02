@@ -153,13 +153,19 @@ const CartPage = () => {
   const [isAllSelected, setIsAllSelected] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const cartListRef = useRef();
-  const [total, setTotal] = useState({ quantity: 0, price: 0 });
+  const [total, setTotal] = useState({
+    quantity: 0,
+    price: 0,
+    selectedItems: [],
+    hasItems: true,
+  });
   const [isEmpty, setIsEmpty] = useState(false);
 
   const handleSelectAll = (e) => {
-    setIsAllSelected(e.target.checked);
+    const checked = e.target.checked;
+    setIsAllSelected(checked);
     if (cartListRef.current) {
-      cartListRef.current.selectAll(e.target.checked);
+      cartListRef.current.selectAll(checked);
     }
   };
 
@@ -171,32 +177,36 @@ const CartPage = () => {
 
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
-    setIsEmpty(newTotal.quantity === 0);
+    setIsEmpty(!newTotal.hasItems);
+    setIsAllSelected(
+      newTotal.selectedItems?.length > 0 &&
+        newTotal.selectedItems?.length ===
+          cartListRef.current?.getSelectedItems()?.length
+    );
   };
 
   const handlePurchase = () => {
+    if (!cartListRef.current) return;
+
     const selectedItems = cartListRef.current.getSelectedItems();
     if (selectedItems.length === 0) {
-      alert('구매할 상품을 선택해주세요.');
+      alert("구매할 상품을 선택해주세요.");
       return;
     }
     setShowModal(true);
   };
 
   const handleConfirmPurchase = () => {
+    if (!cartListRef.current) return;
+
     const selectedItems = cartListRef.current.getSelectedItems();
     setShowModal(false);
-    try {
-      navigate('/purchase-complete', { 
-        state: { 
-          items: selectedItems,
-          totalPrice: total.price
-        }
-      });
-    } catch (error) {
-      console.error('Navigation error:', error);
-      window.location.href = '/purchase-complete';
-    }
+    navigate("/purchase-complete", {
+      state: {
+        items: selectedItems,
+        totalPrice: total.price,
+      },
+    });
   };
 
   return (
@@ -211,20 +221,23 @@ const CartPage = () => {
           <CartContent>
             {isEmpty ? (
               <EmptyCartMessage>
-                장바구니가 비어있습니다.<br />
+                장바구니가 비어있습니다.
+                <br />
                 상품을 추가해주세요.
               </EmptyCartMessage>
             ) : (
               <>
                 <SelectAllBar>
-                  <Checkbox 
-                    type="checkbox" 
-                    id="selectAll" 
+                  <Checkbox
+                    type="checkbox"
+                    id="selectAll"
                     checked={isAllSelected}
                     onChange={handleSelectAll}
                   />
                   <SelectAllText>전체 선택</SelectAllText>
-                  <DeleteButton onClick={handleDeleteSelected}>선택상품 삭제</DeleteButton>
+                  <DeleteButton onClick={handleDeleteSelected}>
+                    선택상품 삭제
+                  </DeleteButton>
                 </SelectAllBar>
                 <CartList ref={cartListRef} onUpdateTotal={handleUpdateTotal} />
               </>

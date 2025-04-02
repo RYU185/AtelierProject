@@ -110,7 +110,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
       price: 42000,
       quantity: 2,
       image: "/images/goods1.jpg",
-      checked: false
+      checked: false,
     },
     {
       id: 2,
@@ -118,7 +118,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
       price: 42000,
       quantity: 1,
       image: "/images/goods1.jpg",
-      checked: false
+      checked: false,
     },
   ]);
 
@@ -126,44 +126,48 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
 
   useImperativeHandle(ref, () => ({
     selectAll: (checked) => {
-      const newItems = items.map(item => ({ ...item, checked }));
+      const newItems = items.map((item) => ({ ...item, checked }));
       setItems(newItems);
       calculateTotal(newItems);
     },
     deleteSelected: () => {
-      const newItems = items.filter(item => !item.checked);
+      const newItems = items.filter((item) => !item.checked);
       setItems(newItems);
       calculateTotal(newItems);
     },
     getSelectedItems: () => {
-      return items.filter(item => item.checked);
-    }
+      return items.filter((item) => item.checked);
+    },
   }));
 
   const handleQuantityChange = (id, change) => {
-    const newItems = items.map(item => {
-      if (item.id === id) {
-        const newQuantity = Math.max(1, item.quantity + change);
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
+    setItems((prevItems) => {
+      const newItems = prevItems.map((item) => {
+        if (item.id === id) {
+          const newQuantity = Math.max(1, item.quantity + change);
+          return {
+            ...item,
+            quantity: newQuantity,
+          };
+        }
+        return item;
+      });
+      calculateTotal(newItems);
+      return newItems;
     });
-    
-    setItems(newItems);
-    calculateTotal(newItems);
   };
 
   const handleDelete = (id) => {
-    const newItems = items.filter(item => item.id !== id);
+    const newItems = items.filter((item) => item.id !== id);
     setItems(newItems);
     calculateTotal(newItems);
     if (newItems.length === 0) {
-      navigate('/cartpage');
+      navigate("/cartpage");
     }
   };
 
   const handleCheckItem = (id) => {
-    const newItems = items.map(item => 
+    const newItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item
     );
     setItems(newItems);
@@ -171,13 +175,31 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
   };
 
   const calculateTotal = (currentItems) => {
-    const selectedItems = currentItems.filter(item => item.checked);
-    const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
-    const totalPrice = selectedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    onUpdateTotal({ 
-      quantity: totalQuantity, 
+    if (!currentItems || currentItems.length === 0) {
+      onUpdateTotal({
+        quantity: 0,
+        price: 0,
+        selectedItems: [],
+        hasItems: false,
+      });
+      return;
+    }
+
+    const selectedItems = currentItems.filter((item) => item.checked);
+    const totalQuantity = selectedItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+    const totalPrice = selectedItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+
+    onUpdateTotal({
+      quantity: totalQuantity,
       price: totalPrice,
-      selectedItems: selectedItems
+      selectedItems: selectedItems,
+      hasItems: currentItems.length > 0,
     });
   };
 
@@ -185,8 +207,8 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
     <Container>
       {items.map((item) => (
         <CartItemContainer key={item.id}>
-          <Checkbox 
-            type="checkbox" 
+          <Checkbox
+            type="checkbox"
             checked={item.checked}
             onChange={() => handleCheckItem(item.id)}
           />
@@ -197,11 +219,20 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
               <PriceText>{item.price.toLocaleString()}원</PriceText>
             </ProductDetails>
             <QuantityControl>
-              <QuantityButton onClick={() => handleQuantityChange(item.id, -1)}>-</QuantityButton>
+              <QuantityButton
+                onClick={() => handleQuantityChange(item.id, -1)}
+                disabled={item.quantity <= 1}
+              >
+                -
+              </QuantityButton>
               <QuantityInput type="text" value={item.quantity} readOnly />
-              <QuantityButton onClick={() => handleQuantityChange(item.id, 1)}>+</QuantityButton>
+              <QuantityButton onClick={() => handleQuantityChange(item.id, 1)}>
+                +
+              </QuantityButton>
             </QuantityControl>
-            <DeleteButton onClick={() => handleDelete(item.id)}>삭제</DeleteButton>
+            <DeleteButton onClick={() => handleDelete(item.id)}>
+              삭제
+            </DeleteButton>
           </ProductInfo>
         </CartItemContainer>
       ))}
@@ -209,4 +240,4 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
   );
 });
 
-export default CartList; 
+export default CartList;

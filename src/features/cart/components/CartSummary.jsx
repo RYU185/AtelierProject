@@ -22,7 +22,7 @@ const SummaryRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  
+
   &:last-child {
     margin-top: 24px;
     padding-top: 24px;
@@ -36,9 +36,9 @@ const Label = styled.span`
 `;
 
 const Value = styled.span`
-  font-size: ${props => props.total ? "24px" : "16px"};
-  font-weight: ${props => props.total ? "bold" : "normal"};
-  color: ${props => props.total ? "#0066ff" : "#666"};
+  font-size: ${(props) => (props.total ? "24px" : "16px")};
+  font-weight: ${(props) => (props.total ? "bold" : "normal")};
+  color: ${(props) => (props.total ? "#0066ff" : "#666")};
 `;
 
 const PurchaseButton = styled.button`
@@ -71,9 +71,7 @@ const CartSummary = ({ total, onPurchase }) => {
         <Label>총 상품 금액</Label>
         <Value total>{total.price.toLocaleString()}원</Value>
       </SummaryRow>
-      <PurchaseButton onClick={onPurchase}>
-        구매하기
-      </PurchaseButton>
+      <PurchaseButton onClick={onPurchase}>구매하기</PurchaseButton>
     </Container>
   );
 };
