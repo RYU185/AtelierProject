@@ -27,6 +27,7 @@ import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
+import NoticeDetail from "../features/NoticeDetail/NoticeDetail";
 
 function AppRoutes() {
   return (
@@ -58,7 +59,9 @@ function AppRoutes() {
         <Route path="guide" element={<Guide />} />
         <Route path="contactus" element={<ContactUs />} />
         <Route path="notice" element={<Notice />} />
+        <Route path="notice/:id" element={<NoticeDetail />} />
       </Route>
+
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/cart" element={<CartPage />} />

@@ -73,16 +73,27 @@ const SortBar = styled.select`
   border: 1px solid #0068ca;
   border-radius: 2px;
   outline: none;
+  /* & > option {
+    border-radius: 5px;
+  } */
 `;
-// const option = styled.select`
-// margin-top: 15px;
-// text-align: center;
-// font-size: 15px;
-// color: #0068ca;
-// border: 1px solid #0068ca;
-// border-radius: 5px;
-// outline: none;
-// `;
+const StyledImg = styled.img`
+  width: 30px; /* 이미지 크기 조절 */
+  height: 30px;
+  cursor: pointer;
+  transition: transform 0.2s ease-out-in;
+
+  &:hover {
+    transform: scale(0.9); /* 호버 시 크기 확대 */
+    /* font-size: 1.1rem; */
+    cursor: pointer;
+    color: #000;
+  }
+`;
+
+const NoticeListGrid = styled.div`
+
+`;
 
 const Container = styled.div`
   width: 80%;
@@ -101,22 +112,18 @@ const Box = styled.button`
   border-style: none;
   background-color: #fff;
   color: #414141;
+  transition: transform 0.2s ease-out-in;
 
   & > div {
     padding: 8px;
   }
   &:hover {
+    transform: scale(1.023); /* 호버 시 크기 확대 */
     font-size: 1.1rem;
     cursor: pointer;
     color: #000;
   }
 `;
-
-// const Img = styled.button`
-//   border-style: none;
-//   background-color: #fff;
-//   cursor: pointer;
-// `;
 
 export default function NoticeList() {
   return (
@@ -137,29 +144,30 @@ export default function NoticeList() {
           <option value="price_desc">가격 높은순</option>
         </SortBar>
       </TabBars>
+      <NoticeListGrid>
+        {Notice.map((Notice) => (
+          <Container
+            key={Notice.id}
+            onClick={() => handleProductClick(Notice.id)}
+          >
+            <NoticeImage src={Notice.image} alt={Notice.name} />
+            <NoticeInfo>
+              <NoticeDate>{Notice.date}</NoticeDate>
+              <NoticeName>{Notice.name}</NoticeName>
+              <NoticeImage>{Notice.image}</NoticeImage>
+            </NoticeInfo>
+          </Container>
+        ))}
+      </NoticeListGrid>
       <Container>
         <Box>
           <div>2025.03.03</div>
           <div>업데이트..</div>
-          <img src="/src/assets/Icon/bord_right_icon.png"></img>
-        </Box>
-        <hr />
-        <Box>
-          <div>2025.03.03</div>
-          <div>업데이트..</div>
-          <img src="/src/assets/Icon/bord_right_icon.png"></img>
-        </Box>
-        <hr />
-        <Box>
-          <div>2025.03.03</div>
-          <div>업데이트..</div>
-          <img src="/src/assets/Icon/bord_right_icon.png"></img>
-        </Box>
-        <hr />
-        <Box>
-          <div>2025.03.03</div>
-          <div>업데이트..</div>
-          <img src="/src/assets/Icon/bord_right_icon.png"></img>
+          <StyledImg
+            src="/src/assets/Icon/bord_right_icon.png"
+            alt="이동 아이콘"
+            onClick={() => navigate("/NoticeDetail")}
+          />
         </Box>
         <hr />
       </Container>
