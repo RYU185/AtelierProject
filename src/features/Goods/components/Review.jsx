@@ -71,14 +71,17 @@ function Review() {
   };
 
   // 현재 페이지의 리뷰만 보여주기
-  // 라이브러리 X 직접구현 -> 코드량 많아짐..
-  
   const indexOfLastReview = currentPage * reviewsPerPage; // 마지막 리뷰 인덱스
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage; // 첫 번째 리뷰 인덱스
-  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview); // 현재 페이지 리뷰아닌가??
-  // slice(마지막 리뷰인덱스 , 첫번째 리뷰인덱스)
+  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview); // 현재 페이지 리뷰
+  // slice(마지막 리뷰인덱스 , 첫번째 리뷰인덱스)의 동작방식
+  // 마지막 리뷰인덱스 부터 첫번째 리뷰인덱스 까지 잘라서 배열로 반환한다
+  // ex) 마지막 리뷰인덱스 10, 첫번째 리뷰인덱스 0 -> 10부터 0까지 잘라서 배열로 반환할거임
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
-
+  // 총 리뷰 갯수 / 한 페이지에 보여줄 리뷰 갯수 = 총 페이지 수
+  // ceil() 작동방식 *처음 보는 메서드
+  // 10 / 3 = 3.33333....
+  // 3.33333.... -> 4
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -90,6 +93,8 @@ function Review() {
           <h2>상품평</h2>
           <ReviewList>
             {currentReviews.map((review, index) => (
+              // review를 주면 ReviewBlock에서 렌더링
+              // 렌더링 된 리뷰들을 배열로 반환
               <ReviewBlock key={index} review={review} />
             ))}
             <ReviewInputContainer>
@@ -102,7 +107,7 @@ function Review() {
             </ReviewInputContainer>
           </ReviewList>
           <PaginationContainer>
-            {[...Array(totalPages)].map((_, index) => (
+            {[...Array(totalPages)].map((item, index) => (
               <PageButton
                 key={index + 1}
                 active={currentPage === index + 1}
