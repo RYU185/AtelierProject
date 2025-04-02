@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 import styled from "styled-components";
-import ArtistDetail from "./ArtistDetail";
+import ArtistIntro from "./components/ArtistIntro";
+import artist1 from "../../assets/ArtistIMG/artist1.jpg";
+import artist2 from "../../assets/ArtistIMG/artist2.png";
+import artist3 from "../../assets/ArtistIMG/artist3.jpg";
+import artist4 from "../../assets/ArtistIMG/artist4.jpg";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -37,16 +41,22 @@ const Title = styled.h1`
 const ArtistContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0;
+  gap: 20px;
   width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
+  padding: 20px;
   box-sizing: border-box;
+  width: 70%;
+  margin: 0 auto;
 `;
 
 const Artist = () => {
-  const navigate = useNavigate();
+  const artists = [
+    { id: 1, name: "Artist 1", bio: "Bio for Artist 1", imageUrl: artist1 },
+    { id: 2, name: "Artist 2", bio: "Bio for Artist 2", imageUrl: artist2 },
+    { id: 3, name: "Artist 3", bio: "Bio for Artist 3", imageUrl: artist3 },
+    { id: 4, name: "Artist 4", bio: "Bio for Artist 4", imageUrl: artist4 },
+  ];
+
   return (
     <div>
       <Header />
@@ -55,9 +65,10 @@ const Artist = () => {
         <Title>ARTIST</Title>
       </TitleContainer>
       <ArtistContainer>
-        
+        {artists.map((artist) => (
+          <ArtistIntro key={artist.id} {...artist} />
+        ))}
       </ArtistContainer>
-
       <Footer />
     </div>
   );
