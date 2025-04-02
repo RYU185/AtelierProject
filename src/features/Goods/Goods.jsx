@@ -99,7 +99,6 @@ const ProductImage = styled.img`
   height: 200px;
   object-fit: cover;
   transition: all 0.3s ease;
-
 `;
 
 const ProductInfo = styled.div`
@@ -158,61 +157,61 @@ function Goods() {
     {
       id: 1,
       name: "전시 굿즈 1",
-      price: "₩30,000",
+      price: 30000,
       image: goods1,
     },
     {
       id: 2,
       name: "전시 굿즈 2",
-      price: "₩25,000",
+      price: 25000,
       image: goods2,
     },
     {
       id: 3,
       name: "전시 굿즈 3",
-      price: "₩35,000",
+      price: 35000,
       image: goods3,
     },
     {
       id: 4,
       name: "전시 굿즈 4",
-      price: "₩28,000",
+      price: 28000,
       image: goods4,
     },
     {
       id: 5,
       name: "전시 굿즈 5",
-      price: "₩32,000",
+      price: 32000,
       image: goods5,
     },
     {
       id: 6,
       name: "전시 굿즈 6",
-      price: "₩27,000",
+      price: 27000,
       image: goods6,
     },
     {
       id: 7,
       name: "전시 굿즈 7",
-      price: "₩33,000",
+      price: 33000,
       image: goods7,
     },
     {
       id: 8,
       name: "전시 굿즈 8",
-      price: "₩29,000",
+      price: 29000,
       image: goods8,
     },
     {
       id: 9,
       name: "전시 굿즈 9",
-      price: "₩31,000",
+      price: 31000,
       image: goods9,
     },
     {
       id: 10,
       name: "전시 굿즈 10",
-      price: "₩26,000",
+      price: 26000,
       image: goods10,
     },
   ];
@@ -244,14 +243,11 @@ function Goods() {
 
         <ProductGrid>
           {products.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              onClick={() => handleProductClick(product.id)}
-            >
+            <ProductCard key={product.id} onClick={() => handleProductClick(product.id)}>
               <ProductImage src={product.image} alt={product.name} />
               <ProductInfo>
                 <ProductName>{product.name}</ProductName>
-                <ProductPrice>{product.price}</ProductPrice>
+                <ProductPrice>{product.price.toLocaleString()}원</ProductPrice>
               </ProductInfo>
             </ProductCard>
           ))}

@@ -142,7 +142,7 @@ const CounterWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `;
 
 const CounterButtonContainer = styled.div`
@@ -167,24 +167,34 @@ const CounterInput = styled.input`
   text-align: center;
   outline: none;
   margin-left: 10px;
+  padding-left: 2px;
+  
 `;
 
 const Stock = styled.div`
   margin-bottom: 20px;
+  display: ${({ stockWarning }) => (stockWarning ? "block" : "none")};
 `;
 
 const StockText = styled.div`
   font-size: 16px;
 `;
 
+const StockWarning = styled.div`
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+`;
+
 const AmountCountContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  margin-top: 20px;
 `;
 
 const AmountCount = styled.div`
-  font-size: 16px;
+  font-size: 24px;
 `;
 
 const AmountCountText = styled.div`
@@ -194,12 +204,17 @@ const AmountCountText = styled.div`
 function GoodsDetail() {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
-  const [stock, setStock] = useState(10); // 초기 재고 10개로 설정
+  const [stock, setStock] = useState(10);
+  const [stockWarning, setStockWarning] = useState(false);
 
   const handleIncrease = () => {
     if (stock > 0) {
       setQuantity((prev) => prev + 1);
       setStock((prev) => prev - 1);
+      if (stock <= stock * 0.2) {
+        // 20% 이하일 때
+        setStockWarning(true);
+      }
     }
   };
 
@@ -207,76 +222,80 @@ function GoodsDetail() {
     if (quantity > 1) {
       setQuantity((prev) => prev - 1);
       setStock((prev) => prev + 1);
+      if (stock > 2) {
+        // 20% 초과일 때
+        setStockWarning(false);
+      }
     }
   };
 
   const products = {
     1: {
       name: "전시 굿즈 1",
-      price: "₩30,000",
+      price: 30000,
       image: goods1,
       description:
         "전시 굿즈 1에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     2: {
       name: "전시 굿즈 2",
-      price: "₩25,000",
+      price: 25000,
       image: goods2,
       description:
         "전시 굿즈 2에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     3: {
       name: "전시 굿즈 3",
-      price: "₩35,000",
+      price: 35000,
       image: goods3,
       description:
         "전시 굿즈 3에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     4: {
       name: "전시 굿즈 4",
-      price: "₩28,000",
+      price: 28000,
       image: goods4,
       description:
         "전시 굿즈 4에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     5: {
       name: "전시 굿즈 5",
-      price: "₩32,000",
+      price: 32000,
       image: goods5,
       description:
         "전시 굿즈 5에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     6: {
       name: "전시 굿즈 6",
-      price: "₩27,000",
+      price: 27000,
       image: goods6,
       description:
         "전시 굿즈 6에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     7: {
       name: "전시 굿즈 7",
-      price: "₩33,000",
+      price: 33000,
       image: goods7,
       description:
         "전시 굿즈 7에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     8: {
       name: "전시 굿즈 8",
-      price: "₩29,000",
+      price: 29000,
       image: goods8,
       description:
         "전시 굿즈 8에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     9: {
       name: "전시 굿즈 9",
-      price: "₩31,000",
+      price: 31000,
       image: goods9,
       description:
         "전시 굿즈 9에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
     },
     10: {
       name: "전시 굿즈 10",
-      price: "₩26,000",
+      price: 26000,
       image: goods10,
       description:
         "전시 굿즈 10에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
@@ -322,7 +341,7 @@ function GoodsDetail() {
             <hr />
             <ProductDescription>
               {product.description}
-              <ProductPrice>{product.price}</ProductPrice>
+              <ProductPrice>{product.price.toLocaleString()}원</ProductPrice>
             </ProductDescription>
 
             <CounterWrapper>
@@ -336,12 +355,13 @@ function GoodsDetail() {
 
             <Stock>
               <StockText>남은 재고: {stock}개</StockText>
+              {stockWarning && <StockWarning>재고가 부족합니다!</StockWarning>}
             </Stock>
             <hr />
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCount>{product.price * quantity}</AmountCount>
+              <AmountCount>{(product.price * quantity).toLocaleString()}원</AmountCount>
             </AmountCountContainer>
 
             <ButtonContainer>
