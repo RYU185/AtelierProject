@@ -187,7 +187,6 @@ const SizeControlContainer = styled.div`
 const SliderInput = styled.input`
   width: 150px;
   margin: 0;
-  -webkit-appearance: none;
   height: 4px;
   background: #444;
   border-radius: 4px;
