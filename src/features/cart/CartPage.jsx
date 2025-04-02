@@ -72,6 +72,7 @@ const Checkbox = styled.input`
   height: 20px;
   margin: 0;
   cursor: pointer;
+  accent-color: #0066ff;
 `;
 
 const SelectAllText = styled.span`
@@ -82,16 +83,22 @@ const SelectAllText = styled.span`
 const DeleteButton = styled.button`
   margin-left: auto;
   padding: 8px 16px;
-  border: 1px solid #ddd;
-  background-color: white;
+  border: none;
+  background-color: transparent;
   color: #666;
   cursor: pointer;
   font-size: 14px;
-  border-radius: 4px;
 
   &:hover {
-    background-color: #f8f9fa;
+    text-decoration: underline;
   }
+`;
+
+const EmptyCartMessage = styled.div`
+  text-align: center;
+  padding: 60px 0;
+  font-size: 18px;
+  color: #666;
 `;
 
 const Modal = styled.div`
@@ -138,15 +145,7 @@ const ModalButton = styled.button`
 
   &:hover {
     background-color: #0052cc;
-    transform: translateY(-2px);
   }
-`;
-
-const EmptyCartMessage = styled.div`
-  text-align: center;
-  padding: 60px 0;
-  font-size: 18px;
-  color: #666;
 `;
 
 const CartPage = () => {
@@ -155,7 +154,7 @@ const CartPage = () => {
   const [showModal, setShowModal] = useState(false);
   const cartListRef = useRef();
   const [total, setTotal] = useState({ quantity: 0, price: 0 });
-  const [isEmpty, setIsEmpty] = useState(true);
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const handleSelectAll = (e) => {
     setIsAllSelected(e.target.checked);
@@ -196,7 +195,6 @@ const CartPage = () => {
       });
     } catch (error) {
       console.error('Navigation error:', error);
-      // 백업 방법으로 window.location 사용
       window.location.href = '/purchase-complete';
     }
   };
@@ -240,7 +238,7 @@ const CartPage = () => {
         <>
           <ModalOverlay onClick={() => setShowModal(false)} />
           <Modal>
-            <ModalText>구매가 완료되었습니다!</ModalText>
+            <ModalText>구매하시겠습니까?</ModalText>
             <ModalButton onClick={handleConfirmPurchase}>확인</ModalButton>
           </Modal>
         </>

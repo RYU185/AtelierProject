@@ -11,64 +11,68 @@ const Container = styled.div`
 const CartItemContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 30px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
   background: white;
 `;
 
 const Checkbox = styled.input`
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   margin: 0 24px 0 0;
   cursor: pointer;
+  accent-color: #0066ff;
 `;
 
 const ProductImage = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   margin-right: 32px;
-  border-radius: 8px;
 `;
 
 const ProductInfo = styled.div`
   flex: 1;
-  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+`;
+
+const ProductDetails = styled.div`
+  flex: 1;
 `;
 
 const ProductName = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
-  margin-bottom: 16px;
-  font-weight: 500;
+  margin-bottom: 8px;
 `;
 
 const PriceText = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   color: #333;
-  margin-bottom: 24px;
-  font-weight: bold;
+  font-weight: 500;
 `;
 
 const QuantityControl = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 const QuantityButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border: 1px solid #ddd;
+  width: 28px;
+  height: 28px;
+  border: none;
   background-color: white;
   color: #333;
-  font-size: 18px;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: 4px;
 
   &:hover {
     background-color: #f8f9fa;
@@ -76,26 +80,25 @@ const QuantityButton = styled.button`
 `;
 
 const QuantityInput = styled.input`
-  width: 50px;
-  height: 32px;
-  border: 1px solid #ddd;
+  width: 40px;
+  height: 28px;
+  border: none;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
   text-align: center;
-  font-size: 16px;
-  border-radius: 4px;
+  font-size: 14px;
 `;
 
 const DeleteButton = styled.button`
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  background-color: white;
+  padding: 6px 12px;
+  border: none;
+  background-color: transparent;
   color: #666;
-  font-size: 16px;
-  border-radius: 4px;
+  font-size: 14px;
   cursor: pointer;
-  margin-left: 24px;
 
   &:hover {
-    background-color: #f8f9fa;
+    text-decoration: underline;
   }
 `;
 
@@ -103,7 +106,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
   const [items, setItems] = useState([
     {
       id: 1,
-      name: "핑거세이버 미니어쳐 ver3 (8.5조)",
+      name: "반가사유상 미니어처 ver3 (8조)",
       price: 42000,
       quantity: 2,
       image: "/images/goods1.jpg",
@@ -111,7 +114,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
     },
     {
       id: 2,
-      name: "핑거세이버 미니어쳐 ver3 (8.5조)",
+      name: "반가사유상 미니어처 ver3 (8조)",
       price: 42000,
       quantity: 1,
       image: "/images/goods1.jpg",
@@ -189,15 +192,17 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
           />
           <ProductImage src={item.image} alt={item.name} />
           <ProductInfo>
-            <ProductName>{item.name}</ProductName>
-            <PriceText>{item.price.toLocaleString()}원</PriceText>
+            <ProductDetails>
+              <ProductName>{item.name}</ProductName>
+              <PriceText>{item.price.toLocaleString()}원</PriceText>
+            </ProductDetails>
             <QuantityControl>
               <QuantityButton onClick={() => handleQuantityChange(item.id, -1)}>-</QuantityButton>
               <QuantityInput type="text" value={item.quantity} readOnly />
               <QuantityButton onClick={() => handleQuantityChange(item.id, 1)}>+</QuantityButton>
             </QuantityControl>
+            <DeleteButton onClick={() => handleDelete(item.id)}>삭제</DeleteButton>
           </ProductInfo>
-          <DeleteButton onClick={() => handleDelete(item.id)}>삭제</DeleteButton>
         </CartItemContainer>
       ))}
     </Container>
