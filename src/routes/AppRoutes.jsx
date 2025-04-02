@@ -27,7 +27,10 @@ import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
+import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import NoticeDetail from "../features/Notice/components/NoticeDetail";
+
+
 
 function AppRoutes() {
   return (
@@ -41,6 +44,9 @@ function AppRoutes() {
       <Route path="/AdminGoods" element={<AdminGoods />} />
       <Route path="/AdminTicketList" element={<AdminTicketList />} />
       <Route path="/AdminUser" element={<AdminUser />} />
+      <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
+
+     
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
@@ -60,8 +66,9 @@ function AppRoutes() {
         <Route path="contactus" element={<ContactUs />} />
         <Route path="notice" element={<Notice />} />
         <Route path="notice/:id" element={<NoticeDetail />} />
-      </Route>
 
+      </Route>
+      
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/cart" element={<CartPage />} />
