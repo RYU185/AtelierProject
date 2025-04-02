@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TabBar from "./components/TabBar";
 import NoticeList from "./components/NoticeList";
+import TopButton from "../home/components/TopButton";
 
 function Notice() {
   const [currentTab, setCurrentTab] = useState("");
@@ -8,6 +8,7 @@ function Notice() {
   return (
     <div className="notice-container">
       <NoticeList />
+      <TopButton />
     </div>
   );
 }

@@ -78,19 +78,6 @@ const SortBar = styled.select`
     border-radius: 5px;
   } */
 `;
-const StyledImg = styled.img`
-  width: 30px; /* 이미지 크기 조절 */
-  height: 30px;
-  cursor: pointer;
-  transition: transform 0.2s ease-out-in;
-
-  &:hover {
-    transform: scale(0.9); /* 호버 시 크기 확대 */
-    /* font-size: 1.1rem; */
-    cursor: pointer;
-    color: #000;
-  }
-`;
 
 const NoticeListGrid = styled.div`
   width: 80%;
@@ -101,20 +88,20 @@ const Container = styled.div`
   width: 100%;
   margin: 20px auto;
   padding: 20px;
+  display: flex;
   border: 1px solid #ddd;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    color: #0068ca;
   }
 `;
 
 const NoticeImage = styled.img`
-  width: 100%;
-  height: 200px;
+  width: 30%;
+  height: 90px;
   object-fit: cover;
   border-radius: 4px;
 `;
@@ -124,6 +111,8 @@ const NoticeInfo = styled.div`
 `;
 
 const NoticeDate = styled.div`
+  width: 70%;
+  display: flex;
   color: #666;
   font-size: 14px;
   margin-bottom: 8px;
@@ -178,7 +167,10 @@ export default function NoticeList() {
       </TabBars>
       <NoticeListGrid>
         {notices.map((notice) => (
-          <Container key={notice.id} onClick={() => handleProductClick(notice.id)}>
+          <Container
+            key={notice.id}
+            onClick={() => handleProductClick(notice.id)}
+          >
             <NoticeImage src={notice.image} alt={notice.title} />
             <NoticeInfo>
               <NoticeDate>{notice.date}</NoticeDate>
