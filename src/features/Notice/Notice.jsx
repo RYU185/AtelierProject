@@ -7,8 +7,7 @@ function Notice() {
 
   return (
     <div className="notice-container">
-      <h2>공지사항</h2>
-      <TabBar tab={currentTab} setTab={setCurrentTab} />
+      <TabBar />
       <NoticeList />
     </div>
   );
