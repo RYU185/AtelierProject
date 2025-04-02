@@ -14,6 +14,7 @@ import goods8 from "../../assets/GoodsIMG/goods8.jpg";
 import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import Review from "./components/Review";
+import TopButton from "../home/components/TopButton";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -22,6 +23,7 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 40px;
+  cursor: pointer;
 `;
 
 const BackTitle = styled.h1`
@@ -385,6 +387,10 @@ function GoodsDetail() {
     navigate("/cart");
   };
 
+  const handleTitleClick = () => {
+    navigate("/goods");
+  };
+
   const products = {
     1: {
       name: "전시 굿즈 1",
@@ -494,7 +500,7 @@ function GoodsDetail() {
   return (
     <>
       <Header />
-      <TitleContainer>
+      <TitleContainer onClick={handleTitleClick}>
         <BackTitle>Gallery Goods</BackTitle>
         <Title>Gallery Goods</Title>
       </TitleContainer>
@@ -576,6 +582,7 @@ function GoodsDetail() {
       <ReviewHR />
       <Review />
       <Footer />
+      <TopButton />
     </>
   );
 }

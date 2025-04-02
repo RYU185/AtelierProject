@@ -14,6 +14,7 @@ import goods8 from "../../assets/GoodsIMG/goods8.jpg";
 import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import { useNavigate } from "react-router-dom";
+import TopButton from "../home/components/TopButton";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -52,7 +53,7 @@ const Title = styled.h1`
 const DataController = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   padding: 0 22px;
 `;
 
@@ -63,8 +64,8 @@ const SearchContainer = styled.div`
 
 const SearchBar = styled.input`
   width: 100%;
-  height: 40px;
-  border: 1px solid #0068ca;
+  height: 50px;
+  border: 1px solid #54adff;
   padding-left: 40px;
   outline: none;
 `;
@@ -85,6 +86,18 @@ const SortBar = styled.select`
   height: 40px;
   border: 1px solid #0068ca;
   outline: none;
+  text-align: center;
+  transition: all 0.5s ease;
+
+  &:hover {
+    background-color: #0068ca;
+    color: #ffffff;
+  }
+
+  option {
+    background-color: white;
+    color: #0068ca;
+  }
 `;
 
 // 그리드 설정
@@ -254,6 +267,7 @@ function Goods() {
           ))}
         </ProductGrid>
       </Container>
+      <TopButton />
       <Footer />
     </>
   );
