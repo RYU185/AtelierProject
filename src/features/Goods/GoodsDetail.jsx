@@ -57,13 +57,63 @@ const ProductContainer = styled.div`
 
 const ImageSection = styled.div`
   flex: 1;
+  position: relative;
 `;
 
-const ProductImage = styled.img`
+const MainImageContainer = styled.div`
+  flex: 1;
+`;
+
+const MainImage = styled.img`
   width: 100%;
   height: auto;
   border-radius: 8px;
-  margin: 10px 0;
+  margin-bottom: 20px;
+  cursor: zoom-in;
+`;
+
+const ZoomedImage = styled.div`
+  position: absolute;
+  left: 105%;
+  top: 0;
+  width: 400px;
+  height: 400px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  transition: opacity 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+`;
+
+const ZoomedImageContent = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center center;
+`;
+
+const ThumbnailContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 10px 0;
+`;
+
+const ThumbnailImage = styled.img`
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 2px solid ${(props) => (props.active ? "#0068ca" : "transparent")};
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const InfoSection = styled.div`
@@ -168,7 +218,6 @@ const CounterInput = styled.input`
   outline: none;
   margin-left: 10px;
   padding-left: 2px;
-  
 `;
 
 const Stock = styled.div`
@@ -198,14 +247,20 @@ const AmountCount = styled.div`
 `;
 
 const AmountCountText = styled.div`
-  font-size: 16px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #0068ca;
 `;
 
 function GoodsDetail() {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [stock, setStock] = useState(10);
-  const [stockWarning, setStockWarning] = useState(false);
+  const [stockWarning, setStockWarning] = useState(false); // 재고 경고 표시
+  const [selectedImage, setSelectedImage] = useState(0); // 선택된 이미지 썸네일 알려주기
+  // 확대 창 상태관리
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // 배웠던거 - drowing에서 썼던 상태관리
 
   const handleIncrease = () => {
     if (stock > 0) {
@@ -228,6 +283,51 @@ function GoodsDetail() {
       }
     }
   };
+
+  const handleMouseEnter = () => {
+    setIsZoomed(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsZoomed(false);
+  };
+
+  // 화면 확대 창 보여주기
+  // 처음 사용해보는 메서드나 기능이 포함됨
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    // getBoundingClientRect();
+    // 현재 요소의 위치와 크기 가져오는 메서드
+    // x, y, width, height 값을 모두 가져옴
+    const x = e.clientX - rect.left; // 마우스 위치 - 요소 위치를 빼는 값
+    const y = e.clientY - rect.top;
+
+    // 이미지의 중앙을 기준으로 상대적인 위치를 계산해야하니까 백분율로 계산
+    const relativeX = (x / rect.width) * 100;
+    const relativeY = (y / rect.height) * 100;
+
+    // 중앙(50%)을 기준으로 -50~50 범위로 변환
+    let centeredX = relativeX - 50;
+    let centeredY = relativeY - 50;
+
+    // 확대된 이미지가 원본 이미지의 범위를 벗어나지 않도록 제한해야함
+    const maxOffset = 25; // 50%의 절반 (2배 확대이므로)
+    // 왜?
+    // 이미지가 2배 (scale(2)) 확대되었으므로
+    // 중앙(50%)을 기준으로 -50~50 범위로 변환
+    centeredX = Math.max(Math.min(centeredX, maxOffset), -maxOffset);
+    // centeredX값이 25보다 크면 25로 제한
+    // 그러니까 마우스 위치값이 30이면 25로 강제로 제한해버림
+    centeredY = Math.max(Math.min(centeredY, maxOffset), -maxOffset);
+
+    setMousePosition({
+      x: centeredX,
+      y: centeredY,
+    });
+  };
+
+
+  
 
   const products = {
     1: {
@@ -320,6 +420,21 @@ function GoodsDetail() {
     );
   }
 
+  const productImages = {
+    1: [goods1, goods2, goods3, goods4, goods5],
+    2: [goods2, goods3, goods4, goods5, goods6],
+    3: [goods3, goods4, goods5, goods6, goods7],
+    4: [goods4, goods5, goods6, goods7, goods8],
+    5: [goods5, goods6, goods7, goods8, goods9],
+    6: [goods6, goods7, goods8, goods9, goods10],
+    7: [goods7, goods8, goods9, goods10, goods1],
+    8: [goods8, goods9, goods10, goods1, goods2],
+    9: [goods9, goods10, goods1, goods2, goods3],
+    10: [goods10, goods1, goods2, goods3, goods4],
+  };
+
+  const currentProductImages = productImages[id];
+
   return (
     <>
       <Header />
@@ -330,11 +445,36 @@ function GoodsDetail() {
       <Container>
         <ProductContainer>
           <ImageSection>
-            <ProductImage src={product.image} alt={product.name} />
-            <ProductImage src={product.image} alt={product.name} />
-            <ProductImage src={product.image} alt={product.name} />
-            <ProductImage src={product.image} alt={product.name} />
-            <ProductImage src={product.image} alt={product.name} />
+            <MainImage
+              src={currentProductImages[selectedImage]}
+              alt={product.name}
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            />
+            <ThumbnailContainer>
+              {currentProductImages.map((image, index) => (
+                <ThumbnailImage
+                  key={index}
+                  src={image}
+                  alt={`${product.name} 썸네일 ${index + 1}`}
+                  active={selectedImage === index}
+                  onClick={() => setSelectedImage(index)}
+                />
+              ))}
+            </ThumbnailContainer>
+            <ZoomedImage isVisible={isZoomed}>
+              <ZoomedImageContent
+                src={currentProductImages[selectedImage]}
+                alt={`${product.name} 확대`}
+                style={{
+                  transform: `scale(2) translate(${-mousePosition.x * 4}px, ${
+                    -mousePosition.y * 4
+                  }px)`,
+                  transformOrigin: "center center",
+                }}
+              />
+            </ZoomedImage>
           </ImageSection>
           <InfoSection>
             <ProductTitle>{product.name}</ProductTitle>
@@ -361,7 +501,7 @@ function GoodsDetail() {
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCount>{(product.price * quantity).toLocaleString()}원</AmountCount>
+              <AmountCountText>{(product.price * quantity).toLocaleString()}원</AmountCountText>
             </AmountCountContainer>
 
             <ButtonContainer>
