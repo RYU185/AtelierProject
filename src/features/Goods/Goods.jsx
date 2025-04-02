@@ -138,15 +138,15 @@ const ProductCard = styled.div`
     }
 
     ${ProductInfo} {
-      background-color: #0055aa;
+      background-color: #e9e9e9;
     }
 
     ${ProductName} {
-      color: #ffffff;
+      color: #1a1a1a;
     }
 
     ${ProductPrice} {
-      color: #ffffff;
+      color: #1a1a1a;
     }
   }
 `;
