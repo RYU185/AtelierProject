@@ -53,6 +53,7 @@ const DataController = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 30px;
+  padding: 0 22px;
 `;
 
 const SearchContainer = styled.div`

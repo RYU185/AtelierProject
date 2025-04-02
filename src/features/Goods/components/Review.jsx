@@ -29,7 +29,11 @@ const ReviewInputButton = styled.button`
   background: #0068ca;
   color: white;
   border: none;
+  border-radius: 5px;
+  margin-left: auto;
+  display: block;
   cursor: pointer;
+
 `;
 
 const PaginationContainer = styled.div`

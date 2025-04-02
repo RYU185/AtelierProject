@@ -1,14 +1,16 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import GlobalStyle from "./styles/GlobalStyle";
 import AppRoutes from "./routes/AppRoutes";
+import CustomCursor from "./components/CustomCursor";
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <Router>
+      <CustomCursor />
       <GlobalStyle />
       <AppRoutes />
-    </BrowserRouter>
+    </Router>
   );
 };
 

@@ -50,6 +50,8 @@ const MenuButton = styled.button`
   background: none;
   text-align: left;
   cursor: pointer;
+  color: ${(props) =>
+    props.type === "edit" ? "#0068ca" : props.type === "delete" ? "#ff4d4f" : "#333"};
   &:hover {
     background: #f5f5f5;
   }
@@ -70,8 +72,8 @@ function ReviewBlock({ review }) {
         <ReviewContent>{review.content}</ReviewContent>
         <MoreButton onClick={handleMoreClick}>⋮</MoreButton>
         <DropdownMenu isOpen={isOpen}>
-          <MenuButton>수정</MenuButton>
-          <MenuButton>삭제</MenuButton>
+          <MenuButton type="edit">수정</MenuButton>
+          <MenuButton type="delete">삭제</MenuButton>
         </DropdownMenu>
       </ReviewItem>
     </div>

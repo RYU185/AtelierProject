@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -156,19 +156,24 @@ const ProductDescription = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 10px;
+  position: relative;
 `;
 
 const GoToCartButton = styled.button`
   width: 100%;
   height: 60px;
   padding: 15px;
-  background-color: #f3f3f3;
+  background-color: #fafafa;
   color: #0068ca;
   border: 2px solid #0068ca;
   border-radius: 4px;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
+
+  &:hover {
+    background-color: #e2e2e2;
+  }
 `;
 
 const PurchaseButton = styled.button`
@@ -259,6 +264,42 @@ const ReviewHR = styled.hr`
   border: 2px solid #c9c9c9;
 `;
 
+const CartNotification = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin-top: 10px;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #0068ca;
+  border-radius: 4px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+`;
+
+const NotificationText = styled.div`
+  color: #0068ca;
+  font-size: 14px;
+  margin-bottom: 10px;
+`;
+
+const GoToCartLink = styled.button`
+  width: 100%;
+  padding: 8px 16px;
+  background-color: #0068ca;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: #004483;
+  }
+`;
+
 function GoodsDetail() {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
@@ -268,6 +309,8 @@ function GoodsDetail() {
   // 확대 창 상태관리
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // 배웠던거 - drowing에서 썼던 상태관리
+  const [showCartNotice, setshowCartNotice] = useState(false);
+  const navigate = useNavigate();
 
   const handleIncrease = () => {
     if (stock > 0) {
@@ -331,6 +374,15 @@ function GoodsDetail() {
       x: centeredX,
       y: centeredY,
     });
+  };
+
+  const handleAddToCart = () => {
+    setshowCartNotice(true);
+  };
+
+  const handleGoToCart = () => {
+    setshowCartNotice(false);
+    navigate("/cart");
   };
 
   const products = {
@@ -509,7 +561,13 @@ function GoodsDetail() {
             </AmountCountContainer>
 
             <ButtonContainer>
-              <GoToCartButton>장바구니 담기</GoToCartButton>
+              <GoToCartButton onClick={handleAddToCart}>장바구니 담기</GoToCartButton>
+              {showCartNotice && (
+                <CartNotification>
+                  <NotificationText>장바구니에 담겼습니다</NotificationText>
+                  <GoToCartLink onClick={handleGoToCart}>장바구니로 가기</GoToCartLink>
+                </CartNotification>
+              )}
               <PurchaseButton>바로 구매하기</PurchaseButton>
             </ButtonContainer>
           </InfoSection>
