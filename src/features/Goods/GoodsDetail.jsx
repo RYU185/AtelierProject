@@ -13,6 +13,7 @@ import goods7 from "../../assets/GoodsIMG/goods7.jpg";
 import goods8 from "../../assets/GoodsIMG/goods8.jpg";
 import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
+import Review from "./components/Review";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -250,6 +251,12 @@ const AmountCountText = styled.div`
   font-size: 24px;
   font-weight: bold;
   color: #0068ca;
+`;
+
+const ReviewHR = styled.hr`
+  margin: 0 auto;
+  width: 73rem;
+  border: 2px solid #c9c9c9;
 `;
 
 function GoodsDetail() {
@@ -511,6 +518,8 @@ function GoodsDetail() {
           </InfoSection>
         </ProductContainer>
       </Container>
+      <ReviewHR />
+      <Review />
       <Footer />
     </>
   );
