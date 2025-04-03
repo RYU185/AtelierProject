@@ -13,9 +13,11 @@ import UserGallery from "../features/UserGallery/UserGallery";
 import Artist from "../features/Artist/Artist";
 import ArtistDetail from "../features/Artist/ArtistDetail";
 import Community from "../features/Community/Community";
-import FAQ from "../features/faq/FAQ";
-import Guide from "../features/faq/components/Guide";
-import ContactUs from "../features/faq/components/ContactUs";
+import SupportPage from "../features/support/SupportPage";
+import NoticePage from "../features/support/NoticePage";
+import GuidePage from "../features/support/GuidePage";
+import LocationPage from "../features/support/LocationPage";
+import ContactusPage from "../features/support/ContactusPage";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
 import AdminArtAdd from "../features/adminpage/components/AdminArtAdd";
@@ -28,9 +30,7 @@ import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
-import NoticePage from "../features/support/NoticePage";
 import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
-// import AdminUser from "../features/adminpage/components/AdminUser";
 
 function AppRoutes() {
   return (
@@ -46,7 +46,7 @@ function AppRoutes() {
       <Route path="/AdminUser" element={<AdminUser />} />
       <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
       <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
-      {/* <Route path="AdminUser" element={<AdminUser />} /> */}
+      <Route path="AdminUser" element={<AdminUser />} />
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
@@ -61,11 +61,11 @@ function AppRoutes() {
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
       <Route path="/community" element={<Community />} />
-      <Route path="/faq" element={<FAQ />}>
-        <Route index element={<Guide />} />
-        <Route path="guide" element={<Guide />} />
-        <Route path="contactus" element={<ContactUs />} />
-        <Route path="noticepage" element={<NoticePage />} />
+      <Route path="/support" element={<SupportPage />}>
+        <Route path="notice" element={<NoticePage />} />
+        <Route path="guide" element={<GuidePage />} />
+        <Route path="location" element={<LocationPage />} />
+        <Route path="contact" element={<ContactusPage />} />
       </Route>
 
       <Route path="/ticket" element={<TicketPage />} />
