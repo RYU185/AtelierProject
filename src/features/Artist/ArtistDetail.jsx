@@ -7,17 +7,9 @@ import artist1 from "../../assets/ArtistIMG/artist1.jpg";
 import artist2 from "../../assets/ArtistIMG/artist2.png";
 import artist3 from "../../assets/ArtistIMG/artist3.jpg";
 import artist4 from "../../assets/ArtistIMG/artist4.jpg";
-
-const TitleContainer = styled.div`
-  width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  margin-bottom: 60px;
-  margin-top: 20px;
-`;
+import art1 from "../../assets/ArtIMG/1.jpg";
+import art2 from "../../assets/ArtIMG/2.jpg";
+import art3 from "../../assets/ArtIMG/3.jpg";
 
 const DetailWrapper = styled.div`
   width: 50%;
@@ -49,7 +41,6 @@ const ArtistImage = styled.img`
   width: 100%;
   max-width: 500px;
   height: auto;
-  border-radius: 8px;
   margin-bottom: 20px;
 `;
 
@@ -93,28 +84,15 @@ const WorksGrid = styled.div`
 `;
 
 const WorkCard = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: none;
   overflow: hidden;
+  width: 300px;
+  height: 300px;
 `;
 
 const WorkImage = styled.img`
   width: 100%;
   height: auto;
-`;
-
-const WorkInfo = styled.div`
-  padding: 10px;
-`;
-
-const WorkName = styled.h3`
-  font-size: 18px;
-  margin: 0;
-`;
-
-const WorkDescription = styled.p`
-  font-size: 14px;
-  color: #666;
 `;
 
 const ArtistDetail = () => {
@@ -133,6 +111,22 @@ const ArtistDetail = () => {
       default:
         return artist1;
     }
+  };
+
+  const getArtImage = (id) => {
+    switch (id) {
+      case "1":
+        return art1;
+      case "2":
+        return art2;
+      case "3":
+        return art3;
+    }
+  };
+
+  const art = {
+    id: id,
+    imageUrl: getArtImage(id),
   };
 
   const artist = {
@@ -228,7 +222,7 @@ const ArtistDetail = () => {
           <WorksGrid>
             {[1, 2, 3, 4].map((workId) => (
               <WorkCard key={workId}>
-                <WorkImage src={artist.imageUrl} alt={`작품 ${workId}`} />
+                <WorkImage src={art.imageUrl} alt={`작품 ${workId}`} />
               </WorkCard>
             ))}
           </WorksGrid>
