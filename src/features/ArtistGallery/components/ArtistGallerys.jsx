@@ -15,6 +15,7 @@ const Img = styled.img`
   margin-right: 40px;
   margin-left: 100px;
   transition: transform 0.3s ease;
+  cursor: pointer;
   &:hover {
     transform: scale(0.95);
     opacity: 0.8;
@@ -22,6 +23,7 @@ const Img = styled.img`
 `;
 
 const ArtistGalleryIntro = styled.div`
+  cursor: pointer;
   & h1 {
     font-size: 35px;
     color: #1e1e1e;

@@ -62,6 +62,7 @@ const PosterBox = styled.div`
   width: 30%;
   height: 500px;
   border-right: 1.3px solid #bababa;
+  padding-left: 40px;
 `;
 
 const InfoBox = styled.div`

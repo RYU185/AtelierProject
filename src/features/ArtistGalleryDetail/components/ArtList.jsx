@@ -31,7 +31,7 @@ const ArrowButton = styled.div`
 
 const LeftButton = (props) => {
   const { onClick } = props;
-  return <ArrowButton onClick={onClick} style={{ left: "10px" }} />;
+  return <ArrowButton onClick={onClick} style={{ left: "155px" }} />;
 };
 
 const RightButton = (props) => {
@@ -39,7 +39,7 @@ const RightButton = (props) => {
   return (
     <ArrowButton
       onClick={onClick}
-      style={{ right: "10px", transform: "translateY(-50%) rotate(180deg)" }}
+      style={{ right: "155px", transform: "translateY(-50%) rotate(180deg)" }}
     />
   );
 };
