@@ -9,24 +9,34 @@ const CursorDot = styled.div`
   position: fixed;
   pointer-events: none;
   z-index: 9999;
-  transition: transform 10s ease;
+  transition: transform 0.1s ease;
   transform: translate(-50%, -50%);
 `;
 
 const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateCursorPosition = (e) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      setTargetPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    const animateCursor = () => {
+      setPosition((prev) => ({
+        x: prev.x + (targetPosition.x - prev.x) * 0.5,
+        y: prev.y + (targetPosition.y - prev.y) * 0.5,
+      }));
+      requestAnimationFrame(animateCursor);
     };
 
     window.addEventListener("mousemove", updateCursorPosition);
+    requestAnimationFrame(animateCursor);
 
     return () => {
       window.removeEventListener("mousemove", updateCursorPosition);
     };
-  }, []);
+  }, [targetPosition]);
 
   return (
     <CursorDot
