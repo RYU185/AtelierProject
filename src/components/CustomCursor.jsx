@@ -11,6 +11,7 @@ const CursorDot = styled.div`
   z-index: 9999;
   transition: transform 1.3s ease;
   transform: translate(-50%, -50%);
+  display: none;
 `;
 
 const CustomCursor = () => {

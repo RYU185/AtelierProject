@@ -36,16 +36,16 @@ const NavigationButton = styled.button`
   transform: translateY(-50%);
   background: rgba(255, 255, 255, 0.8);
   border: none;
-  padding: 20px 25px;
+  padding: 20px 30px;
   font-size: 30px;
   font-weight: bold;
   cursor: pointer;
   border-radius: 50%;
-  z-index: 1000;
+  z-index: 10;
   color: #018ec8;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   &:hover {
-    background: rgba(200, 200, 200, 0.8);
+    background: #ebf2ff;
   }
 `;
 

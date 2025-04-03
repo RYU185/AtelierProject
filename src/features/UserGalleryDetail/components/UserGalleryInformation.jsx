@@ -59,7 +59,7 @@ function UserGalleryInformation() {
       <InformationTitle>전시 정보</InformationTitle>
       <InformationItem>
         <ItemLabel>제목</ItemLabel>
-        <ItemValue>산업 디자인인</ItemValue>
+        <ItemValue>산업 디자인</ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>일정</ItemLabel>
