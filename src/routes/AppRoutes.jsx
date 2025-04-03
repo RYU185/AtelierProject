@@ -16,7 +16,6 @@ import Community from "../features/Community/Community";
 import FAQ from "../features/faq/FAQ";
 import Guide from "../features/faq/components/Guide";
 import ContactUs from "../features/faq/components/ContactUs";
-import Notice from "../features/Notice/Notice";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
 import AdminArtAdd from "../features/adminpage/components/AdminArtAdd";
@@ -29,9 +28,7 @@ import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
-import NoticeDetail from "../features/Notice/components/NoticeDetail";
-
-
+import NoticePage from "../features/supprt/NoticePage";
 
 function AppRoutes() {
   return (
@@ -46,8 +43,6 @@ function AppRoutes() {
       <Route path="/AdminTicketList" element={<AdminTicketList />} />
       <Route path="/AdminUser" element={<AdminUser />} />
       <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
-
-     
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
@@ -66,11 +61,9 @@ function AppRoutes() {
         <Route index element={<Guide />} />
         <Route path="guide" element={<Guide />} />
         <Route path="contactus" element={<ContactUs />} />
-        <Route path="notice" element={<Notice />} />
-        <Route path="notice/:id" element={<NoticeDetail />} />
-
+        <Route path="noticepage" element={<NoticePage />} />
       </Route>
-      
+
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/cart" element={<CartPage />} />
