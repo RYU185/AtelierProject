@@ -6,6 +6,7 @@ import TicketButton from "./components/TicketButton";
 import ArtList from "./components/ArtList";
 import Footer from "../Footer";
 import styled from "styled-components";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -46,7 +47,7 @@ const Button = styled.button`
   padding: 10px;
   margin: 10px;
   &:hover {
-    background-color: #cddeff;
+    background-color: #b0c1e1;
   }
 `;
 
@@ -69,13 +70,15 @@ const InfoBox = styled.div`
 `;
 const Box = styled.div`
   margin-top: 130px;
+  margin-bottom: 150px;
   & h1 {
     text-align: center;
-    margin-bottom: 50px;
   }
 `;
 
 function ArtistGalleryDetail() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <TitleContainer>
@@ -83,7 +86,10 @@ function ArtistGalleryDetail() {
         <Title>ARTIST GALLERY</Title>
       </TitleContainer>
       <ButtonDiv>
-        <Button> &lt; 목록 보기</Button>
+        <Button onClick={() => navigate("/gallery/artistgallery")}>
+          {" "}
+          &lt; 목록 보기
+        </Button>
       </ButtonDiv>
       <Container>
         <PosterBox>

@@ -7,7 +7,7 @@ const ArtContainer = styled.div`
 
 const ArtImage = styled.img`
   width: 100%;
-  max-height: 400px;
+  max-height: 500px;
   object-fit: contain;
 `;
 

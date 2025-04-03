@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Button = styled.div`
@@ -16,9 +17,10 @@ const Button = styled.div`
 `;
 
 function TicketButton() {
+  const navigate = useNavigate();
   return (
     <div>
-      <Button>티켓 예매하기</Button>
+      <Button onClick={() => navigate("/ticket")}>티켓 예매하기</Button>
     </div>
   );
 }
