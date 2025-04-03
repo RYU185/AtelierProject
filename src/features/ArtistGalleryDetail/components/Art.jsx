@@ -17,10 +17,12 @@ const ArtTitle = styled.h3`
 
 const ArtArtist = styled.p`
   color: #888;
+  margin: 5px;
 `;
 
 const ArtDate = styled.p`
   color: #888;
+  margin: 5px;
 `;
 
 function Art({ image, title, artist, date }) {

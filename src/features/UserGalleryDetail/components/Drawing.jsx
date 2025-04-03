@@ -17,10 +17,12 @@ const DrawingTitle = styled.h3`
 
 const DrawingUser = styled.p`
   color: #888;
+  margin: 5px;
 `;
 
 const DrawingDate = styled.p`
   color: #888;
+  margin: 5px;
 `;
 
 function Drawing({ image, title, user, date }) {

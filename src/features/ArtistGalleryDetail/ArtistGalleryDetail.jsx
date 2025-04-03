@@ -76,6 +76,7 @@ const Box = styled.div`
   margin-bottom: 150px;
   & h1 {
     text-align: center;
+    margin-bottom: 100px;
   }
 `;
 

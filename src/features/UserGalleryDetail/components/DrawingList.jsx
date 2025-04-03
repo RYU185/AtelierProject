@@ -49,30 +49,31 @@ function DrawingList() {
     {
       image: "/src/assets/UserDrawingIMG/Drawing.jpg",
       title: "발자취",
-      artist: "김말자",
+      user: "김말자",
       date: "2024.01.13",
     },
     {
       image: "/src/assets/UserDrawingIMG/Drawing1.png",
       title: "추구미",
-      artist: "최미숙",
+      user: "최미숙",
       date: "2024.02.20",
     },
     {
       image: "/src/assets/UserDrawingIMG/Drawing2.png",
       title: "카우걸",
-      artist: "이미자",
+      user: "이미자",
       date: "2024.03.15",
     },
     {
       image: "/src/assets/UserDrawingIMG/Drawing3.png",
       title: "단잠",
-      artist: "최민지",
+      user: "최민지",
       date: "2024.04.05",
     },
   ];
+
   const settings = {
-    infinite: true, // 무한 루프
+    infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -82,13 +83,13 @@ function DrawingList() {
 
   return (
     <Slider {...settings}>
-      {artWorks.map((user, index) => (
+      {artWorks.map((item, index) => (
         <div key={index}>
           <Drawing
-            image={user.image}
-            artist={user.user}
-            title={user.title}
-            date={user.date}
+            image={item.image}
+            title={item.title}
+            user={item.user}
+            date={item.date}
           />
         </div>
       ))}
