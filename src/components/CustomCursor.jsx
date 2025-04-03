@@ -9,7 +9,7 @@ const CursorDot = styled.div`
   position: fixed;
   pointer-events: none;
   z-index: 9999;
-  transition: transform 0.1s ease;
+  transition: transform 0.9s ease;
   transform: translate(-50%, -50%);
 `;
 
@@ -24,8 +24,8 @@ const CustomCursor = () => {
 
     const animateCursor = () => {
       setPosition((prev) => ({
-        x: prev.x + (targetPosition.x - prev.x) * 0.5,
-        y: prev.y + (targetPosition.y - prev.y) * 0.5,
+        x: prev.x + (targetPosition.x - prev.x) * 0.6,
+        y: prev.y + (targetPosition.y - prev.y) * 0.6,
       }));
       requestAnimationFrame(animateCursor);
     };
