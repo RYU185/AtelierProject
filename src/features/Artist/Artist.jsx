@@ -51,10 +51,14 @@ const ArtistContainer = styled.div`
 
 const Artist = () => {
   const artists = [
-    { id: 1, name: "Artist 1", bio: "Bio for Artist 1", imageUrl: artist1 },
-    { id: 2, name: "Artist 2", bio: "Bio for Artist 2", imageUrl: artist2 },
-    { id: 3, name: "Artist 3", bio: "Bio for Artist 3", imageUrl: artist3 },
-    { id: 4, name: "Artist 4", bio: "Bio for Artist 4", imageUrl: artist4 },
+    { id: 1, name: "Artist 1", bio: "", imageUrl: artist1 },
+    { id: 2, name: "Artist 2", bio: "", imageUrl: artist2 },
+    { id: 3, name: "Artist 3", bio: "", imageUrl: artist3 },
+    { id: 4, name: "Artist 4", bio: "", imageUrl: artist4 },
+    { id: 1, name: "Artist 1", bio: "", imageUrl: artist1 },
+    { id: 2, name: "Artist 2", bio: "", imageUrl: artist2 },
+    { id: 3, name: "Artist 3", bio: "", imageUrl: artist3 },
+    { id: 4, name: "Artist 4", bio: "", imageUrl: artist4 },
   ];
 
   return (
