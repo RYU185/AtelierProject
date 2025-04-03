@@ -16,8 +16,8 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 30px;
-  margin-bottom: 20px;
-  margin-top: 20px;
+  margin-bottom: 50px;
+  margin-top: 78px;
 `;
 
 const BackTitle = styled.h1`

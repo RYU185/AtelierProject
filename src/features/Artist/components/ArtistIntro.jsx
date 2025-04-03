@@ -29,9 +29,6 @@ const ArtistImage = styled.img`
   border-radius: 8px;
   margin: 0;
   transition: object-position 20s ease;
-
-  &:hover {
-  }
 `;
 
 const ArtistInfo = styled.div`
@@ -42,15 +39,16 @@ const ArtistInfo = styled.div`
   height: 70px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   opacity: 0;
   transition: opacity 0.5s ease;
   z-index: 2;
   padding: 0 20px 10px 20px;
-  background-color: #2f343b;
   margin: 0;
+  background-color: #111111;
   border-radius: 0 0 8px 8px;
+  pointer-events: none;
 `;
 
 const ArtistName = styled.div`
@@ -61,8 +59,8 @@ const ArtistName = styled.div`
 
 const CommunicateButton = styled.button`
   padding: 8px 16px;
-  background-color: #ffffff;
-  color: #2f343b;
+  color: #ffffff;
+  background-color: #111111;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -71,8 +69,7 @@ const CommunicateButton = styled.button`
   font-weight: bold;
 
   &:hover {
-    background-color: #e0e0e0;
-    color: #0054d3;
+    color: #ffffff;
   }
 `;
 
