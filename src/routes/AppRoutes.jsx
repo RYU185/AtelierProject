@@ -28,7 +28,7 @@ import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
-import NoticePage from "../features/supprt/NoticePage";
+import NoticePage from "../features/support/NoticePage";
 
 function AppRoutes() {
   return (

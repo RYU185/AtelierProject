@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import TabBar from "./SupportMenu";
+import TabBar from "../components/SupportMenu";
 
 const TitleContainer = styled.div`
   width: 100%;
