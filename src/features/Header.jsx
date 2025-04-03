@@ -299,12 +299,20 @@ const Header = () => {
               </NavItemContainer>
 
               <NavItemContainer
-                onMouseEnter={() => handleMouseEnter("Guide")}
+                onMouseEnter={() => handleMouseEnter("Notice")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem onClick={() => navigate("/faq/guide")}>
-                  FAQ
-                  <DropdownMenu $show={showDropdown === "Guide"}>
+                <NavItem onClick={() => navigate("/faq/notice")}>
+                  고객 지원
+                  <DropdownMenu $show={showDropdown === "Notice"}>
+                  <DropdownItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/faq/notice");
+                      }}
+                    >
+                      공지사항
+                    </DropdownItem>
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
@@ -324,18 +332,10 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/faq/notice");
-                      }}
-                    >
-                      공지사항
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
                         navigate("/faq/customersupport");
                       }}
                     >
-                      고객센터
+                      문의하기
                     </DropdownItem>
                   </DropdownMenu>
                 </NavItem>
