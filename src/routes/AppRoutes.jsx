@@ -12,7 +12,6 @@ import ArtistGallery from "../features/ArtistGallery/ArtistGallery";
 import UserGallery from "../features/UserGallery/UserGallery";
 import Artist from "../features/Artist/Artist";
 import ArtistDetail from "../features/Artist/ArtistDetail";
-import Community from "../features/Community/Community";
 import SupportPage from "../features/support/SupportPage";
 import NoticePage from "../features/support/NoticePage";
 import GuidePage from "../features/support/GuidePage";
@@ -31,6 +30,7 @@ import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
+import CommunityMain from "../features/community/CommunityMain";
 
 function AppRoutes() {
   return (
@@ -60,7 +60,7 @@ function AppRoutes() {
 
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
-      <Route path="/community" element={<Community />} />
+      <Route path="/community" element={<CommunityMain />} />
       <Route path="/support" element={<SupportPage />}>
         <Route path="notice" element={<NoticePage />} />
         <Route path="guide" element={<GuidePage />} />
