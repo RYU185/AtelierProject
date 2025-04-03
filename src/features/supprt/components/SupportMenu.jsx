@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 
-const TabBarBox = styled.div`
+const SupportMenuBox = styled.div`
   width: 80%;
   margin: 0 auto;
   margin-top: 50px;
@@ -28,7 +28,7 @@ const Button = styled.div`
   }
 `;
 
-function TabBar() {
+function SupportMenu() {
   const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
 
   const handleButtonClick = (index) => {
@@ -39,7 +39,7 @@ function TabBar() {
 
   return (
     <div>
-      <TabBarBox>
+      <SupportMenuBox>
         <SearchBox>
           {buttonNames.map((name, index) => (
             <Button
@@ -55,9 +55,9 @@ function TabBar() {
             </Button>
           ))}
         </SearchBox>
-      </TabBarBox>
+      </SupportMenuBox>
     </div>
   );
 }
 
-export default TabBar;
+export default SupportMenu;

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import NoticeList from "./components/NoticeList";
-import TopButton from "../home/components/TopButton";
+import SupportMenu from "./components/SupportMenu";
 
-function Notice() {
+function NoticePage() {
   const [currentTab, setCurrentTab] = useState("");
 
   return (
     <div className="notice-container">
       <NoticeList />
-      <TopButton />
+      <SupportMenu />
     </div>
   );
 }
 
-export default Notice;
+export default NoticePage;
