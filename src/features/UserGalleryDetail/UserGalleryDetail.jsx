@@ -9,12 +9,28 @@ import Footer from "../Footer";
 function UserGalleryDetail() {
   return (
     <div>
-      <Header />
-      <UserGalleryPoster />
-      <TicketButton />
-      <UserGalleryInformation />
-      <DrawingList />
-      <Footer />
+      <TitleContainer>
+        <BackTitle>ARTIST GALLERY</BackTitle>
+        <Title>{gallery?.title || "전시 정보 없음"}</Title>
+      </TitleContainer>
+      <ButtonDiv>
+        <Button onClick={() => navigate("/gallery/usergallery")}>
+          {" "}
+          &lt; 목록 보기
+        </Button>
+      </ButtonDiv>
+      <Container>
+        <PosterBox>
+          <UserGalleryPoster />
+        </PosterBox>
+        <InfoBox>
+          <UserGalleryInformation />
+        </InfoBox>
+      </Container>
+      <Box>
+        <h1>참여 작품</h1>
+        <DrawingList />
+      </Box>
     </div>
   );
 }

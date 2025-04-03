@@ -1,12 +1,10 @@
 import React from "react";
-import Header from "../Header";
+import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import ArtistGalleryPoster from "./components/ArtistGalleryPoster";
 import ArtistGalleryInformation from "./components/ArtistGalleryInformation";
-import TicketButton from "./components/TicketButton";
+
 import ArtList from "./components/ArtList";
-import Footer from "../Footer";
-import styled from "styled-components";
-import { Navigate, useNavigate } from "react-router-dom";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -40,6 +38,7 @@ const ButtonDiv = styled.div`
   margin: 0 auto;
   margin-top: 50px;
 `;
+
 const Button = styled.button`
   background-color: #ebf2ff;
   border: none;
@@ -58,6 +57,7 @@ const Container = styled.div`
   padding-top: 50px;
   display: flex;
 `;
+
 const PosterBox = styled.div`
   width: 30%;
   height: 500px;
@@ -69,6 +69,7 @@ const InfoBox = styled.div`
   width: 70%;
   padding-left: 20px;
 `;
+
 const Box = styled.div`
   margin-top: 130px;
   margin-bottom: 150px;
@@ -77,14 +78,33 @@ const Box = styled.div`
   }
 `;
 
+const galleryData = [
+  {
+    id: "1",
+    title: "삶의 예찬",
+    date: "2025.01.20 ~ 2025.02.01",
+    artists: "곽두팔 화백, 김철용 화백",
+    description: "삶을 찬미하는 작품들...",
+  },
+  {
+    id: "2",
+    title: "다른 전시",
+    date: "2025.02.15 ~ 2025.03.01",
+    artists: "이순신 화백, 홍길동 화백",
+    description: "다른 전시 설명...",
+  },
+];
+
 function ArtistGalleryDetail() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const gallery = galleryData.find((item) => item.id === id);
 
   return (
     <div>
       <TitleContainer>
         <BackTitle>ARTIST GALLERY</BackTitle>
-        <Title>ARTIST GALLERY</Title>
+        <Title>{gallery?.title || "전시 정보 없음"}</Title>
       </TitleContainer>
       <ButtonDiv>
         <Button onClick={() => navigate("/gallery/artistgallery")}>
@@ -95,7 +115,6 @@ function ArtistGalleryDetail() {
       <Container>
         <PosterBox>
           <ArtistGalleryPoster />
-          <TicketButton />
         </PosterBox>
         <InfoBox>
           <ArtistGalleryInformation />

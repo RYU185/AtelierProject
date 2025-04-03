@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ArtistGallerys from "./ArtistGallerys";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 94%;
@@ -31,9 +32,10 @@ const GalleryGrid = styled.div`
 `;
 
 function ArtistGalleryLsit() {
+  const navigate = useNavigate();
   const galleryItems = [
     {
-      id: 1, // ⬅️ id 값을 유니크하게 설정해야 함!
+      id: 1,
       imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
       title: "삶의 예찬",
       date: "2025.01.20 ~ 2025.02.01",
@@ -41,7 +43,7 @@ function ArtistGalleryLsit() {
       description: "아티스트 갤러리 포스터 설명...",
     },
     {
-      id: 2, // ⬅️ 각 항목마다 고유한 id 할당
+      id: 2,
       imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
       title: "자연의 숨결",
       date: "2025.03.15 ~ 2025.04.01",
@@ -81,7 +83,12 @@ function ArtistGalleryLsit() {
     <Container>
       <GalleryGrid>
         {galleryItems.map((item) => (
-          <ArtistGallerys key={item.id} {...item} />
+          <div
+            key={item.id}
+            onClick={() => navigate(`/gallery/artistgallery/${item.id}`)}
+          >
+            <ArtistGallerys {...item} />
+          </div>
         ))}
       </GalleryGrid>
     </Container>

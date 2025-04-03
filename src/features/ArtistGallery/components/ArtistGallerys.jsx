@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 90%;
   border: none;
   margin-top: 40px;
   display: flex;
+  cursor: pointer;
 `;
 
 const Img = styled.img`
@@ -15,7 +17,6 @@ const Img = styled.img`
   margin-right: 40px;
   margin-left: 100px;
   transition: transform 0.3s ease;
-  cursor: pointer;
   &:hover {
     transform: scale(0.95);
     opacity: 0.8;
@@ -23,7 +24,6 @@ const Img = styled.img`
 `;
 
 const ArtistGalleryIntro = styled.div`
-  cursor: pointer;
   & h1 {
     font-size: 35px;
     color: #1e1e1e;
@@ -45,30 +45,22 @@ const ArtistGalleryIntro = styled.div`
   }
 `;
 
-function ArtistGallerys() {
+function ArtistGallerys({ id, imageUrl, title, date, artists, description }) {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/gallery/artistgallery/${id}`);
+  };
+
   return (
-    <div>
-      <Container>
-        <Img
-          src="/src/assets/ArtistGalleryIMG/삶의 예찬.jpg"
-          alt="아티스트 갤러리 "
-        />
-        <ArtistGalleryIntro>
-          <h1>삶의 예찬</h1>
-          <h2>2025.01.20 ~ 2025.02.01</h2>
-          <h3>곽두팔 화백, 김철용 화백</h3>
-          <p>
-            아티스트 갤러리 포스터 설명아티스트 갤러리 포스터 설명 아티스트
-            갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리
-            포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명
-            아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트
-            갤러리 포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리
-            포스터 설명 아티스트 갤러리 포스터 설명 아티스트 갤러리 포스터 설명
-            아티스트 갤러리 포스터 설명
-          </p>
-        </ArtistGalleryIntro>
-      </Container>
-    </div>
+    <Container onClick={handleClick}>
+      <Img src={imageUrl} alt={title} />
+      <ArtistGalleryIntro>
+        <h1>{title}</h1>
+        <h2>{date}</h2>
+        <h3>{artists}</h3>
+        <p>{description}</p>
+      </ArtistGalleryIntro>
+    </Container>
   );
 }
 
