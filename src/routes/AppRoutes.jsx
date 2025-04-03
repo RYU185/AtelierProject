@@ -30,12 +30,14 @@ import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
+import NoticeCreate from "../features/support/components/NoticeCreate";
+import NoticeDetail from "../features/support/components/NoticeDetail";
+import NoticeEdit from "../features/support/components/NoticeEdit";
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
 
-
 function AppRoutes() {
-  return ( 
+  return (
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
@@ -50,7 +52,6 @@ function AppRoutes() {
       <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
       <Route path="AdminUser" element={<AdminUser />} />
       <Route path="AdminTicketChart" element={<AdminTicketChart />} />
-     
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
@@ -65,11 +66,15 @@ function AppRoutes() {
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
       <Route path="/community" element={<CommunityMain />} />
-      <Route path="/support" element={<SupportPage />}>
+      <Route path="/support/*" element={<SupportPage />}>
         <Route path="notice" element={<NoticePage />} />
+        <Route path="notice/create" element={<NoticeCreate />} />
+        <Route path="notice/:id" element={<NoticeDetail />} />
+        <Route path="notice/edit/:id" element={<NoticeEdit />} />
+
         <Route path="guide" element={<GuidePage />} />
         <Route path="location" element={<LocationPage />} />
-        <Route path="contact" element={<ContactusPage />} />
+        <Route path="contactus" element={<ContactusPage />} />
       </Route>
 
       <Route path="/ticket" element={<TicketPage />} />

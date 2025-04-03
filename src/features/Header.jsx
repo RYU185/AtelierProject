@@ -19,7 +19,7 @@ const HeaderWrapper = styled.header`
 `;
 
 const HeaderSpacer = styled.div`
-  height: 80px;
+  height: 70px;
   width: 100%;
 `;
 

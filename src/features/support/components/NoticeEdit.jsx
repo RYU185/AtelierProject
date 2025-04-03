@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -110,7 +111,65 @@ const RightButtonGroup = styled.div`
   gap: 10px;
 `;
 
-const NoticeEdit = ({ noticeId }) => {
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 400px;
+  text-align: center;
+`;
+
+const ModalTitle = styled.h3`
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+`;
+
+const ModalText = styled.p`
+  margin-bottom: 2rem;
+  color: #666;
+`;
+
+const ModalButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+const ModalButton = styled.button`
+  padding: 0.5rem 2rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: white;
+  color: #333;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${(props) => (props.confirm ? "#dc3545" : "#333")};
+    color: white;
+    border-color: ${(props) => (props.confirm ? "#dc3545" : "#333")};
+  }
+`;
+
+const NoticeEdit = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -123,7 +182,7 @@ const NoticeEdit = ({ noticeId }) => {
       title: "긴급 휴관 안내",
       content: "휴관 관련 상세 내용...",
     });
-  }, [noticeId]);
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -137,18 +196,21 @@ const NoticeEdit = ({ noticeId }) => {
     e.preventDefault();
     // TODO: API 연동
     console.log("Submit:", formData);
+    navigate("/support/notice");
   };
 
   const handleDelete = () => {
-    if (window.confirm("정말로 삭제하시겠습니까?")) {
-      // TODO: API 연동
-      console.log("Delete:", noticeId);
-    }
+    setShowModal(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    // TODO: API 연동
+    console.log("Delete:", id);
+    navigate("/support/notice");
   };
 
   const handleCancel = () => {
-    // TODO: 뒤로가기 구현
-    console.log("Cancel");
+    navigate("/support/notice");
   };
 
   return (
@@ -190,6 +252,23 @@ const NoticeEdit = ({ noticeId }) => {
           </RightButtonGroup>
         </ButtonGroup>
       </Form>
+
+      {showModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalTitle>정말 삭제하시겠습니까?</ModalTitle>
+            <ModalText>복구가 불가능합니다.</ModalText>
+            <ModalButtonGroup>
+              <ModalButton onClick={() => setShowModal(false)}>
+                취소
+              </ModalButton>
+              <ModalButton confirm onClick={handleDeleteConfirm}>
+                삭제
+              </ModalButton>
+            </ModalButtonGroup>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </Container>
   );
 };

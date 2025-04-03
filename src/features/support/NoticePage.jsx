@@ -1,111 +1,162 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Header from "../Header";
 
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-`;
-
-const Title = styled.h1`
-  font-size: 48px;
-  color: #333;
-  margin-bottom: 40px;
+const Title = styled.h2`
+  font-size: 4rem;
   text-align: center;
+  margin-bottom: 3rem;
+  color: #333;
   position: relative;
 
-  &::after {
+  &:before {
     content: "NOTICE";
     position: absolute;
-    top: -20px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: 80px;
-    color: rgba(0, 0, 0, 0.05);
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    color: rgba(200, 200, 255, 0.2);
     z-index: -1;
   }
 `;
 
-const MenuContainer = styled.div`
+const TabContainer = styled.div`
   display: flex;
+  margin-bottom: 2rem;
   border-bottom: 1px solid #ddd;
-  margin-bottom: 30px;
 `;
 
-const MenuItem = styled.button`
-  padding: 15px 30px;
-  font-size: 18px;
-  background: none;
-  border: none;
-  color: ${(props) => (props.active ? "#007AFF" : "#666")};
+const Tab = styled.div`
+  padding: 1rem 2rem;
   cursor: pointer;
   position: relative;
+  color: ${(props) => (props.active ? "#000" : "#666")};
+  font-weight: ${(props) => (props.active ? "bold" : "normal")};
 
-  ${(props) =>
-    props.active &&
-    `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #007AFF;
-    }
-  `}
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: ${(props) => (props.active ? "#000" : "transparent")};
+  }
 
   &:hover {
-    color: #007aff;
+    color: #000;
   }
 `;
 
-const ContentContainer = styled.div`
-  display: flex;
-  gap: 40px;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-`;
-
-const SortContainer = styled.div`
+const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
+  margin-bottom: 2rem;
+  justify-content: space-between;
 `;
 
-const SortButton = styled.button`
-  padding: 8px 16px;
-  background: ${(props) => (props.active ? "#007AFF" : "white")};
-  color: ${(props) => (props.active ? "white" : "#666")};
-  border: 1px solid ${(props) => (props.active ? "#007AFF" : "#ddd")};
-  border-radius: 20px;
-  margin-right: 10px;
+const SearchGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const FilterContainer = styled.div`
+  position: relative;
+`;
+
+const FilterButton = styled.button`
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
   cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   &:hover {
-    background: ${(props) => (props.active ? "#0056b3" : "#f8f9fa")};
+    background-color: #f8f9fa;
+  }
+`;
+
+const FilterDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: ${(props) => (props.show ? "block" : "none")};
+`;
+
+const FilterOption = styled.div`
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+`;
+
+const SearchTypeSelect = styled.select`
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+`;
+
+const SearchBox = styled.div`
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  width: 300px;
+`;
+
+const SearchInput = styled.input`
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0.25rem 0;
+
+  &::placeholder {
+    color: #999;
   }
 `;
 
 const NoticeList = styled.div`
-  width: 100%;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 const NoticeItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #eee;
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
-  transition: background 0.3s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
     background: #f8f9fa;
@@ -122,176 +173,175 @@ const NoticeTitle = styled.div`
   color: #333;
 `;
 
-const NoticeArrow = styled.div`
-  margin-left: 20px;
+const Arrow = styled.div`
+  margin-left: 1rem;
   color: #999;
+  font-size: 1rem;
+  transform: scaleX(0.7);
 `;
 
 const Pagination = styled.div`
   display: flex;
+  align-items: center;
+  margin-top: 2rem;
+  position: relative;
+`;
+
+const PageButtonGroup = styled.div`
+  display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
-  gap: 10px;
+  gap: 2rem;
+  width: 100%;
 `;
 
 const PageButton = styled.button`
-  padding: 8px 12px;
   border: none;
-  background: ${(props) => (props.active ? "#007AFF" : "transparent")};
-  color: ${(props) => (props.active ? "white" : "#666")};
+  background: none;
+  padding: 0.5rem;
   cursor: pointer;
-  border-radius: 4px;
+  color: ${(props) => (props.active ? "#007bff" : "#666")};
+  font-weight: ${(props) => (props.active ? "bold" : "normal")};
+  font-size: 0.9rem;
 
   &:hover {
-    background: ${(props) => (props.active ? "#0056b3" : "#f0f0f0")};
+    color: #007bff;
   }
 `;
 
-const SideContent = styled.div`
-  width: 300px;
-`;
-
-const SearchBox = styled.div`
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 4px;
-`;
-
-const SearchTitle = styled.h3`
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 15px;
-`;
-
-const SearchInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-bottom: 10px;
-
-  &:focus {
-    outline: none;
-    border-color: #007aff;
-  }
-`;
-
-const SearchButton = styled.button`
-  width: 100%;
-  padding: 10px;
-  background: #007aff;
+const SubmitButton = styled.button`
+  padding: 0.5rem 2rem;
+  background-color: #0095ff;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  position: absolute;
+  right: 0;
 
   &:hover {
-    background: #0056b3;
+    background-color: #0056b3;
   }
 `;
 
 const NoticePage = () => {
-  const [activeMenu, setActiveMenu] = useState("공지사항");
-  const [activeSort, setActiveSort] = useState("최신순");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [searchType, setSearchType] = useState("title"); // "title" or "date"
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
+  const [sortOrder, setSortOrder] = useState("newest");
 
-  const menus = [
-    { name: "공지사항", path: "/support/notice" },
-    { name: "시설 안내", path: "/support/guide" },
-    { name: "오시는 길", path: "/support/location" },
-    { name: "문의하기", path: "/support/contact" },
+  const notices = [
+    { id: 1, date: "2025.03.15", title: "긴급 휴관 안내" },
+    { id: 2, date: "2025.03.14", title: "전시회 연장 안내" },
+    { id: 3, date: "2025.03.13", title: "주차장 공사 안내" },
+    { id: 4, date: "2025.03.12", title: "회원 이벤트 안내" },
+    { id: 5, date: "2025.03.11", title: "신규 전시 안내" },
+    { id: 6, date: "2025.03.10", title: "휴관일 변경 안내" },
+    { id: 7, date: "2025.03.09", title: "미술관 투어 안내" },
+    { id: 8, date: "2025.03.08", title: "전시 해설 프로그램" },
   ];
 
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu.name);
-    navigate(menu.path);
+  const filteredNotices = notices.filter((notice) => {
+    if (!searchTerm) return true;
+
+    if (searchType === "date") {
+      return notice.date.includes(searchTerm);
+    } else {
+      return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+  });
+
+  const sortedNotices = [...filteredNotices].sort((a, b) => {
+    const dateA = new Date(a.date.replace(/\./g, "-"));
+    const dateB = new Date(b.date.replace(/\./g, "-"));
+    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+  });
+
+  const handleSearchTypeChange = (e) => {
+    setSearchType(e.target.value);
+    setSearchTerm("");
   };
 
-  const sortOptions = ["최신순", "조회순", "추천순"];
+  const handleFilterClick = () => {
+    setShowFilter(!showFilter);
+  };
 
-  const dummyNotices = [
-    { id: 1, date: "2025.03.15", title: "긴급 휴관 안내" },
-    { id: 2, date: "2025.03.15", title: "긴급 휴관 안내" },
-    { id: 3, date: "2025.03.15", title: "긴급 휴관 안내" },
-    { id: 4, date: "2025.03.15", title: "긴급 휴관 안내" },
-    { id: 5, date: "2025.03.15", title: "긴급 휴관 안내" },
-  ];
+  const handleSortChange = (order) => {
+    setSortOrder(order);
+    setShowFilter(false);
+  };
+
+  const handleCreateClick = () => {
+    navigate("create");
+  };
+
+  const handleCancel = () => {
+    navigate("..");
+  };
+
+  const handleNoticeClick = (noticeId) => {
+    navigate(`${noticeId}`); // 상대 경로로 이동
+  };
 
   return (
     <>
-      <Header />
-      <Container>
-        <Title>공지사항</Title>
-
-        <MenuContainer>
-          {menus.map((menu) => (
-            <MenuItem
-              key={menu.name}
-              active={activeMenu === menu.name}
-              onClick={() => handleMenuClick(menu)}
-            >
-              {menu.name}
-            </MenuItem>
-          ))}
-        </MenuContainer>
-
-        <ContentContainer>
-          <MainContent>
-            <SortContainer>
-              {sortOptions.map((option) => (
-                <SortButton
-                  key={option}
-                  active={activeSort === option}
-                  onClick={() => setActiveSort(option)}
-                >
-                  {option}
-                </SortButton>
-              ))}
-            </SortContainer>
-
-            <NoticeList>
-              {dummyNotices.map((notice) => (
-                <NoticeItem key={notice.id}>
-                  <NoticeDate>{notice.date}</NoticeDate>
-                  <NoticeTitle>{notice.title}</NoticeTitle>
-                  <NoticeArrow>›</NoticeArrow>
-                </NoticeItem>
-              ))}
-            </NoticeList>
-
-            <Pagination>
-              <PageButton>‹</PageButton>
-              {[1, 2, 3, 4, 5].map((page) => (
-                <PageButton
-                  key={page}
-                  active={currentPage === page}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
-                </PageButton>
-              ))}
-              <PageButton>›</PageButton>
-            </Pagination>
-          </MainContent>
-
-          <SideContent>
-            <SearchBox>
-              <SearchTitle>검색</SearchTitle>
-              <SearchInput
-                type="text"
-                placeholder="검색어를 입력하세요"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <SearchButton>검색</SearchButton>
-            </SearchBox>
-          </SideContent>
-        </ContentContainer>
-      </Container>
+      <Title>NOTICE</Title>
+      <TabContainer></TabContainer>
+      <SearchContainer>
+        <SearchGroup>
+          <SearchTypeSelect
+            value={searchType}
+            onChange={handleSearchTypeChange}
+          >
+            <option value="title">제목별</option>
+            <option value="date">날짜별</option>
+          </SearchTypeSelect>
+          <SearchBox>
+            <SearchInput
+              type={searchType === "date" ? "text" : "text"}
+              placeholder={
+                searchType === "date" ? "YYYY.MM.DD" : "검색어를 입력하세요"
+              }
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </SearchBox>
+        </SearchGroup>
+        <FilterContainer>
+          <FilterButton onClick={handleFilterClick}>
+            전체 유형 {showFilter ? "▼" : "▲"}
+          </FilterButton>
+          <FilterDropdown show={showFilter}>
+            <FilterOption onClick={() => handleSortChange("newest")}>
+              최근 날짜순
+            </FilterOption>
+            <FilterOption onClick={() => handleSortChange("oldest")}>
+              늦은 날짜순
+            </FilterOption>
+          </FilterDropdown>
+        </FilterContainer>
+      </SearchContainer>
+      <NoticeList>
+        {sortedNotices.map((notice) => (
+          <NoticeItem
+            key={notice.id}
+            onClick={() => handleNoticeClick(notice.id)}
+          >
+            <NoticeDate>{notice.date}</NoticeDate>
+            <NoticeTitle>{notice.title}</NoticeTitle>
+            <Arrow>›</Arrow>
+          </NoticeItem>
+        ))}
+      </NoticeList>
+      <Pagination>
+        <PageButtonGroup>
+          <PageButton>‹</PageButton>
+          <PageButton active>1</PageButton>
+          <PageButton>›</PageButton>
+        </PageButtonGroup>
+        <SubmitButton onClick={handleCreateClick}>등록</SubmitButton>
+      </Pagination>
     </>
   );
 };

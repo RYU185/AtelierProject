@@ -1,247 +1,122 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 20px;
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
-  color: #333;
-  margin-bottom: 40px;
+  font-size: 2.5rem;
   text-align: center;
+  margin-bottom: 2rem;
   position: relative;
 
-  &::after {
+  &:before {
     content: "GUIDE";
     position: absolute;
-    top: -20px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: 80px;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
     color: rgba(0, 0, 0, 0.05);
     z-index: -1;
   }
 `;
 
-const MenuContainer = styled.div`
-  display: flex;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 30px;
+const FacilityGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 `;
 
-const MenuItem = styled.button`
-  padding: 15px 30px;
-  font-size: 18px;
-  background: none;
-  border: none;
-  color: ${(props) => (props.active ? "#007AFF" : "#666")};
-  cursor: pointer;
-  position: relative;
-
-  ${(props) =>
-    props.active &&
-    `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #007AFF;
-    }
-  `}
-
-  &:hover {
-    color: #007aff;
-  }
+const FacilityCard = styled.div`
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 `;
 
-const Section = styled.section`
-  margin-bottom: 40px;
-`;
-
-const SectionTitle = styled.h3`
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 15px;
+const FacilityImage = styled.div`
+  height: 200px;
+  background-color: #f0f0f0;
   display: flex;
   align-items: center;
-
-  &:before {
-    content: "";
-    display: inline-block;
-    width: 4px;
-    height: 20px;
-    background-color: #007aff;
-    margin-right: 10px;
-  }
+  justify-content: center;
+  font-size: 3rem;
 `;
 
-const Content = styled.div`
-  font-size: 16px;
-  line-height: 1.6;
+const FacilityInfo = styled.div`
+  padding: 20px;
+`;
+
+const FacilityTitle = styled.h3`
+  margin: 0 0 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+`;
+
+const FacilityDescription = styled.p`
+  margin: 0;
+  font-size: 0.9rem;
   color: #666;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  margin: 15px 0;
-`;
-
-const Th = styled.th`
-  background-color: #f8f9fa;
-  padding: 12px;
-  border: 1px solid #dee2e6;
-  text-align: center;
-`;
-
-const Td = styled.td`
-  padding: 12px;
-  border: 1px solid #dee2e6;
-  text-align: center;
-`;
-
-const List = styled.ul`
-  list-style: none;
-  padding: 0;
-
-  li {
-    position: relative;
-    padding-left: 15px;
-    margin-bottom: 10px;
-
-    &:before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: #007aff;
-    }
-  }
+  line-height: 1.6;
 `;
 
 const GuidePage = () => {
-  const [activeMenu, setActiveMenu] = useState("시설 안내");
-  const navigate = useNavigate();
-
-  const menus = [
-    { name: "공지사항", path: "/support/notice" },
-    { name: "시설 안내", path: "/support/guide" },
-    { name: "오시는 길", path: "/support/location" },
-    { name: "문의하기", path: "/support/contact" },
+  const facilities = [
+    {
+      id: 1,
+      title: "입장/운영 정보",
+      description:
+        "본 미술관은 오전 10시부터 오후 6시까지 운영되며, 입장 마감은 오후 5시 30분입니다. 매주 월요일은 정기 휴관입니다.",
+      icon: "🎟",
+    },
+    {
+      id: 2,
+      title: "이용 유의사항",
+      description:
+        "전시실 내에서는 플래시를 사용하지 않는 선에서의 사진 촬영이 가능합니다. 삼각대 및 셀카봉은 제한됩니다.",
+      icon: "💡",
+    },
+    {
+      id: 3,
+      title: "부대시설 소개",
+      description:
+        "지하 1층에는 카페테리아와 뮤지엄 샵이 위치해 있으며, 다양한 굿즈와 도서 등을 구매하실 수 있습니다.",
+      icon: "☕",
+    },
+    {
+      id: 4,
+      title: "소지품 보관 및 보안 안내",
+      description:
+        "안심하고 작품에 몰입하실 수 있도록, 미술관은 다음과 같은 소지품 보관 및 보안 서비스를 제공하고 있습니다.",
+      icon: "🧳",
+    },
   ];
 
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu.name);
-    navigate(menu.path);
-  };
-
   return (
-    <Container>
+    <>
       <Header />
-      <Title>시설 안내</Title>
-
-      <MenuContainer>
-        {menus.map((menu) => (
-          <MenuItem
-            key={menu.name}
-            active={activeMenu === menu.name}
-            onClick={() => handleMenuClick(menu)}
-          >
-            {menu.name}
-          </MenuItem>
-        ))}
-      </MenuContainer>
-
-      <Section>
-        <SectionTitle>운영시간</SectionTitle>
-        <Content>
-          <Table>
-            <thead>
-              <tr>
-                <Th>구분</Th>
-                <Th>평일</Th>
-                <Th>주말/공휴일</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>운영시간</Td>
-                <Td>09:00 ~ 18:00</Td>
-                <Td>10:00 ~ 17:00</Td>
-              </tr>
-              <tr>
-                <Td>점심시간</Td>
-                <Td>12:00 ~ 13:00</Td>
-                <Td>12:00 ~ 13:00</Td>
-              </tr>
-            </tbody>
-          </Table>
-        </Content>
-      </Section>
-
-      <Section>
-        <SectionTitle>이용요금</SectionTitle>
-        <Content>
-          <Table>
-            <thead>
-              <tr>
-                <Th>구분</Th>
-                <Th>성인</Th>
-                <Th>청소년</Th>
-                <Th>어린이</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <Td>1회 이용권</Td>
-                <Td>10,000원</Td>
-                <Td>8,000원</Td>
-                <Td>5,000원</Td>
-              </tr>
-              <tr>
-                <Td>정기권 (월)</Td>
-                <Td>90,000원</Td>
-                <Td>70,000원</Td>
-                <Td>45,000원</Td>
-              </tr>
-            </tbody>
-          </Table>
-        </Content>
-      </Section>
-
-      <Section>
-        <SectionTitle>이용안내</SectionTitle>
-        <Content>
-          <List>
-            <li>시설 이용 시 반드시 회원카드를 지참해주시기 바랍니다.</li>
-            <li>
-              안전한 이용을 위해 시설 내 뛰거나 소란을 피우는 행위를 금지합니다.
-            </li>
-            <li>귀중품은 반드시 보관함에 보관해 주시기 바랍니다.</li>
-            <li>시설 내 음식물 반입이 금지됩니다.</li>
-            <li>타인에게 피해를 주는 행위는 퇴장 조치될 수 있습니다.</li>
-          </List>
-        </Content>
-      </Section>
-
-      <Section>
-        <SectionTitle>휴관일</SectionTitle>
-        <Content>
-          <List>
-            <li>매월 첫째 주 월요일</li>
-            <li>법정 공휴일</li>
-            <li>시설 정비 기간 (별도 공지)</li>
-          </List>
-        </Content>
-      </Section>
-    </Container>
+      <Container>
+        <Title>시설 안내</Title>
+        <FacilityGrid>
+          {facilities.map((facility) => (
+            <FacilityCard key={facility.id}>
+              <FacilityImage>{facility.icon}</FacilityImage>
+              <FacilityInfo>
+                <FacilityTitle>{facility.title}</FacilityTitle>
+                <FacilityDescription>
+                  {facility.description}
+                </FacilityDescription>
+              </FacilityInfo>
+            </FacilityCard>
+          ))}
+        </FacilityGrid>
+      </Container>
+    </>
   );
 };
 

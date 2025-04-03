@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import Header from "../Header";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -28,40 +26,6 @@ const Title = styled.h1`
   }
 `;
 
-const MenuContainer = styled.div`
-  display: flex;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 30px;
-`;
-
-const MenuItem = styled.button`
-  padding: 15px 30px;
-  font-size: 18px;
-  background: none;
-  border: none;
-  color: ${(props) => (props.active ? "#007AFF" : "#666")};
-  cursor: pointer;
-  position: relative;
-
-  ${(props) =>
-    props.active &&
-    `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #007AFF;
-    }
-  `}
-
-  &:hover {
-    color: #007aff;
-  }
-`;
-
 const Section = styled.section`
   margin-bottom: 40px;
 `;
@@ -73,9 +37,8 @@ const MapContainer = styled.div`
   margin-bottom: 30px;
   border: 1px solid #dee2e6;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
+  position: relative;
 `;
 
 const InfoBox = styled.div`
@@ -155,95 +118,97 @@ const List = styled.ul`
 `;
 
 const LocationPage = () => {
-  const [activeMenu, setActiveMenu] = useState("오시는 길");
-  const navigate = useNavigate();
+  useEffect(() => {
+    // 구글 맵 스크립트 로드
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAmGI0j6d781i2SpRD4LHS081knMiQM_B0`;
+    script.async = true;
+    script.onload = initMap;
+    document.head.appendChild(script);
 
-  const menus = [
-    { name: "공지사항", path: "/support/notice" },
-    { name: "시설 안내", path: "/support/guide" },
-    { name: "오시는 길", path: "/support/location" },
-    { name: "문의하기", path: "/support/contact" },
-  ];
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu.name);
-    navigate(menu.path);
+  const initMap = () => {
+    const location = { lat: 36.327697, lng: 127.423171 };
+    const map = new window.google.maps.Map(document.getElementById("map"), {
+      center: location,
+      zoom: 17,
+    });
+
+    // 마커 추가
+    const marker = new window.google.maps.Marker({
+      position: location,
+      map: map,
+      title: "DW아카데미학원",
+    });
+
+    // 정보창 추가
+    const infowindow = new window.google.maps.InfoWindow({
+      content: `
+        <div style="padding: 10px;">
+          <h3 style="margin: 0 0 5px 0;">DW아카데미학원</h3>
+          <p style="margin: 0;">대전광역시 중구 중앙로121번길 20<br>방산빌딩 2층, 3층(일부), 5층</p>
+        </div>
+      `,
+    });
+
+    // 마커 클릭시 정보창 표시
+    marker.addListener("click", () => {
+      infowindow.open(map, marker);
+    });
   };
 
   return (
-    <>
-      <Header />
-      <Container>
-        <Title>오시는 길</Title>
+    <Container>
+      <Title>오시는 길</Title>
+      <Section>
+        <MapContainer id="map" />
+        <InfoBox>
+          <InfoItem>
+            <Label>주소</Label>
+            <Value>
+              대전광역시 중구 중앙로121번길 20 방산빌딩 2층, 3층(일부), 5층
+            </Value>
+          </InfoItem>
+          <InfoItem>
+            <Label>전화번호</Label>
+            <Value>042-222-2402</Value>
+          </InfoItem>
+        </InfoBox>
+      </Section>
 
-        <MenuContainer>
-          {menus.map((menu) => (
-            <MenuItem
-              key={menu.name}
-              active={activeMenu === menu.name}
-              onClick={() => handleMenuClick(menu)}
-            >
-              {menu.name}
-            </MenuItem>
-          ))}
-        </MenuContainer>
+      <Section>
+        <TransportTitle>교통안내</TransportTitle>
+        <TransportSection>
+          <TransportTitle>지하철</TransportTitle>
+          <List>
+            <li>대전역 1번 출구에서 도보 15분</li>
+          </List>
+        </TransportSection>
 
-        <Section>
-          <MapContainer>
-            지도가 표시될 영역입니다.
-            {/* TODO: 카카오맵 또는 네이버맵 API 연동 */}
-          </MapContainer>
+        <TransportSection>
+          <TransportTitle>버스</TransportTitle>
+          <List>
+            <li>대전역에서 하차 후 도보 15분</li>
+          </List>
+        </TransportSection>
 
-          <InfoBox>
-            <InfoItem>
-              <Label>주소</Label>
-              <Value>서울특별시 강남구 테헤란로 123 OO빌딩 5층</Value>
-            </InfoItem>
-            <InfoItem>
-              <Label>전화번호</Label>
-              <Value>02-1234-5678</Value>
-            </InfoItem>
-            <InfoItem>
-              <Label>팩스</Label>
-              <Value>02-1234-5679</Value>
-            </InfoItem>
-            <InfoItem>
-              <Label>이메일</Label>
-              <Value>info@example.com</Value>
-            </InfoItem>
-          </InfoBox>
-        </Section>
-
-        <Section>
-          <TransportTitle>교통안내</TransportTitle>
-          <TransportSection>
-            <TransportTitle>지하철</TransportTitle>
-            <List>
-              <li>2호선 강남역 3번 출구에서 도보 5분</li>
-              <li>신분당선 강남역 5번 출구에서 도보 7분</li>
-            </List>
-          </TransportSection>
-
-          <TransportSection>
-            <TransportTitle>버스</TransportTitle>
-            <List>
-              <li>간선버스: 140, 144, 145, 146</li>
-              <li>지선버스: 3412, 4412</li>
-              <li>광역버스: 9404, 9408</li>
-            </List>
-          </TransportSection>
-
-          <TransportSection>
-            <TransportTitle>자가용</TransportTitle>
-            <List>
-              <li>강남대로에서 테헤란로 방면으로 우회전</li>
-              <li>지하 주차장 이용 가능 (2시간 무료주차)</li>
-              <li>내비게이션 검색: "OO센터" 또는 "테헤란로 123"</li>
-            </List>
-          </TransportSection>
-        </Section>
-      </Container>
-    </>
+        <TransportSection>
+          <TransportTitle>자가용</TransportTitle>
+          <List>
+            <li>선화로에서 좌회전하고 앞으로 직진</li>
+            <li>지하 주차장 이용 가능 (2시간 무료주차)</li>
+            <li>
+              내비게이션 검색: "DW아카데미학원" 또는 "대전 중구 중앙로121번길
+              20"
+            </li>
+          </List>
+        </TransportSection>
+      </Section>
+    </Container>
   );
 };
 

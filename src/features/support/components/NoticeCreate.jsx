@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -97,7 +98,60 @@ const CancelButton = styled(Button)`
   }
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 400px;
+  text-align: center;
+`;
+
+const ModalTitle = styled.h3`
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #333;
+`;
+
+const ModalButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+`;
+
+const ModalButton = styled.button`
+  padding: 0.5rem 2rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: white;
+  color: #333;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${(props) => (props.confirm ? "#0095ff" : "#333")};
+    color: white;
+    border-color: ${(props) => (props.confirm ? "#0095ff" : "#333")};
+  }
+`;
+
 const NoticeCreate = () => {
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -113,13 +167,17 @@ const NoticeCreate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowModal(true);
+  };
+
+  const handleConfirm = () => {
     // TODO: API 연동
-    console.log("Submit:", formData);
+    console.log("Form submitted:", formData);
+    navigate("../notice");
   };
 
   const handleCancel = () => {
-    // TODO: 뒤로가기 구현
-    console.log("Cancel");
+    navigate("../notice");
   };
 
   return (
@@ -156,6 +214,22 @@ const NoticeCreate = () => {
           <SubmitButton type="submit">등록</SubmitButton>
         </ButtonGroup>
       </Form>
+
+      {showModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalTitle>공지사항을 등록하시겠습니까?</ModalTitle>
+            <ModalButtonGroup>
+              <ModalButton onClick={() => setShowModal(false)}>
+                취소
+              </ModalButton>
+              <ModalButton confirm onClick={handleConfirm}>
+                확인
+              </ModalButton>
+            </ModalButtonGroup>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </Container>
   );
 };

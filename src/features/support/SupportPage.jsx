@@ -1,194 +1,176 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
-import Header from '../Header';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import Header from "../Header";
+import Footer from "../Footer";
+
+const PageWrapper = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ContentWrapper = styled.div`
+  flex: 1;
+  padding: 20px;
+  background-color: #f8f9fa;
+`;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 20px;
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
-  color: #333;
-  margin-bottom: 40px;
+  font-size: 2.5rem;
   text-align: center;
+  margin-bottom: 2rem;
   position: relative;
-  
-  &::after {
-    content: 'SUPPORT';
+
+  &:before {
+    content: "SUPPORT";
     position: absolute;
-    top: -20px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: 80px;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
     color: rgba(0, 0, 0, 0.05);
     z-index: -1;
   }
 `;
 
-const MenuContainer = styled.div`
-  display: flex;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 30px;
-`;
-
-const MenuItem = styled.button`
-  padding: 15px 30px;
-  font-size: 18px;
-  background: none;
-  border: none;
-  color: ${props => props.active ? '#007AFF' : '#666'};
-  cursor: pointer;
-  position: relative;
-
-  ${props => props.active && `
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: #007AFF;
-    }
-  `}
-
-  &:hover {
-    color: #007AFF;
-  }
-`;
-
 const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  margin-top: 40px;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  margin-bottom: 40px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
-const Card = styled(Link)`
-  text-decoration: none;
+const Card = styled.div`
   background: white;
-  border-radius: 10px;
-  padding: 40px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
   text-align: center;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const IconContainer = styled.div`
-  width: 80px;
-  height: 80px;
-  background: #f8f9fa;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-
-  svg {
-    width: 40px;
-    height: 40px;
-    color: #007AFF;
-  }
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
 `;
 
 const CardTitle = styled.h3`
-  font-size: 24px;
+  margin: 0;
+  font-size: 1.1rem;
   color: #333;
-  margin-bottom: 15px;
 `;
 
 const CardDescription = styled.p`
-  font-size: 16px;
+  margin: 5px 0 0;
+  font-size: 0.8rem;
   color: #666;
-  line-height: 1.6;
+  line-height: 1.2;
+`;
+
+const ContentContainer = styled.div`
+  margin-top: 40px;
+  ${(props) =>
+    props.isContactUs
+      ? `
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  `
+      : `
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  `}
 `;
 
 const SupportPage = () => {
-  const [activeMenu, setActiveMenu] = useState('공지사항');
   const navigate = useNavigate();
-
-  
-
-  const handleMenuClick = (menu) => {
-    setActiveMenu(menu.name);
-    navigate(menu.path);
-  };
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState("notice");
 
   const supportItems = [
     {
-      title: '공지사항',
-      description: '센터의 주요 소식과 공지사항을 확인하실 수 있습니다.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-      ),
-      path: '/support/notice'
+      id: "notice",
+      title: "공지사항",
+      description: "미술관의 새로운 소식과 안내사항을 확인하세요.",
+      path: "/support/notice",
+      icon: "📢",
     },
     {
-      title: '시설 안내',
-      description: '센터의 시설 정보와 이용 안내를 확인하실 수 있습니다.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      ),
-      path: '/support/guide'
+      id: "guide",
+      title: "이용안내",
+      description: "미술관 이용에 대한 안내사항을 확인하세요.",
+      path: "/support/guide",
+      icon: "📋",
     },
     {
-      title: '오시는 길',
-      description: '센터의 위치와 교통편을 확인하실 수 있습니다.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-      path: '/support/location'
+      id: "location",
+      title: "오시는 길",
+      description: "미술관의 위치와 교통편을 확인하세요.",
+      path: "/support/location",
+      icon: "🗺️",
     },
     {
-      title: '문의하기',
-      description: '궁금하신 사항을 문의하실 수 있습니다.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-        </svg>
-      ),
-      path: '/support/contact'
-    }
+      id: "contactus",
+      title: "문의하기",
+      description: "궁금한 점이나 건의사항을 문의하세요.",
+      path: "/support/contactus",
+      icon: "💬",
+    },
   ];
 
+  const handleCardClick = (path) => {
+    navigate(path, { replace: true });
+  };
+
   return (
-    <>
+    <PageWrapper>
       <Header />
-      <Container>
-        <Title>고객지원</Title>
-        
-        <GridContainer>
-          {supportItems.map((item, index) => (
-            <Card key={index} to={item.path}>
-              <IconContainer>
-                {item.icon}
-              </IconContainer>
-              <CardTitle>{item.title}</CardTitle>
-              <CardDescription>{item.description}</CardDescription>
-            </Card>
-          ))}
-        </GridContainer>
-        <Outlet />
-      </Container>
-    </>
+      <ContentWrapper>
+        <Container>
+          <Title>고객지원</Title>
+          <GridContainer>
+            {supportItems.map((item) => (
+              <Card
+                key={item.id}
+                onClick={() => handleCardClick(item.path)}
+                isActive={location.pathname === item.path}
+              >
+                <IconContainer>{item.icon}</IconContainer>
+                <CardTitle>{item.title}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </Card>
+            ))}
+          </GridContainer>
+          {location.pathname !== "/support" && (
+            <ContentContainer
+              isContactUs={location.pathname === "/support/contactus"}
+            >
+              <Outlet />
+            </ContentContainer>
+          )}
+        </Container>
+      </ContentWrapper>
+      <Footer />
+    </PageWrapper>
   );
 };
 
