@@ -36,26 +36,26 @@ const TabButton = styled.button`
   }
 `;
 
-function AdminGoodsMenubar() {
+function AdminTiketMenubar() {
   const navigate = useNavigate();  
   const location = useLocation(); // ✅ 현재 URL 가져오기
 
   return (
     <MenuContainer>
       <TabButton 
-        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoods면 활성화
-        onClick={() => navigate('/AdminGoods')}
+        active={location.pathname === '/AdminTicketList'} // ✅ 현재 URL이 /AdminGoods면 활성화
+        onClick={() => navigate('/AdminTicketList')}
       >
-        굿즈 판매내역 관리
+        전시회 별 현황
       </TabButton>
       <TabButton 
-        active={location.pathname === '/AdminGoodsChart'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
-        onClick={() => navigate('/AdminGoodsChart')}
+        active={location.pathname === '/AdminTicketChart'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
+        onClick={() => navigate('/AdminTicketChart')}
       >
-        통계 관리
+        전시회 분석
       </TabButton>
     </MenuContainer>
   );
 }
 
-export default AdminGoodsMenubar;
+export default AdminTiketMenubar;

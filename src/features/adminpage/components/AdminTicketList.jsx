@@ -3,6 +3,7 @@ import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import styled from 'styled-components';
+import AdminTiketMenubar from './AdminTiketMenubar';
 
 // ✅ AdminGoods와 동일한 스타일 적용
 const Container = styled.div`
@@ -12,7 +13,14 @@ const Container = styled.div`
   position: relative;
 `;
 
-// ✅ AdminGoods의 AdminMenu 스타일 동일하게 적용
+const AdminGoodsMenubarWrapper = styled.div`
+  position: relative;
+  top: 100px;
+  left: 21px;
+  z-index: 10;
+  margin-left: -85px;
+`;
+
 const AdminMenuWrapper = styled.div`
   position: relative;
   top: 30px;
@@ -26,7 +34,7 @@ const MainContent = styled.div`
   margin-top: -30px;
 `;
 
-// 제목 스타일
+
 const Title = styled.h1`
 position: relative;
   font-size: 32px;
@@ -35,11 +43,11 @@ position: relative;
   margin-bottom: 30px;
 `;
 
-// 검색창 컨테이너
 const SearchContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 20px;
+  
 `;
 
 const SearchInput = styled.input`
@@ -47,16 +55,20 @@ const SearchInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 250px;
-  margin-right: 10px;
+  margin-right: 160px;
 `;
 
+
 const SearchButton = styled.button`
+ position: absolute; /* 🔥 버튼 위치 조정 */
+  right : 130px; /* 버튼을 검색창의 왼쪽으로 이동 */
   padding: 8px 16px;
   background: #3da9fc;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 90px;
 
   &:hover {
     background: #3a92e5;
@@ -65,52 +77,73 @@ const SearchButton = styled.button`
 
 // 표 스타일
 const Table = styled.table`
-   width: 100%;
+  width: 100%;
   max-width: 1300px;
   border-collapse: collapse;
   margin-top: 20px;
   margin-right: -17px;
   font-size: 16px;
   text-align: center;
-  table-layout: fixed;
- 
+  table-layout: fixed; /* ✅ 테이블 크기 고정 */
 `;
 
 const Th = styled.th`
   background: #f0f0f0;
   padding: 12px;
-  justify-content: center;
   border: 1px solid #ddd;
-  text-align: center
+  text-align: center;
+
+  /* ✅ 너비 비율 조정 */
+  &:first-child {
+    width: 75%; /* 전시 정보 칸 넓게 */
+  }
+  &:nth-child(2) {
+    width: 25%; /* 누적 관람객 칸 줄이기 */
+  }
 `;
 
 const Td = styled.td`
+  position: relative;
   padding: 12px;
   border: 1px solid #ddd;
-`;
+  text-align: center;
+  height: 200px;
 
-// 이미지 스타일
-const Thumbnail = styled.img`
-width: 180px;
-  height: 130px;
-  position: relative;
-  object-fit: cover;
-  margin-left: -450px;
-  border-radius: 5px;
-  flex-shrink: 0;
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
-  pointer-events: auto; /* ✅ 이미지만 클릭 가능 */
-
-  &:hover {
-    transform: scale(1.05);
+  /* ✅ 동일한 비율 적용 */
+  &:first-child {
+    width: 75%;
+  }
+  &:nth-child(2) {
+    width: 25%;
   }
 `;
+
+const Thumbnail = styled.img`
+  width: 170px; /* ✅ 이미지 너비 증가 */
+  height: 180px; /* ✅ 이미지 세로 크기 증가 */
+  object-fit: cover;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+
+  position: absolute; /* ✅ 절대 위치 설정 */
+  top: 30%; /* ✅ 부모 요소(Td)의 정중앙 기준 */
+  left: 10%;
+  transform: translate(-50%, -30%); /* ✅ 위쪽으로 살짝 올려서 조정 */
+
+  &:hover {
+    transform: translate(-50%, -30%) scale(1.05);
+  }
+`;
+
 
 const AdminTicketList = () => {
   return (
     <>
       <Header />
+      <AdminGoodsMenubarWrapper>
+        <AdminTiketMenubar />
+      </AdminGoodsMenubarWrapper>
       <Container>
         {/* ✅ AdminMenuWrapper 적용 */}
         <AdminMenuWrapper>

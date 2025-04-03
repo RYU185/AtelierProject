@@ -32,8 +32,9 @@ import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
 import CommunityMain from "../features/community/CommunityMain";
 
+
 function AppRoutes() {
-  return (
+  return ( 
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
@@ -47,6 +48,7 @@ function AppRoutes() {
       <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
       <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
       <Route path="AdminUser" element={<AdminUser />} />
+     
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
