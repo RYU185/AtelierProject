@@ -45,6 +45,9 @@ const Button = styled.button`
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
+  &:hover {
+    background-color: #cddeff;
+  }
 `;
 
 const Container = styled.div`

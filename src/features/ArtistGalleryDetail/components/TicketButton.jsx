@@ -9,6 +9,10 @@ const Button = styled.div`
   background-color: #018ec8;
   color: #ffffff;
   padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #007acc;
+  }
 `;
 
 function TicketButton() {
