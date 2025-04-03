@@ -132,30 +132,27 @@ const LocationPage = () => {
   }, []);
 
   const initMap = () => {
-    const location = { lat: 36.327697, lng: 127.423171 };
+    const location = { lat: 36.32870201193343, lng: 127.42299855952346 }; // 정확한 좌표로 변경
     const map = new window.google.maps.Map(document.getElementById("map"), {
       center: location,
       zoom: 17,
     });
 
-    // 마커 추가
     const marker = new window.google.maps.Marker({
       position: location,
       map: map,
       title: "DW아카데미학원",
     });
 
-    // 정보창 추가
     const infowindow = new window.google.maps.InfoWindow({
       content: `
-        <div style="padding: 10px;">
-          <h3 style="margin: 0 0 5px 0;">DW아카데미학원</h3>
-          <p style="margin: 0;">대전광역시 중구 중앙로121번길 20<br>방산빌딩 2층, 3층(일부), 5층</p>
-        </div>
-      `,
+      <div style="padding: 10px;">
+        <h3 style="margin: 0 0 5px 0;">DW아카데미학원</h3>
+        <p style="margin: 0;">대전광역시 중구 중앙로121번길 20<br>방산빌딩 2층, 3층(일부), 5층</p>
+      </div>
+    `,
     });
 
-    // 마커 클릭시 정보창 표시
     marker.addListener("click", () => {
       infowindow.open(map, marker);
     });
