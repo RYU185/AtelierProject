@@ -66,7 +66,8 @@ const AdminMenu = () => {
       <Sidebar>
         <AdminInfo>관리자 김동근님 <br /> 어서오세요</AdminInfo>
         <MenuList>
-          <MenuItem active={location.pathname === '/AdminPage'}>
+          {/* ✅ '/AdminPage' 또는 '/AdminArtAdd'일 때 작품 조회 버튼 활성화 */}
+          <MenuItem active={location.pathname.includes('/AdminPage') || location.pathname.includes('/AdminArtAdd')}>
             <Link to="/AdminPage" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
               작품 조회
             </Link>

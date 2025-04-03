@@ -4,26 +4,48 @@ import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import AdminGoodsMenubar from './AdminGoodsMenubar';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-
   display: flex;
   padding: 23px;
   margin-left: 23px;
+  position: relative; /* ✅ AddButton absolute 위치 적용을 위해 추가 */
 `;
 
-/* ✅ AdminMenu만 따로 감싸는 Wrapper 추가 */
 const AdminMenuWrapper = styled.div`
-
   position: relative;
   top: -58px;
-  margin-left: 13px; /* ✅ 원하는 만큼 조정 (위로 올리기) */
+  margin-left: 13px;
+`;
+
+/* ✅ 버튼을 감싸는 새로운 Wrapper 추가 */
+const AddButtonWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 100px; /* 오른쪽 정렬 */
+  z-index: 10;
+  margin-top: 16px;
   
 `;
 
+const AddButton = styled.button`
+  padding: 8px 16px;
+  background: #3da9fc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background: #3da0e5;
+  }
+`;
+
 const TitleWrapper = styled.div`
-  position: relative; /* ✅ 다른 요소들에 영향 없이 이동 가능 */
-  top: 40px; /* ✅ 원하는 만큼 내리기 */
+  position: relative;
+  top: 40px;
   margin-left: 480px;
   color: #222;
   border-radius: 6px;
@@ -32,9 +54,12 @@ const TitleWrapper = styled.div`
 `;
 
 const AdminGoodsMenubarWrapper = styled.div`
-  position: relative; /* ✅ 다른 요소에 영향 없이 개별 이동 */
-  top: 30px; /* ✅ 원하는 만큼 내리기 */
+  position: relative;
+  top: 30px;
+  left: 21px;
+  z-index: 10;
 `;
+
 const ContentWrapper = styled.div`
   flex: 1;
   padding: 20px;
@@ -47,6 +72,7 @@ const Table = styled.table`
   max-width: 1300px;
   border-collapse: collapse;
   margin-top: 20px;
+  margin-right: -17px;
   font-size: 16px;
   text-align: center;
   table-layout: fixed;
@@ -97,6 +123,8 @@ const ProductCell = styled.td`
   padding: 6px;
   border-right: 1px solid #bbb;
   border-bottom: 1px solid #bbb;
+
+  
 `;
 
 const ProductImage = styled.img`
@@ -107,6 +135,7 @@ const ProductImage = styled.img`
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
+  pointer-events: auto; /* ✅ 이미지만 클릭 가능 */
 
   &:hover {
     transform: scale(1.05);
@@ -122,7 +151,9 @@ const ProductInfo = styled.div`
   flex: 1;
   min-width: 110px;
   word-break: keep-all;
+  pointer-events: auto; /* ✅ 텍스트 클릭 가능 */
 `;
+
 
 const GoodsData = [
   { id: 1, image: 'goods1.jpg', name: '전통 부채', price: 20000, stock: 137, sold: 145 },
@@ -140,11 +171,19 @@ function AdminGoods() {
       <AdminGoodsMenubarWrapper>
         <AdminGoodsMenubar />
       </AdminGoodsMenubarWrapper>
+
       <Container>
-        {/* ✅ AdminMenu만 따로 감싸서 올림 */}
         <AdminMenuWrapper>
           <AdminMenu />
         </AdminMenuWrapper>
+
+        {/* ✅ AddButton을 별도 Wrapper에 감싸 위치 조정 */}
+        <AddButtonWrapper>
+          <Link to="/AdminGoodsAdd" style={{ textDecoration: 'none' }}>
+            <AddButton>굿즈 추가</AddButton>
+          </Link>
+        </AddButtonWrapper>
+
         <ContentWrapper>
           <Table>
             <thead>
@@ -158,7 +197,10 @@ function AdminGoods() {
               {GoodsData.map((item) => (
                 <ProductRow key={item.id}>
                   <ProductCell>
-                    <ProductImage src={`/images/${item.image}`} alt={item.name} />
+                    {/* ✅ 이미지에만 링크 적용 */}
+                    <Link to={`/goods/${item.id}`} style={{ display: 'inline-block' }}>
+                      <ProductImage src={`/images/${item.image}`} alt={item.name} />
+                    </Link>
                     <ProductInfo>
                       <strong style={{ fontSize: '16px' }}>{item.name}</strong>
                       <span style={{ color: '#666', fontSize: '13px' }}>
@@ -166,6 +208,7 @@ function AdminGoods() {
                       </span>
                     </ProductInfo>
                   </ProductCell>
+
                   <Td>{item.stock}</Td>
                   <TdLast>{item.sold}</TdLast>
                 </ProductRow>

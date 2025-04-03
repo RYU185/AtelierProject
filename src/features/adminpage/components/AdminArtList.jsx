@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ArtCard from './ArtCard';
 import { Link } from 'react-router-dom';
 
+
 const PageContainer = styled.div`
   padding: 20px;
   margin-top: 10px;
@@ -229,12 +230,16 @@ const AdminArtList = () => {
                 <OptionButton onClick={() => console.log('수정 클릭')}>수정</OptionButton>
                 <OptionButton danger onClick={() => console.log('삭제 클릭')}>삭제</OptionButton>
               </OptionsMenu>
-              <ArtCard
-                title={art.title}
-                artist={art.artist}
-                date={art.date}
-                imageUrl={art.imageUrl}
-              />
+
+              {/* ✅ 이미지 클릭 시 상세 페이지로 이동 */}
+              <Link to={`/Artist/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <ArtCard
+                  title={art.title}
+                  artist={art.artist}
+                  date={art.date}
+                  imageUrl={art.imageUrl}
+                />
+              </Link>
             </ArtItem>
           ))}
         </ArtGrid>

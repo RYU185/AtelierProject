@@ -4,6 +4,7 @@ import Footer from '../Footer';
 import styled from 'styled-components';
 import AdminMenu from './components/AdminMenu';
 import AdminArtList from './components/AdminArtList';
+import AdminGoods from './components/AdminGoods';
 
 
 const Container = styled.div`
@@ -33,6 +34,7 @@ const AdminPage = () => {
                 <Wrapper>
                     <AdminMenu tab={tab} setTab={setTab} />
                 <AdminArtList />
+                <AdminGoods />
                 </Wrapper>
             </Container>
             <Footer />
