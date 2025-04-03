@@ -3,31 +3,38 @@ import styled from 'styled-components';
 
 const MenuContainer = styled.div`
   display: flex;
-  justify-content: flex-start; /* 왼쪽 정렬 유지 */
-
-  margin-bottom: -30px; /* 버튼과 상품 간격 확보 */
-  margin-top: 20px; /* 헤더와의 간격 조정 */
-  padding-left: 990px; /* ✅ 왼쪽 여백 추가해서 버튼을 살짝 오른쪽으로 이동 */
+  justify-content: flex-start;
+  margin-bottom: -px;
+  margin-top: 20px;
+  padding-left: 469px;
 `;
+
 const TabButton = styled.button`
-  padding: 10px 20px; /* ✅ 버튼 크기 유지 */
+  width: 220px;
+  padding: 10px 30px;
   font-size: 14px;
   border: 1px solid #bbb;
   border-radius: 10px 10px 0 0;
   background: ${(props) => (props.active ? '#6ea8fe' : '#f1f1f1')};
   color: ${(props) => (props.active ? '#fff' : '#666')};
   cursor: pointer;
-  transition: background 0.3s;
-  margin-right: 5px; /* ✅ 버튼 사이 간격 */
-  cursor: pointer;
-  
+  transition: background 0.2s;
+  margin-right: 5px;
   text-align: center;
+
+  position: relative; /* ✅ 버튼 위치 조정 가능하게 설정 */
+  top: 30px; /* ✅ 버튼을 아래로 내림 */
 
   &:hover {
     background: #6ea8fe;
     color: #fff;
   }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
+
 
 function AdminGoodsMenubar() {
   const [activeTab, setActiveTab] = useState('goods');

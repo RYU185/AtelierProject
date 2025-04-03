@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const PageContainer = styled.div`
   padding: 20px;
-  background: #f8f9fa;
+  
   min-height: 100vh;
 `;
 

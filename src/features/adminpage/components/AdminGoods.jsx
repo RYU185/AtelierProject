@@ -7,6 +7,11 @@ import styled from 'styled-components'
 
 const Container = styled.div`
   display: flex;
+  padding: 23px;
+
+  
+  
+  margin-left: 23px
 `;
 
 const ContentWrapper = styled.div`
@@ -17,8 +22,8 @@ const ContentWrapper = styled.div`
 `;
 
 const Table = styled.table`
-  width: 80%; /* ✅ 테이블 크기 조정 */
-  max-width: 900px;
+  width: 100%; /* ✅ 테이블 크기 조정 */
+  max-width: 1300px;
   border-collapse: collapse;
   margin-top: 20px;
   font-size: 16px;
@@ -37,7 +42,7 @@ const Th = styled.th`
 const Td = styled.td`
   padding: 10px;
   border: 1px solid #bbb;
-  font-size: 14px;
+  font-size: 16px;
   vertical-align: middle;
 `;
 
@@ -48,9 +53,9 @@ const ProductRow = styled.tr`
 const ProductCell = styled.td`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px;
-  width: 30%; /* ✅ 상품 정보 칸 폭 줄이기 */
+  gap: 30px;
+  padding: 6px;
+ 
 `;
 
 const ProductImage = styled.img`
@@ -91,9 +96,9 @@ function AdminGoods() {
           <Table>
             <thead>
               <tr>
-                <Th>상품</Th>
-                <Th>재고</Th>
-                <Th>판매</Th>
+                <Th>상품정보</Th>
+                <Th>재고량</Th>
+                <Th>누적 판매량</Th>
               </tr>
             </thead>
             <tbody>
