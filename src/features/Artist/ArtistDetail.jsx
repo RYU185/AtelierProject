@@ -120,7 +120,7 @@ const Modal = styled.div`
   background-color: white;
   max-width: 900px;
   width: 100%;
-  height: 50%;
+  height: 60%;
   position: relative;
 `;
 
