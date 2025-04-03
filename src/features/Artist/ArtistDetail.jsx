@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Header";
@@ -214,6 +214,28 @@ const ArtistDetail = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedWork, setSelectedWork] = useState(null);
 
+  const handleOverlayClick = () => {
+    setModalOpen(false); // 모달 닫기
+  };
+
+  // 모달 열림 상태에 따라 body 스크롤 잠금
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    if (modalOpen) {
+      document.body.style.overflow = "hidden";
+
+      document.body.style.paddingRight = "15px";
+    } else {
+      document.body.style.overflow = originalStyle;
+      document.body.style.paddingRight = "0";
+    }
+
+    return () => {
+      document.body.style.overflow = originalStyle;
+      document.body.style.paddingRight = "0";
+    };
+  }, [modalOpen]);
+
   return (
     <div>
       <Header />
@@ -314,8 +336,8 @@ const ArtistDetail = () => {
         </WorksContainer>
       </DetailWrapper>
       {modalOpen && (
-        <Overlay>
-          <Modal>
+        <Overlay onClick={handleOverlayClick}>
+          <Modal onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={() => setModalOpen(false)}>X</CloseButton>
             <ArtDetailImageContainer>
               <img src={art.imageUrl} alt={`작품 ${selectedWork}`} />
