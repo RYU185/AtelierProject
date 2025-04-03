@@ -119,7 +119,7 @@ const NoticeDetail = () => {
   };
 
   const handleBackClick = () => {
-    navigate("..");
+    navigate("/support/notice");
   };
 
   const handleEditClick = () => {

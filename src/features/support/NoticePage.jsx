@@ -310,7 +310,7 @@ const NoticePage = () => {
         </SearchGroup>
         <FilterContainer>
           <FilterButton onClick={handleFilterClick}>
-            전체 유형 {showFilter ? "▼" : "▲"}
+            전체 유형 {showFilter ? "▲" : "▼"}
           </FilterButton>
           <FilterDropdown show={showFilter}>
             <FilterOption onClick={() => handleSortChange("newest")}>

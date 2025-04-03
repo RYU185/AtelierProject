@@ -1,201 +1,310 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  EffectCoverflow,
+  Navigation,
+  Autoplay,
+  Mousewheel,
+} from "swiper/modules";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/navigation";
 
-const CarouselWrapper = styled.section`
-  position: relative;
-  width: 100%;
-  padding: 80px 0;
+const WhatsOnSection = styled.section`
   background: #fff;
-  text-align: center;
+  padding: 0;
+  position: relative;
   overflow: hidden;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  perspective: 2500px;
+  perspective-origin: 50% 50%;
 `;
 
-const Title = styled.h2`
-  font-size: 100px;
-  font-weight: 800;
-  color: #d1d1d1;
-  margin-bottom: 40px;
+const Title = styled.h1`
+  font-size: 140px;
+  color: #000;
+  margin: 0;
+  padding: 20px 0;
+  opacity: 0.06;
+  font-weight: 900;
   position: absolute;
   top: 20px;
-  left: 50px;
-
-  @media (max-width: 768px) {
-    font-size: 50px;
-    left: 20px;
-  }
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 1;
+  white-space: nowrap;
+  letter-spacing: -5px;
 `;
 
-const Slider = styled.div`
-  position: relative;
-  margin: 0 auto;
-  width: 90%;
-  max-width: 1200px;
-  height: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  perspective: 2000px;
-  user-select: none;
-`;
-
-const Card = styled.div`
-  position: absolute;
-  width: 280px;
-  height: 420px;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #111;
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-
-  @media (max-width: 768px) {
-    width: 200px;
-    height: 300px;
-  }
-`;
-
-const CardImage = styled.img`
+const SliderContainer = styled.div`
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  transform-style: preserve-3d;
+
+  .swiper {
+    width: 100%;
+    padding: 70px 0;
+    overflow: visible;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .swiper-slide {
+    width: 300px;
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transform-style: preserve-3d;
+    cursor: grab;
+    transform-origin: center;
+    backface-visibility: hidden;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    .slide-content {
+      height: 420px;
+      width: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: scale(0.85) translateZ(0);
+      transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+      will-change: transform;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transform-origin: center;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+  }
+
+  .swiper-slide-active {
+    opacity: 1;
+    z-index: 1;
+
+    .slide-content {
+      transform: scale(1.1) translateY(-10px) translateZ(-150px);
+    }
+
+    img {
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .event-info {
+      opacity: 1;
+      transform: translateY(20) translateZ(-150px);
+    }
+  }
+
+  .swiper-slide-prev,
+  .swiper-slide-next {
+    opacity: 0.85;
+    z-index: 2;
+  }
+
+  .swiper-slide-prev {
+    transform: translate3d(20%, 0, 250px) rotateY(40deg) !important;
+  }
+
+  .swiper-slide-next {
+    transform: translate3d(-20%, 0, 250px) rotateY(-40deg) !important;
+  }
+
+  .swiper-slide-prev-prev {
+    transform: translate3d(58%, 0, 500px) rotateY(45deg) scale(1) !important;
+    opacity: 0.9;
+    z-index: 1;
+  }
+  .swiper-slide-next-next {
+    transform: translate3d(-58%, 0, 500px) rotateY(-45deg) scale(1) !important;
+    opacity: 0.85;
+    z-index: 1;
+  }
 `;
 
-const BottomInfo = styled.div`
-  margin-top: 30px;
-  padding: 20px 40px;
-  background: rgba(0, 34, 254, 0.76);
-  color: #fff;
-  font-weight: 600;
-  font-size: 18px;
+const EventInfo = styled.div`
   text-align: center;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  display: inline-block;
-  transition: all 0.3s ease;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transform: translateY(12px);
+  margin-top: 15px;
+  color: #01000a;
 
-  h3 {
-    font-size: 24px;
-    font-weight: 800;
+  .title {
+    font-size: 25px;
+    font-weight: 600;
     margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  p {
-    font-size: 16px;
+  .date {
+    font-size: 20px;
+    opacity: 0.7;
+    font-weight: 300;
   }
 `;
-
-const whatsOnData = [
-  { title: "공연 1", img: "/images/poster1.jpg", date: "2025.04.12", place: "서울" },
-  { title: "공연 2", img: "/images/poster2.jpg", date: "2025.05.10", place: "부산" },
-  { title: "공연 3", img: "/images/poster3.jpg", date: "2025.06.20", place: "대구" },
-  { title: "공연 4", img: "/images/poster4.jpg", date: "2025.07.01", place: "인천" },
-  { title: "공연 5", img: "/images/poster5.jpg", date: "2025.08.15", place: "광주" },
-];
-
-// 무한 루프
-const infiniteData = [...whatsOnData, ...whatsOnData, ...whatsOnData];
 
 const WhatsOn = () => {
-  const [centerIndex, setCenterIndex] = useState(whatsOnData.length);
-  const startX = useRef(null);
-  const dragging = useRef(false);
-  const transitionEnabled = useRef(true);
+  const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      moveRight();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    if (centerIndex >= infiniteData.length - whatsOnData.length) {
-      setTimeout(() => {
-        transitionEnabled.current = false;
-        setCenterIndex(whatsOnData.length);
-      }, 500);
-    }
-    if (centerIndex <= whatsOnData.length - 1) {
-      setTimeout(() => {
-        transitionEnabled.current = false;
-        setCenterIndex(infiniteData.length - whatsOnData.length - 1);
-      }, 500);
-    }
-  }, [centerIndex]);
-
-  const moveLeft = () => {
-    transitionEnabled.current = true;
-    setCenterIndex((prev) => prev - 1);
-  };
-
-  const moveRight = () => {
-    transitionEnabled.current = true;
-    setCenterIndex((prev) => prev + 1);
-  };
-
-  const handleMouseDown = (e) => {
-    startX.current = e.clientX;
-    dragging.current = true;
-  };
-
-  const handleMouseMove = (e) => {
-    if (!dragging.current) return;
-    const delta = e.clientX - startX.current;
-    if (Math.abs(delta) > 50) {
-      delta > 0 ? moveLeft() : moveRight();
-      dragging.current = false;
-    }
-  };
-
-  const handleMouseUp = () => {
-    dragging.current = false;
-  };
+  const events = [
+    {
+      id: 1,
+      image: "/images/event1.jpg",
+      title: "그림1",
+      date: "2025.05.17",
+      location: "DW",
+    },
+    {
+      id: 2,
+      image: "/images/event2.jpg",
+      title: "그림2",
+      date: "2025.04.15",
+      location: "블루스퀘어",
+    },
+    {
+      id: 3,
+      image: "/images/event3.jpg",
+      title: "그림3",
+      date: "2025.04.20",
+      location: "블루스퀘어",
+    },
+    {
+      id: 4,
+      image: "/images/event4.jpg",
+      title: "그림4",
+      date: "2025.04.05",
+      location: "SOL드림홀",
+    },
+    {
+      id: 5,
+      image: "/images/event5.jpg",
+      title: "그림5t",
+      date: "2025.05.01",
+      location: "블루스퀘어",
+    },
+    {
+      id: 6,
+      image: "/images/event6.jpg",
+      title: "그림6",
+      date: "2025.05.10",
+      location: "블루스퀘어",
+    },
+    {
+      id: 7,
+      image: "/images/event7.jpg",
+      title: "그림7",
+      date: "2025.05.15",
+      location: "블루스퀘어",
+    },
+    {
+      id: 8,
+      image: "/images/event8.jpg",
+      title: "그림8",
+      date: "2025.05.20",
+      location: "블루스퀘어",
+    },
+    {
+      id: 9,
+      image: "/images/event9.jpg",
+      title: "그림9",
+      date: "2025.05.25",
+      location: "블루스퀘어",
+    },
+    {
+      id: 10,
+      image: "/images/event10.jpg",
+      title: "그림10",
+      date: "2025.05.30",
+      location: "블루스퀘어",
+    },
+  ];
 
   return (
-    <CarouselWrapper>
-      <Title>WHAT’S ON</Title>
-      <Slider
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseUp}
-      >
-        {infiniteData.map((item, i) => {
-          const offset = i - centerIndex;
-          const translateX = offset * 280;
-          const translateY = Math.abs(offset) * 8;
-          const translateZ = Math.abs(offset) === 0 ? -250 : Math.abs(offset) === 1 ? -120 : 0;
-          const scale = 1 + Math.abs(offset) * 0.08;
-          const rotateY = offset * -15;
+    <WhatsOnSection>
+      <Title>WHAT'S ON</Title>
+      <SliderContainer>
+        <Swiper
+          effect={"coverflow"}
+          grabCursor={true}
+          centeredSlides={true}
+          slidesPerView={5}
+          initialSlide={2}
+          speed={800}
+          loop={true}
+          loopedSlides={events.length}
+          mousewheel={{
+            forceToAxis: true,
+            sensitivity: 0.5,
+          }}
+          coverflowEffect={{
+            rotate: 45,
+            stretch: 0,
+            depth: 400,
+            modifier: 1.5,
+            slideShadows: false,
+          }}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          modules={[EffectCoverflow, Navigation, Autoplay, Mousewheel]}
+          onSlideChange={(swiper) => {
+            const realIndex = swiper.realIndex;
+            setActiveIndex(realIndex);
+            const slides = swiper.slides;
 
-          return (
-            <Card
-              key={i}
-              style={{
-                transform: `
-          translateX(${translateX}px)
-          translateY(${translateY}px)
-          translateZ(${translateZ}px)
-          scale(${scale})
-          rotateY(${rotateY}deg)
-        `,
-                zIndex: 10 - Math.abs(offset),
-                transition: transitionEnabled.current ? "transform 0.5s ease" : "none",
-              }}
-            >
-              <CardImage src={item.img} alt={item.title} />
-            </Card>
-          );
-        })}
-      </Slider>
-      <BottomInfo>
-        <h3>{infiniteData[centerIndex].title}</h3>
-        <p>
-          {infiniteData[centerIndex].date} | {infiniteData[centerIndex].place}
-        </p>
-      </BottomInfo>
-    </CarouselWrapper>
+            slides.forEach((slide, index) => {
+              slide.classList.remove(
+                "swiper-slide-prev-prev",
+                "swiper-slide-next-next"
+              );
+
+              if (index === swiper.activeIndex - 2) {
+                slide.classList.add("swiper-slide-prev-prev");
+              }
+
+              if (index === swiper.activeIndex + 2) {
+                slide.classList.add("swiper-slide-next-next");
+              }
+            });
+          }}
+        >
+          {events.map((event) => (
+            <SwiperSlide key={event.id}>
+              <div className="slide-content">
+                <img src={event.image} alt={event.title} />
+              </div>
+              <EventInfo className="event-info">
+                <div className="title">{event.title}</div>
+                <div className="date">
+                  {event.date} | {event.location}
+                </div>
+              </EventInfo>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </SliderContainer>
+    </WhatsOnSection>
   );
 };
 
