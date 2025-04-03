@@ -33,34 +33,29 @@ const GalleryGrid = styled.div`
 function ArtistGalleryLsit() {
   const galleryItems = [
     {
-      id: 1,
+      id: 1, // ⬅️ id 값을 유니크하게 설정해야 함!
       imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
       title: "삶의 예찬",
       date: "2025.01.20 ~ 2025.02.01",
       artists: "곽두팔 화백, 김철용 화백",
-      description:
-        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+      description: "아티스트 갤러리 포스터 설명...",
     },
     {
-      id: 1,
+      id: 2, // ⬅️ 각 항목마다 고유한 id 할당
       imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
-      title: "삶의 예찬",
-      date: "2025.01.20 ~ 2025.02.01",
-      artists: "곽두팔 화백, 김철용 화백",
-      description:
-        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+      title: "자연의 숨결",
+      date: "2025.03.15 ~ 2025.04.01",
+      artists: "박서준 화백",
+      description: "자연의 아름다움을 표현한 작품들...",
     },
-
     {
-      id: 1,
+      id: 3,
       imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
-      title: "삶의 예찬",
-      date: "2025.01.20 ~ 2025.02.01",
-      artists: "곽두팔 화백, 김철용 화백",
-      description:
-        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
+      title: "도시와 인간",
+      date: "2025.05.10 ~ 2025.06.01",
+      artists: "이정화 화백",
+      description: "도시 속에서 살아가는 인간의 모습을 조명한 전시...",
     },
-
     {
       id: 1,
       imageUrl: "/src/assets/ArtistGalleryIMG/삶의 예찬.jpg",
@@ -85,8 +80,8 @@ function ArtistGalleryLsit() {
   return (
     <Container>
       <GalleryGrid>
-        {galleryItems.map((item, index) => (
-          <ArtistGallerys key={index} {...item} /> // ArtistGallerys 컴포넌트 사용
+        {galleryItems.map((item) => (
+          <ArtistGallerys key={item.id} {...item} />
         ))}
       </GalleryGrid>
     </Container>
