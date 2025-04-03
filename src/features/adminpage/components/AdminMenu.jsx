@@ -8,11 +8,12 @@ const Container = styled.div`
   padding: 40px 60px;
   min-height: 80vh;
   background: #f8f9fa;
+  
 `;
 
 const Title = styled.h1`
   font-size: 35px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   margin-left: -20px;
 `;
 
@@ -70,7 +71,8 @@ const AdminMenu = () => {
               작품 조회
             </Link>
           </MenuItem>
-          <MenuItem active={location.pathname === '/AdminGoods'}>
+          {/* ✅ `/AdminGoods` 또는 `/AdminGoodsChart`일 때 버튼 활성화 */}
+          <MenuItem active={location.pathname.includes('/AdminGoods')}>
             <Link to="/AdminGoods" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
               굿즈 판매 내역
             </Link>

@@ -1,19 +1,40 @@
-import React from 'react'
-import Header from '../../Header'
-import Footer from '../../Footer'
-import AdminMenu from './AdminMenu'
-import AdminGoodsMenubar from './AdminGoodsMenubar'
-import styled from 'styled-components'
+import React from 'react';
+import Header from '../../Header';
+import Footer from '../../Footer';
+import AdminMenu from './AdminMenu';
+import AdminGoodsMenubar from './AdminGoodsMenubar';
+import styled from 'styled-components';
 
 const Container = styled.div`
+
   display: flex;
   padding: 23px;
-
-  
-  
-  margin-left: 23px
+  margin-left: 23px;
 `;
 
+/* ✅ AdminMenu만 따로 감싸는 Wrapper 추가 */
+const AdminMenuWrapper = styled.div`
+
+  position: relative;
+  top: -70px;
+  margin-left: 10px; /* ✅ 원하는 만큼 조정 (위로 올리기) */
+  
+`;
+
+const TitleWrapper = styled.div`
+  position: relative; /* ✅ 다른 요소들에 영향 없이 이동 가능 */
+  top: 40px; /* ✅ 원하는 만큼 내리기 */
+  margin-left: 480px;
+  color: #222;
+  border-radius: 6px;
+  font-size: 25px;
+  font-weight: bold;
+`;
+
+const AdminGoodsMenubarWrapper = styled.div`
+  position: relative; /* ✅ 다른 요소에 영향 없이 개별 이동 */
+  top: 30px; /* ✅ 원하는 만큼 내리기 */
+`;
 const ContentWrapper = styled.div`
   flex: 1;
   padding: 20px;
@@ -22,7 +43,7 @@ const ContentWrapper = styled.div`
 `;
 
 const Table = styled.table`
-  width: 100%; /* ✅ 테이블 크기 조정 */
+  width: 100%;
   max-width: 1300px;
   border-collapse: collapse;
   margin-top: 20px;
@@ -32,22 +53,41 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  background: #ddd;
   padding: 12px;
   font-weight: bold;
-  border: 1px solid #bbb;
-  font-size: 16px; /* ✅ 글자 크기 조정 */
+  border-top: 3px solid #bbb;
+  border-bottom: 2px solid #bbb;
+  font-size: 16px;
+  border-right: 1px solid #bbb;
+`;
+
+const ThLast = styled.th`
+  padding: 12px;
+  font-weight: bold;
+  border-top: 3px solid #bbb;
+  border-bottom: 2px solid #bbb;
+  font-size: 16px;
+  border-right: none;
 `;
 
 const Td = styled.td`
   padding: 10px;
-  border: 1px solid #bbb;
   font-size: 16px;
   vertical-align: middle;
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+`;
+
+const TdLast = styled.td`
+  padding: 10px;
+  font-size: 16px;
+  vertical-align: middle;
+  border-right: none;
+  border-bottom: 1px solid #bbb;
 `;
 
 const ProductRow = styled.tr`
-  height: 140px; /* ✅ 행 높이 줄이기 */
+  height: 140px;
 `;
 
 const ProductCell = styled.td`
@@ -55,7 +95,8 @@ const ProductCell = styled.td`
   align-items: center;
   gap: 30px;
   padding: 6px;
- 
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
 `;
 
 const ProductImage = styled.img`
@@ -64,6 +105,12 @@ const ProductImage = styled.img`
   object-fit: cover;
   border-radius: 5px;
   flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const ProductInfo = styled.div`
@@ -89,16 +136,22 @@ function AdminGoods() {
   return (
     <>
       <Header />
-      <AdminGoodsMenubar /> {/* ✅ 헤더 아래로 이동 */}
+      <TitleWrapper>전체 굿즈 판매량 통계</TitleWrapper>
+      <AdminGoodsMenubarWrapper>
+        <AdminGoodsMenubar />
+      </AdminGoodsMenubarWrapper>
       <Container>
-        <AdminMenu />
+        {/* ✅ AdminMenu만 따로 감싸서 올림 */}
+        <AdminMenuWrapper>
+          <AdminMenu />
+        </AdminMenuWrapper>
         <ContentWrapper>
           <Table>
             <thead>
               <tr>
                 <Th>상품정보</Th>
                 <Th>재고량</Th>
-                <Th>누적 판매량</Th>
+                <ThLast>누적 판매량</ThLast>
               </tr>
             </thead>
             <tbody>
@@ -114,7 +167,7 @@ function AdminGoods() {
                     </ProductInfo>
                   </ProductCell>
                   <Td>{item.stock}</Td>
-                  <Td>{item.sold}</Td>
+                  <TdLast>{item.sold}</TdLast>
                 </ProductRow>
               ))}
             </tbody>
@@ -123,6 +176,7 @@ function AdminGoods() {
       </Container>
       <Footer />
     </>
-  )
+  );
 }
+
 export default AdminGoods;

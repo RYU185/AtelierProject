@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom'; // ✅ useLocation 추가
 import styled from 'styled-components';
 
 const MenuContainer = styled.div`
@@ -14,7 +15,7 @@ const TabButton = styled.button`
   padding: 10px 30px;
   font-size: 14px;
   border: 1px solid #bbb;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px 10px 10px 10px;
   background: ${(props) => (props.active ? '#6ea8fe' : '#f1f1f1')};
   color: ${(props) => (props.active ? '#fff' : '#666')};
   cursor: pointer;
@@ -35,16 +36,22 @@ const TabButton = styled.button`
   }
 `;
 
-
 function AdminGoodsMenubar() {
-  const [activeTab, setActiveTab] = useState('goods');
+  const navigate = useNavigate();  
+  const location = useLocation(); // ✅ 현재 URL 가져오기
 
   return (
     <MenuContainer>
-      <TabButton active={activeTab === 'goods'} onClick={() => setActiveTab('goods')}>
+      <TabButton 
+        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoods면 활성화
+        onClick={() => navigate('/AdminGoods')}
+      >
         굿즈 판매내역 관리
       </TabButton>
-      <TabButton active={activeTab === 'stats'} onClick={() => setActiveTab('stats')}>
+      <TabButton 
+        active={location.pathname === '/AdminGoodsChart'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
+        onClick={() => navigate('/AdminGoodsChart')}
+      >
         통계 관리
       </TabButton>
     </MenuContainer>
