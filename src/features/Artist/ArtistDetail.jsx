@@ -19,24 +19,6 @@ const TitleContainer = styled.div`
   margin-top: 20px;
 `;
 
-const BackTitle = styled.h1`
-  font-size: 80px;
-  text-align: center;
-  color: #deeaff;
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  z-index: 1;
-`;
-
-const Title = styled.h1`
-  font-size: 50px;
-  text-align: center;
-  margin: 0;
-  position: relative;
-  z-index: 2;
-`;
-
 const DetailWrapper = styled.div`
   width: 50%;
   max-width: 1500px;
@@ -71,19 +53,6 @@ const ArtistImage = styled.img`
   margin-bottom: 20px;
 `;
 
-const ArtistName = styled.h2`
-  font-size: 32px;
-  margin: 10px 0;
-`;
-
-const ArtistBio = styled.p`
-  font-size: 18px;
-  color: #333;
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
 const BioGraphyContainer = styled.div`
   margin-top: 20px;
 `;
@@ -110,7 +79,7 @@ const WorksContainer = styled.div`
 
 const WorksTitle = styled.h2`
   font-size: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   color: #ffffff;
   background-color: #005791;
   display: inline-block;
@@ -220,6 +189,7 @@ const ArtistDetail = () => {
             <br />
             2014. 07. 29~08.03 1회 '바람이 분다.' 아라아트센터, 인사동, 대한민국 외 다수
             <br />
+            <br />
             국내외 아트패어 18회
             <br />
             2025 ART FUTURE TAIPAI, 아트보다 갤러리
@@ -233,6 +203,7 @@ const ArtistDetail = () => {
             2019 싱가포르 어포더블, 일호갤러리
             <br />
             2019 뉴욕어포더블, 메크로폴리탄, 미국
+            <br />
             <br />
             그룹전 37회
             <br />
