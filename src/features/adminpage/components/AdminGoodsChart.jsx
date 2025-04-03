@@ -39,8 +39,8 @@ position: relative;
 
 const AdminMenuWrapper = styled.div`
   position: relative;  /* ✅ AdminMenu만 이동 */
-  top: -42px;          /* ✅ 원하는 만큼 조절 */
-  margin-left: 14px;
+  top: -30px;          /* ✅ 원하는 만큼 조절 */
+  margin-left: 16px;
 `;
 function AdminGoodsChart() {
   // 차트 데이터

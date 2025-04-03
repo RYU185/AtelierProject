@@ -16,8 +16,8 @@ const Container = styled.div`
 const AdminMenuWrapper = styled.div`
 
   position: relative;
-  top: -70px;
-  margin-left: 10px; /* ✅ 원하는 만큼 조정 (위로 올리기) */
+  top: -58px;
+  margin-left: 13px; /* ✅ 원하는 만큼 조정 (위로 올리기) */
   
 `;
 

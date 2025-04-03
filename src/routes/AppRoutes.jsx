@@ -29,6 +29,8 @@ import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import NoticePage from "../features/support/NoticePage";
+import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
+// import AdminUser from "../features/adminpage/components/AdminUser";
 
 function AppRoutes() {
   return (
@@ -43,6 +45,8 @@ function AppRoutes() {
       <Route path="/AdminTicketList" element={<AdminTicketList />} />
       <Route path="/AdminUser" element={<AdminUser />} />
       <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
+      <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
+      {/* <Route path="AdminUser" element={<AdminUser />} /> */}
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
