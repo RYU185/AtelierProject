@@ -1,11 +1,21 @@
 import React from "react";
 import CommunityList from "./components/CommunityList";
+import Footer from "../Footer";
+import Header from "../Header";
+import styled from "styled-components";
+
+const Container = styled.div`
+  width: 100%;
+`;
 
 function CommunityMain() {
   return (
     <div>
-      <h1>커뮤니티</h1>
-      <CommunityList />
+      <Header />
+      <Container>
+        <CommunityList />
+      </Container>
+      <Footer />
     </div>
   );
 }
