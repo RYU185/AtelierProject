@@ -5,28 +5,29 @@ import Gogh from "../../../assets/images/gogh.jpg";
 const Section = styled.section`
   display: flex;
   width: 100%;
-  height: 600px;
+  height: 300px;
 `;
 
 const LeftBox = styled.div`
-  width: 35%;
+  width: 25%;
   background: linear-gradient(to right, #0080ff, #00c0ff);
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end; 
-  padding-right: 60px; 
+  align-items: flex-end;
+  padding-right: 60px;
   padding-left: 50px;
 `;
 
 const Title = styled.h2`
-  font-size: 90px;
+  font-size: 45px;
   font-weight: 700;
+  
 `;
 
 const Subtitle = styled.p`
-  font-size: 30px;
+  font-size: 25px;
   margin-top: 6px;
 `;
 
@@ -38,7 +39,7 @@ const Line = styled.div`
 `;
 
 const RightBox = styled.div`
-  width: 65%;
+  width: 75%;
   background-size: cover;
   background-position: center;
 `;

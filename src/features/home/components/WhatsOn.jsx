@@ -11,10 +11,13 @@ const CarouselWrapper = styled.section`
 `;
 
 const Title = styled.h2`
-  font-size: 50px;
+  font-size: 180px;
   font-weight: 800;
-  color: #000;
+  color: #d1d1d1;
   margin-bottom: 40px;
+  position: absolute;
+  top: 8px;
+  left: 45px;
 `;
 
 const Slider = styled.div`
@@ -29,12 +32,13 @@ const Slider = styled.div`
   user-select: none;
   overflow-x: auto; // ✅ 가로 넘침 허용
   overflow: visible;
+  
 `;
 
 const Card = styled.div`
   position: absolute;
-  width: 400px;
-  height: 600px;
+  width: 300px;
+  height: 450px; // 비율을 유지하기 위해 높이를 수정
   border-radius: 16px;
   overflow: hidden;
   background: #111;

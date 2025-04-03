@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const CursorDot = styled.div`
@@ -9,25 +9,30 @@ const CursorDot = styled.div`
   position: fixed;
   pointer-events: none;
   z-index: 9999;
-  transition: transform 1.3s ease;
+  transition: transform 0.5s ease;
   transform: translate(-50%, -50%);
-  display: none;
 `;
 
 const CustomCursor = () => {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [targetPosition, setTargetPosition] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef({ x: 0, y: 0 }); // 커서 위치
+  const targetRef = useRef({ x: 0, y: 0 }); // 마우스의 도착위치
 
   useEffect(() => {
     const updateCursorPosition = (e) => {
-      setTargetPosition({ x: e.clientX, y: e.clientY });
+      targetRef.current = { x: e.clientX, y: e.clientY };
     };
 
     const animateCursor = () => {
-      setPosition((prev) => ({
-        x: prev.x + (targetPosition.x - prev.x) * 0.5,
-        y: prev.y + (targetPosition.y - prev.y) * 0.5,
-      }));
+      cursorRef.current.x += (targetRef.current.x - cursorRef.current.x) * 0.3;
+      cursorRef.current.y += (targetRef.current.y - cursorRef.current.y) * 0.3;
+
+      // 커서 위치 업데이트
+      const cursorDot = document.querySelector(".cursor-dot");
+      if (cursorDot) {
+        cursorDot.style.left = `${cursorRef.current.x}px`;
+        cursorDot.style.top = `${cursorRef.current.y}px`;
+      }
+
       requestAnimationFrame(animateCursor);
     };
 
@@ -37,16 +42,9 @@ const CustomCursor = () => {
     return () => {
       window.removeEventListener("mousemove", updateCursorPosition);
     };
-  }, [targetPosition]);
+  }, []);
 
-  return (
-    <CursorDot
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-      }}
-    />
-  );
+  return <CursorDot className="cursor-dot" />;
 };
 
 export default CustomCursor;
