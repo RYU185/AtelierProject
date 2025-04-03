@@ -36,21 +36,21 @@ const TabButton = styled.button`
   }
 `;
 
-function AdminTiketMenubar() {
+function AdminTicketMenubar() {
   const navigate = useNavigate();  
   const location = useLocation(); // ✅ 현재 URL 가져오기
 
   return (
     <MenuContainer>
       <TabButton 
-        active={location.pathname === '/AdminTicketList'} // ✅ 현재 URL이 /AdminGoods면 활성화
-        onClick={() => navigate('/AdminTicketList')}
+        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoods면 활성화
+        onClick={() => navigate('/AdminGoods')}
       >
         전시회 별 현황
       </TabButton>
       <TabButton 
-        active={location.pathname === '/AdminTicketChart'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
-        onClick={() => navigate('/AdminTicketChart')}
+        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
+        onClick={() => navigate('/AdminGoods')}
       >
         전시회 분석
       </TabButton>
@@ -58,4 +58,4 @@ function AdminTiketMenubar() {
   );
 }
 
-export default AdminTiketMenubar;
+export default AdminTicketMenubar;

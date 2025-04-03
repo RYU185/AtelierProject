@@ -3,7 +3,7 @@ import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import styled from 'styled-components';
-import AdminTiketMenubar from './AdminTiketMenubar';
+import AdminTicketMenubar from './AdminTicketMenubar';
 
 // ✅ AdminGoods와 동일한 스타일 적용
 const Container = styled.div`
@@ -142,7 +142,7 @@ const AdminTicketList = () => {
     <>
       <Header />
       <AdminGoodsMenubarWrapper>
-        <AdminTiketMenubar />
+        <AdminTicketMenubar />
       </AdminGoodsMenubarWrapper>
       <Container>
         {/* ✅ AdminMenuWrapper 적용 */}
