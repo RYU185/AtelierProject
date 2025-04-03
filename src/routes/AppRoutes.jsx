@@ -31,6 +31,7 @@ import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
 import CommunityMain from "../features/community/CommunityMain";
+import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
 
 
 function AppRoutes() {
@@ -48,6 +49,7 @@ function AppRoutes() {
       <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
       <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
       <Route path="AdminUser" element={<AdminUser />} />
+      <Route path="AdminTicketChart" element={<AdminTicketChart />} />
      
 
       <Route path="/goods" element={<Goods />} />

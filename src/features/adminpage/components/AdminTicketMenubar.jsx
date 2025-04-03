@@ -43,14 +43,14 @@ function AdminTicketMenubar() {
   return (
     <MenuContainer>
       <TabButton 
-        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoods면 활성화
-        onClick={() => navigate('/AdminGoods')}
+        active={location.pathname === '/AdminTicketList'} // ✅ 현재 URL이 /AdminGoods면 활성화
+        onClick={() => navigate('/AdminTicketList')}
       >
         전시회 별 현황
       </TabButton>
       <TabButton 
-        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
-        onClick={() => navigate('/AdminGoods')}
+        active={location.pathname === '/AdminTicketChart'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
+        onClick={() => navigate('/AdminTicketChart')}
       >
         전시회 분석
       </TabButton>
