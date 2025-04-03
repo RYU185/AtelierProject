@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import UserGalleryPoster from "./components/UserGalleryPoster";
 import UserGalleryInformation from "./components/UserGalleryInformation";
 import DrawingList from "./components/DrawingList";
-
 import styled from "styled-components";
 import TicketButton from "../ArtistGalleryDetail/components/TicketButton";
 
@@ -71,24 +70,22 @@ const InfoBox = styled.div`
   padding-left: 20px;
 `;
 
-const Box = styled.div`
+const Info = styled.h1`
   margin-top: 130px;
-  margin-bottom: 150px;
-  & h1 {
-    text-align: center;
-    margin-bottom: 100px;
-  }
+  text-align: center;
+  margin-bottom: 50px;
 `;
 function UserGalleryDetail() {
   const navigate = useNavigate();
+
   return (
     <div>
       <TitleContainer>
-        <BackTitle>User Gallery</BackTitle>
-        <Title>User Gallery</Title>
+        <BackTitle>User GALLERY</BackTitle>
+        <Title>User GALLERY</Title>
       </TitleContainer>
       <ButtonDiv>
-        <Button onClick={() => navigate("/gallery/usergallery")}>
+        <Button onClick={() => navigate("/gallery/Usergallery")}>
           {" "}
           &lt; 목록 보기
         </Button>
@@ -102,10 +99,9 @@ function UserGalleryDetail() {
           <UserGalleryInformation />
         </InfoBox>
       </Container>
-      <Box>
-        <h1>참여 작품</h1>
-        <DrawingList />
-      </Box>
+
+      <Info>참여 작품</Info>
+      <DrawingList />
     </div>
   );
 }

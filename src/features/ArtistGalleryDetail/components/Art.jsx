@@ -3,35 +3,19 @@ import styled from "styled-components";
 
 const ArtContainer = styled.div`
   text-align: center;
+  width: 100%;
 `;
 
 const ArtImage = styled.img`
   width: 100%;
-  max-height: 500px;
+  max-height: 600px;
   object-fit: contain;
 `;
 
-const ArtTitle = styled.h3`
-  margin-top: 10px;
-`;
-
-const ArtArtist = styled.p`
-  color: #888;
-  margin: 5px;
-`;
-
-const ArtDate = styled.p`
-  color: #888;
-  margin: 5px;
-`;
-
-function Art({ image, title, artist, date }) {
+function Art({ image, title }) {
   return (
     <ArtContainer>
       <ArtImage src={image} alt={title} />
-      <ArtTitle>{title}</ArtTitle>
-      <ArtArtist>{artist}</ArtArtist>
-      <ArtDate>{date}</ArtDate>
     </ArtContainer>
   );
 }

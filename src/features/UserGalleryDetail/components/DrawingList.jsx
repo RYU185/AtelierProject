@@ -1,48 +1,61 @@
-import React from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { keyframes } from "styled-components";
 import Drawing from "./Drawing";
 
-const ArrowButton = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:before {
-    content: "❮";
-    font-size: 35px;
-    font-weight: bold;
-    color: #018ec8;
+const fadeInSlide = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(30px);
   }
-
-  &:hover:before {
-    color: #007acc;
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 `;
 
-const LeftButton = (props) => {
-  const { onClick } = props;
-  return <ArrowButton onClick={onClick} style={{ left: "155px" }} />;
-};
+const Container = styled.div`
+  text-align: center;
+  position: relative;
+  width: 1400px;
+  height: 600px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-const RightButton = (props) => {
-  const { onClick } = props;
-  return (
-    <ArrowButton
-      onClick={onClick}
-      style={{ right: "155px", transform: "translateY(-50%) rotate(180deg)" }}
-    />
-  );
-};
+const ImageWrapper = styled.div`
+  animation: ${fadeInSlide} 0.6s ease-in-out;
+  width: 100%;
+`;
+
+const NavigationButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 20px 25px;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 1000;
+  color: #018ec8;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  &:hover {
+    background: rgba(200, 200, 200, 0.8);
+  }
+`;
+
+const LeftButton = styled(NavigationButton)`
+  left: -80px;
+`;
+
+const RightButton = styled(NavigationButton)`
+  right: -80px;
+`;
 
 function DrawingList() {
   const artWorks = [
@@ -72,28 +85,28 @@ function DrawingList() {
     },
   ];
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    prevArrow: <LeftButton />,
-    nextArrow: <RightButton />,
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const prevImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? artWorks.length - 1 : prevIndex - 1
+    );
+  };
+
+  const nextImage = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === artWorks.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   return (
-    <Slider {...settings}>
-      {artWorks.map((item, index) => (
-        <div key={index}>
-          <Drawing
-            image={item.image}
-            title={item.title}
-            user={item.user}
-            date={item.date}
-          />
-        </div>
-      ))}
-    </Slider>
+    <Container>
+      <LeftButton onClick={prevImage}>❮</LeftButton>
+      <ImageWrapper key={currentIndex}>
+        <Drawing image={artWorks[currentIndex].image} />
+      </ImageWrapper>
+      <RightButton onClick={nextImage}>❯</RightButton>
+    </Container>
   );
 }
 

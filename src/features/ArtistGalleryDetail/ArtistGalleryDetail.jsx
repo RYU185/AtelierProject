@@ -4,7 +4,6 @@ import styled from "styled-components";
 import ArtistGalleryPoster from "./components/ArtistGalleryPoster";
 import ArtistGalleryInformation from "./components/ArtistGalleryInformation";
 import TicketButton from "./components/TicketButton";
-
 import ArtList from "./components/ArtList";
 
 const TitleContainer = styled.div`
@@ -71,13 +70,10 @@ const InfoBox = styled.div`
   padding-left: 20px;
 `;
 
-const Box = styled.div`
+const Info = styled.h1`
   margin-top: 130px;
-  margin-bottom: 150px;
-  & h1 {
-    text-align: center;
-    margin-bottom: 100px;
-  }
+  text-align: center;
+  margin-bottom: 50px;
 `;
 
 function ArtistGalleryDetail() {
@@ -104,10 +100,9 @@ function ArtistGalleryDetail() {
           <ArtistGalleryInformation />
         </InfoBox>
       </Container>
-      <Box>
-        <h1>참여 작품</h1>
-        <ArtList />
-      </Box>
+
+      <Info>참여 작품</Info>
+      <ArtList />
     </div>
   );
 }
