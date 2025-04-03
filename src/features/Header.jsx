@@ -142,7 +142,9 @@ const DropdownMenu = styled.ul`
   opacity: ${(props) => (props.$show ? 1 : 0)};
   visibility: ${(props) => (props.$show ? "visible" : "hidden")};
   transform: ${(props) =>
-    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
+    props.$show
+      ? "translateX(-50%) translateY(0px)"
+      : "translateX(-50%) translateY(-10px)"};
   transition: all 0.3s ease;
   pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   z-index: 1001;
@@ -302,13 +304,13 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter("Notice")}
                 onMouseLeave={handleMouseLeave}
               >
-                <NavItem onClick={() => navigate("/faq/notice")}>
+                <NavItem onClick={() => navigate("/support/notice")}>
                   고객 지원
                   <DropdownMenu $show={showDropdown === "Notice"}>
-                  <DropdownItem
+                    <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/faq/notice");
+                        navigate("/support/notice");
                       }}
                     >
                       공지사항
@@ -316,7 +318,7 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/faq/guide");
+                        navigate("/support/guide");
                       }}
                     >
                       이용 안내
@@ -324,7 +326,7 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/faq/contactus");
+                        navigate("/support/location");
                       }}
                     >
                       오시는길
@@ -332,7 +334,7 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/faq/customersupport");
+                        navigate("/support/contact");
                       }}
                     >
                       문의하기
@@ -344,12 +346,22 @@ const Header = () => {
           </NavWrapper>
         </CenterContainer>
         <Right>
-          <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
+          <RightNavItem onClick={() => navigate("/join")}>
+            회원가입
+          </RightNavItem>
           <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
-          <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/adminpage")}> 관리자페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/cart")}> 장바구니</RightNavItem>
-          <MenuIcon>MENU</MenuIcon>
+          <RightNavItem onClick={() => navigate("/mypage")}>
+            마이페이지
+          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/adminpage")}>
+            {" "}
+            관리자페이지
+          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/cart")}>
+            {" "}
+            장바구니
+          </RightNavItem>
+          <MenuIcon onClick={() => navigate("/menu")}>MENU</MenuIcon>
         </Right>
       </HeaderWrapper>
     </>
