@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const Button = styled.div`
+export const Button = styled.div`
   width: 250px;
   text-align: center;
   border: 1px solid #018ec8;
