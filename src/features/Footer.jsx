@@ -2,19 +2,20 @@ import React from "react";
 import styled from "styled-components";
 
 const FooterWrapper = styled.footer`
+  height: 120px;
   display: flex;
   justify-content: space-between;
-  padding: 40px;
+  padding: 20px 70px;
   background: #111;
-  color: white;
-  font-size: 21px;
+  color: #969696;
+  font-size: 15px;
   flex-wrap: wrap;
 `;
 
 const Left = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+
 `;
 
 const Right = styled.div`
