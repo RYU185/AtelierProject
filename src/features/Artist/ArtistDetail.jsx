@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Header";
@@ -26,7 +26,7 @@ const DetailContainer = styled.div`
 
 const ImageContainer = styled.div`
   flex: 1;
-  max-width: 40%;
+  max-width: 50%;
 `;
 
 const DescriptionContainer = styled.div`
@@ -35,6 +35,7 @@ const DescriptionContainer = styled.div`
   flex-direction: column;
   gap: 15px;
   padding: 20px;
+  max-width: 50%;
 `;
 
 const ArtistImage = styled.img`
@@ -80,7 +81,7 @@ const WorksTitle = styled.h2`
 const WorksGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(200px, 1fr));
-  gap: 20px;
+  gap: 40px;
 `;
 
 const WorkCard = styled.div`
@@ -88,11 +89,85 @@ const WorkCard = styled.div`
   overflow: hidden;
   width: 300px;
   height: 300px;
+  cursor: pointer;
 `;
 
 const WorkImage = styled.img`
   width: 100%;
   height: auto;
+`;
+
+/* 모달 오버레이 */
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7); /* 반투명 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 다른 요소 위에 표시 */
+`;
+
+/* 모달 컨테이너 */
+const Modal = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 1fr;
+  gap: 20px;
+  background-color: white;
+  max-width: 900px;
+  width: 100%;
+  height: 50%;
+  position: relative;
+`;
+
+/* 닫기 버튼 */
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+  &:hover {
+    color: #303030;
+  }
+`;
+
+const ArtDetailImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const ArtDetailDescriptionContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding-top: 30px;
+  padding-left: 10px;
+  padding-right: 30px;
+
+  & > h2 {
+    font-size: 32px;
+    color: #333;
+  }
+
+  & > p {
+    font-size: 16px;
+    color: #333;
+    padding-top: 10px;
+  }
 `;
 
 const ArtistDetail = () => {
@@ -135,6 +210,9 @@ const ArtistDetail = () => {
     bio: ` ${id}.`,
     imageUrl: getArtistImage(id),
   };
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedWork, setSelectedWork] = useState(null);
 
   return (
     <div>
@@ -220,14 +298,43 @@ const ArtistDetail = () => {
         <WorksContainer>
           <WorksTitle>EXHIBITIONS</WorksTitle>
           <WorksGrid>
-            {[1, 2, 3, 4].map((workId) => (
-              <WorkCard key={workId}>
-                <WorkImage src={art.imageUrl} alt={`작품 ${workId}`} />
-              </WorkCard>
-            ))}
+            {[1, 2, 3, 4].map((workId) => {
+              const handleWorkClick = () => {
+                // 모달창 상태관리
+                setModalOpen(true);
+                setSelectedWork(workId);
+              };
+              return (
+                <WorkCard key={workId} onClick={handleWorkClick}>
+                  <WorkImage src={art.imageUrl} alt={`작품 ${workId}`} />
+                </WorkCard>
+              );
+            })}
           </WorksGrid>
         </WorksContainer>
       </DetailWrapper>
+      {modalOpen && (
+        <Overlay>
+          <Modal>
+            <CloseButton onClick={() => setModalOpen(false)}>X</CloseButton>
+            <ArtDetailImageContainer>
+              <img src={art.imageUrl} alt={`작품 ${selectedWork}`} />
+            </ArtDetailImageContainer>
+            <ArtDetailDescriptionContainer>
+              <h2>TITLE</h2>
+              <p>
+                {/* {art.description} */}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum
+                dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit
+                amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet
+                consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing
+                elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </p>
+            </ArtDetailDescriptionContainer>
+          </Modal>
+        </Overlay>
+      )}
       <Footer />
     </div>
   );
