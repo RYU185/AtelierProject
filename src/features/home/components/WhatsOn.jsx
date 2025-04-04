@@ -76,8 +76,8 @@ const SliderContainer = styled.div`
       width: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transform: scale(0.85) translateZ(0);
-      transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transform: scale(0.85) translateZ(-50px);
+      transition: transform 0.3s ease;
       will-change: transform;
     }
 
@@ -86,7 +86,8 @@ const SliderContainer = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: 16px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      box-shadow: none !important;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
       transform-origin: center;
       backface-visibility: hidden;
@@ -99,11 +100,11 @@ const SliderContainer = styled.div`
     z-index: 1;
 
     .slide-content {
-      transform: scale(1.1) translateY(-10px) translateZ(-150px);
+      transform: scale(1) translateY(-3px) translateZ(0);
     }
 
     img {
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+      box-shadow: none !important;
     }
 
     .event-info {
@@ -256,10 +257,10 @@ const WhatsOn = () => {
             sensitivity: 0.5,
           }}
           coverflowEffect={{
-            rotate: 45,
+            rotate: 30,
             stretch: 0,
-            depth: 400,
-            modifier: 1.5,
+            depth: 250,
+            modifier: 1,
             slideShadows: false,
           }}
           autoplay={{
