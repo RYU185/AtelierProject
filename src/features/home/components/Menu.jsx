@@ -8,9 +8,9 @@ const MenuOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 2000;
   opacity: ${(props) => (props.$isOpen ? "1" : "0")};
   visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
@@ -63,8 +63,8 @@ const MainMenu = styled.h2`
     left: 0;
     bottom: -12px;
     width: 100%;
-    height: 1px;
-    background-color: rgba(255, 255, 255, 0.1);
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.8);
   }
 
   &:hover {
@@ -82,7 +82,7 @@ const SubMenuList = styled.div`
 
 const SubMenuItem = styled.div`
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(140, 140, 140, 0.9);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
