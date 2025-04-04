@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Community from "./Community";
 import CommentList from "./CommentList";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
+import { BsSearch } from "react-icons/bs";
+import FullImageModal from "./FullImageModal";
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -40,15 +42,41 @@ const CloseButton = styled(AiOutlineClose)`
   }
 `;
 
+const SearchButton = styled(BsSearch)`
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #018ec8;
+  transition: 0.3s;
+
+  &:hover {
+    color: #0056b3;
+  }
+`;
+
 function CommunityDetail({ post, onClose }) {
+  const [isFullImageOpen, setIsFullImageOpen] = useState(false);
+
   return (
-    <ModalBackground onClick={onClose}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose} />
-        <Community {...post} />
-        <CommentList />
-      </ModalContainer>
-    </ModalBackground>
+    <>
+      <ModalBackground onClick={onClose}>
+        <ModalContainer onClick={(e) => e.stopPropagation()}>
+          <CloseButton onClick={onClose} />
+          <Community {...post} />
+          <SearchButton onClick={() => setIsFullImageOpen(true)} />{" "}
+          <CommentList />
+        </ModalContainer>
+      </ModalBackground>
+
+      {isFullImageOpen && (
+        <FullImageModal
+          image={post.drawingImage}
+          onClose={() => setIsFullImageOpen(false)}
+        />
+      )}
+    </>
   );
 }
 
