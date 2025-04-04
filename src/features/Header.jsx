@@ -210,6 +210,13 @@ const Header = () => {
       { label: "문의하기", path: "/support/contactus" },
     ],
   };
+  const mainRoutes = {
+    Gallery: "/gallery/artistgallery",
+    Artist: "/artist",
+    Community: "/community",
+    Goods: "/goods",
+    Notice: "/support/notice",
+  };
 
   return (
     <>
@@ -241,7 +248,15 @@ const Header = () => {
                         </DropdownItem>
                       ))}
                     </DropdownMenu>
-                    <NavItem>{menu}</NavItem>
+
+                    <NavItem
+                      onClick={() => {
+                        setShowDropdown(null);
+                        navigate(mainRoutes[menu]);
+                      }}
+                    >
+                      {menu}
+                    </NavItem>
                   </NavItemContainer>
                 )
               )}
