@@ -179,11 +179,12 @@ const Header = () => {
     const handleStorageChange = () => {
       setUsername(localStorage.getItem("username"));
     };
-
     window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("focus", handleStorageChange);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("focus", handleStorageChange);
     };
   }, []);
   useEffect(() => {
