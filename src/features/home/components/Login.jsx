@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate, Link } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -91,6 +92,13 @@ const Divider = styled.span`
 `;
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    // TODO: 로그인 로직 (API 연결 시 여기에 추가)
+    navigate("/"); // ✅ 홈으로 이동
+  };
+
   return (
     <Container>
       <LeftSection />
@@ -100,13 +108,13 @@ const Login = () => {
           <Subtitle>로그인</Subtitle>
           <Input type="text" placeholder="아이디" />
           <Input type="password" placeholder="비밀번호" />
-          <LoginButton>로그인</LoginButton>
+          <LoginButton onClick={handleLogin}>로그인</LoginButton>
           <Links>
-            <a href="#">아이디 찾기</a>
+            <Link to="/find-id">아이디 찾기</Link>
             <Divider />
-            <a href="#">비밀번호 찾기</a>
+            <Link to="/find-password">비밀번호 찾기</Link>
             <Divider />
-            <a href="#">회원가입</a>
+            <Link to="/join">회원가입</Link>
           </Links>
         </FormWrapper>
       </RightSection>

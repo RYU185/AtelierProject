@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Header from "../../Header";
 import BirthInput from "@components/BirthInput";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   padding: 80px 20px;
@@ -63,8 +64,47 @@ const SubmitButton = styled.button`
     background-color: #007acc;
   }
 `;
+const SuggestionBox = styled.div`
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  background-color: white;
+`;
+
+const SuggestionItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+`;
 
 const Join = () => {
+  const navigate = useNavigate();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // TODO: 유효성 검사, 백엔드 연동 후
+    // 성공하면 로그인 페이지로 이동
+    navigate("/login");
+  };
+  const [email, setEmail] = React.useState("");
+  const [showSuggestions, setShowSuggestions] = React.useState(false);
+  const domainSuggestions = ["naver.com", "gmail.com", "kakao.com"];
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setShowSuggestions(!e.target.value.includes("@"));
+  };
+
+  const handleSuggestionClick = (domain) => {
+    const idPart = email.split("@")[0];
+    setEmail(`${idPart}@${domain}`);
+    setShowSuggestions(false);
+  };
+
   return (
     <>
       <Header />
@@ -103,7 +143,24 @@ const Join = () => {
             <Label>
               이메일<span>*</span>
             </Label>
-            <Input type="email" placeholder="이메일을 입력해주세요" />
+            <Input
+              type="text"
+              placeholder="이메일을 입력해주세요"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            {showSuggestions && (
+              <SuggestionBox>
+                {domainSuggestions.map((domain) => (
+                  <SuggestionItem
+                    key={domain}
+                    onClick={() => handleSuggestionClick(domain)}
+                  >
+                    {email.split("@")[0]}@{domain}
+                  </SuggestionItem>
+                ))}
+              </SuggestionBox>
+            )}
           </FormItem>
           <FormItem>
             <Label>주소</Label>
@@ -126,7 +183,7 @@ const Join = () => {
             </Label>
             <BirthInput />
           </FormItem>
-          <SubmitButton>가입하기</SubmitButton>
+          <SubmitButton onClick={handleSubmit}>가입하기</SubmitButton>
         </Form>
       </Wrapper>
     </>
