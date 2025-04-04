@@ -41,6 +41,7 @@ import CommunityDetail from "../features/community/components/CommunityDetail";
 import ChatPage from "../features/chatting/components.jsx/ChatPage";
 import ChatRoomMain from "../features/chatting/components.jsx/ChatRoomMain";
 import UserPage from "../features/chatting/components.jsx/UserPage";
+import AdminContact from "../features/adminpage/components/AdminContact";
 
 function AppRoutes() {
   return (
@@ -60,6 +61,7 @@ function AppRoutes() {
       <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
       <Route path="AdminUser" element={<AdminUser />} />
       <Route path="AdminTicketChart" element={<AdminTicketChart />} />
+      <Route path="AdminContact" element={<AdminContact />} />
 
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
