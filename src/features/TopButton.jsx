@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-// 스타일
 const Button = styled.button`
   position: fixed;
   bottom: 40px;
@@ -16,34 +15,36 @@ const Button = styled.button`
   font-size: 14px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 999;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  opacity: ${(props) => (props.visible ? 1 : 0)};
+  transform: ${(props) => (props.visible ? "scale(1)" : "scale(0.8)")};
 
   &:hover {
     background-color: #0050ff;
   }
 `;
 
-const TopButton = () => {
-  const [isVisible, setIsVisible] = useState(false);
-
-  // 스크롤 감지
-  const handleScroll = () => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    setIsVisible(scrollTop > 300); 
-  };
+function TopButton() {
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    const handleScroll = () => {
+      setVisible(window.scrollY > 200);
+    };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  return isVisible && <Button onClick={scrollToTop}>▲ TOP</Button>;
-};
+  return (
+    <Button onClick={scrollToTop} visible={visible}>
+      ▲ TOP
+    </Button>
+  );
+}
 
 export default TopButton;

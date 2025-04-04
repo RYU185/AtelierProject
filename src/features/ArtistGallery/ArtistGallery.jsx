@@ -2,6 +2,7 @@ import React from "react";
 import Datacontrol from "./components/Datacontrol";
 import ArtistGalleryLsit from "./components/ArtistGalleryLsit";
 import styled from "styled-components";
+import TopButton from "../TopButton";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -39,6 +40,7 @@ function ArtistGallery() {
       </TitleContainer>
       <Datacontrol />
       <ArtistGalleryLsit />
+      <TopButton />
     </div>
   );
 }
