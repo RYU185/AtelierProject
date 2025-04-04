@@ -14,15 +14,15 @@ const MenuOverlay = styled.div`
   z-index: 2000;
   opacity: ${(props) => (props.$isOpen ? "1" : "0")};
   visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
-  transition: all 0.5s ease;
+  transition: all 0.6s ease;
   overflow: hidden;
 
   /* 스크롤바 숨기기 */
   &::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 const MenuContainer = styled.div`
@@ -36,9 +36,10 @@ const MenuContainer = styled.div`
 const MenuSection = styled.div`
   opacity: ${(props) => (props.$isOpen ? "1" : "0")};
   transform: ${(props) =>
-    props.$isOpen ? "translateY(0)" : "translateY(20px)"};
-  transition: all 0.5s ease;
-  transition-delay: ${(props) => props.$delay}s;
+    props.$isOpen ? "translateY(0)" : "translateY(-20px)"};
+  transition: all 0.6s ease;
+  transition-delay: ${(props) =>
+    props.$isOpen ? props.$index * 0.15 : (4 - props.$index) * 0.1}s;
   padding: 25px 0;
   border-bottom: none;
 
@@ -48,7 +49,7 @@ const MenuSection = styled.div`
 `;
 
 const MainMenu = styled.h2`
-  font-size: 32px;
+  font-size: 38px;
   font-weight: 700;
   color: #fff;
   margin-bottom: 12px;
@@ -73,14 +74,14 @@ const MainMenu = styled.h2`
 
 const SubMenuList = styled.div`
   display: flex;
-  gap: 60px;
+  gap: 70px;
   flex-wrap: nowrap;
   overflow-x: hidden;
-  margin-top: 25px;
+  margin-top: 30px;
 `;
 
 const SubMenuItem = styled.div`
-  font-size: 16px;
+  font-size: 20px;
   color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -104,11 +105,12 @@ const LogoContainer = styled.div`
   opacity: ${(props) => (props.$isOpen ? "1" : "0")};
   transform: ${(props) =>
     props.$isOpen ? "translateY(0)" : "translateY(-20px)"};
-  transition: all 0.5s ease;
+  transition: all 0.6s ease;
+  transition-delay: ${(props) => (props.$isOpen ? "0s" : "0.5s")};
 `;
 
 const Logo = styled.div`
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   color: #fff;
   cursor: pointer;
@@ -139,20 +141,27 @@ const CloseButton = styled.button`
   background: none;
   border: none;
   color: #fff;
-  font-size: 24px;
+  font-size: 42px;
   cursor: pointer;
   z-index: 2001;
-  transition: all 0.3s ease;
-  width: 40px;
-  height: 40px;
+  transition: all 0.6s ease;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  opacity: ${(props) => (props.$isOpen ? "1" : "0")};
+  transform: ${(props) =>
+    props.$isOpen
+      ? "translateY(0) rotate(0)"
+      : "translateY(-20px) rotate(-90deg)"};
+  transition-delay: ${(props) => (props.$isOpen ? "0.5s" : "0s")};
 
   &:hover {
     color: #60d2ff;
-    transform: rotate(90deg);
+    transform: ${(props) =>
+      props.$isOpen ? "rotate(90deg)" : "translateY(-20px) rotate(-90deg)"};
     background-color: rgba(255, 255, 255, 0.1);
   }
 `;
@@ -216,14 +225,12 @@ const Menu = ({ isOpen, onClose }) => {
       <LogoContainer $isOpen={isOpen}>
         <Logo onClick={() => handleNavigate("/")}>LOGO</Logo>
       </LogoContainer>
-      <CloseButton onClick={onClose}>×</CloseButton>
-      <MenuContainer>
+      <CloseButton onClick={onClose} $isOpen={isOpen}>
+        ×
+      </CloseButton>
+      <MenuContainer $isOpen={isOpen}>
         {menuItems.map((item, index) => (
-          <MenuSection
-            key={item.main}
-            $isOpen={isOpen}
-            $delay={0.1 * (index + 1)}
-          >
+          <MenuSection key={item.main} $isOpen={isOpen} $index={index}>
             <MainMenu onClick={() => handleNavigate(item.subs[0].path)}>
               {item.main}
             </MainMenu>
