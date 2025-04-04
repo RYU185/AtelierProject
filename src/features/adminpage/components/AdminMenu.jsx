@@ -83,8 +83,8 @@ const AdminMenu = () => {
               티켓 판매 내역
             </Link>
           </MenuItem>
-          <MenuItem active={location.pathname.includes('/AdminTicketList') || location.pathname.includes('/AdminTicketChart')}>
-            <Link to="/AdminTicketList" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
+          <MenuItem active={location.pathname.includes('/AdminContact') || location.pathname.includes('/AdminContact')}>
+            <Link to="/AdminContact" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
               문의 관리
             </Link>
           </MenuItem>
