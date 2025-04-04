@@ -149,7 +149,7 @@ const TicketComplete = () => {
           <Button onClick={() => navigate("/exhibition")} primary={false}>
             전시회 목록
           </Button>
-          <Button onClick={() => navigate("/myticket")} primary={true}>
+          <Button onClick={() => navigate("/mypage")} primary={true}>
             나의 티켓 확인하기
           </Button>
         </ButtonContainer>
