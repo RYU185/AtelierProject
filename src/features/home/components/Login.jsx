@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -54,6 +54,17 @@ const Input = styled.input`
   }
 `;
 
+const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 16px;
+
+  input {
+    margin-right: 6px;
+  }
+`;
+
 const LoginButton = styled.button`
   width: 100%;
   padding: 12px;
@@ -91,12 +102,48 @@ const Divider = styled.span`
   margin: 0 6px;
 `;
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 12px;
+`;
+
 const Login = () => {
   const navigate = useNavigate();
+  const [userId, setUserId] = useState("");
+  const [password, setPassword] = useState("");
+  const [autoLogin, setAutoLogin] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const savedAutoLogin = localStorage.getItem("autoLogin");
+    if (savedAutoLogin === "true") {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleLogin = () => {
-    // TODO: 로그인 로직 (API 연결 시 여기에 추가)
-    navigate("/"); // ✅ 홈으로 이동
+    if (!userId.trim() || !password.trim()) {
+      setError("아이디와 비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
+    setError("");
+
+    if (autoLogin) {
+      localStorage.setItem("autoLogin", "true");
+    } else {
+      localStorage.removeItem("autoLogin");
+    }
+
+    localStorage.setItem("username", userId); // ✅ 핵심!
+    navigate("/");
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
   };
 
   return (
@@ -106,9 +153,30 @@ const Login = () => {
         <FormWrapper>
           <Logo>LOGO</Logo>
           <Subtitle>로그인</Subtitle>
-          <Input type="text" placeholder="아이디" />
-          <Input type="password" placeholder="비밀번호" />
+          <Input
+            type="text"
+            placeholder="아이디"
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <Input
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <CheckboxLabel>
+            <input
+              type="checkbox"
+              checked={autoLogin}
+              onChange={(e) => setAutoLogin(e.target.checked)}
+            />
+            자동 로그인
+          </CheckboxLabel>
           <LoginButton onClick={handleLogin}>로그인</LoginButton>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <Links>
             <Link to="/find-id">아이디 찾기</Link>
             <Divider />

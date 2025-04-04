@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaUser, FaEnvelope } from "react-icons/fa";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaArrowLeft, FaLock } from "react-icons/fa";
 
-
+// === 스타일 컴포넌트 ===
 const PageWrapper = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #d2e0f0, #f2f8fc);
@@ -86,19 +85,6 @@ const Result = styled.p`
   font-weight: bold;
 `;
 
-const TextLink = styled.button`
-  background: none;
-  border: none;
-  margin-top: 20px;
-  color: #007aff;
-  cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
-
-  &:hover {
-    color: #0056b3;
-  }
-`;
 const BackButton = styled.button`
   margin-top: 24px;
   display: inline-flex;
@@ -118,30 +104,62 @@ const BackButton = styled.button`
 
   &:hover {
     color: #0056b3;
-
     svg {
       transform: translateX(-4px);
     }
   }
 `;
 
+// === 컴포넌트 ===
 const FindPassword = () => {
+  const navigate = useNavigate();
+  const DUMMY_CODE = "123456";
+
   const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
+  const [authSent, setAuthSent] = useState(false);
+  const [authCode, setAuthCode] = useState("");
+  const [authVerified, setAuthVerified] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [result, setResult] = useState("");
-  const navigate = useNavigate();
 
-  const handleFindPassword = () => {
-    if (userId.trim() !== "" && email.includes("@")) {
-      setResult("✅ 비밀번호 재설정 링크를 이메일로 전송했습니다.");
-    } else {
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidPassword = (pw) =>
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(pw);
+
+  const handleSendAuthCode = () => {
+    if (userId.trim() === "" || !isValidEmail(email)) {
       setResult("❌ 아이디와 이메일을 정확히 입력해주세요.");
+      return;
+    }
+    setAuthSent(true);
+    setResult("📧 인증코드를 전송했습니다. (더미: 123456)");
+  };
+
+  const handleVerifyCode = () => {
+    if (authCode === DUMMY_CODE) {
+      setAuthVerified(true);
+      setResult("✅ 인증 성공! 새 비밀번호를 설정하세요.");
+    } else {
+      setResult("❌ 인증코드가 일치하지 않습니다.");
     }
   };
 
+  const handleResetPassword = () => {
+    if (!isValidPassword(password)) {
+      setResult("❌ 비밀번호는 영문+숫자 포함 8자 이상이어야 합니다.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setResult("❌ 비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    setResult("✅ 비밀번호가 성공적으로 재설정되었습니다!");
+  };
+
   return (
-      <PageWrapper>
-          
+    <PageWrapper>
       <GlassCard
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -158,6 +176,9 @@ const FindPassword = () => {
             placeholder="아이디를 입력하세요"
             value={userId}
             onChange={(e) => setUserId(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" && !authSent && handleSendAuthCode()
+            }
           />
         </InputWrapper>
 
@@ -170,11 +191,68 @@ const FindPassword = () => {
             placeholder="가입한 이메일을 입력하세요"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) =>
+              e.key === "Enter" && !authSent && handleSendAuthCode()
+            }
           />
         </InputWrapper>
 
-        <Button onClick={handleFindPassword}>비밀번호 찾기</Button>
+        {!authSent && (
+          <Button onClick={handleSendAuthCode}>인증코드 전송</Button>
+        )}
+
+        {authSent && !authVerified && (
+          <>
+            <InputWrapper>
+              <Icon>
+                <FaEnvelope />
+              </Icon>
+              <Input
+                type="text"
+                placeholder="인증코드를 입력하세요"
+                value={authCode}
+                onChange={(e) => setAuthCode(e.target.value)}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && !authVerified && handleVerifyCode()
+                }
+              />
+            </InputWrapper>
+            <Button onClick={handleVerifyCode}>인증코드 확인</Button>
+          </>
+        )}
+
+        {authVerified && (
+          <>
+            <InputWrapper>
+              <Icon>
+                <FaLock />
+              </Icon>
+              <Input
+                type="password"
+                placeholder="새 비밀번호 입력"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleResetPassword()}
+              />
+            </InputWrapper>
+            <InputWrapper>
+              <Icon>
+                <FaLock />
+              </Icon>
+              <Input
+                type="password"
+                placeholder="비밀번호 확인"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleResetPassword()}
+              />
+            </InputWrapper>
+            <Button onClick={handleResetPassword}>비밀번호 재설정</Button>
+          </>
+        )}
+
         {result && <Result success={result.includes("✅")}>{result}</Result>}
+
         <BackButton onClick={() => navigate("/login")}>
           <FaArrowLeft />
           로그인으로 돌아가기

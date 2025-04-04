@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
@@ -15,7 +15,6 @@ const HeaderWrapper = styled.header`
   background-color: #080101;
   color: #fff;
   z-index: 1000;
-  transition: all 0.3s ease;
   height: 80px;
 `;
 
@@ -24,10 +23,6 @@ const HeaderSpacer = styled.div`
   width: 100%;
 `;
 
-// 전체화면 덮는 오버레이 z-index 999
-// 1000은 헤더
-// 1001은 드롭다운
-// 나머지 1은 뒤에 있는 포스터 이미지 + 배경
 const Overlay = styled.div`
   position: fixed;
   top: 80px;
@@ -38,10 +33,7 @@ const Overlay = styled.div`
   backdrop-filter: blur(5px);
   transform-origin: top;
   transform: ${(props) => (props.$show ? "scaleY(1)" : "scaleY(0)")};
-  transition-property: transform; // transform 속성만 변경
-  transition-duration: 0.5s; // 애니메이션 속도
-  transition-timing-function: ease; // 부드러운 감속/가속 효과
-  transition-delay: 0s; // 지연시간 없음
+  transition: transform 0.5s ease;
   z-index: 999;
 `;
 
@@ -61,7 +53,6 @@ const NavWrapper = styled.div`
   position: relative;
   background-color: rgba(47, 47, 47, 1);
   border-radius: 25px;
-  transition: all 0.3s ease;
   z-index: 1001;
 `;
 
@@ -72,11 +63,60 @@ const NavList = styled.ul`
   list-style: none;
 `;
 
+const NavItemContainer = styled.div`
+  position: relative;
+`;
+
+const NavItem = styled.li`
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  border-radius: 25px;
+  padding: 0.1rem 1.2rem;
+
+  &:hover {
+    background-color: #0f85b4;
+  }
+`;
+
+const DropdownMenu = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: ${(props) =>
+    props.$show
+      ? "translateX(-50%) translateY(0px)"
+      : "translateX(-50%) translateY(-10px)"};
+  background-color: rgba(47, 47, 47, 1);
+  border-radius: 23px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  margin-top: 20px;
+  opacity: ${(props) => (props.$show ? 1 : 0)};
+  visibility: ${(props) => (props.$show ? "visible" : "hidden")};
+  pointer-events: ${(props) => (props.$show ? "auto" : "none")};
+  transition: all 0.3s ease;
+  z-index: 1001;
+`;
+
+const DropdownItem = styled(NavItem)`
+  font-size: 0.9rem;
+  padding: 0.7rem 1.5rem;
+  color: #f3f3f3;
+  text-align: center;
+
+  &:hover {
+    background-color: #424242;
+  }
+`;
+
 const Right = styled.div`
   display: flex;
   align-items: center;
   gap: 18px;
-  white-space: nowrap;
 `;
 
 const RightNavItem = styled.div`
@@ -85,7 +125,6 @@ const RightNavItem = styled.div`
   cursor: pointer;
   color: rgba(255, 255, 255, 0.9);
   transition: 0.5s;
-  white-space: nowrap;
 
   &:hover {
     color: #60d2ff;
@@ -99,109 +138,59 @@ const MenuIcon = styled.div`
   border-left: 1px solid #666;
   padding: 6px 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
 
   &:hover {
     color: #60d2ff;
   }
 `;
 
-const NavItemContainer = styled.div`
-  position: relative;
-`;
-
-const NavItem = styled.li`
-  font-size: 1.2rem;
-  font-weight: 600;
-  cursor: pointer;
-  color: white;
-  transition: 0.2s;
-  position: relative;
-  border-radius: 25px;
-  padding: 0.1rem 1.2rem;
-
-  &:hover {
-    background-color: #0f85b4;
-    color: #ffffff;
-  }
-`;
-
-const DropdownMenu = styled.ul`
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(47, 47, 47, 1);
-  border-radius: 23px;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  min-width: 160px;
-  margin-top: 20px;
-
-  // transition은 display: none -> display: block같은 속성을 처리할수 없다...
-  opacity: ${(props) => (props.$show ? 1 : 0)};
-  visibility: ${(props) => (props.$show ? "visible" : "hidden")};
-  transform: ${(props) =>
-    props.$show
-      ? "translateX(-50%) translateY(0px)"
-      : "translateX(-50%) translateY(-10px)"};
-  transition: all 0.3s ease;
-  pointer-events: ${(props) => (props.$show ? "auto" : "none")};
-  z-index: 1001;
-`;
-
-const DropdownItem = styled(NavItem)`
-  display: block;
-  white-space: nowrap;
-  font-size: 0.9rem;
-  padding: 0.7rem 1.5rem;
-  position: static;
-  transition: 0.5s ease;
-  color: #f3f3f3;
-  height: 100%;
-  text-align: center;
-
-  &:hover {
-    background-color: #424242;
-    color: #f3f3f3;
-  }
-`;
-
+// Component --------------------------------------
 const Header = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const timeoutRef = React.useRef(null);
+  const timeoutRef = useRef(null);
+  const [username, setUsername] = useState(localStorage.getItem("username"));
 
-  const handleMouseEnter = (itemName) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    setShowDropdown(itemName);
+  const handleMouseEnter = (menuName) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setShowDropdown(menuName);
   };
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setShowDropdown(null);
-    }, 200);
+    timeoutRef.current = setTimeout(() => setShowDropdown(null), 200);
   };
 
   const handleMenuOpen = () => {
     setIsMenuOpen(true);
-    setShowDropdown(null); // 메뉴 열 때 드롭다운 닫기
+    setShowDropdown(null);
   };
 
-  const handleMenuClose = () => {
-    setIsMenuOpen(false);
-  };
+  const handleMenuClose = () => setIsMenuOpen(false);
 
-  React.useEffect(() => {
+  const handleLogout = () => {
+    if (window.confirm("정말 로그아웃 하시겠습니까?")) {
+      localStorage.removeItem("username");
+      localStorage.removeItem("autoLogin");
+      navigate("/login");
+    }
+  };
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUsername(localStorage.getItem("username"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("focus", handleStorageChange);
+
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setShowDropdown(null);
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("focus", handleStorageChange);
+    };
+  }, []);
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
@@ -214,161 +203,46 @@ const Header = () => {
         <CenterContainer>
           <NavWrapper>
             <NavList>
-              <NavItemContainer
-                onMouseEnter={() => handleMouseEnter("Gallery")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <NavItem onClick={() => navigate("/gallery/artistgallery")}>
-                  Gallery
-                  <DropdownMenu $show={showDropdown === "Gallery"}>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // 이벤트 버블링 현상
-                        // 드롭다운 메뉴를 클릭하면 그 이벤트 대상이 부모요소로 전파되서
-                        // 그 어떤 자식을 눌러도 부모 메뉴의 클릭이벤트가 실행되는 문제
-                        // stopPropagation()은 이 함수를 막아준다.
-                        navigate("/gallery/artistgallery");
-                      }}
-                    >
-                      Artist Gallery
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/gallery/usergallery");
-                      }}
-                    >
-                      User Gallery
-                    </DropdownItem>
-                  </DropdownMenu>
-                </NavItem>
-              </NavItemContainer>
-
-              <NavItemContainer
-                onMouseEnter={() => handleMouseEnter("Artist")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <NavItem onClick={() => navigate("/artist")}>
-                  Artist
-                  <DropdownMenu $show={showDropdown === "Artist"}>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/artist");
-                      }}
-                    >
-                      작가 소개
-                    </DropdownItem>
-                  </DropdownMenu>
-                </NavItem>
-              </NavItemContainer>
-
-              <NavItemContainer
-                onMouseEnter={() => handleMouseEnter("Community")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <NavItem onClick={() => navigate("/community")}>
-                  Community
-                  <DropdownMenu $show={showDropdown === "Community"}>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/community");
-                      }}
-                    >
-                      Community
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/drawingcanvas");
-                      }}
-                    >
-                      나만의 작품 그리기
-                    </DropdownItem>
-                  </DropdownMenu>
-                </NavItem>
-              </NavItemContainer>
-
-              <NavItemContainer
-                onMouseEnter={() => handleMouseEnter("Goods")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <NavItem onClick={() => navigate("/goods")}>
-                  Goods
-                  <DropdownMenu $show={showDropdown === "Goods"}>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/goods");
-                      }}
-                    >
-                      굿즈샵
-                    </DropdownItem>
-                  </DropdownMenu>
-                </NavItem>
-              </NavItemContainer>
-
-              <NavItemContainer
-                onMouseEnter={() => handleMouseEnter("Notice")}
-                onMouseLeave={handleMouseLeave}
-              >
-                <NavItem onClick={() => navigate("/support/notice")}>
-                  고객 지원
-                  <DropdownMenu $show={showDropdown === "Notice"}>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/support/notice");
-                      }}
-                    >
-                      공지사항
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/support/guide");
-                      }}
-                    >
-                      이용 안내
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/support/location");
-                      }}
-                    >
-                      오시는길
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate("/support/contactus");
-                      }}
-                    >
-                      문의하기
-                    </DropdownItem>
-                  </DropdownMenu>
-                </NavItem>
-              </NavItemContainer>
+              {["Gallery", "Artist", "Community", "Goods", "Notice"].map(
+                (menu) => (
+                  <NavItemContainer
+                    key={menu}
+                    onMouseEnter={() => handleMouseEnter(menu)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <NavItem>{menu}</NavItem>
+                    <DropdownMenu $show={showDropdown === menu}>
+                      <DropdownItem>Coming Soon</DropdownItem>
+                    </DropdownMenu>
+                  </NavItemContainer>
+                )
+              )}
             </NavList>
           </NavWrapper>
         </CenterContainer>
         <Right>
-          <RightNavItem onClick={() => navigate("/join")}>
-            회원가입
-          </RightNavItem>
-          <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
+          {username ? (
+            <>
+              <RightNavItem>{username}님</RightNavItem>
+              <RightNavItem onClick={handleLogout}>로그아웃</RightNavItem>
+            </>
+          ) : (
+            <>
+              <RightNavItem onClick={() => navigate("/join")}>
+                회원가입
+              </RightNavItem>
+              <RightNavItem onClick={() => navigate("/login")}>
+                로그인
+              </RightNavItem>
+            </>
+          )}
           <RightNavItem onClick={() => navigate("/mypage")}>
             마이페이지
           </RightNavItem>
           <RightNavItem onClick={() => navigate("/adminpage")}>
-            {" "}
             관리자페이지
           </RightNavItem>
           <RightNavItem onClick={() => navigate("/cart")}>
-            {" "}
             장바구니
           </RightNavItem>
           <MenuIcon onClick={handleMenuOpen}>MENU</MenuIcon>

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaEnvelope } from "react-icons/fa";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaEnvelope, FaArrowLeft } from "react-icons/fa";
 
 const PageWrapper = styled.div`
   min-height: 100vh;
@@ -98,6 +97,7 @@ const TextLink = styled.button`
     color: #0056b3;
   }
 `;
+
 const BackButton = styled.button`
   margin-top: 24px;
   display: inline-flex;
@@ -129,13 +129,21 @@ const FindId = () => {
   const [result, setResult] = useState("");
   const navigate = useNavigate();
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const handleFindId = () => {
-    if (email.includes("@")) {
-      setResult("✅ 찾은 아이디는 user123 입니다!");
-    } else {
+    if (!isValidEmail(email)) {
       setResult("❌ 이메일 형식이 올바르지 않습니다.");
+    } else {
+      // 실제 API 연동 시 여기에서 호출
+      setResult("✅ 찾은 아이디는 user123 입니다!");
     }
   };
+
+  // 이메일 입력 변경 시 결과 초기화
+  useEffect(() => {
+    setResult("");
+  }, [email]);
 
   return (
     <PageWrapper>
@@ -152,6 +160,7 @@ const FindId = () => {
             placeholder="가입한 이메일을 입력하세요"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleFindId()}
           />
         </InputWrapper>
         <Button onClick={handleFindId}>아이디 찾기</Button>
