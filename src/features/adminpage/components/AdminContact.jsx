@@ -67,14 +67,14 @@ const Input = styled.textarea`
 const Button = styled.button`
   margin-top: 10px;
   padding: 10px 15px;
-  background: #007bff;
-  color: white;
+  background: ${(props) => (props.disabled ? "#ccc" : "#007bff")};
+  color: ${(props) => (props.disabled ? "#666" : "white")};
   border: none;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   border-radius: 5px;
 
   &:hover {
-    background: #0056b3;
+    background: ${(props) => (props.disabled ? "#ccc" : "#0056b3")};
   }
 `;
 
@@ -95,9 +95,22 @@ function AdminContact() {
   const [inquiries, setInquiries] = useState([
     { id: 1, name: "김철수", email: "chulsoo@example.com", title: "로그인 문제", content: "로그인이 안 돼요.", isReplied: false, createdAt: "2025-04-03 10:30" },
     { id: 2, name: "이영희", email: "younghee@example.com", title: "회원가입 오류", content: "회원가입이 실패합니다.", isReplied: false, createdAt: "2025-04-02 15:45" },
-    { id: 3, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: true, createdAt: "2025-04-01 08:20" },
-    { id: 4, name: "박수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: true, createdAt: "2025-04-05 08:20" },
-]);
+    { id: 3, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+    { id: 4, name: "김철수", email: "chulsoo@example.com", title: "로그인 문제", content: "로그인이 안 돼요.", isReplied: false, createdAt: "2025-04-03 10:30" },
+    { id: 5, name: "이영희", email: "younghee@example.com", title: "회원가입 오류", content: "회원가입이 실패합니다.", isReplied: false, createdAt: "2025-04-02 15:45" },
+    { id: 6, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+    { id: 7, name: "김철수", email: "chulsoo@example.com", title: "로그인 문제", content: "로그인이 안 돼요.", isReplied: false, createdAt: "2025-04-03 10:30" },
+    { id: 8, name: "이영희", email: "younghee@example.com", title: "회원가입 오류", content: "회원가입이 실패합니다.", isReplied: false, createdAt: "2025-04-02 15:45" },
+    { id: 9, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+    { id: 10, name: "김철수", email: "chulsoo@example.com", title: "로그인 문제", content: "로그인이 안 돼요.", isReplied: false, createdAt: "2025-04-03 10:30" },
+    { id:11, name: "이영희", email: "younghee@example.com", title: "회원가입 오류", content: "회원가입이 실패합니다.", isReplied: false, createdAt: "2025-04-02 15:45" },
+    { id: 12, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+    { id: 13, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+    { id: 14, name: "김철수", email: "chulsoo@example.com", title: "로그인 문제", content: "로그인이 안 돼요.", isReplied: false, createdAt: "2025-04-03 10:30" },
+    { id: 15, name: "이영희", email: "younghee@example.com", title: "회원가입 오류", content: "회원가입이 실패합니다.", isReplied: false, createdAt: "2025-04-02 15:45" },
+    { id: 16, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+   { id: 17, name: "박민수", email: "minsoo@example.com", title: "비밀번호 변경", content: "비밀번호를 잊어버렸어요.", isReplied: false, createdAt: "2025-04-01 08:20" },
+ ]);
 
   // 최신 문의가 상단에 오도록 정렬
   const sortedInquiries = inquiries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -115,6 +128,11 @@ function AdminContact() {
   const handleSendReply = () => {
     if (!reply.trim()) {
       alert("답변을 입력하세요!");
+      return;
+    }
+
+    if (selectedInquiry.isReplied) {
+      alert("이미 답변한 문의입니다.");
       return;
     }
 
@@ -165,8 +183,11 @@ function AdminContact() {
                 placeholder="답변을 입력하세요..."
                 value={reply}
                 onChange={(e) => setReply(e.target.value)}
+                disabled={selectedInquiry.isReplied}
               />
-              <Button onClick={handleSendReply}>답변 보내기</Button>
+              <Button onClick={handleSendReply} disabled={selectedInquiry.isReplied}>
+                {selectedInquiry.isReplied ? "이미 답변 완료" : "답변 보내기"}
+              </Button>
             </InquiryDetail>
           )}
         </Content>
