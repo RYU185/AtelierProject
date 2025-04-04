@@ -2,6 +2,7 @@ import React from "react";
 import DataControlUser from "./components/DataControlUser";
 import UserGalleryList from "./components/UserGalleryList";
 import styled from "styled-components";
+import TopButton from "../TopButton";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -37,6 +38,7 @@ function UserGallery() {
       </TitleContainer>
       <DataControlUser />
       <UserGalleryList />
+      <TopButton />
     </div>
   );
 }

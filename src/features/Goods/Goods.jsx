@@ -14,7 +14,7 @@ import goods8 from "../../assets/GoodsIMG/goods8.jpg";
 import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import { useNavigate } from "react-router-dom";
-import TopButton from "../home/components/TopButton";
+import TopButton from "../TopButton";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -257,7 +257,10 @@ function Goods() {
 
         <ProductGrid>
           {products.map((product) => (
-            <ProductCard key={product.id} onClick={() => handleProductClick(product.id)}>
+            <ProductCard
+              key={product.id}
+              onClick={() => handleProductClick(product.id)}
+            >
               <ProductImage src={product.image} alt={product.name} />
               <ProductInfo>
                 <ProductName>{product.name}</ProductName>

@@ -5,7 +5,7 @@ import HighlightExhibition from "./components/HighlightExhibition";
 import ThemeGallery from "./components/ThemeGallery";
 import ServiceMenu from "./components/ServiceMenu";
 import Footer from "../Footer";
-import TopButton from "./components/TopButton";
+import TopButton from "../TopButton";
 
 const Home = () => {
   return (

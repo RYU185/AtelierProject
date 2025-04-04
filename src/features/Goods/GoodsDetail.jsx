@@ -14,7 +14,7 @@ import goods8 from "../../assets/GoodsIMG/goods8.jpg";
 import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import Review from "./components/Review";
-import TopButton from "../home/components/TopButton";
+import TopButton from "../TopButton";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -563,15 +563,21 @@ function GoodsDetail() {
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCountText>{(product.price * quantity).toLocaleString()}원</AmountCountText>
+              <AmountCountText>
+                {(product.price * quantity).toLocaleString()}원
+              </AmountCountText>
             </AmountCountContainer>
 
             <ButtonContainer>
-              <GoToCartButton onClick={handleAddToCart}>장바구니 담기</GoToCartButton>
+              <GoToCartButton onClick={handleAddToCart}>
+                장바구니 담기
+              </GoToCartButton>
               {showCartNotice && (
                 <CartNotification>
                   <NotificationText>장바구니에 담겼습니다</NotificationText>
-                  <GoToCartLink onClick={handleGoToCart}>장바구니로 가기</GoToCartLink>
+                  <GoToCartLink onClick={handleGoToCart}>
+                    장바구니로 가기
+                  </GoToCartLink>
                 </CartNotification>
               )}
               <PurchaseButton>바로 구매하기</PurchaseButton>

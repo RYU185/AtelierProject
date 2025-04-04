@@ -79,6 +79,19 @@ const SliderContainer = styled.div`
       transform: scale(0.85) translateZ(-50px);
       transition: transform 0.3s ease;
       will-change: transform;
+      position: relative;
+    }
+    .slide-content::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3); /* ← 이 부분이 핵심 */
+      border-radius: 16px;
+      pointer-events: none;
     }
 
     img {
