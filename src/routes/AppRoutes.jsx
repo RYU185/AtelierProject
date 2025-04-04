@@ -35,6 +35,7 @@ import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
+import CommunityDetail from "../features/community/CommunityDetail";
 
 function AppRoutes() {
   return (
@@ -65,7 +66,9 @@ function AppRoutes() {
 
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
-      <Route path="/community" element={<CommunityMain />} />
+      <Route path="/community" element={<CommunityMain />}>
+        <Route path="community/:id" element={<CommunityDetail />} />
+      </Route>
       <Route path="/support/*" element={<SupportPage />}>
         <Route path="notice" element={<NoticePage />} />
         <Route path="notice/create" element={<NoticeCreate />} />

@@ -111,9 +111,12 @@ const Actions = styled.div`
   display: flex;
   justify-content: flex-start;
   margin-top: 15px;
+  align-items: center;
 `;
 
 const ActionIcon = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 24px;
   margin-right: 25px;
   color: #ff6347;
@@ -122,6 +125,12 @@ const ActionIcon = styled.div`
 
   &:active {
     transform: scale(1.3);
+  }
+
+  span {
+    font-size: 16px;
+    margin-left: 6px;
+    color: #444;
   }
 `;
 
@@ -137,9 +146,15 @@ const ChatIcon = styled(BsChat)`
 
 function Community({ id, nickname, datetext, content, drawingImage }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleHeart = () => {
+    if (isHeartFilled) {
+      setLikeCount((prev) => prev - 1);
+    } else {
+      setLikeCount((prev) => prev + 1);
+    }
     setIsHeartFilled(!isHeartFilled);
   };
 
@@ -178,6 +193,7 @@ function Community({ id, nickname, datetext, content, drawingImage }) {
       <Actions>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}
+          <span>{likeCount}</span>
         </ActionIcon>
         <ChatIcon />
       </Actions>
