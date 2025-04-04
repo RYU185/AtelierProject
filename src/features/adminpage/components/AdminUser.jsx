@@ -60,7 +60,7 @@ const SortButton = styled.button`
   }
 `;
 
-// ✅ 슬라이드 정렬 옵션
+// ✅ 정렬 옵션 스타일
 const SortOptions = styled.div`
   display: ${(props) => (props.open ? 'block' : 'none')};
   background: white;
@@ -83,26 +83,38 @@ const SortOption = styled.div`
   }
 `;
 
-// ✅ 유저 테이블 스타일 (그리드 적용)
-const TableWrapper = styled.div`
+// ✅ 테이블 스타일 (스크롤 추가)
+const TableContainer = styled.div`
   width: 100%;
   max-width: 1300px;
-  display: grid;
-  grid-template-columns: 80px 150px 250px 200px 150px 150px 120px 80px;
-  border-top: 3px solid #bbb;
   margin-top: 20px;
 `;
 
-const TableHeader = styled.div`
+const TableWrapper = styled.div`
+  max-height: 400px; /* ✅ 최대 높이 설정 */
+  overflow-y: auto; /* ✅ 세로 스크롤 활성화 */
+  display: block; /* ✅ 스크롤 적용 시 헤더를 고정 */
+  border-top: 3px solid #bbb;
+`;
+
+// ✅ 테이블 헤더 고정
+const TableHeaderWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 80px 150px 250px 200px 150px 150px 120px 80px;
   background: #f8f8f8;
   font-weight: bold;
   padding: 12px;
   border-bottom: 2px solid #bbb;
   text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 `;
 
 const TableRow = styled.div`
-  display: contents;
+  display: grid;
+  grid-template-columns: 80px 150px 250px 200px 150px 150px 120px 80px;
+  text-align: center;
 `;
 
 const TableCell = styled.div`
@@ -111,7 +123,6 @@ const TableCell = styled.div`
   text-align: center;
 `;
 
-// ✅ 유저 데이터
 const AdminUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOpen, setSortOpen] = useState(false);
@@ -121,18 +132,16 @@ const AdminUser = () => {
     { id: '1', nickname: '곽두팔', address: '대전광역시 서구 탄방동 4번지', email: 'emil@gmail.com', birth: '1999.09.01', joinDate: '2025.01.16', points: 30000, gender: '남' },
     { id: '2', nickname: '김철수', address: '서울특별시 강남구 테헤란로', email: 'kim@gmail.com', birth: '1995.06.12', joinDate: '2024.11.22', points: 50000, gender: '여' },
     { id: '3', nickname: '이영희', address: '부산광역시 해운대구', email: 'lee@gmail.com', birth: '2000.05.21', joinDate: '2023.07.30', points: 10000, gender: '여' },
-    { id: '4', nickname: '곽두팔', address: '대전광역시 서구 탄방동 4번지', email: 'emil@gmail.com', birth: '1999.09.01', joinDate: '2025.01.16', points: 30000, gender: '남' },
-    { id: '5', nickname: '곽두팔', address: '대전광역시 서구 탄방동 4번지', email: 'emil@gmail.com', birth: '1999.09.01', joinDate: '2025.01.16', points: 30000, gender: '남' },
-    { id: '6', nickname: '곽두팔', address: '대전광역시 서구 탄방동 4번지', email: 'emil@gmail.com', birth: '1999.09.01', joinDate: '2025.01.16', points: 30000, gender: '남' },
-    { id: '7', nickname: '곽두팔', address: '대전광역시 서구 탄방동 4번지', email: 'emil@gmail.com', birth: '1999.09.01', joinDate: '2025.01.16', points: 30000, gender: '남' },
+    // 🔽 더미 데이터 추가 (테스트용)
+    ...Array(20).fill({
+      id: '4', nickname: '테스트유저', address: '서울시', email: 'test@gmail.com', birth: '1999.01.01', joinDate: '2024.12.01', points: 15000, gender: '남'
+    }),
   ];
 
-  // 🔍 검색 필터 적용
   const filteredUsers = userData.filter(user =>
     user.nickname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // 🔽 정렬 로직 적용
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (sortType === 'recent') {
       return new Date(b.joinDate) - new Date(a.joinDate);
@@ -148,13 +157,11 @@ const AdminUser = () => {
       <TitleWrapper>유저 관리</TitleWrapper>
 
       <Container>
-        {/* ✅ 사이드바 유지 */}
         <AdminMenuWrapper>
           <AdminMenu />
         </AdminMenuWrapper>
 
         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {/* 🔍 검색 및 정렬 필터 */}
           <FilterContainer>
             <SearchInput
               type="text"
@@ -171,30 +178,25 @@ const AdminUser = () => {
             </div>
           </FilterContainer>
 
-          {/* 📊 테이블 렌더링 */}
-          <TableWrapper>
-            <TableHeader>ID</TableHeader>
-            <TableHeader>닉네임</TableHeader>
-            <TableHeader>주소</TableHeader>
-            <TableHeader>Email</TableHeader>
-            <TableHeader>생년월일</TableHeader>
-            <TableHeader>가입날짜</TableHeader>
-            <TableHeader>포인트</TableHeader>
-            <TableHeader>성별</TableHeader>
-
-            {sortedUsers.map(user => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.nickname}</TableCell>
-                <TableCell>{user.address}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.birth}</TableCell>
-                <TableCell>{user.joinDate}</TableCell>
-                <TableCell>{user.points}</TableCell>
-                <TableCell>{user.gender}</TableCell>
-              </TableRow>
-            ))}
-          </TableWrapper>
+          <TableContainer>
+            <TableHeaderWrapper>
+              <div>ID</div><div>닉네임</div><div>주소</div><div>Email</div><div>생년월일</div><div>가입날짜</div><div>포인트</div><div>성별</div>
+            </TableHeaderWrapper>
+            <TableWrapper>
+              {sortedUsers.map(user => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.nickname}</TableCell>
+                  <TableCell>{user.address}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.birth}</TableCell>
+                  <TableCell>{user.joinDate}</TableCell>
+                  <TableCell>{user.points}</TableCell>
+                  <TableCell>{user.gender}</TableCell>
+                </TableRow>
+              ))}
+            </TableWrapper>
+          </TableContainer>
         </div>
       </Container>
       <Footer />

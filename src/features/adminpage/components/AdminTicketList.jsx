@@ -9,7 +9,7 @@ import AdminTicketMenubar from './AdminTicketMenubar';
 // ✅ 스타일 정의
 const Container = styled.div`
   display: flex;
-  padding: 23px;
+  padding: 20px;
   margin-left: 23px;
   position: relative;
 `;
@@ -17,21 +17,22 @@ const Container = styled.div`
 const AdminGoodsMenubarWrapper = styled.div`
   position: relative;
   top: 100px;
-  left: 21px;
+  left: 45px;
   z-index: 10;
   margin-left: -85px;
 `;
 
 const AdminMenuWrapper = styled.div`
   position: relative;
-  top: 30px;
+  top: -30px;
   margin-left: 13px;
 `;
 
 const MainContent = styled.div`
   flex: 1;
   padding: 20px;
-  margin-top: -30px;
+  margin-top: -60px;
+  margin-left: 30px;
 `;
 
 const Title = styled.h1`
@@ -185,6 +186,36 @@ const AdminTicketList = () => {
                     src="/src/assets/ArtIMG/2.jpg"
                     alt="전시 이미지"
                     onClick={() => handleThumbnailClick(2)} // ✅ ID 2로 이동
+                  />
+                  <div>
+                    <p>2025.04.12 - 2025.04.25</p>
+                    <p><strong>FOLDER [record and archive]</strong></p>
+                    <p>현대 산업디자인展</p>
+                  </div>
+                </Td>
+                <Td>21 명</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <Thumbnail
+                    src="/src/assets/ArtIMG/3.jpg"
+                    alt="전시 이미지"
+                    onClick={() => handleThumbnailClick(3)} // ✅ ID 3로 이동
+                  />
+                  <div>
+                    <p>2025.04.12 - 2025.04.25</p>
+                    <p><strong>FOLDER [record and archive]</strong></p>
+                    <p>현대 산업디자인展</p>
+                  </div>
+                </Td>
+                <Td>21 명</Td>
+              </tr>
+              <tr>
+                <Td>
+                  <Thumbnail
+                    src="/src/assets/ArtIMG/3.jpg"
+                    alt="전시 이미지"
+                    onClick={() => handleThumbnailClick(3)} // ✅ ID 3로 이동
                   />
                   <div>
                     <p>2025.04.12 - 2025.04.25</p>

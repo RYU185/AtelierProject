@@ -33,8 +33,8 @@ const TitleWrapper = styled.div`
 
 const MenubarWrapper = styled.div`
 position: relative;
-  margin-top: -20px; /* ✅ AdminGoodsMenubar를 위로 올림 */
-  margin-left: 43px;
+  margin-top: -27px; /* ✅ AdminGoodsMenubar를 위로 올림 */
+  margin-left: 30px;
 `;
 
 const AdminMenuWrapper = styled.div`

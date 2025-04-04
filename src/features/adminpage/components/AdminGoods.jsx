@@ -23,7 +23,7 @@ const AdminMenuWrapper = styled.div`
 const AddButtonWrapper = styled.div`
   position: absolute;
   top: 10px;
-  right: 100px; /* 오른쪽 정렬 */
+  right: 115px; /* 오른쪽 정렬 */
   z-index: 10;
   margin-top: 16px;
   
@@ -55,7 +55,7 @@ const TitleWrapper = styled.div`
 
 const AdminGoodsMenubarWrapper = styled.div`
   position: relative;
-  top: 30px;
+  top: 20px;
   left: 21px;
   z-index: 10;
 `;
@@ -161,6 +161,8 @@ const GoodsData = [
   { id: 3, image: 'goods1.jpg', name: '가방', price: 20000, stock: 45, sold: 31 },
   { id: 4, image: 'goods1.jpg', name: '다기 세트', price: 20000, stock: 63, sold: 24 },
   { id: 5, image: 'goods1.jpg', name: '검정 부채', price: 20000, stock: 5, sold: 101 },
+  { id: 5, image: 'goods1.jpg', name: '검정 부채', price: 20000, stock: 5, sold: 101 },
+  
 ];
 
 function AdminGoods() {

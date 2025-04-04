@@ -14,32 +14,34 @@ const Container = styled.div`
   display: flex;
   padding: 10px;
   margin-left: 30px;
-  margin-top: -20px;
+  margin-top: 10px;
 `;
 
 const ChartWrapper = styled.div`
   width: 60%;
-  margin-left: 80px;
+  margin-left: 30px;
   padding: 40px;
+  margin-top: 30px;
+  position: relative;
 `;
 
 const TitleWrapper = styled.div`
   text-align: center;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   margin-top: 30px;
-  margin-bottom: 10px; /* ✅ 메뉴바와 간격 조정 */
+  margin-right: 800px;
+  margin-bottom: 10px;
 `;
 
 const MenubarWrapper = styled.div`
   position: relative;
-  margin-top: -20px; /* ✅ AdminTicketMenubar 위치 조정 */
-  margin-left: 43px;
+  margin-left: -20px;
 `;
 
 const AdminMenuWrapper = styled.div`
   position: relative;
-  top: -30px;
+  top: -80px;
   margin-left: 16px;
 `;
 
@@ -52,7 +54,7 @@ function AdminTicketChart() {
         type: 'bar',
         label: '티켓 판매량',
         data: [500, 700, 800, 850, 900, 920, 1000],
-        backgroundColor: 'rgba(128, 128, 255, 0.5)', // 연한 파란색
+        backgroundColor: 'rgba(128, 128, 255, 0.5)',
         borderColor: 'rgba(128, 128, 255, 1)',
         borderWidth: 1,
       },
@@ -60,12 +62,12 @@ function AdminTicketChart() {
         type: 'line',
         label: '판매 추세',
         data: [520, 680, 750, 780, 810, 860, 950],
-        borderColor: '#E24A4A', // 빨간색
+        borderColor: '#E24A4A',
         backgroundColor: '#E24A4A',
         pointBackgroundColor: '#E24A4A',
         pointBorderColor: '#fff',
         borderWidth: 2,
-        tension: 0.3, // 부드러운 곡선 효과
+        tension: 0.3,
       },
     ],
   };
@@ -97,9 +99,10 @@ function AdminTicketChart() {
   return (
     <>
       <Header />
-      <TitleWrapper>전체 티켓 판매량 통계</TitleWrapper> {/* ✅ 제목 위치 고정 */}
+      <TitleWrapper>전체 티켓 판매량 통계</TitleWrapper>
       <MenubarWrapper>
-        <AdminTicketMenubar />
+        {/* ✅ className 추가하여 특정 스타일 적용 가능 */}
+        <AdminTicketMenubar className="chart-menubar" />
       </MenubarWrapper>
       <Container>
         <AdminMenuWrapper>

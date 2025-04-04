@@ -8,7 +8,6 @@ const Container = styled.div`
   padding: 40px 60px;
   min-height: 80vh;
   background: #f8f9fa;
-  
 `;
 
 const Title = styled.h1`
@@ -58,7 +57,7 @@ const MenuItem = styled.li`
 `;
 
 const AdminMenu = () => {
-  const location = useLocation(); // 현재 URL 가져오기
+  const location = useLocation(); // ✅ 현재 URL 가져오기
 
   return (
     <Container>
@@ -78,7 +77,8 @@ const AdminMenu = () => {
               굿즈 판매 내역
             </Link>
           </MenuItem>
-          <MenuItem active={location.pathname === '/AdminTicketList'}>
+          {/* ✅ AdminTicketList와 AdminTicketChart 둘 다 활성화되도록 수정 */}
+          <MenuItem active={location.pathname.includes('/AdminTicketList') || location.pathname.includes('/AdminTicketChart')}>
             <Link to="/AdminTicketList" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
               티켓 판매 내역
             </Link>
