@@ -5,11 +5,14 @@ import { useNavigate } from "react-router-dom";
 const Wrapper = styled.section`
   padding: 80px 40px;
   background: white;
+  width: 65%;
+  margin: 0 auto;
 `;
 const Title = styled.h2`
   font-size: 40px;
   font-weight: bold;
   margin-bottom: 40px;
+  padding-left: 20px;
 `;
 const CardWrapper = styled.div`
   display: flex;
@@ -29,17 +32,17 @@ const Card = styled.div`
   }
 `;
 const Icon = styled.div`
-  font-size: 32px;
+  font-size: 25px;
   margin-bottom: 20px;
   opacity: 0.6;
 `;
 const Eng = styled.div`
-  font-size: 35px;
+  font-size: 1.1rem;
   color: #666;
   margin-bottom: 4px;
 `;
 const Kor = styled.div`
-  font-size: 40px;
+  font-size: 1.42rem;
   font-weight: bold;
   color: #333;
 `;

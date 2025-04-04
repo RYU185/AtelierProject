@@ -100,69 +100,45 @@ const themes = [
 ];
 
 const ThemeGallery = () => {
-  const sectionRefs = useRef([]);
   const gridRef = useRef(null);
-  const animationFrame = useRef(null);
-
-  const dotTopRef = useRef(0); // 실시간 위치 추적용
-  const targetDotTopRef = useRef(0); // 목표 위치 추적용
-
-  const [dotTop, setDotTop] = useState(0);
   const [showDot, setShowDot] = useState(false);
+  const [dotTop, setDotTop] = useState(0);
 
   useEffect(() => {
-    const animateDot = () => {
-      const diff = targetDotTopRef.current - dotTopRef.current;
-      dotTopRef.current += diff * 0.1;
-
-      setDotTop(dotTopRef.current);
-
-      if (Math.abs(diff) > 0.5) {
-        animationFrame.current = requestAnimationFrame(animateDot);
-      }
-    };
-
     const handleScroll = () => {
-      if (!gridRef.current) return;
+      const scrollY = window.scrollY;
+      const grid = gridRef.current;
+      if (!grid) return;
 
-      const middleY = window.scrollY + window.innerHeight / 2;
-      const gridTop = gridRef.current.getBoundingClientRect().top + window.scrollY;
+      const rect = grid.getBoundingClientRect();
+      const gridTop = rect.top + scrollY;
+      const gridHeight = rect.height;
+      const gridBottom = gridTop + gridHeight;
+      const middleY = scrollY + window.innerHeight / 2;
+      const padding = 500;
 
-      let found = false;
+      if (middleY >= gridTop + padding &&
+        middleY <= gridBottom - padding) {
+        setShowDot(true);
 
-      for (let i = 0; i < sectionRefs.current.length; i++) {
-        const el = sectionRefs.current[i];
-        if (!el) continue;
+        const progress = (middleY - gridTop) / gridHeight;
+        const min = 9000;
+        const max = window.innerHeight - 9000;
+        const top = min + (max - min) * progress;
 
-        const rect = el.getBoundingClientRect();
-        const elCenterY = rect.top + rect.height / 2 + window.scrollY;
-
-        const elTopY = elCenterY - rect.height / 2;
-        const elBottomY = elCenterY + rect.height / 2;
-
-        if (middleY >= elTopY && middleY <= elBottomY) {
-          const relativeTop = elCenterY - gridTop;
-          targetDotTopRef.current = relativeTop;
-          cancelAnimationFrame(animationFrame.current);
-          animationFrame.current = requestAnimationFrame(animateDot);
-          setShowDot(true);
-          found = true;
-          break;
-        }
+        setDotTop(top);
+      } else {
+        setShowDot(false);
       }
-
-      if (!found) setShowDot(false);
     };
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", handleScroll);
-
-    handleScroll(); // 최초 실행
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
-      cancelAnimationFrame(animationFrame.current);
     };
   }, []);
 
@@ -174,7 +150,6 @@ const ThemeGallery = () => {
         {themes.map((item, i) => (
           <Item
             key={i}
-            ref={(el) => (sectionRefs.current[i] = el)}
             style={{ flexDirection: i % 2 === 0 ? "row" : "row-reverse" }}
           >
             <ImageBox align={i % 2 === 0 ? "flex-start" : "flex-end"}>
