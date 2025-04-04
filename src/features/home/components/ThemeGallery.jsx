@@ -115,15 +115,15 @@ const ThemeGallery = () => {
       const gridHeight = rect.height;
       const gridBottom = gridTop + gridHeight;
       const middleY = scrollY + window.innerHeight / 2;
-      const padding = 500;
+      const padding = 200;
 
       if (middleY >= gridTop + padding &&
         middleY <= gridBottom - padding) {
         setShowDot(true);
 
         const progress = (middleY - gridTop) / gridHeight;
-        const min = 9000;
-        const max = window.innerHeight - 9000;
+        const min = 300;
+        const max = window.innerHeight - 300;
         const top = min + (max - min) * progress;
 
         setDotTop(top);

@@ -13,7 +13,9 @@ const CursorDot = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const CustomCursor = () => {
+const CustomCursor = ({ hidden }) => {
+  if (hidden) return null;
+
   const cursorRef = useRef({ x: 0, y: 0 }); // 커서 위치
   const targetRef = useRef({ x: 0, y: 0 }); // 마우스의 도착위치
 
