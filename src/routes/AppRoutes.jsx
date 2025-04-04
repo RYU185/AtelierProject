@@ -37,7 +37,6 @@ import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
-import CommunityDetail from "../features/community/components/CommunityDetail";
 import ChatPage from "../features/chatting/components.jsx/ChatPage";
 import ChatRoomMain from "../features/chatting/components.jsx/ChatRoomMain";
 import UserPage from "../features/chatting/components.jsx/UserPage";
@@ -80,9 +79,7 @@ function AppRoutes() {
       <Route path="/chat/:artistid" element={<ChatPage />} />
       <Route path="/chat/user" element={<UserPage />} />
 
-      <Route path="/community" element={<CommunityMain />}>
-        <Route path="community/:id" element={<CommunityDetail />} />
-      </Route>
+      <Route path="/community" element={<CommunityMain />} />
       <Route path="/support/*" element={<SupportPage />}>
         <Route path="notice" element={<NoticePage />} />
         <Route path="notice/create" element={<NoticeCreate />} />
