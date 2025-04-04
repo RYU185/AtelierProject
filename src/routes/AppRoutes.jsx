@@ -80,6 +80,8 @@ function AppRoutes() {
       <Route path="/chat/user" element={<UserPage />} />
 
       <Route path="/community" element={<CommunityMain />} />
+      <Route path="/community/:id" element={<CommunityMain />} />
+
       <Route path="/support/*" element={<SupportPage />}>
         <Route path="notice" element={<NoticePage />} />
         <Route path="notice/create" element={<NoticeCreate />} />
