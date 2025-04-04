@@ -38,6 +38,9 @@ import NoticeEdit from "../features/support/components/NoticeEdit";
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
 import CommunityDetail from "../features/community/components/CommunityDetail";
+import ChatPage from "../features/chatting/components.jsx/ChatPage";
+import ChatRoomMain from "../features/chatting/components.jsx/ChatRoomMain";
+import UserPage from "../features/chatting/components.jsx/UserPage";
 
 function AppRoutes() {
   return (
@@ -70,6 +73,11 @@ function AppRoutes() {
 
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
+
+      <Route path="/chat" element={<ChatRoomMain />} />
+      <Route path="/chat/:artistid" element={<ChatPage />} />
+      <Route path="/chat/user" element={<UserPage />} />
+
       <Route path="/community" element={<CommunityMain />}>
         <Route path="community/:id" element={<CommunityDetail />} />
       </Route>

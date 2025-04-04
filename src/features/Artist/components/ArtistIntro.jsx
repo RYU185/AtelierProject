@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Links, useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const ArtistCard = styled.div`
   display: flex;
@@ -19,6 +19,8 @@ const ArtistCard = styled.div`
       opacity: 1;
     }
   }
+
+  pointer-events: auto;
 `;
 
 const ArtistImage = styled.img`
@@ -48,7 +50,6 @@ const ArtistInfo = styled.div`
   margin: 0;
   background-color: #111111;
   border-radius: 0 0 8px 8px;
-  pointer-events: none;
 `;
 
 const ArtistName = styled.div`
@@ -57,7 +58,7 @@ const ArtistName = styled.div`
   color: #ffffff;
 `;
 
-const CommunicateButton = styled.button`
+const CommunicateButton = styled(NavLink)`
   padding: 8px 16px;
   color: #ffffff;
   background-color: #111111;
@@ -67,9 +68,10 @@ const CommunicateButton = styled.button`
   font-size: 14px;
   transition: background-color 0.5s;
   font-weight: bold;
+  text-decoration: none;
 
   &:hover {
-    color: #ffffff;
+    background-color: #333;
   }
 `;
 
@@ -77,11 +79,6 @@ const ArtistBio = styled.p`
   font-size: 16px;
   color: #666;
   text-align: center;
-`;
-
-const Link = styled(NavLink)`
-  text-decoration: none;
-  color: #ffffff;
 `;
 
 const ArtistIntro = ({ id, name, bio, imageUrl }) => {
@@ -96,9 +93,7 @@ const ArtistIntro = ({ id, name, bio, imageUrl }) => {
       <ArtistImage src={imageUrl} alt={name} />
       <ArtistInfo className="artist-info">
         <ArtistName>{name}</ArtistName>
-        <Link to="/chat">
-          <CommunicateButton>작가와의 소통</CommunicateButton>
-        </Link>
+        <CommunicateButton to={`/chat/${id}`} onClick={(e)=>e.stopPropagation()}>작가와의 소통</CommunicateButton>
       </ArtistInfo>
       <ArtistBio>{bio}</ArtistBio>
     </ArtistCard>
