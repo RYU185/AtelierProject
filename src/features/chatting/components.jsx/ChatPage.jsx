@@ -110,6 +110,7 @@ function ChatPage({ userName, message, stompClientRef, artistName }) {
   function sendMessage(e) {
     e.preventDefault();
     if (value && stompClientRef.current) {
+      console.log("🚫 stompClientRef가 아직 초기화되지 않았습니다");
       const chatMessage = {
         sender: userName,
         content: value,
