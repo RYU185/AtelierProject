@@ -334,7 +334,7 @@ const Header = () => {
                     <DropdownItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/support/contact");
+                        navigate("/support/contactus");
                       }}
                     >
                       문의하기
