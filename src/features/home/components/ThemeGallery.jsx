@@ -88,7 +88,7 @@ const Dot = styled.div`
   border-radius: 50%;
   background: #007aff;
   z-index: 2;
-  transition: top 0.3s ease, opacity 0.3s ease;
+  transition: top 0.4s ease, opacity 0.4s ease;
   opacity: ${({ show }) => (show ? 1 : 0)};
 `;
 
@@ -102,35 +102,67 @@ const themes = [
 const ThemeGallery = () => {
   const sectionRefs = useRef([]);
   const gridRef = useRef(null);
+  const animationFrame = useRef(null);
+
+  const dotTopRef = useRef(0); // 실시간 위치 추적용
+  const targetDotTopRef = useRef(0); // 목표 위치 추적용
+
   const [dotTop, setDotTop] = useState(0);
   const [showDot, setShowDot] = useState(false);
 
   useEffect(() => {
+    const animateDot = () => {
+      const diff = targetDotTopRef.current - dotTopRef.current;
+      dotTopRef.current += diff * 0.1;
+
+      setDotTop(dotTopRef.current);
+
+      if (Math.abs(diff) > 0.5) {
+        animationFrame.current = requestAnimationFrame(animateDot);
+      }
+    };
+
     const handleScroll = () => {
-      const middleY = window.innerHeight / 2;
-      const gridRect = gridRef.current.getBoundingClientRect();
-      let foundIndex = -1;
-      let newDotTop = 0;
+      if (!gridRef.current) return;
+
+      const middleY = window.scrollY + window.innerHeight / 2;
+      const gridTop = gridRef.current.getBoundingClientRect().top + window.scrollY;
+
+      let found = false;
 
       for (let i = 0; i < sectionRefs.current.length; i++) {
         const el = sectionRefs.current[i];
-        const rect = el.getBoundingClientRect();
+        if (!el) continue;
 
-        if (rect.top <= middleY && rect.bottom >= middleY) {
-          foundIndex = i;
-          newDotTop = rect.top + rect.height / 2 - gridRect.top;
+        const rect = el.getBoundingClientRect();
+        const elCenterY = rect.top + rect.height / 2 + window.scrollY;
+
+        const elTopY = elCenterY - rect.height / 2;
+        const elBottomY = elCenterY + rect.height / 2;
+
+        if (middleY >= elTopY && middleY <= elBottomY) {
+          const relativeTop = elCenterY - gridTop;
+          targetDotTopRef.current = relativeTop;
+          cancelAnimationFrame(animationFrame.current);
+          animationFrame.current = requestAnimationFrame(animateDot);
+          setShowDot(true);
+          found = true;
           break;
         }
       }
-      setDotTop(newDotTop);
-      setShowDot(foundIndex >= 0);
+
+      if (!found) setShowDot(false);
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll();
+    window.addEventListener("resize", handleScroll);
+
+    handleScroll(); // 최초 실행
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      cancelAnimationFrame(animationFrame.current);
     };
   }, []);
 
