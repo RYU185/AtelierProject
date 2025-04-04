@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import SockJS from "sockjs-client";
 import * as Stomp from "@stomp/stompjs";
@@ -33,7 +33,8 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
 `;
-function UserPage({ url }) {
+
+const UserPage = ({ artistId, artistName }) => {
   const [userName, setUserName] = useState("");
   const [isConnected, setIsConnected] = useState(false);
   const [message, setMessage] = useState(null);
@@ -42,28 +43,28 @@ function UserPage({ url }) {
   // useRef로 만드는 변수는 화면렌더링을 일으키지않아 성능에 유리하다.
   const stompClientRef = useRef(null);
 
-  function connect(e){
+  function connect(e) {
     e.preventDefault();
     // 화면 리로드(새로고침) 방지
-    if (userName && !stompClientRef.current){
+    if (userName && !stompClientRef.current) {
       // 웹소켓 연결설정 (=엔드포인트) 설정
       const client = new Stomp.Client({
-        webSocketFactory: ()=> new SockJS(`${url}/ws`),
-        onConnect: ()=> { // 소켓 연결이 성공한다면
+        webSocketFactory: () => new SockJS(`http://localhost:8080/ws`),
+        onConnect: () => {
           console.log("Connected as", userName);
           stompClientRef.current = client;
           // useRef 사용법: .current를 꼭 써줘야한다
           setIsConnected(true);
 
           // 구독
-          client.subscribe("/topic/public",onMessageReceived )
+          client.subscribe("/topic/public", onMessageReceived);
           // Join 전송
           client.publish({
             destination: "/app/chat.addUser",
-            body: JSON.stringify({ sender: userName, type: "JOIN"}),
-          })
+            body: JSON.stringify({ sender: userName, type: "JOIN" }),
+          });
         },
-        onStompError: (frame)=>{
+        onStompError: (frame) => {
           console.log("Broker error", frame.headers["message"]);
         },
       });
@@ -73,13 +74,12 @@ function UserPage({ url }) {
     }
   }
 
-  function onMessageReceived(message){
+  function onMessageReceived(message) {
     const body = JSON.parse(message.body);
     setMessage(body);
     console.log("Received", body);
-
   }
-  //  useRef 사용법 
+  //  useRef 사용법
   // 1. 상태관리는 해야되는데 화면에 렌더링할 필요는 없을때
   // 2. Virtual DOM말고 실제 DOM을 참조하기 위해 사용할때
 
@@ -96,18 +96,19 @@ function UserPage({ url }) {
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
-            <Button type="submit"> Start Chatting</Button>
+            <Button type="submit">Start Chatting</Button>
           </form>
         </Container>
       ) : (
-        <ChatPage 
+        <ChatPage
           userName={userName}
           message={message}
           stompClientRef={stompClientRef}
+          artistName={artistName}
         />
       )}
     </>
   );
-}
+};
 
 export default UserPage;

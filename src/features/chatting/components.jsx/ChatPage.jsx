@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import UserPage from "./UserPage";
 
 const Container = styled.div`
   width: 100%;
@@ -85,8 +86,7 @@ const colors = [
   "#FF9800",
   "#39bbb0",
 ];
-
-function ChatPage({ userName, message, stompClientRef }) {
+function ChatPage({ userName, message, stompClientRef, artistName }) {
   const [value, setValue] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -120,13 +120,15 @@ function ChatPage({ userName, message, stompClientRef }) {
         body: JSON.stringify(chatMessage),
       });
       setValue("");
+    } else {
+      console.error("stompClientRef.current is undefined");
     }
   }
 
   return (
     <Container>
       <Header>
-        <h2>Spring WebSocket Chat Demo</h2>
+        <h2>작가 {artistName} 님과의 채팅방입니다</h2>
       </Header>
       <MessageArea>
         {messageList.map((m, i) =>
