@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { Links, useNavigate, NavLink } from "react-router-dom";
 
 const ArtistCard = styled.div`
   display: flex;
@@ -79,6 +79,11 @@ const ArtistBio = styled.p`
   text-align: center;
 `;
 
+const Link = styled(NavLink)`
+  text-decoration: none;
+  color: #ffffff;
+`;
+
 const ArtistIntro = ({ id, name, bio, imageUrl }) => {
   const navigate = useNavigate();
 
@@ -91,7 +96,9 @@ const ArtistIntro = ({ id, name, bio, imageUrl }) => {
       <ArtistImage src={imageUrl} alt={name} />
       <ArtistInfo className="artist-info">
         <ArtistName>{name}</ArtistName>
-        <CommunicateButton>작가와의 소통</CommunicateButton>
+        <Link to="/chat">
+          <CommunicateButton>작가와의 소통</CommunicateButton>
+        </Link>
       </ArtistInfo>
       <ArtistBio>{bio}</ArtistBio>
     </ArtistCard>
