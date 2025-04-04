@@ -181,6 +181,17 @@ const Header = () => {
     };
 
     window.addEventListener("storage", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUsername(localStorage.getItem("username"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
     window.addEventListener("focus", handleStorageChange);
 
     return () => {
@@ -193,6 +204,24 @@ const Header = () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
+  const dropdownItems = {
+    Gallery: [
+      { label: "Artist Gallery", path: "/gallery/artistgallery" },
+      { label: "User Gallery", path: "/gallery/usergallery" },
+    ],
+    Artist: [{ label: "작가 소개", path: "/artist" }],
+    Community: [
+      { label: "community", path: "/community" },
+      { label: "나만의 작품 그리기", path: "/drawingcanvas" },
+    ],
+    Goods: [{ label: "굿즈샵", path: "/goods" }],
+    Notice: [
+      { label: "공지사항", path: "/support/notice" },
+      { label: "이용 안내", path: "/support/guide" },
+      { label: "오시는 길", path: "/support/location" },
+      { label: "문의하기", path: "/support/contactus" },
+    ],
+  };
 
   return (
     <>
@@ -210,10 +239,20 @@ const Header = () => {
                     onMouseEnter={() => handleMouseEnter(menu)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <NavItem>{menu}</NavItem>
                     <DropdownMenu $show={showDropdown === menu}>
-                      <DropdownItem>Coming Soon</DropdownItem>
+                      {dropdownItems[menu].map((item) => (
+                        <DropdownItem
+                          key={item.path}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(item.path);
+                          }}
+                        >
+                          {item.label}
+                        </DropdownItem>
+                      ))}
                     </DropdownMenu>
+                    <NavItem>{menu}</NavItem>
                   </NavItemContainer>
                 )
               )}
