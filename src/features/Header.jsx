@@ -152,14 +152,16 @@ const Header = () => {
   const timeoutRef = useRef(null);
   const [username, setUsername] = useState(localStorage.getItem("username"));
 
+  const handleMouseEnter = (menu) => {
+    setShowDropdown(menu);
+  };
 
-
- const handleMouseLeave = () => {
-   if (timeoutRef.current) clearTimeout(timeoutRef.current);
-   timeoutRef.current = setTimeout(() => {
-     setShowDropdown(null);
-   }, 200);
- };
+  const handleMouseLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setShowDropdown(null);
+    }, 200);
+  };
 
   const handleMenuOpen = () => {
     setIsMenuOpen(true);
