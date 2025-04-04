@@ -1,6 +1,7 @@
 import React from "react";
 import Community from "./Community";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 40%;
@@ -48,13 +49,28 @@ const Gird = styled.div`
   flex-direction: column;
   overflow-y: auto;
   max-height: 600px;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #bcd0db;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #018ec8;
+    border-radius: 5px;
+    max-height: 30px;
+  }
 `;
 
 function CommunityList() {
+  const navigate = useNavigate();
   const communityItems = [
     {
       id: 1,
       nickname: "귀염둥이",
+      drawingImage: "/src/assets/UserDrawingIMG/Drawing.jpg",
       datetext: "2025.03.27 12:00",
       content:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s ",
@@ -69,6 +85,7 @@ function CommunityList() {
     {
       id: 3,
       nickname: "마이콜",
+      drawingImage: "/src/assets/UserDrawingIMG/Drawing1.png",
       datetext: "2025.03.29 14:00",
       content:
         "세번째 게시글 입니다. 세번째 게시글 입니다. 세번째 게시글 입니다. 세번째 게시글 입니다. 세번째 게시글 입니다. ",
@@ -76,6 +93,7 @@ function CommunityList() {
     {
       id: 4,
       nickname: "귀염둥이",
+      drawingImage: "/src/assets/UserDrawingIMG/Drawing3.png",
       datetext: "2025.03.27 12:00",
       content:
         "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s ",
@@ -100,7 +118,9 @@ function CommunityList() {
         <ButtonBox>
           <Button>게시글 등록</Button>
           <Button>나의 글 보기</Button>
-          <DrawwButton>작품 그리기</DrawwButton>
+          <DrawwButton onClick={() => navigate("/drawingcanvas")}>
+            작품 그리기
+          </DrawwButton>
         </ButtonBox>
         <Gird>
           {communityItems.map((item) => (

@@ -49,10 +49,62 @@ const Content = styled.p`
   line-height: 1.6;
 `;
 
+const PostImage = styled.img`
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+`;
+
+const MenuIconWrapper = styled.div`
+  position: relative;
+  cursor: pointer;
+`;
+
 const MenuIcon = styled(BsThreeDots)`
   font-size: 18px;
   color: #888;
+`;
+
+const MenuDropdown = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 10;
+`;
+
+const MenuItemM = styled.div`
+  width: 100px;
+  padding: 10px;
+  background: white;
+  font-size: 14px;
+  color: #018ec8;
   cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
+const MenuItemD = styled.div`
+  width: 100px;
+  padding: 10px;
+  background: white;
+  font-size: 14px;
+  color: #e16060;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background: #f0f0f0;
+  }
 `;
 
 const Actions = styled.div`
@@ -69,7 +121,7 @@ const ActionIcon = styled.div`
   transition: transform 0.1s ease-in-out;
 
   &:active {
-    transform: scale(1.3); // 클릭 시 크기 확대
+    transform: scale(1.3);
   }
 `;
 
@@ -83,11 +135,24 @@ const ChatIcon = styled(BsChat)`
   }
 `;
 
-function Community({ id, nickname, datetext, content }) {
+function Community({ id, nickname, datetext, content, drawingImage }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleHeart = () => {
     setIsHeartFilled(!isHeartFilled);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleModify = () => {
+    alert("수정 기능 연결!");
+  };
+
+  const handleDelete = () => {
+    alert("삭제 완료!");
   };
 
   return (
@@ -97,10 +162,19 @@ function Community({ id, nickname, datetext, content }) {
           <Nickname>{nickname}</Nickname>
           <DateText>{datetext}</DateText>
         </UserInfo>
-        <MenuIcon />
+        <MenuIconWrapper onClick={toggleMenu}>
+          <MenuIcon />
+          {isMenuOpen && (
+            <MenuDropdown>
+              <MenuItemM onClick={handleModify}>수정</MenuItemM>
+              <MenuItemD onClick={handleDelete}>삭제</MenuItemD>
+            </MenuDropdown>
+          )}
+        </MenuIconWrapper>
       </Header>
       <Divider />
       <Content>{content}</Content>
+      {drawingImage && <PostImage src={drawingImage} alt="Attached Content" />}
       <Actions>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}
