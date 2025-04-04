@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import ArtCard from './ArtCard';
 import { Link } from 'react-router-dom';
 
-
 const PageContainer = styled.div`
   padding: 20px;
   margin-top: 10px;
@@ -13,7 +12,6 @@ const PageContainer = styled.div`
 const ArtListTitle = styled.h2`
   font-size: 25px;
   font-weight: bold;
- 
   color: #222;
   text-align: center;
   padding: 12px;
@@ -24,11 +22,9 @@ const ArtListTitle = styled.h2`
 `;
 
 const ArtListContainer = styled.div`
-  width: 100%;
   width: 1200px;
   margin: 0 auto;
-  margin-left: 100px;
-  background: #fff;
+
   padding: 10px;
   border-radius: 8px;
   margin-top: 20px;
@@ -44,7 +40,6 @@ const ArtListHeader = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   gap: 10px;
-  margin-left: -80px;
 `;
 
 const SearchInput = styled.input`
@@ -62,7 +57,7 @@ const SearchButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background: ${({ active }) => (active ? '#3da0e5' : '#829CBC')};
+    background: #3da0e5;
   }
 `;
 
@@ -71,10 +66,12 @@ const AddButton = styled.button`
   background: #3da9fc;
   color: white;
   border: none;
+  position: absolute;
+  margin-left: -3px;
   border-radius: 4px;
   cursor: pointer;
   &:hover {
-    background: ${({ active }) => (active ? '#3da0e5' : '#829CBC')};
+    background: #3da0e5;
   }
 `;
 
@@ -82,7 +79,6 @@ const ArtGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin-left: -80px;
 `;
 
 const ArtItem = styled.div`
@@ -91,16 +87,20 @@ const ArtItem = styled.div`
   padding: 10px;
   text-align: center;
   position: relative;
+  cursor: pointer;
 `;
 
 const MoreOptions = styled.div`
   cursor: pointer;
-  font-size: 20px;
+  font-size: 30px;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  margin-top: 300px;
+  top: 290px;
+  right: 5px;
+  z-index: 100; /* 다른 요소 위로 올림 */
+  color: #4e5b69; /* 테스트용으로 빨간색으로 변경 */
   
+  padding: 2px 5px; /* 아이콘 주변에 여백 추가 */
+  border-radius: 4px;
 `;
 
 const OptionsMenu = styled.div`
@@ -109,17 +109,12 @@ const OptionsMenu = styled.div`
   top: 100%;
   margin-top: -43px;
   right: 0;
-  background: rgba(255, 255, 255, 0.9); /* 불투명도 추가 (0.9로 설정) */
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 100px;
   z-index: 10;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  
-  /* hover 시에도 불투명도 유지 */
-  &:hover {
-    background: rgba(255, 255, 255, 0.9); /* hover시 배경 색상과 불투명도 동일 */
-  }
 `;
 
 const OptionButton = styled.button`
@@ -129,22 +124,102 @@ const OptionButton = styled.button`
   background: white;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s ease-in-out;
+  color: ${({ danger }) => (danger ? "#e16060" : "#018ec8")};
 
   &:hover {
-    background: ${({ danger }) => (danger ? "#e74c3c" : "#3da9fc")};
-    color: white;
+    background: #f0f0f0;
+  }
+`;
+
+/* === 모달 스타일 추가 === */
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const Modal = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 20px;
+  background-color: white;
+  max-width: 900px;
+  width: 100%;
+  height: 60%;
+  position: relative;
+  border-radius: 8px;
+  padding: 20px;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 50px;
+  cursor: pointer;
+  color: #333;
+  &:hover {
+    color: #303030;
+  }
+`;
+
+const ModalImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const ModalDescriptionContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding-top: 30px;
+  padding-left: 10px;
+  padding-right: 30px;
+
+  & > h2 {
+    font-size: 24px;
+    color: #333;
+  }
+
+  & > p {
+    font-size: 16px;
+    color: #444;
+    padding-top: 10px;
   }
 `;
 
 const AdminArtList = () => {
   const [menuOpen, setMenuOpen] = useState({});
+  const [selectedArt, setSelectedArt] = useState(null);
 
   const toggleMenu = (id) => {
     setMenuOpen((prev) => ({
       ...prev,
-      [id]: !prev[id], // 해당 ID에 대한 토글만 관리
+      [id]: !prev[id],
     }));
+  };
+
+  const openModal = (art) => {
+    setSelectedArt(art);
+  };
+
+  const closeModal = () => {
+    setSelectedArt(null);
   };
 
   const artData = [
@@ -154,6 +229,7 @@ const AdminArtList = () => {
       artist: 'Vincent van Gogh',
       date: '1889',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'A beautiful night sky painted by Van GoghThe world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa..'
     },
     {
       id: 2,
@@ -161,55 +237,61 @@ const AdminArtList = () => {
       artist: 'Leonardo da Vinci',
       date: '1503',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
     },
     {
-      id: 3,
-      title: 'The Persistence of Memory',
-      artist: 'Salvador Dalí',
-      date: '1931',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-    },
-    {
-      id: 4,
-      title: 'The Scream',
-      artist: 'Edvard Munch',
-      date: '1893',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-    },
-    {
-      id: 5,
-      title: 'Starry Night',
-      artist: 'Vincent van Gogh',
-      date: '1889',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-    },
-    {
-      id: 6,
+      id: 2,
       title: 'Mona Lisa',
       artist: 'Leonardo da Vinci',
       date: '1503',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
     },
     {
-      id: 7,
-      title: 'The Persistence of Memory',
-      artist: 'Salvador Dalí',
-      date: '1931',
+      id: 2,
+      title: 'Mona Lisa',
+      artist: 'Leonardo da Vinci',
+      date: '1503',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
     },
     {
-      id: 8,
-      title: 'The Scream',
-      artist: 'Edvard Munch',
-      date: '1893',
+      id: 2,
+      title: 'Mona Lisa',
+      artist: 'Leonardo da Vinci',
+      date: '1503',
       imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
     },
+    {
+      id: 2,
+      title: 'Mona Lisa',
+      artist: 'Leonardo da Vinci',
+      date: '1503',
+      imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
+    },
+    {
+      id: 2,
+      title: 'Mona Lisa',
+      artist: 'Leonardo da Vinci',
+      date: '1503',
+      imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
+    },
+    {
+      id: 2,
+      title: 'Mona Lisa',
+      artist: 'Leonardo da Vinci',
+      date: '1503',
+      imageUrl: '/src/assets/ArtIMG/1.jpg',
+      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
+    }
   ];
 
   return (
     <PageContainer>
       <ArtListTitle>작품 목록 관리</ArtListTitle>
-
       <ArtListContainer>
         <ArtListHeader>
           <SearchContainer>
@@ -225,25 +307,41 @@ const AdminArtList = () => {
         <ArtGrid>
           {artData.map((art) => (
             <ArtItem key={art.id}>
-              <MoreOptions onClick={() => toggleMenu(art.id)}>⋮</MoreOptions>
+              <MoreOptions onClick={(e) => {
+                e.stopPropagation();
+                toggleMenu(art.id);
+              }}>⋮</MoreOptions>
               <OptionsMenu visible={menuOpen[art.id]}>
                 <OptionButton onClick={() => console.log('수정 클릭')}>수정</OptionButton>
                 <OptionButton danger onClick={() => console.log('삭제 클릭')}>삭제</OptionButton>
               </OptionsMenu>
-
-              {/* ✅ 이미지 클릭 시 상세 페이지로 이동 */}
-              <Link to={`/Artist/${art.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <ArtCard
-                  title={art.title}
-                  artist={art.artist}
-                  date={art.date}
-                  imageUrl={art.imageUrl}
-                />
-              </Link>
+              <ArtCard
+                title={art.title}
+                artist={art.artist}
+                date={art.date}
+                imageUrl={art.imageUrl}
+                onImageClick={() => openModal(art)} // 이미지 클릭 시 모달 열기
+              />
             </ArtItem>
           ))}
         </ArtGrid>
       </ArtListContainer>
+
+      {/* 모달 */}
+      <ModalOverlay isOpen={selectedArt !== null} onClick={closeModal}>
+        {selectedArt && (
+          <Modal onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={closeModal}>×</CloseButton>
+            <ModalImageContainer>
+              <img src={selectedArt.imageUrl} alt={selectedArt.title} />
+            </ModalImageContainer>
+            <ModalDescriptionContainer>
+              <h2>{selectedArt.title}</h2>
+              <p>{selectedArt.description}</p>
+            </ModalDescriptionContainer>
+          </Modal>
+        )}
+      </ModalOverlay>
     </PageContainer>
   );
 };
