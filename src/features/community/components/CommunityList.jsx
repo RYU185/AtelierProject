@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Community from "./Community";
+import CommunityDetail from "./CommunityDetail";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -11,14 +12,16 @@ const Container = styled.div`
   margin: 0 auto;
   margin-bottom: 80px;
 `;
+
 const ButtonBox = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
+
 const Button = styled.div`
   color: #018ec8;
   background-color: #ffffff;
-  font: bold;
+  font-weight: bold;
   margin: 60px 20px;
   padding: 25px;
   border-radius: 15px;
@@ -29,10 +32,11 @@ const Button = styled.div`
     border: 1px solid #0b5671;
   }
 `;
+
 const DrawwButton = styled.div`
   color: #ffffff;
   background-color: #018ec8;
-  font: bold;
+  font-weight: bold;
   margin: 60px 20px;
   padding: 25px;
   border-radius: 15px;
@@ -44,7 +48,7 @@ const DrawwButton = styled.div`
   }
 `;
 
-const Gird = styled.div`
+const Grid = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -64,8 +68,23 @@ const Gird = styled.div`
   }
 `;
 
+// 모달 배경 (블러 처리)
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
 function CommunityList() {
   const navigate = useNavigate();
+  const [selectedPost, setSelectedPost] = useState(null);
   const communityItems = [
     {
       id: 1,
@@ -122,14 +141,22 @@ function CommunityList() {
             작품 그리기
           </DrawwButton>
         </ButtonBox>
-        <Gird>
+        <Grid>
           {communityItems.map((item) => (
-            <div key={item.id}>
+            <div key={item.id} onClick={() => setSelectedPost(item)}>
+              {" "}
               <Community {...item} />
             </div>
           ))}
-        </Gird>
+        </Grid>
       </Container>
+
+      {selectedPost && (
+        <ModalBackground onClick={() => setSelectedPost(null)}>
+          {" "}
+          <CommunityDetail post={selectedPost} />
+        </ModalBackground>
+      )}
     </div>
   );
 }
