@@ -3,6 +3,7 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import styled from "styled-components";
 import AdminMenu from "./AdminMenu";
+import { Title } from "chart.js";
 
 const Container = styled.div`
   display: flex;
@@ -11,9 +12,14 @@ const Container = styled.div`
   position: relative;
 `;
 
+const Text = styled.h2`
+    margin-bottom: 30px;
+    font-size: 24px;
+`;
+
 const AdminMenuWrapper = styled.div`
   position: relative;
-  top: -58px;
+  top: 20px;
   margin-left: 13px;
 `;
 
@@ -25,9 +31,11 @@ const Content = styled.div`
 `;
 
 const InquiryList = styled.ul`
+position: relative;
   list-style: none;
   padding: 0;
-  max-height: 400px;
+  max-height: 80%;
+  width: 650px;
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -48,20 +56,22 @@ const InquiryItem = styled.li`
 `;
 
 const InquiryDetail = styled.div`
-  margin-top: 20px;
+position: relative;
+  margin-top: -645px;
   padding: 20px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: 700px;
 `;
 
 const Input = styled.textarea`
-  width: 100%;
+  width: 50%;
   padding: 10px;
   margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  resize: none;
+ 
 `;
 
 const Button = styled.button`
@@ -72,7 +82,7 @@ const Button = styled.button`
   border: none;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   border-radius: 5px;
-
+  margin-left: 50px;
   &:hover {
     background: ${(props) => (props.disabled ? "#ccc" : "#0056b3")};
   }
@@ -130,23 +140,24 @@ function AdminContact() {
       alert("답변을 입력하세요!");
       return;
     }
-
+  
     if (selectedInquiry.isReplied) {
       alert("이미 답변한 문의입니다.");
       return;
     }
-
+  
     alert(`"${selectedInquiry.name}"님에게 답변을 보냈습니다: ${reply}`);
-
+  
     setInquiries(
       inquiries.map((inquiry) =>
         inquiry.id === selectedInquiry.id ? { ...inquiry, isReplied: true } : inquiry
       )
     );
-
+  
+    // 답변을 보낸 후, 답변창을 닫음
     setReply("");
+    setSelectedInquiry(null);
   };
-
   return (
     <>
       <Header />
@@ -155,7 +166,7 @@ function AdminContact() {
           <AdminMenu />
         </AdminMenuWrapper>
         <Content>
-          <h2>문의 관리</h2>
+          <Text>문의 관리</Text>
           <InquiryList>
             {sortedInquiries.map((inquiry) => (
               <InquiryItem key={inquiry.id} onClick={() => handleSelectInquiry(inquiry)}>
