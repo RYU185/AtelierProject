@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.section`
   padding: 80px 40px;
@@ -44,14 +45,20 @@ const Kor = styled.div`
 `;
 
 const services = [
-  { title: "공지사항", eng: "NOTICE", icon: "📢" },
-  { title: "시설 안내", eng: "GUIDE", icon: "🏢" },
-  { title: "오시는 길", eng: "CONTACT US", icon: "🗺️" },
-  { title: "고객센터", eng: "FAQ", icon: "💬" },
+  { title: "공지사항", eng: "NOTICE", icon: "📢", path: "/support/notice" },
+  { title: "시설 안내", eng: "GUIDE", icon: "🏢", path: "/support/guide" },
+  {
+    title: "오시는 길",
+    eng: "CONTACT US",
+    icon: "🗺️",
+    path: "/support/Location",
+  },
+  { title: "고객센터", eng: "FAQ", icon: "💬", path: "/support/contactus" },
 ];
 
 const ServiceMenu = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const navigate = useNavigate();
 
   return (
     <Wrapper>
@@ -60,8 +67,10 @@ const ServiceMenu = () => {
         {services.map((item, i) => (
           <Card
             key={i}
-            active={i === activeIndex}
-            onClick={() => setActiveIndex(i)}
+            onClick={() => {
+              setActiveIndex(i);
+              navigate(item.path);
+            }}
           >
             <Icon>{item.icon}</Icon>
             <Eng>{item.eng}</Eng>
