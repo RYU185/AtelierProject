@@ -152,7 +152,9 @@ const PurchaseCompletePage = () => {
         <PageContainer>
           <Title>구매 내역이 없습니다.</Title>
           <ButtonContainer>
-            <Button onClick={() => navigate("/cartpage")}>장바구니로 돌아가기</Button>
+            <Button onClick={() => navigate("/cartpage")}>
+              장바구니로 돌아가기
+            </Button>
           </ButtonContainer>
         </PageContainer>
         <Footer />
@@ -189,8 +191,13 @@ const PurchaseCompletePage = () => {
           </TotalRow>
         </PurchaseInfo>
         <ButtonContainer>
-          <Button onClick={() => navigate("/cartpage")}>장바구니로 돌아가기</Button>
-          <Button primary onClick={() => navigate("/mypage", { state: { activeTab: "purchase" } })}>
+          <Button onClick={() => navigate("/goods")}>계속 쇼핑하기</Button>
+          <Button
+            primary
+            onClick={() =>
+              navigate("/mypage", { state: { activeTab: "purchase" } })
+            }
+          >
             나의 굿즈 구매현황
           </Button>
         </ButtonContainer>

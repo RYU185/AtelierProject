@@ -145,24 +145,26 @@ const CanvasWrapper = styled.div`
   transform-origin: center;
 `;
 
-const Canvas = styled.canvas`
+const Canvas = styled.canvas.attrs((props) => ({
+  "data-tool": props.tool,
+}))`
   background: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  cursor: ${(props) => {
-    if (props.isPanning) return "grab";
-    switch (props.tool) {
+  cursor: ${({ tool, isPanning }) => {
+    if (isPanning) return "grab";
+    switch (tool) {
       case "pencil":
-        return 'url("@pencil-cursor.png") 0 24, auto';
+        return 'url("/cursors/pencil-cursor.png") 0 24, auto';
       case "brush":
-        return 'url("@brush-cursor.png") 0 24, auto';
+        return 'url("/cursors/brush-cursor.png") 0 24, auto';
       case "marker":
-        return 'url("@marker-cursor.png") 0 24, auto';
+        return 'url("/cursors/marker-cursor.png") 0 24, auto';
       case "highlighter":
-        return 'url("@highlighter-cursor.png") 0 24, auto';
+        return 'url("/cursors/highlighter-cursor.png") 0 24, auto';
       case "calligraphy":
-        return 'url("@calligraphy-cursor.png") 0 24, auto';
+        return 'url("/cursors/calligraphy-cursor.png") 0 24, auto';
       case "eraser":
-        return 'url("@eraser-cursor.png") 0 24, auto';
+        return 'url("/cursors/eraser-cursor.png") 0 24, auto';
       default:
         return "crosshair";
     }
