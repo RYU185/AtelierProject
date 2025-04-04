@@ -17,6 +17,7 @@ const Grid = styled.div`
   max-width: 1000px;
   margin: 100px auto;
   position: relative;
+  overflow: visible;
 `;
 
 const Item = styled.div`
@@ -70,10 +71,12 @@ const Reflection = styled.div`
 const Line = styled.div`
   position: absolute;
   left: 50%;
+  transform: translateX(-50%);
   width: 2px;
   background: #007aff;
-  transform: translateX(-50%);
   z-index: 0;
+  top: ${({ top }) => `${top}px`};
+  height: ${({ height }) => `${height}px`};
 `;
 
 const Dot = styled.div`
@@ -117,35 +120,34 @@ const ThemeGallery = () => {
 
         if (rect.top <= middleY && rect.bottom >= middleY) {
           foundIndex = i;
-          newDotTop = rect.top + rect.height / 2 - gridRect.top;
-          setDotTop(dotPosition);
+          newDotTop = rect.top + rect.height / 2 - gridRect.top + 100;
+          setDotTop(newDotTop);
           break;
         }
       }
 
-      setDotTop(newDotTop);
       setShowDot(foundIndex >= 0);
     };
 
     const calculateLinePosition = () => {
       if (!gridRef.current || sectionRefs.current.length === 0) return;
+
       const firstItem = sectionRefs.current[0];
-      const gridRect = gridRef.current.getBoundingClientRect();
+      const wrapperRect = gridRef.current.parentElement.getBoundingClientRect();
+      const firstItemRect = firstItem.getBoundingClientRect();
 
-      const offset = firstItem.getBoundingClientRect().top - gridRect.top + firstItem.offsetHeight; 
-      const gridHeight = gridRef.current.offsetHeight;
-
-      setLineTop(offset);
-      setLineHeight(gridHeight - offset);
+      const offsetTop = firstItemRect.top - wrapperRect.top + firstItem.offsetHeight / 2;
+      setLineTop(offsetTop);
+      setLineHeight(gridRef.current.offsetHeight - offsetTop);
     };
 
     const onScroll = () => requestAnimationFrame(handleScroll);
 
     window.addEventListener("scroll", handleScroll);
     window.addEventListener("resize", calculateLinePosition);
-    
+
     handleScroll();
-    calculateLinePosition();
+    setTimeout(calculateLinePosition, 100);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -155,10 +157,10 @@ const ThemeGallery = () => {
 
   return (
     <Wrapper>
-      <Grid ref={gridRef}>
-        <Line style={{ top: `${lineTop}px`, height: `${lineHeight}px` }} />
-        <Dot style={{ top: `${dotTop}px` }} show={showDot} />
+      <Line top={0} height={lineHeight} />
+      <Dot style={{ top: `${dotTop}px` }} show={showDot} />
 
+      <Grid ref={gridRef}>
         {themes.map((item, i) => (
           <Item
             key={i}
