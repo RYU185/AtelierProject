@@ -1,7 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "../features/home/Home";
-import Login from "../features/home/Login";
+import Login from "../features/home/components/Login";
+import FindId from "../features/home/components/FindId";
+import FindPassword from "../features/home/components/FindPassword";
 import Join from "../features/home/components/Join";
 import MyPage from "../features/mypage/MyPage";
 import AdminPage from "../features/adminpage/AdminPage";
@@ -43,6 +45,8 @@ function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
+      <Route path="/find-id" element={<FindId />} />
+      <Route path="/find-password" element={<FindPassword />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/adminpage" element={<AdminPage />} />
       <Route path="/AdminArtAdd" element={<AdminArtAdd />} />
