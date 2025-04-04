@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const CursorDot = styled.div`
@@ -13,8 +14,11 @@ const CursorDot = styled.div`
   transform: translate(-50%, -50%);
 `;
 
-const CustomCursor = ({ hidden }) => {
-  if (hidden) return null;
+const CustomCursor = () => {
+  const location = useLocation();
+  const hiddenRoutes= ["/drawingcanvas"]
+  const isHidden = hiddenRoutes.includes(location.pathname);
+
 
   const cursorRef = useRef({ x: 0, y: 0 }); // 커서 위치
   const targetRef = useRef({ x: 0, y: 0 }); // 마우스의 도착위치
@@ -46,7 +50,7 @@ const CustomCursor = ({ hidden }) => {
     };
   }, []);
 
-  return <CursorDot className="cursor-dot" />;
+  return <CursorDot className="cursor-dot" hidden={isHidden} />;
 };
 
 export default CustomCursor;

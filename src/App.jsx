@@ -7,7 +7,7 @@ import CustomCursor from "./components/CustomCursor";
 const App = () => {
   return (
     <Router>
-      <CustomCursor hidden={window.location.pathname === "/drawingcanvas"} />
+      <CustomCursor />
       <GlobalStyle />
       <AppRoutes />
     </Router>
