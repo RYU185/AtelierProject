@@ -72,16 +72,21 @@ const SortOptions = styled.div`
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
+  z-index: 20; /* ✅ 테이블 헤더보다 높은 z-index */
 `;
+
 
 const SortOption = styled.div`
   padding: 10px;
   font-size: 14px;
   cursor: pointer;
+  z-index: 20; /* ✅ 테이블 헤더보다 높은 z-index */
   &:hover {
     background: #f0f0f0;
   }
 `;
+
+
 
 // ✅ 테이블 스타일 (스크롤 추가)
 const TableContainer = styled.div`
@@ -108,7 +113,7 @@ const TableHeaderWrapper = styled.div`
   text-align: center;
   position: sticky;
   top: 0;
-  z-index: 10;
+ 
 `;
 
 const TableRow = styled.div`
