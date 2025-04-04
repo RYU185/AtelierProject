@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { BsThreeDots, BsHeart, BsHeartFill, BsChat } from "react-icons/bs";
+import {
+  BsThreeDots,
+  BsHeart,
+  BsHeartFill,
+  BsChat,
+  BsArrowsFullscreen,
+} from "react-icons/bs";
+import FullImageModal from "./FullImageModal";
 
 const Container = styled.div`
   width: 800px;
@@ -49,12 +56,37 @@ const Content = styled.p`
   line-height: 1.6;
 `;
 
+const PostImageWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100%;
+`;
+
 const PostImage = styled.img`
   width: 100%;
   max-height: 380px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+`;
+
+const ExpandButton = styled(BsArrowsFullscreen)`
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 17px;
+  right: 8px;
+  font-size: 24px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 25%;
+  padding: 5px;
+  cursor: pointer;
+  z-index: 11;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
 `;
 
 const MenuIconWrapper = styled.div`
@@ -139,6 +171,7 @@ const ChatIcon = styled(BsChat)`
   color: #888;
   cursor: pointer;
   transition: transform 0.3s ease;
+
   &:hover {
     transform: scale(1.2);
   }
@@ -155,6 +188,7 @@ function Community({
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleHeart = () => {
     setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
@@ -162,6 +196,8 @@ function Community({
   };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <Container>
@@ -205,21 +241,33 @@ function Community({
       </Content>
 
       {drawingImage && (
-        <PostImage
-          src={drawingImage}
-          alt="Attached Content"
-          onClick={(e) =>
-            onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-          }
-        />
+        <PostImageWrapper>
+          <PostImage
+            src={drawingImage}
+            alt="Attached Content"
+            onClick={(e) =>
+              onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+            }
+          />
+          <ExpandButton onClick={openModal} />
+        </PostImageWrapper>
       )}
+
       <Actions>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}
           <span>{likeCount}</span>
         </ActionIcon>
-        <ChatIcon />
+        <ChatIcon
+          onClick={(e) =>
+            onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+          }
+        />
       </Actions>
+
+      {isModalOpen && (
+        <FullImageModal image={drawingImage} onClose={closeModal} />
+      )}
     </Container>
   );
 }

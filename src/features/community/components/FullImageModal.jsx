@@ -35,7 +35,7 @@ const CloseButton = styled(AiOutlineClose)`
   right: 10px;
   font-size: 30px;
   cursor: pointer;
-  color: white;
+  color: #333;
 
   &:hover {
     color: #e74c3c;
