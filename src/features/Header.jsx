@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import Menu from "./home/components/Menu";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -170,6 +171,7 @@ const DropdownItem = styled(NavItem)`
 const Header = () => {
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = React.useRef(null);
 
   const handleMouseEnter = (itemName) => {
@@ -185,6 +187,15 @@ const Header = () => {
     }, 200);
   };
 
+  const handleMenuOpen = () => {
+    setIsMenuOpen(true);
+    setShowDropdown(null); // 메뉴 열 때 드롭다운 닫기
+  };
+
+  const handleMenuClose = () => {
+    setIsMenuOpen(false);
+  };
+
   React.useEffect(() => {
     return () => {
       if (timeoutRef.current) {
@@ -195,7 +206,6 @@ const Header = () => {
   }, []);
 
   return (
-    // 오버레이만 추가하고 나머지 옮겨넣기
     <>
       <HeaderSpacer />
       <Overlay $show={showDropdown !== null} />
@@ -361,9 +371,10 @@ const Header = () => {
             {" "}
             장바구니
           </RightNavItem>
-          <MenuIcon onClick={() => navigate("/menu")}>MENU</MenuIcon>
+          <MenuIcon onClick={handleMenuOpen}>MENU</MenuIcon>
         </Right>
       </HeaderWrapper>
+      <Menu isOpen={isMenuOpen} onClose={handleMenuClose} />
     </>
   );
 };

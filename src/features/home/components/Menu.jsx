@@ -1,0 +1,247 @@
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
+const MenuOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 2000;
+  opacity: ${(props) => (props.$isOpen ? "1" : "0")};
+  visibility: ${(props) => (props.$isOpen ? "visible" : "hidden")};
+  transition: all 0.5s ease;
+  overflow: hidden;
+
+  /* 스크롤바 숨기기 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+`;
+
+const MenuContainer = styled.div`
+  max-width: 1400px;
+  margin: 120px auto 0;
+  padding: 0 80px;
+  position: relative;
+  z-index: 2001;
+`;
+
+const MenuSection = styled.div`
+  opacity: ${(props) => (props.$isOpen ? "1" : "0")};
+  transform: ${(props) =>
+    props.$isOpen ? "translateY(0)" : "translateY(20px)"};
+  transition: all 0.5s ease;
+  transition-delay: ${(props) => props.$delay}s;
+  padding: 25px 0;
+  border-bottom: none;
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const MainMenu = styled.h2`
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  position: relative;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -12px;
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:hover {
+    color: #60d2ff;
+  }
+`;
+
+const SubMenuList = styled.div`
+  display: flex;
+  gap: 60px;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  margin-top: 25px;
+`;
+
+const SubMenuItem = styled.div`
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  white-space: nowrap;
+
+  &:hover {
+    color: #60d2ff;
+    transform: translateX(10px);
+  }
+`;
+
+const LogoContainer = styled.div`
+  position: fixed;
+  top: 50px;
+  left: 80px;
+  z-index: 2001;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: ${(props) => (props.$isOpen ? "1" : "0")};
+  transform: ${(props) =>
+    props.$isOpen ? "translateY(0)" : "translateY(-20px)"};
+  transition: all 0.5s ease;
+`;
+
+const Logo = styled.div`
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #60d2ff;
+  }
+`;
+
+const LogoNumber = styled.div`
+  width: 30px;
+  height: 30px;
+  background-color: #60d2ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+`;
+
+const CloseButton = styled.button`
+  position: fixed;
+  top: 50px;
+  right: 80px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 2001;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  &:hover {
+    color: #60d2ff;
+    transform: rotate(90deg);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+`;
+
+const Menu = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
+
+  const handleNavigate = (path) => {
+    onClose();
+    navigate(path);
+  };
+
+  const menuItems = [
+    {
+      main: "Gallery",
+      subs: [
+        { name: "AristGallery", path: "/gallery/artistgallery" },
+        { name: "UsersGallery", path: "/gallery/usergallery" },
+      ],
+    },
+    {
+      main: "Artist",
+      subs: [{ name: "AboutArtist", path: "/artist" }],
+    },
+    {
+      main: "Community",
+      subs: [
+        { name: "Community", path: "/community" },
+        { name: "DrawingCanvas", path: "/DrawingCanvas" },
+      ],
+    },
+    {
+      main: "Goods",
+      subs: [{ name: "GalleryGoods", path: "/goods" }],
+    },
+    {
+      main: "고객 지원",
+      subs: [
+        { name: "공지사항", path: "/support/notice" },
+        { name: "이용안내", path: "/support/guide" },
+        { name: "오시는 길", path: "/support/location" },
+        { name: "문의하기", path: "/support/contactus" },
+      ],
+    },
+  ];
+
+  return (
+    <MenuOverlay $isOpen={isOpen}>
+      <LogoContainer $isOpen={isOpen}>
+        <Logo onClick={() => handleNavigate("/")}>LOGO</Logo>
+      </LogoContainer>
+      <CloseButton onClick={onClose}>×</CloseButton>
+      <MenuContainer>
+        {menuItems.map((item, index) => (
+          <MenuSection
+            key={item.main}
+            $isOpen={isOpen}
+            $delay={0.1 * (index + 1)}
+          >
+            <MainMenu onClick={() => handleNavigate(item.subs[0].path)}>
+              {item.main}
+            </MainMenu>
+            <SubMenuList>
+              {item.subs.map((sub) => (
+                <SubMenuItem
+                  key={sub.path}
+                  onClick={() => handleNavigate(sub.path)}
+                >
+                  {sub.name}
+                </SubMenuItem>
+              ))}
+            </SubMenuList>
+          </MenuSection>
+        ))}
+      </MenuContainer>
+    </MenuOverlay>
+  );
+};
+
+export default Menu;

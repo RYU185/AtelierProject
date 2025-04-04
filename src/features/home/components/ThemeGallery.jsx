@@ -70,13 +70,13 @@ const Reflection = styled.div`
 
 const Line = styled.div`
   position: absolute;
+  top: 0;
   left: 50%;
-  transform: translateX(-50%);
   width: 2px;
+  height: 3000px;
   background: #007aff;
+  transform: translateX(-50%);
   z-index: 0;
-  top: ${({ top }) => `${top}px`};
-  height: ${({ height }) => `${height}px`};
 `;
 
 const Dot = styled.div`
@@ -104,62 +104,40 @@ const ThemeGallery = () => {
   const gridRef = useRef(null);
   const [dotTop, setDotTop] = useState(0);
   const [showDot, setShowDot] = useState(false);
-  const [lineTop, setLineTop] = useState(0);
-  const [lineHeight, setLineHeight] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const middleY = window.innerHeight / 2;
+      const gridRect = gridRef.current.getBoundingClientRect();
       let foundIndex = -1;
       let newDotTop = 0;
 
       for (let i = 0; i < sectionRefs.current.length; i++) {
         const el = sectionRefs.current[i];
         const rect = el.getBoundingClientRect();
-        const gridRect = gridRef.current.getBoundingClientRect();
 
         if (rect.top <= middleY && rect.bottom >= middleY) {
           foundIndex = i;
-          newDotTop = rect.top + rect.height / 2 - gridRect.top + 100;
-          setDotTop(newDotTop);
+          newDotTop = rect.top + rect.height / 2 - gridRect.top;
           break;
         }
       }
-
+      setDotTop(newDotTop);
       setShowDot(foundIndex >= 0);
     };
 
-    const calculateLinePosition = () => {
-      if (!gridRef.current || sectionRefs.current.length === 0) return;
-
-      const firstItem = sectionRefs.current[0];
-      const wrapperRect = gridRef.current.parentElement.getBoundingClientRect();
-      const firstItemRect = firstItem.getBoundingClientRect();
-
-      const offsetTop = firstItemRect.top - wrapperRect.top + firstItem.offsetHeight / 2;
-      setLineTop(offsetTop);
-      setLineHeight(gridRef.current.offsetHeight - offsetTop);
-    };
-
-    const onScroll = () => requestAnimationFrame(handleScroll);
-
     window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", calculateLinePosition);
-
     handleScroll();
-    setTimeout(calculateLinePosition, 100);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", calculateLinePosition);
     };
   }, []);
 
   return (
     <Wrapper>
-      <Line top={0} height={lineHeight} />
+      <Line />
       <Dot style={{ top: `${dotTop}px` }} show={showDot} />
-
       <Grid ref={gridRef}>
         {themes.map((item, i) => (
           <Item
