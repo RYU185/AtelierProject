@@ -46,7 +46,7 @@ function CommunityDetail({ post, onClose }) {
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose} />
         <Community {...post} />
-        <CommentList /> {/* 댓글 리스트를 Community 아래에 배치 */}
+        <CommentList />
       </ModalContainer>
     </ModalBackground>
   );

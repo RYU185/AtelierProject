@@ -48,7 +48,6 @@ const DropdownMenu = styled.div`
 
 const DropdownItemM = styled.button`
   background: none;
-
   border: none;
   padding: 8px;
   text-align: center;
@@ -65,7 +64,6 @@ const DropdownItemM = styled.button`
 const DropdownItemD = styled.button`
   background: none;
   border: none;
-
   padding: 8px;
   text-align: center;
   cursor: pointer;
@@ -77,6 +75,7 @@ const DropdownItemD = styled.button`
     background: #f0f0f0;
   }
 `;
+
 const CommentInputContainer = styled.div`
   display: flex;
   margin-top: 10px;
@@ -108,13 +107,12 @@ const SubmitButton = styled.button`
 
 function CommentList() {
   const [comments, setComments] = useState([
-    "댓글 1",
-    "댓글 2",
-    "댓글 3",
-    "댓글 4",
+    { nickname: "익명", text: "첫 번째 댓글!", date: "2025-04-04 12:00" },
+    { nickname: "익명", text: "안녕하세요!", date: "2025-04-04 12:05" },
   ]);
 
   const [activeIndex, setActiveIndex] = useState(null);
+  const [inputText, setInputText] = useState("");
 
   const handleToggleMenu = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -130,11 +128,31 @@ function CommentList() {
     setActiveIndex(null);
   };
 
+  const handleSubmit = () => {
+    if (!inputText.trim()) {
+      alert("댓글을 입력하세요!");
+      return;
+    }
+
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${String(
+      now.getMonth() + 1
+    ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(
+      now.getHours()
+    ).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+    setComments([
+      ...comments,
+      { nickname: "익명", text: inputText, date: formattedDate },
+    ]);
+    setInputText("");
+  };
+
   return (
     <CommentContainer>
-      {comments.map((text, index) => (
+      {comments.map((comment, index) => (
         <CommentItem key={index}>
-          <Comment text={text} />
+          <Comment {...comment} />
           <div
             style={{
               position: "relative",
@@ -158,8 +176,12 @@ function CommentList() {
       ))}
 
       <CommentInputContainer>
-        <Input placeholder="댓글을 입력해주세요" />
-        <SubmitButton>등록</SubmitButton>
+        <Input
+          placeholder="댓글을 입력해주세요"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+        />
+        <SubmitButton onClick={handleSubmit}>등록</SubmitButton>
       </CommentInputContainer>
     </CommentContainer>
   );
