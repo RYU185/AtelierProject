@@ -37,10 +37,10 @@ import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
-import ChatPage from "../features/chatting/components.jsx/ChatPage";
-import ChatRoomMain from "../features/chatting/components.jsx/ChatRoomMain";
-import UserPage from "../features/chatting/components.jsx/UserPage";
+import ChatPage from "../features/chatting/components/ChatPage";
+import UserPage from "../features/chatting/components/UserPage";
 import AdminContact from "../features/adminpage/components/AdminContact";
+import ChatRoomMain from "../features/chatting/components/ChatRoomMain";
 
 function AppRoutes() {
   return (
@@ -75,7 +75,6 @@ function AppRoutes() {
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
 
-      <Route path="/chat" element={<ChatRoomMain />} />
       <Route path="/chat/:artistid" element={<ChatPage />} />
       <Route path="/chat/user" element={<UserPage />} />
 
@@ -98,6 +97,7 @@ function AppRoutes() {
       <Route path="/cart" element={<CartPage />} />
       <Route path="/purchase-complete" element={<PurchaseCompletePage />} />
       <Route path="/drawingcanvas" element={<DrawingCanvas />} />
+      <Route path="/chat/:artistId" element={<ChatRoomMain />} />
     </Routes>
   );
 }

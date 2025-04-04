@@ -152,14 +152,14 @@ const Header = () => {
   const timeoutRef = useRef(null);
   const [username, setUsername] = useState(localStorage.getItem("username"));
 
-  const handleMouseEnter = (menuName) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setShowDropdown(menuName);
-  };
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setShowDropdown(null), 200);
-  };
+
+ const handleMouseLeave = () => {
+   if (timeoutRef.current) clearTimeout(timeoutRef.current);
+   timeoutRef.current = setTimeout(() => {
+     setShowDropdown(null);
+   }, 200);
+ };
 
   const handleMenuOpen = () => {
     setIsMenuOpen(true);
@@ -188,9 +188,7 @@ const Header = () => {
     };
   }, []);
   useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
+    return () => {};
   }, []);
   const dropdownItems = {
     Gallery: [
@@ -240,6 +238,8 @@ const Header = () => {
                           key={item.path}
                           onClick={(e) => {
                             e.stopPropagation();
+                            if (timeoutRef.current)
+                              clearTimeout(timeoutRef.current);
                             setShowDropdown(null);
                             navigate(item.path);
                           }}
@@ -251,7 +251,9 @@ const Header = () => {
 
                     <NavItem
                       onClick={() => {
-                        setShowDropdown(null);
+                        if (timeoutRef.current)
+                          clearTimeout(timeoutRef.current);
+                        setShowDropdown(null); // ✅ 드롭다운 닫기
                         navigate(mainRoutes[menu]);
                       }}
                     >
