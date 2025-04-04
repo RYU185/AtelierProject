@@ -3,14 +3,14 @@ import styled from "styled-components";
 import { BsThreeDots, BsHeart, BsHeartFill, BsChat } from "react-icons/bs";
 
 const Container = styled.div`
-  width: 600px;
+  width: 800px;
   padding: 15px;
   border-radius: 8px;
   background: white;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
   position: relative;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 `;
 
 const Header = styled.div`
@@ -51,7 +51,7 @@ const Content = styled.p`
 
 const PostImage = styled.img`
   width: 100%;
-  max-height: 400px;
+  max-height: 380px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
@@ -144,52 +144,75 @@ const ChatIcon = styled(BsChat)`
   }
 `;
 
-function Community({ id, nickname, datetext, content, drawingImage }) {
+function Community({
+  id,
+  nickname,
+  datetext,
+  content,
+  drawingImage,
+  onOpenModal,
+}) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleHeart = () => {
-    if (isHeartFilled) {
-      setLikeCount((prev) => prev - 1);
-    } else {
-      setLikeCount((prev) => prev + 1);
-    }
+    setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
     setIsHeartFilled(!isHeartFilled);
   };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const handleModify = () => {
-    alert("수정 기능 연결!");
-  };
-
-  const handleDelete = () => {
-    alert("삭제 완료!");
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <Container>
       <Header>
         <UserInfo>
-          <Nickname>{nickname}</Nickname>
-          <DateText>{datetext}</DateText>
+          <Nickname
+            onClick={(e) =>
+              onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+            }
+          >
+            {nickname}
+          </Nickname>
+          <DateText
+            onClick={(e) =>
+              onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+            }
+          >
+            {datetext}
+          </DateText>
         </UserInfo>
         <MenuIconWrapper onClick={toggleMenu}>
           <MenuIcon />
           {isMenuOpen && (
             <MenuDropdown>
-              <MenuItemM onClick={handleModify}>수정</MenuItemM>
-              <MenuItemD onClick={handleDelete}>삭제</MenuItemD>
+              <MenuItemM onClick={() => alert("수정 기능 연결!")}>
+                수정
+              </MenuItemM>
+              <MenuItemD onClick={() => alert("삭제 완료!")}>삭제</MenuItemD>
             </MenuDropdown>
           )}
         </MenuIconWrapper>
       </Header>
       <Divider />
-      <Content>{content}</Content>
-      {drawingImage && <PostImage src={drawingImage} alt="Attached Content" />}
+
+      <Content
+        onClick={(e) =>
+          onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+        }
+      >
+        {content}
+      </Content>
+
+      {drawingImage && (
+        <PostImage
+          src={drawingImage}
+          alt="Attached Content"
+          onClick={(e) =>
+            onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+          }
+        />
+      )}
       <Actions>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}

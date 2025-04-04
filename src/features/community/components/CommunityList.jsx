@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Community from "./Community";
 import CommunityDetail from "./CommunityDetail";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Container = styled.div`
-  width: 40%;
+  width: 65%;
   height: auto;
   background-color: #e5f0fb;
   border-radius: 15px;
@@ -22,8 +22,8 @@ const Button = styled.div`
   color: #018ec8;
   background-color: #ffffff;
   font-weight: bold;
-  margin: 60px 20px;
-  padding: 25px;
+  margin: 40px 20px;
+  padding: 20px;
   border-radius: 15px;
   transition: transform 0.3s ease;
   cursor: pointer;
@@ -37,8 +37,8 @@ const DrawwButton = styled.div`
   color: #ffffff;
   background-color: #018ec8;
   font-weight: bold;
-  margin: 60px 20px;
-  padding: 25px;
+  margin: 40px 20px;
+  padding: 20px;
   border-radius: 15px;
   transition: transform 0.3s ease;
   cursor: pointer;
@@ -52,7 +52,7 @@ const Grid = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  max-height: 600px;
+  max-height: 645px;
   &::-webkit-scrollbar {
     width: 10px;
   }
@@ -68,23 +68,25 @@ const Grid = styled.div`
   }
 `;
 
-// 모달 배경 (블러 처리)
-const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
 function CommunityList() {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [selectedPost, setSelectedPost] = useState(null);
+
+  const handleOpenModal = (e, post) => {
+    e.stopPropagation();
+    setSelectedPost(post);
+
+    navigate(`/community/${post.id}`);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+
+    navigate("/community");
+  };
+
   const communityItems = [
     {
       id: 1,
@@ -131,6 +133,7 @@ function CommunityList() {
       content: "쏠수 있어 진짜 쏠수 있어 ",
     },
   ];
+
   return (
     <div>
       <Container>
@@ -143,22 +146,15 @@ function CommunityList() {
         </ButtonBox>
         <Grid>
           {communityItems.map((item) => (
-            <div key={item.id} onClick={() => setSelectedPost(item)}>
-              {" "}
-              <Community {...item} />
-            </div>
+            <Community key={item.id} {...item} onOpenModal={handleOpenModal} />
           ))}
         </Grid>
       </Container>
 
       {selectedPost && (
-        <ModalBackground onClick={() => setSelectedPost(null)}>
-          {" "}
-          <CommunityDetail post={selectedPost} />
-        </ModalBackground>
+        <CommunityDetail post={selectedPost} onClose={handleCloseModal} />
       )}
     </div>
   );
 }
-
 export default CommunityList;

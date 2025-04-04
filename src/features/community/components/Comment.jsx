@@ -1,11 +1,7 @@
 import React from "react";
 
-function Comment() {
-  return (
-    <div>
-      <h1>답글</h1>
-    </div>
-  );
+function Comment({ text }) {
+  return <div>{text}</div>;
 }
 
 export default Comment;
