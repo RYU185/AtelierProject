@@ -93,7 +93,12 @@ const ArtistIntro = ({ id, name, bio, imageUrl }) => {
       <ArtistImage src={imageUrl} alt={name} />
       <ArtistInfo className="artist-info">
         <ArtistName>{name}</ArtistName>
-        <CommunicateButton to={`/chat/${id}`} onClick={(e)=>e.stopPropagation()}>작가와의 소통</CommunicateButton>
+        <CommunicateButton
+          to={`/artist/${id}/chat`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          작가와의 소통
+        </CommunicateButton>
       </ArtistInfo>
       <ArtistBio>{bio}</ArtistBio>
     </ArtistCard>

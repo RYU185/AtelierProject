@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
 
+
 const HeaderWrapper = styled.header`
   position: fixed;
   top: 0;
@@ -100,6 +101,7 @@ const DropdownMenu = styled.ul`
   pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   transition: all 0.3s ease;
   z-index: 1001;
+  padding: 8px 0;
 `;
 
 const DropdownItem = styled(NavItem)`
@@ -153,14 +155,16 @@ const Header = () => {
   const [username, setUsername] = useState(localStorage.getItem("username"));
 
   const handleMouseEnter = (menu) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setShowDropdown(menu);
   };
 
   const handleMouseLeave = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setShowDropdown(null);
-    }, 200);
+    }, 300);
   };
 
   const handleMenuOpen = () => {
@@ -234,33 +238,31 @@ const Header = () => {
                     onMouseEnter={() => handleMouseEnter(menu)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <DropdownMenu $show={showDropdown === menu}>
+                    <NavItem
+                      onClick={() => {
+                        navigate(mainRoutes[menu]);
+                        setShowDropdown(null);
+                      }}
+                    >
+                      {menu}
+                    </NavItem>
+                    <DropdownMenu
+                      $show={showDropdown === menu}
+                      onMouseEnter={() => handleMouseEnter(menu)}
+                      onMouseLeave={handleMouseLeave}
+                    >
                       {dropdownItems[menu].map((item) => (
                         <DropdownItem
                           key={item.path}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (timeoutRef.current)
-                              clearTimeout(timeoutRef.current);
-                            setShowDropdown(null);
+                          onClick={() => {
                             navigate(item.path);
+                            setShowDropdown(null);
                           }}
                         >
                           {item.label}
                         </DropdownItem>
                       ))}
                     </DropdownMenu>
-
-                    <NavItem
-                      onClick={() => {
-                        if (timeoutRef.current)
-                          clearTimeout(timeoutRef.current);
-                        setShowDropdown(null); // ✅ 드롭다운 닫기
-                        navigate(mainRoutes[menu]);
-                      }}
-                    >
-                      {menu}
-                    </NavItem>
                   </NavItemContainer>
                 )
               )}

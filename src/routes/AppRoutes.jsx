@@ -29,7 +29,6 @@ import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDe
 import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
-import CartPage from "../features/cart/CartPage";
 import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
 import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
 import NoticeCreate from "../features/support/components/NoticeCreate";
@@ -37,10 +36,10 @@ import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
-import ChatPage from "../features/chatting/components/ChatPage";
-import UserPage from "../features/chatting/components/UserPage";
 import AdminContact from "../features/adminpage/components/AdminContact";
-import ChatRoomMain from "../features/chatting/components/ChatRoomMain";
+import ChattingPage from "../features/chatting/pages/ChattingPage";
+import CartPage from "../features/cart/CartPage";
+
 
 function AppRoutes() {
   return (
@@ -61,43 +60,34 @@ function AppRoutes() {
       <Route path="AdminUser" element={<AdminUser />} />
       <Route path="AdminTicketChart" element={<AdminTicketChart />} />
       <Route path="AdminContact" element={<AdminContact />} />
-
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
-
       <Route path="/gallery" element={<Gallery />}>
         <Route path="artistgallery" element={<ArtistGallery />} />
         <Route path="artistgallery/:id" element={<ArtistGalleryDetail />} />
         <Route path="usergallery" element={<UserGallery />} />
         <Route path="usergallery/:id" element={<UserGalleryDetail />} />
       </Route>
-
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
-
-      <Route path="/chat/:artistid" element={<ChatPage />} />
-      <Route path="/chat/user" element={<UserPage />} />
-
       <Route path="/community" element={<CommunityMain />} />
       <Route path="/community/:id" element={<CommunityMain />} />
-
       <Route path="/support/*" element={<SupportPage />}>
         <Route path="notice" element={<NoticePage />} />
         <Route path="notice/create" element={<NoticeCreate />} />
         <Route path="notice/:id" element={<NoticeDetail />} />
         <Route path="notice/edit/:id" element={<NoticeEdit />} />
-
         <Route path="guide" element={<GuidePage />} />
         <Route path="location" element={<LocationPage />} />
         <Route path="contactus" element={<ContactusPage />} />
       </Route>
-
       <Route path="/ticket" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/purchase-complete" element={<PurchaseCompletePage />} />
       <Route path="/drawingcanvas" element={<DrawingCanvas />} />
-      <Route path="/chat/:artistId" element={<ChatRoomMain />} />
+      <Route path="/chat" element={<ChattingPage />} />
+      <Route path="/artist/:artistId/chat" element={<ChattingPage />} />
     </Routes>
   );
 }
