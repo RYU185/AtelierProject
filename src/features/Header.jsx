@@ -101,7 +101,8 @@ const DropdownMenu = styled.ul`
   pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   transition: all 0.3s ease;
   z-index: 1001;
-  padding: 8px 0;
+  padding: 1px 0;
+  white-space: nowrap;
 `;
 
 const DropdownItem = styled(NavItem)`
