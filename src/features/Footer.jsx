@@ -15,7 +15,6 @@ const FooterWrapper = styled.footer`
 const Left = styled.div`
   display: flex;
   flex-direction: column;
-
 `;
 
 const Right = styled.div`

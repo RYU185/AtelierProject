@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -167,6 +167,9 @@ const ProductCard = styled.div`
 
 function Goods() {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("");
+
   const products = [
     {
       id: 1,
@@ -234,6 +237,31 @@ function Goods() {
     navigate(`/goods/${productId}`);
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSort = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  const filteredAndSortedProducts = products
+    .filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      switch (sortOption) {
+        case "price_asc":
+          return a.price - b.price;
+        case "price_desc":
+          return b.price - a.price;
+        case "name_asc":
+          return a.name.localeCompare(b.name);
+        default:
+          return 0;
+      }
+    });
+
   return (
     <>
       <Header />
@@ -245,9 +273,13 @@ function Goods() {
         <DataController>
           <SearchContainer>
             <SearchIcon />
-            <SearchBar placeholder="검색어를 입력하세요" />
+            <SearchBar
+              placeholder="검색어를 입력하세요"
+              value={searchTerm}
+              onChange={handleSearch}
+            />
           </SearchContainer>
-          <SortBar>
+          <SortBar value={sortOption} onChange={handleSort}>
             <option value="">정렬</option>
             <option value="price_asc">가격 낮은순</option>
             <option value="price_desc">가격 높은순</option>
@@ -256,7 +288,7 @@ function Goods() {
         </DataController>
 
         <ProductGrid>
-          {products.map((product) => (
+          {filteredAndSortedProducts.map((product) => (
             <ProductCard
               key={product.id}
               onClick={() => handleProductClick(product.id)}

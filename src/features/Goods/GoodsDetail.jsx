@@ -302,6 +302,64 @@ const GoToCartLink = styled.button`
   }
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+`;
+
+const ModalTitle = styled.h2`
+  margin-bottom: 20px;
+  color: #333;
+`;
+
+const ModalButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+`;
+
+const ModalButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s;
+
+  &:first-child {
+    background-color: #0068ca;
+    color: white;
+    &:hover {
+      background-color: #004483;
+    }
+  }
+
+  &:last-child {
+    background-color: #f0f0f0;
+    color: #333;
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+`;
+
 function GoodsDetail() {
   const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
@@ -312,6 +370,7 @@ function GoodsDetail() {
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // 배웠던거 - drowing에서 썼던 상태관리
   const [showCartNotice, setshowCartNotice] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const navigate = useNavigate();
 
   const handleIncrease = () => {
@@ -389,6 +448,20 @@ function GoodsDetail() {
 
   const handleTitleClick = () => {
     navigate("/goods");
+  };
+
+  const handlePurchase = () => {
+    setShowPurchaseModal(true);
+  };
+
+  const handleConfirmPurchase = () => {
+    // 구매 처리 로직 추가
+    setShowPurchaseModal(false);
+    navigate("/payment"); // 결제 페이지로 이동
+  };
+
+  const handleCancelPurchase = () => {
+    setShowPurchaseModal(false);
   };
 
   const products = {
@@ -580,7 +653,9 @@ function GoodsDetail() {
                   </GoToCartLink>
                 </CartNotification>
               )}
-              <PurchaseButton>바로 구매하기</PurchaseButton>
+              <PurchaseButton onClick={handlePurchase}>
+                바로 구매하기
+              </PurchaseButton>
             </ButtonContainer>
           </InfoSection>
         </ProductContainer>
@@ -589,6 +664,19 @@ function GoodsDetail() {
       <Review />
       <Footer />
       <TopButton />
+
+      {showPurchaseModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalTitle>구매하시겠습니까?</ModalTitle>
+            <p>총 금액: {(product.price * quantity).toLocaleString()}원</p>
+            <ModalButtonContainer>
+              <ModalButton onClick={handleConfirmPurchase}>확인</ModalButton>
+              <ModalButton onClick={handleCancelPurchase}>취소</ModalButton>
+            </ModalButtonContainer>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </>
   );
 }
