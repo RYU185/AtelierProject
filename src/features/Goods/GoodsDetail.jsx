@@ -15,6 +15,7 @@ import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import Review from "./components/Review";
 import TopButton from "../TopButton";
+import PurchaseCompletePage from "../cart/PurchaseCompletePage";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -457,7 +458,7 @@ function GoodsDetail() {
   const handleConfirmPurchase = () => {
     // 구매 처리 로직 추가
     setShowPurchaseModal(false);
-    navigate("/payment"); // 결제 페이지로 이동
+    navigate("/purchase-complete"); // 결제 페이지로 이동
   };
 
   const handleCancelPurchase = () => {
