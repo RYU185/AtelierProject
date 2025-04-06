@@ -126,9 +126,24 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
 
   useImperativeHandle(ref, () => ({
     selectAll: (checked) => {
-      const newItems = items.map((item) => ({ ...item, checked }));
-      setItems(newItems);
-      calculateTotal(newItems);
+      const updatedItems = items.map((item) => ({
+        ...item,
+        checked,
+      }));
+      setItems(updatedItems);
+
+      // 전체 선택 시 즉시 총액 업데이트
+      const selectedItems = updatedItems.filter((item) => item.checked);
+      const newTotal = {
+        quantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
+        price: selectedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ),
+        selectedItems: selectedItems,
+        hasItems: selectedItems.length > 0,
+      };
+      onUpdateTotal(newTotal);
     },
     deleteSelected: () => {
       const newItems = items.filter((item) => !item.checked);
@@ -140,21 +155,26 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
     },
   }));
 
-  const handleQuantityChange = (id, change) => {
-    setItems((prevItems) => {
-      const newItems = prevItems.map((item) => {
-        if (item.id === id) {
-          const newQuantity = Math.max(1, item.quantity + change);
-          return {
-            ...item,
-            quantity: newQuantity,
-          };
-        }
-        return item;
-      });
-      calculateTotal(newItems);
-      return newItems;
-    });
+  const handleQuantityChange = (index, newQuantity) => {
+    const updatedItems = [...items];
+    updatedItems[index] = {
+      ...updatedItems[index],
+      quantity: newQuantity,
+    };
+    setItems(updatedItems);
+
+    // 수량 변경 시 즉시 총액 업데이트
+    const selectedItems = updatedItems.filter((item) => item.checked);
+    const newTotal = {
+      quantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
+      price: selectedItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      ),
+      selectedItems: selectedItems,
+      hasItems: selectedItems.length > 0,
+    };
+    onUpdateTotal(newTotal);
   };
 
   const handleDelete = (id) => {
@@ -220,13 +240,22 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
             </ProductDetails>
             <QuantityControl>
               <QuantityButton
-                onClick={() => handleQuantityChange(item.id, -1)}
+                onClick={() =>
+                  handleQuantityChange(
+                    items.indexOf(item),
+                    Math.max(1, item.quantity - 1)
+                  )
+                }
                 disabled={item.quantity <= 1}
               >
                 -
               </QuantityButton>
               <QuantityInput type="text" value={item.quantity} readOnly />
-              <QuantityButton onClick={() => handleQuantityChange(item.id, 1)}>
+              <QuantityButton
+                onClick={() =>
+                  handleQuantityChange(items.indexOf(item), item.quantity + 1)
+                }
+              >
                 +
               </QuantityButton>
             </QuantityControl>

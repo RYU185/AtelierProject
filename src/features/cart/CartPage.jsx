@@ -166,6 +166,17 @@ const CartPage = () => {
     setIsAllSelected(checked);
     if (cartListRef.current) {
       cartListRef.current.selectAll(checked);
+      const selectedItems = cartListRef.current.getSelectedItems();
+      const newTotal = {
+        quantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
+        price: selectedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ),
+        selectedItems: selectedItems,
+        hasItems: selectedItems.length > 0,
+      };
+      setTotal(newTotal);
     }
   };
 
@@ -178,12 +189,13 @@ const CartPage = () => {
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
     setIsEmpty(!newTotal.hasItems);
+
     if (cartListRef.current) {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
-      setIsAllSelected(
-        selectedItems.length > 0 && selectedItems.length === allItems.length
-      );
+      const isAllSelected =
+        selectedItems.length > 0 && selectedItems.length === allItems.length;
+      setIsAllSelected(isAllSelected);
     }
   };
 
