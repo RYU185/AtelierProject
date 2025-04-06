@@ -146,7 +146,7 @@ const TicketComplete = () => {
         <Divider />
 
         <ButtonContainer>
-          <Button onClick={() => navigate("/exhibition")} primary={false}>
+          <Button onClick={() => navigate("/gallery/artistgallery")} primary={false}>
             전시회 목록
           </Button>
           <Button onClick={() => navigate("/mypage")} primary={true}>
