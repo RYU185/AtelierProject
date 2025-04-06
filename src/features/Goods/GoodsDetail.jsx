@@ -16,6 +16,7 @@ import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import Review from "./components/Review";
 import TopButton from "../TopButton";
 import PurchaseCompletePage from "../cart/PurchaseCompletePage";
+import { image } from "framer-motion/client";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -458,7 +459,24 @@ function GoodsDetail() {
   const handleConfirmPurchase = () => {
     // 구매 처리 로직 추가
     setShowPurchaseModal(false);
-    navigate("/purchase-complete"); // 결제 페이지로 이동
+
+    const items = 
+      {
+        id: id,
+        name: product.name,
+        image:product.image,
+        quantity,
+        price: product.price,
+      };
+
+    const totalPrice = product.price * quantity;
+
+    navigate("/purchase-complete", { 
+      state: { 
+        items:[items],
+        totalPrice,
+      },
+    }); // 결제 페이지로 이동
   };
 
   const handleCancelPurchase = () => {
