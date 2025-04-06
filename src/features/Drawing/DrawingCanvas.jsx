@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import Header from "../Header";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -268,6 +269,7 @@ const DrawingCanvas = () => {
   const [isPanning, setIsPanning] = useState(false);
   const [startPanPosition, setStartPanPosition] = useState({ x: 0, y: 0 });
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -491,8 +493,17 @@ const DrawingCanvas = () => {
 
   const handleTempSave = () => {
     const image = canvasRef.current.toDataURL("image/png");
-    localStorage.setItem("tempDrawing", image);
-    alert("임시저장되었습니다!");
+
+    const drawings = JSON.parse(localStorage.getItem("myDrawings")) || [];
+    drawings.push({
+      id: Date.now(),
+      image,
+      isTemporary: true,
+    });
+
+    localStorage.setItem("myDrawings", JSON.stringify(drawings));
+    alert("임시저장 완료! 마이페이지로 이동합니다.");
+    navigate("/mypage", { state: { activeTab: "drawing" } });
   };
 
   const handleDownload = () => {
@@ -504,11 +515,20 @@ const DrawingCanvas = () => {
   };
 
   const handleSave = () => {
+    if (!window.confirm("정말 저장하시겠습니까?")) return;
+
     const image = canvasRef.current.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = "drawing.png";
-    link.click();
+
+    const drawings = JSON.parse(localStorage.getItem("myDrawings")) || [];
+    drawings.push({
+      id: Date.now(),
+      image,
+      isTemporary: false,
+    });
+
+    localStorage.setItem("myDrawings", JSON.stringify(drawings));
+    alert("저장 완료! 커뮤니티로 이동합니다.");
+    navigate("/community");
   };
 
   const handleClear = () => {
@@ -542,8 +562,6 @@ const DrawingCanvas = () => {
         break;
       case "tempSave":
         handleTempSave();
-        break;
-      default:
         break;
     }
     setShowMenu(false);

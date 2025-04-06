@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { useNavigate, Outlet, useLocation } from "react-router-dom";
+import React from "react";
+import styled, { keyframes, css } from "styled-components";
+import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 
@@ -9,136 +9,147 @@ const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
-
 const ContentWrapper = styled.div`
   flex: 1;
-  padding: 20px;
-  background-color: #f8f9fa;
+  padding: 40px 20px;
+  background-color: #f9fafc;
 `;
-
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
 `;
-
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 2.4rem;
   text-align: center;
-  margin-bottom: 2rem;
-  position: relative;
-
-  &:before {
-    content: "SUPPORT";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
-    color: rgba(0, 0, 0, 0.05);
-    z-index: -1;
-  }
+  margin-bottom: 3rem;
+  font-weight: bold;
 `;
 
 const GridContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  gap: 15px;
-  margin-bottom: 40px;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
 `;
 
 const Card = styled.div`
   background: white;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  width: 230px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ${({ $active }) =>
+    $active &&
+    css`
+      border: 2px solid #007aff;
+      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
+    `}
 `;
 
 const IconContainer = styled.div`
-  font-size: 2rem;
+  font-size: 2.4rem;
   margin-bottom: 1rem;
-  color: #333;
+
+  ${({ $type }) =>
+    $type === "notice" &&
+    css`
+      ${Card}:hover & {
+        animation: ${shake} 0.4s ease-in-out;
+      }
+    `}
 `;
 
 const CardTitle = styled.h3`
-  margin: 0;
   font-size: 1.1rem;
   color: #333;
+  margin: 0;
 `;
 
 const CardDescription = styled.p`
-  margin: 5px 0 0;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #666;
-  line-height: 1.2;
+  margin-top: 6px;
+  line-height: 1.4;
+`;
+
+const AccentBar = styled.div`
+  height: 4px;
+  width: 100%;
+  background-color: ${({ color }) => color || "#ccc"};
+  border-radius: 4px;
+  margin-top: 1.5rem;
 `;
 
 const ContentContainer = styled.div`
   margin-top: 40px;
-  ${(props) =>
-    props.isContactUs
-      ? `
-    background: transparent;
-    box-shadow: none;
-    padding: 0;
-  `
-      : `
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-  `}
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 20px;
 `;
+
+const shake = keyframes`
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+`;
+
+const supportItems = [
+  {
+    id: "notice",
+    title: "공지사항",
+    description: "새로운 소식을 확인하세요.",
+    path: "/support/notice",
+    icon: "📢",
+    color: "#FF7043",
+  },
+  {
+    id: "guide",
+    title: "이용안내",
+    description: "이용안내를 확인하세요.",
+    path: "/support/guide",
+    icon: "📋",
+    color: "#29B6F6",
+  },
+  {
+    id: "location",
+    title: "오시는 길",
+    description: "위치와 교통편을 확인하세요.",
+    path: "/support/location",
+    icon: "🗺️",
+    color: "#66BB6A",
+  },
+  {
+    id: "contactus",
+    title: "문의하기",
+    description: "궁금한 점을 남겨주세요.",
+    path: "/support/contactus",
+    icon: "💬",
+    color: "#AB47BC",
+  },
+];
 
 const SupportPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [activeMenu, setActiveMenu] = useState("notice");
-
-  const supportItems = [
-    {
-      id: "notice",
-      title: "공지사항",
-      description: "미술관의 새로운 소식과 안내사항을 확인하세요.",
-      path: "/support/notice",
-      icon: "📢",
-    },
-    {
-      id: "guide",
-      title: "이용안내",
-      description: "미술관 이용에 대한 안내사항을 확인하세요.",
-      path: "/support/guide",
-      icon: "📋",
-    },
-    {
-      id: "location",
-      title: "오시는 길",
-      description: "미술관의 위치와 교통편을 확인하세요.",
-      path: "/support/location",
-      icon: "🗺️",
-    },
-    {
-      id: "contactus",
-      title: "문의하기",
-      description: "궁금한 점이나 건의사항을 문의하세요.",
-      path: "/support/contactus",
-      icon: "💬",
-    },
-  ];
 
   const handleCardClick = (path) => {
-    navigate(path, { replace: true });
+    navigate(path);
   };
 
   return (
@@ -151,19 +162,20 @@ const SupportPage = () => {
             {supportItems.map((item) => (
               <Card
                 key={item.id}
+                aria-label={`${item.title} - ${item.description}`}
+                $active={location.pathname === item.path}
                 onClick={() => handleCardClick(item.path)}
-                isActive={location.pathname === item.path}
               >
-                <IconContainer>{item.icon}</IconContainer>
+                <IconContainer $type={item.id}>{item.icon}</IconContainer>
                 <CardTitle>{item.title}</CardTitle>
                 <CardDescription>{item.description}</CardDescription>
+                <AccentBar color={item.color} />
               </Card>
             ))}
           </GridContainer>
+
           {location.pathname !== "/support" && (
-            <ContentContainer
-              isContactUs={location.pathname === "/support/contactus"}
-            >
+            <ContentContainer>
               <Outlet />
             </ContentContainer>
           )}

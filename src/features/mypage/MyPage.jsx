@@ -214,7 +214,7 @@ const MyPage = () => {
     birth: "1997-01-01",
     email: "abc01234@gmail.com",
     address: "서울시 동작구",
-    points: "200",
+    points: "50000",
   });
 
   // location.state가 변경될 때마다 activeTab 업데이트

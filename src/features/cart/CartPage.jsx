@@ -178,11 +178,13 @@ const CartPage = () => {
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
     setIsEmpty(!newTotal.hasItems);
-    setIsAllSelected(
-      newTotal.selectedItems?.length > 0 &&
-        newTotal.selectedItems?.length ===
-          cartListRef.current?.getSelectedItems()?.length
-    );
+    if (cartListRef.current) {
+      const selectedItems = cartListRef.current.getSelectedItems();
+      const allItems = cartListRef.current.getAllItems();
+      setIsAllSelected(
+        selectedItems.length > 0 && selectedItems.length === allItems.length
+      );
+    }
   };
 
   const handlePurchase = () => {

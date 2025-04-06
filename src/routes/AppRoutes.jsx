@@ -40,7 +40,6 @@ import AdminContact from "../features/adminpage/components/AdminContact";
 import ChattingPage from "../features/chatting/pages/ChattingPage";
 import CartPage from "../features/cart/CartPage";
 
-
 function AppRoutes() {
   return (
     <Routes>
