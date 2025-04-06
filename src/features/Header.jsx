@@ -109,6 +109,7 @@ const DropdownItem = styled(NavItem)`
   padding: 0.7rem 1.5rem;
   color: #f3f3f3;
   text-align: center;
+  white-space: nowrap;
 
   &:hover {
     background-color: #424242;
