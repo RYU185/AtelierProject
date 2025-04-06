@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
+// === 스타일 === (생략 없이 전체 유지)
 const Title = styled.h2`
   font-size: 4rem;
   text-align: center;
@@ -191,7 +192,7 @@ const PageButtonGroup = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   width: 100%;
 `;
 
@@ -224,12 +225,15 @@ const SubmitButton = styled.button`
   }
 `;
 
+// === 컴포넌트 ===
 const NoticePage = () => {
   const navigate = useNavigate();
-  const [searchType, setSearchType] = useState("title"); // "title" or "date"
+  const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilter, setShowFilter] = useState(false);
   const [sortOrder, setSortOrder] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const notices = [
     { id: 1, date: "2025.03.15", title: "긴급 휴관 안내" },
@@ -244,7 +248,6 @@ const NoticePage = () => {
 
   const filteredNotices = notices.filter((notice) => {
     if (!searchTerm) return true;
-
     if (searchType === "date") {
       return notice.date.includes(searchTerm);
     } else {
@@ -257,6 +260,16 @@ const NoticePage = () => {
     const dateB = new Date(b.date.replace(/\./g, "-"));
     return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
   });
+
+  const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
+  const paginatedNotices = sortedNotices.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  useEffect(() => {
+    setCurrentPage(1); // 검색어 바뀌면 1페이지로 초기화
+  }, [searchTerm, searchType]);
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
@@ -276,12 +289,14 @@ const NoticePage = () => {
     navigate("create");
   };
 
-  const handleCancel = () => {
-    navigate("..");
+  const handleNoticeClick = (noticeId) => {
+    navigate(`${noticeId}`);
   };
 
-  const handleNoticeClick = (noticeId) => {
-    navigate(`${noticeId}`); // 상대 경로로 이동
+  const goToPage = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
 
   return (
@@ -299,7 +314,7 @@ const NoticePage = () => {
           </SearchTypeSelect>
           <SearchBox>
             <SearchInput
-              type={searchType === "date" ? "text" : "text"}
+              type="text"
               placeholder={
                 searchType === "date" ? "YYYY.MM.DD" : "검색어를 입력하세요"
               }
@@ -310,35 +325,51 @@ const NoticePage = () => {
         </SearchGroup>
         <FilterContainer>
           <FilterButton onClick={handleFilterClick}>
-            전체 유형 {showFilter ? "▲" : "▼"}
+            정렬 {showFilter ? "▲" : "▼"}
           </FilterButton>
           <FilterDropdown show={showFilter}>
             <FilterOption onClick={() => handleSortChange("newest")}>
               최근 날짜순
             </FilterOption>
             <FilterOption onClick={() => handleSortChange("oldest")}>
-              늦은 날짜순
+              오래된 순
             </FilterOption>
           </FilterDropdown>
         </FilterContainer>
       </SearchContainer>
+
       <NoticeList>
-        {sortedNotices.map((notice) => (
-          <NoticeItem
-            key={notice.id}
-            onClick={() => handleNoticeClick(notice.id)}
-          >
-            <NoticeDate>{notice.date}</NoticeDate>
-            <NoticeTitle>{notice.title}</NoticeTitle>
-            <Arrow>›</Arrow>
+        {paginatedNotices.length > 0 ? (
+          paginatedNotices.map((notice) => (
+            <NoticeItem
+              key={notice.id}
+              onClick={() => handleNoticeClick(notice.id)}
+            >
+              <NoticeDate>{notice.date}</NoticeDate>
+              <NoticeTitle>{notice.title}</NoticeTitle>
+              <Arrow>›</Arrow>
+            </NoticeItem>
+          ))
+        ) : (
+          <NoticeItem>
+            <NoticeTitle>검색 결과가 없습니다.</NoticeTitle>
           </NoticeItem>
-        ))}
+        )}
       </NoticeList>
+
       <Pagination>
         <PageButtonGroup>
-          <PageButton>‹</PageButton>
-          <PageButton active>1</PageButton>
-          <PageButton>›</PageButton>
+          <PageButton onClick={() => goToPage(currentPage - 1)}>‹</PageButton>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <PageButton
+              key={i + 1}
+              active={currentPage === i + 1}
+              onClick={() => goToPage(i + 1)}
+            >
+              {i + 1}
+            </PageButton>
+          ))}
+          <PageButton onClick={() => goToPage(currentPage + 1)}>›</PageButton>
         </PageButtonGroup>
         <SubmitButton onClick={handleCreateClick}>등록</SubmitButton>
       </Pagination>

@@ -34,6 +34,7 @@ import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
 import NoticeCreate from "../features/support/components/NoticeCreate";
 import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
+
 import CommunityMain from "../features/community/CommunityMain";
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
 import AdminContact from "../features/adminpage/components/AdminContact";
@@ -71,11 +72,11 @@ function AppRoutes() {
       <Route path="/artist/:id" element={<ArtistDetail />} />
       <Route path="/community" element={<CommunityMain />} />
       <Route path="/community/:id" element={<CommunityMain />} />
-      <Route path="/support/*" element={<SupportPage />}>
-        <Route path="notice" element={<NoticePage />} />
-        <Route path="notice/create" element={<NoticeCreate />} />
-        <Route path="notice/:id" element={<NoticeDetail />} />
-        <Route path="notice/edit/:id" element={<NoticeEdit />} />
+      <Route path="/support" element={<SupportPage />}>
+        <Route path="/support/notice" element={<NoticePage />} />
+        <Route path="/support/notice/create" element={<NoticeCreate />} />
+        <Route path="/support/notice/edit/:id" element={<NoticeEdit />} />
+        <Route path="/support/notice/:id" element={<NoticeDetail />} />
         <Route path="guide" element={<GuidePage />} />
         <Route path="location" element={<LocationPage />} />
         <Route path="contactus" element={<ContactusPage />} />

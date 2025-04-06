@@ -171,7 +171,6 @@ const NoticeCreate = () => {
   };
 
   const handleConfirm = () => {
-    // TODO: API 연동
     console.log("Form submitted:", formData);
     navigate("../notice");
   };

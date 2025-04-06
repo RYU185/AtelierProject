@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { keyframes, css } from "styled-components";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
+
 import Header from "../Header";
 import Footer from "../Footer";
 

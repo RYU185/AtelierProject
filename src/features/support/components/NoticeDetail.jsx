@@ -109,7 +109,7 @@ const NoticeDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // 실제로는 API에서 데이터를 가져와야 합니다
+  // TODO: 실제 데이터는 API로 가져와야 함
   const noticeData = {
     id: id,
     title: "긴급 휴관 안내",
@@ -128,7 +128,6 @@ const NoticeDetail = () => {
 
   const handleDeleteClick = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      // TODO: API 연동
       console.log("Delete notice:", id);
       navigate("/support/notice");
     }
@@ -136,6 +135,7 @@ const NoticeDetail = () => {
 
   return (
     <Container>
+      <Title>NOTICE</Title>
       <NoticeContainer>
         <NoticeHeader>
           <NoticeTitle>{noticeData.title}</NoticeTitle>
