@@ -101,7 +101,6 @@ const DropdownMenu = styled.ul`
   pointer-events: ${(props) => (props.$show ? "auto" : "none")};
   transition: all 0.3s ease;
   z-index: 1001;
-  padding: 8px 0;
 `;
 
 const DropdownItem = styled(NavItem)`
@@ -204,7 +203,7 @@ const Header = () => {
     ],
     Artist: [{ label: "작가 소개", path: "/artist" }],
     Community: [
-      { label: "community", path: "/community" },
+      { label: "커뮤니티", path: "/community" },
       { label: "나만의 작품 그리기", path: "/drawingcanvas" },
     ],
     Goods: [{ label: "굿즈샵", path: "/goods" }],
