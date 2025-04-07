@@ -78,6 +78,7 @@ const NavItem = styled.li`
   color: white;
   border-radius: 25px;
   padding: 0.1rem 1.2rem;
+  transition: 0.5s ease-in-out;
 
   &:hover {
     background-color: #0f85b4;
@@ -112,7 +113,7 @@ const DropdownItem = styled(NavItem)`
   white-space: nowrap;
 
   &:hover {
-    background-color: #424242;
+    background-color:rgb(75, 75, 75);
   }
 `;
 
