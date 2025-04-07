@@ -99,7 +99,7 @@ const EventInfo = styled.div`
 `;
 
 const getSlideStyle = (offset) => {
-  const radius = 1600;
+  const radius = 1800;
   const angle = offset * 20
   const rad = (Math.PI / 180) * angle;
 
@@ -110,10 +110,10 @@ const getSlideStyle = (offset) => {
     transform: `
       translateX(${x}px)
       translateZ(${-z}px)
-      rotateY(${-angle}deg)  /* 슬라이드가 나를 바라보게 */
+      rotateY(${-angle}deg)
     `,
     zIndex: 10 - Math.abs(offset),
-    opacity: Math.abs(offset) > 4 ? 0 : 1,
+    opacity: Math.abs(offset) > 3 ? 0 : 1,
   };
 };
 
