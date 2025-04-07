@@ -40,6 +40,7 @@ import AdminTicketChart from "../features/adminpage/components/AdminTicketChart"
 import AdminContact from "../features/adminpage/components/AdminContact";
 import ChattingPage from "../features/chatting/pages/ChattingPage";
 import CartPage from "../features/cart/CartPage";
+import AddPostModal from "../features/community/components/AddPostModal";
 
 function AppRoutes() {
   return (
@@ -71,6 +72,7 @@ function AppRoutes() {
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
       <Route path="/community" element={<CommunityMain />} />
+      <Route path="/add" element={<AddPostModal />} />
       <Route path="/community/:id" element={<CommunityMain />} />
       <Route path="/support" element={<SupportPage />}>
         <Route path="/support/notice" element={<NoticePage />} />
