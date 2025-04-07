@@ -3,6 +3,7 @@ import Community from "./Community";
 import CommunityDetail from "./CommunityDetail";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
+import AddPostModal from "./AddPostModal";
 
 const Container = styled.div`
   width: 65%;
@@ -77,13 +78,19 @@ function CommunityList() {
   const handleOpenModal = (e, post) => {
     e.stopPropagation();
     setSelectedPost(post);
-
     navigate(`/community/${post.id}`);
   };
 
   const handleCloseModal = () => {
     setSelectedPost(null);
+    navigate("/community");
+  };
 
+  const handleAddPostClick = () => {
+    navigate("/community/add");
+  };
+
+  const handleCloseAddModal = () => {
     navigate("/community");
   };
 
@@ -134,11 +141,13 @@ function CommunityList() {
     },
   ];
 
+  const isAddModalOpen = location.pathname === "/community/add";
+
   return (
     <div>
       <Container>
         <ButtonBox>
-          <Button>게시글 등록</Button>
+          <Button onClick={handleAddPostClick}>게시글 등록</Button>
           <Button>나의 글 보기</Button>
           <DrawwButton onClick={() => navigate("/drawingcanvas")}>
             작품 그리기
@@ -154,6 +163,8 @@ function CommunityList() {
       {selectedPost && (
         <CommunityDetail post={selectedPost} onClose={handleCloseModal} />
       )}
+
+      {isAddModalOpen && <AddPostModal onClose={handleCloseAddModal} />}
     </div>
   );
 }
