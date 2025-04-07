@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
-import { ReactComponent as Logo } from "../assets/LogoDesign/아틀리에 로고 시안3.svg";
+import logo from "../assets/LogoDesign/logo_atelier3.svg";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -42,6 +42,8 @@ const Left = styled.div`
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
 
 const CenterContainer = styled.div`
@@ -86,7 +88,9 @@ const DropdownMenu = styled.ul`
   top: 100%;
   left: 50%;
   transform: ${(props) =>
-    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
+    props.$show
+      ? "translateX(-50%) translateY(0px)"
+      : "translateX(-50%) translateY(-10px)"};
   background-color: rgba(47, 47, 47, 1);
   border-radius: 23px;
   list-style: none;
@@ -226,44 +230,50 @@ const Header = () => {
       <Overlay $show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>
-          <Logo style={{ height: "50px", marginTop: "10px" }} />
+          <img
+            src={logo}
+            alt="logo"
+            style={{ height: "50px", marginTop: "10px" }}
+          />
         </Left>
         <CenterContainer>
           <NavWrapper>
             <NavList>
-              {["Gallery", "Artist", "Community", "Goods", "Notice"].map((menu) => (
-                <NavItemContainer
-                  key={menu}
-                  onMouseEnter={() => handleMouseEnter(menu)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <NavItem
-                    onClick={() => {
-                      navigate(mainRoutes[menu]);
-                      setShowDropdown(null);
-                    }}
-                  >
-                    {menu}
-                  </NavItem>
-                  <DropdownMenu
-                    $show={showDropdown === menu}
+              {["Gallery", "Artist", "Community", "Goods", "Notice"].map(
+                (menu) => (
+                  <NavItemContainer
+                    key={menu}
                     onMouseEnter={() => handleMouseEnter(menu)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    {dropdownItems[menu].map((item) => (
-                      <DropdownItem
-                        key={item.path}
-                        onClick={() => {
-                          navigate(item.path);
-                          setShowDropdown(null);
-                        }}
-                      >
-                        {item.label}
-                      </DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </NavItemContainer>
-              ))}
+                    <NavItem
+                      onClick={() => {
+                        navigate(mainRoutes[menu]);
+                        setShowDropdown(null);
+                      }}
+                    >
+                      {menu}
+                    </NavItem>
+                    <DropdownMenu
+                      $show={showDropdown === menu}
+                      onMouseEnter={() => handleMouseEnter(menu)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {dropdownItems[menu].map((item) => (
+                        <DropdownItem
+                          key={item.path}
+                          onClick={() => {
+                            navigate(item.path);
+                            setShowDropdown(null);
+                          }}
+                        >
+                          {item.label}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </NavItemContainer>
+                )
+              )}
             </NavList>
           </NavWrapper>
         </CenterContainer>
@@ -275,13 +285,23 @@ const Header = () => {
             </>
           ) : (
             <>
-              <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
-              <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
+              <RightNavItem onClick={() => navigate("/join")}>
+                회원가입
+              </RightNavItem>
+              <RightNavItem onClick={() => navigate("/login")}>
+                로그인
+              </RightNavItem>
             </>
           )}
-          <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/adminpage")}>관리자페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/cart")}>장바구니</RightNavItem>
+          <RightNavItem onClick={() => navigate("/mypage")}>
+            마이페이지
+          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/adminpage")}>
+            관리자페이지
+          </RightNavItem>
+          <RightNavItem onClick={() => navigate("/cart")}>
+            장바구니
+          </RightNavItem>
           <MenuIcon onClick={handleMenuOpen}>MENU</MenuIcon>
         </Right>
       </HeaderWrapper>
