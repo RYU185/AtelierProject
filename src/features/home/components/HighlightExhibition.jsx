@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import Gogh from "../../../assets/images/gogh.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Section = styled.section`
   display: flex;
   width: 100%;
   height: 300px;
+  cursor: pointer;
 `;
 
 const LeftBox = styled.div`
@@ -44,9 +46,13 @@ const RightBox = styled.div`
   background-position: center;
 `;
 
+
+
 const HighlightExhibition = () => {
+  const navigate = useNavigate();
+
   return (
-    <Section>
+    <Section onClick={() => navigate("/gallery/usergallery")}>
       <LeftBox>
         <Title>기획전</Title>
         <Subtitle>USER’S GALLERY</Subtitle>

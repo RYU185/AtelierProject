@@ -25,6 +25,7 @@ const WhatsOnSection = styled.section`
   align-items: center;
   justify-content: center;
   perspective: 2500px;
+  overflow-x: hidden;
 `;
 
 const Title = styled.h1`
@@ -52,6 +53,7 @@ const SliderContainer = styled.div`
   perspective: 2000px;
   perspective-origin: center 100%;
   transform: translateY(-350px)
+
 `;
 
 const SlideWrapper = styled.div`
