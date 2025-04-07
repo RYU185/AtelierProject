@@ -41,6 +41,7 @@ import AdminContact from "../features/adminpage/components/AdminContact";
 import ChattingPage from "../features/chatting/pages/ChattingPage";
 import CartPage from "../features/cart/CartPage";
 import AddPostModal from "../features/community/components/AddPostModal";
+import EditPostModal from "../features/community/components/EditPostModal";
 
 function AppRoutes() {
   return (
@@ -71,7 +72,9 @@ function AppRoutes() {
       </Route>
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
-      <Route path="/community" element={<CommunityMain />} />
+      <Route path="/community" element={<CommunityMain />}>
+        <Route path="/community/modify/:id" element={<EditPostModal />} />
+      </Route>
       <Route path="/add" element={<AddPostModal />} />
       <Route path="/community/:id" element={<CommunityMain />} />
       <Route path="/support" element={<SupportPage />}>
