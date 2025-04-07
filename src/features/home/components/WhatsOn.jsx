@@ -51,6 +51,7 @@ const SliderContainer = styled.div`
   height: 500px;
   perspective: 2000px;
   perspective-origin: center;
+  transform: translateY(-250px)
 `;
 
 const SlideWrapper = styled.div`
@@ -63,10 +64,10 @@ const SlideWrapper = styled.div`
 
 const Slide = styled.div`
   position: absolute;
-  width: 300px;
-  height: 420px;
+  width: 500px;
+  height: 700px;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   backface-visibility: hidden;
   transform-style: preserve-3d;
   will-change: transform, opacity;
@@ -98,7 +99,7 @@ const EventInfo = styled.div`
 `;
 
 const getSlideStyle = (offset) => {
-  const radius = 1000;
+  const radius = 1600;
   const angle = offset * 20
   const rad = (Math.PI / 180) * angle;
 

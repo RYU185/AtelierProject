@@ -229,7 +229,7 @@ const Header = () => {
       <Overlay $show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>
-          <LogoIcon style={{ width: "140px", height: "120px" }}/>
+          <LogoIcon style={{ width: "130px", height: "120px" }}/>
         </Left>
         <CenterContainer>
           <NavWrapper>
