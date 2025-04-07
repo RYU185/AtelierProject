@@ -73,7 +73,7 @@ function AppRoutes() {
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
       <Route path="/community" element={<CommunityMain />}>
-        <Route path="/community/modify/:id" element={<EditPostModal />} />
+        <Route path="modify/:id" element={<EditPostModal />} />
       </Route>
       <Route path="/add" element={<AddPostModal />} />
       <Route path="/community/:id" element={<CommunityMain />} />
