@@ -99,8 +99,8 @@ const EventInfo = styled.div`
 `;
 
 const getSlideStyle = (offset) => {
-  const radius = 1800;
-  const angle = offset * 20
+  const radius = 1200;
+  const angle = offset * 26
   const rad = (Math.PI / 180) * angle;
 
   const x = Math.sin(rad) * radius;
