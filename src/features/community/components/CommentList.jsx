@@ -124,8 +124,12 @@ function CommentList() {
   };
 
   const handleDelete = (index) => {
+    const confirmed = window.confirm("정말로 이 댓글을 삭제하시겠습니까?");
+    if (!confirmed) return;
+
     setComments(comments.filter((_, i) => i !== index));
     setActiveIndex(null);
+    alert("댓글이 삭제 되었습니다.");
   };
 
   const handleSubmit = () => {
