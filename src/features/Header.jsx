@@ -6,6 +6,7 @@ import LogoExample1 from "../assets/LogoDesign/아틀리에 로고 시안2.svg";
 import LogoExample2 from "../assets/LogoDesign/아틀리에 로고 시안3.svg";
 import LogoExample3 from "../assets/LogoDesign/아틀리에 로고 시안4.svg";
 import LogoExample4 from "../assets/LogoDesign/아틀리에 시안 로고1.svg";
+import LogoExample5 from "../assets/LogoDesign/아틀리에 로고 시안 5.svg";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -229,10 +230,15 @@ const Header = () => {
       <Overlay $show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>
-          <img
+          {/* <img
             src={LogoExample4}
             alt="아틀리에 로고"
             style={{ height: "70px", objectFit: "contain", overflow:"hidden"}}
+          /> */}
+          <img
+            src={LogoExample3}
+            alt="아틀리에 로고"
+            style={{ height: "50px", objectFit: "contain", overflow: "hidden", marginTop: "10px" }}
           />
         </Left>
         <CenterContainer>
