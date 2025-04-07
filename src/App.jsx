@@ -4,17 +4,18 @@ import GlobalStyle from "./styles/GlobalStyle";
 import AppRoutes from "./routes/AppRoutes";
 import CustomCursor from "./components/CustomCursor";
 import InquiryNotifications from "./features/adminpage/components/InquiryNotifications";
-
+import { InquiryProvider } from "./features/adminpage/components/InquiryContext"; // 📌 import 추가
 
 const App = () => {
   return (
-    <Router>
-      
-      <InquiryNotifications />
-      <CustomCursor />
-      <GlobalStyle />
-      <AppRoutes />
-    </Router>
+    <InquiryProvider> {/* 🔥 Context로 감싸줌 */}
+      <Router>
+        <InquiryNotifications />
+        <CustomCursor />
+        <GlobalStyle />
+        <AppRoutes />
+      </Router>
+    </InquiryProvider>
   );
 };
 

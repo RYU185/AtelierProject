@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useInquiry } from "../adminpage/components/InquiryContext"; // InquiryContext 사용
 
+// 스타일 코드 (기존 유지)
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -16,17 +18,6 @@ const Title = styled.h1`
   text-align: center;
   margin-bottom: 2rem;
   position: relative;
-
-  &:before {
-    content: "CONTACT";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
-    color: rgba(0, 0, 0, 0.05);
-    z-index: -1;
-  }
 `;
 
 const Form = styled.form`
@@ -55,11 +46,6 @@ const Input = styled.input`
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-  }
 `;
 
 const TextArea = styled.textarea`
@@ -70,11 +56,6 @@ const TextArea = styled.textarea`
   font-size: 1rem;
   min-height: 150px;
   resize: vertical;
-
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-  }
 `;
 
 const SubmitButton = styled.button`
@@ -86,72 +67,16 @@ const SubmitButton = styled.button`
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #0056b3;
-  }
-`;
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
-const ModalContent = styled.div`
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 400px;
-  text-align: center;
-`;
-
-const ModalTitle = styled.h3`
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-  color: #333;
-`;
-
-const ModalButtonGroup = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-`;
-
-const ModalButton = styled.button`
-  padding: 0.5rem 2rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: white;
-  color: #333;
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: ${(props) => (props.confirm ? "#0095ff" : "#333")};
-    color: white;
-    border-color: ${(props) => (props.confirm ? "#0095ff" : "#333")};
-  }
 `;
 
 const ContactusPage = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const { addInquiry } = useInquiry(); // 전역 상태 업데이트 함수 사용
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
-    message: "",
+    message: "", // 문의 내용 추가
   });
 
   const handleChange = (e) => {
@@ -164,15 +89,11 @@ const ContactusPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowModal(true);
-  };
-
-  const handleConfirm = () => {
-    // TODO: API 연동
-    console.log("Form submitted:", formData);
-    setShowModal(false);
-    // 문의 완료 후 처리 (예: 목록으로 이동 또는 완료 메시지 표시)
-    navigate("/support/notice");
+    addInquiry({
+      subject: formData.subject,
+      message: formData.message, // 문의 내용 추가
+    });
+    navigate("/support");
   };
 
   return (
@@ -224,22 +145,6 @@ const ContactusPage = () => {
         </FormGroup>
         <SubmitButton type="submit">문의하기</SubmitButton>
       </Form>
-
-      {showModal && (
-        <ModalOverlay>
-          <ModalContent>
-            <ModalTitle>문의하시겠습니까?</ModalTitle>
-            <ModalButtonGroup>
-              <ModalButton onClick={() => setShowModal(false)}>
-                취소
-              </ModalButton>
-              <ModalButton confirm onClick={handleConfirm}>
-                확인
-              </ModalButton>
-            </ModalButtonGroup>
-          </ModalContent>
-        </ModalOverlay>
-      )}
     </Container>
   );
 };
