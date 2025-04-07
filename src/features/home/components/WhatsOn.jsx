@@ -50,8 +50,8 @@ const SliderContainer = styled.div`
   align-items: center;
   height: 500px;
   perspective: 2000px;
-  perspective-origin: center;
-  transform: translateY(-250px)
+  perspective-origin: center 100%;
+  transform: translateY(-350px)
 `;
 
 const SlideWrapper = styled.div`
