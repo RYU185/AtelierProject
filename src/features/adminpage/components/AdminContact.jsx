@@ -26,7 +26,7 @@ const AdminMenuWrapper = styled.div`
 const Content = styled.div`
   flex: 1;
   padding: 20px;
-  background: #f9f9f9;
+ 
   border-radius: 8px;
 `;
 

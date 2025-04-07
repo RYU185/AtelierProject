@@ -21,8 +21,8 @@ const InquiryNotifications = () => {
         onClick={markAllAsRead}
         style={{
           background: "none",
-          top:"100px",
-          marginLeft:"2450px",
+          top:"90px",
+          marginLeft:"2050px",
           border: "none",
           fontSize: "40px",
           cursor: "pointer",

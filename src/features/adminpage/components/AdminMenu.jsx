@@ -7,7 +7,7 @@ const Container = styled.div`
   flex-direction: column;
   padding: 40px 60px;
   min-height: 80vh;
-  background: #f8f9fa;
+  
 `;
 
 const Title = styled.h1`
