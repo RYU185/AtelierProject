@@ -54,6 +54,7 @@ const Grid = styled.div`
   flex-direction: column;
   overflow-y: auto;
   max-height: 645px;
+
   &::-webkit-scrollbar {
     width: 10px;
   }
@@ -72,29 +73,11 @@ const Grid = styled.div`
 function CommunityList() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [editingPost, setEditingPost] = useState(null);
 
   const [selectedPost, setSelectedPost] = useState(null);
 
-  const handleOpenModal = (e, post) => {
-    e.stopPropagation();
-    setSelectedPost(post);
-    navigate(`/community/${post.id}`);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedPost(null);
-    navigate("/community");
-  };
-
-  const handleAddPostClick = () => {
-    navigate("/community/add");
-  };
-
-  const handleCloseAddModal = () => {
-    navigate("/community");
-  };
-
-  const communityItems = [
+  const [communityItems, setCommunityItems] = useState([
     {
       id: 1,
       nickname: "귀염둥이",
@@ -139,7 +122,44 @@ function CommunityList() {
       datetext: "2025.03.29 14:00",
       content: "쏠수 있어 진짜 쏠수 있어 ",
     },
-  ];
+  ]);
+
+  const handleOpenModal = (e, post) => {
+    e.stopPropagation();
+    setSelectedPost(post);
+    navigate(`/community/${post.id}`);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+    navigate("/community");
+  };
+
+  const handleAddPostClick = () => {
+    navigate("/community/add");
+  };
+
+  const handleCloseAddModal = () => {
+    navigate("/community");
+  };
+
+  const handleDelete = (id) => {
+    const confirmed = window.confirm("정말 삭제하시겠습니까?");
+    if (confirmed) {
+      setCommunityItems((prev) => prev.filter((post) => post.id !== id));
+
+      alert("삭제가 완료되었습니다.");
+
+      if (selectedPost && selectedPost.id === id) {
+        setSelectedPost(null);
+        navigate("/community");
+      }
+    }
+  };
+
+  const handleAddPost = (newPost) => {
+    setCommunityItems((prev) => [newPost, ...prev]);
+  };
 
   const isAddModalOpen = location.pathname === "/community/add";
 
@@ -153,19 +173,40 @@ function CommunityList() {
             작품 그리기
           </DrawwButton>
         </ButtonBox>
+
         <Grid>
-          {communityItems.map((item) => (
-            <Community key={item.id} {...item} onOpenModal={handleOpenModal} />
+          {communityItems.map((post) => (
+            <Community
+              key={post.id}
+              {...post}
+              onOpenModal={handleOpenModal}
+              onDelete={handleDelete}
+            />
           ))}
         </Grid>
       </Container>
 
       {selectedPost && (
-        <CommunityDetail post={selectedPost} onClose={handleCloseModal} />
+        <CommunityDetail
+          post={selectedPost}
+          onClose={handleCloseModal}
+          onDelete={handleDelete}
+        />
       )}
 
-      {isAddModalOpen && <AddPostModal onClose={handleCloseAddModal} />}
+      {isAddModalOpen && (
+        <AddPostModal onClose={handleCloseAddModal} onSubmit={handleAddPost} />
+      )}
+
+      {editingPost && (
+        <EditPostModal
+          post={editingPost}
+          onClose={() => setEditingPost(null)}
+          onEdit={handleEditSubmit}
+        />
+      )}
     </div>
   );
 }
+
 export default CommunityList;

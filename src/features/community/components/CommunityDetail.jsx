@@ -40,12 +40,17 @@ const CloseButton = styled(AiOutlineClose)`
   }
 `;
 
-function CommunityDetail({ post, onClose }) {
+function CommunityDetail({ post, onClose, onDelete, onOpenModal, onEdit }) {
   return (
     <ModalBackground onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose} />
-        <Community {...post} />
+        <Community
+          {...post}
+          onDelete={onDelete}
+          onOpenModal={onOpenModal}
+          onEdit={onEdit}
+        />
         <CommentList />
       </ModalContainer>
     </ModalBackground>

@@ -8,6 +8,7 @@ import {
   BsArrowsFullscreen,
 } from "react-icons/bs";
 import FullImageModal from "./FullImageModal";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 800px;
@@ -82,7 +83,7 @@ const ExpandButton = styled(BsArrowsFullscreen)`
   border-radius: 25%;
   padding: 5px;
   cursor: pointer;
-  z-index: 11;
+  z-index: 5;
 
   &:hover {
     background: rgba(0, 0, 0, 0.8);
@@ -184,11 +185,14 @@ function Community({
   content,
   drawingImage,
   onOpenModal,
+  onDelete,
+  onEdit,
 }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleHeart = () => {
     setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
@@ -198,6 +202,16 @@ function Community({
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleEdit = () => {
+    navigate(`/community/modify/${id}`);
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(id);
+    }
+  };
 
   return (
     <Container>
@@ -222,10 +236,8 @@ function Community({
           <MenuIcon />
           {isMenuOpen && (
             <MenuDropdown>
-              <MenuItemM onClick={() => alert("수정 기능 연결!")}>
-                수정
-              </MenuItemM>
-              <MenuItemD onClick={() => alert("삭제 완료!")}>삭제</MenuItemD>
+              <MenuItemM onClick={handleEdit}>수정</MenuItemM>
+              <MenuItemD onClick={handleDelete}>삭제</MenuItemD>
             </MenuDropdown>
           )}
         </MenuIconWrapper>
