@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
-import LogoExample from "../assets/LogoDesign/아틀리에 로고 시안2.svg";
+import LogoExample1 from "../assets/LogoDesign/아틀리에 로고 시안2.svg";
+import LogoExample2 from "../assets/LogoDesign/아틀리에 로고 시안3.svg";
+import LogoExample3 from "../assets/LogoDesign/아틀리에 로고 시안4.svg";
+import LogoExample4 from "../assets/LogoDesign/아틀리에 시안 로고1.svg";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -227,9 +230,9 @@ const Header = () => {
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>
           <img
-            src={LogoExample}
+            src={LogoExample4}
             alt="아틀리에 로고"
-            style={{ height: "80px", objectFit: "contain", overflow: "hidden" }}
+            style={{ height: "70px", objectFit: "contain", overflow:"hidden"}}
           />
         </Left>
         <CenterContainer>
