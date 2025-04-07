@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
 import logo from "../assets/LogoDesign/logo_atelier3.svg";
+import LogoIcon from "./Logo";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -230,11 +231,7 @@ const Header = () => {
       <Overlay $show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>
-          <img
-            src={logo}
-            alt="logo"
-            style={{ height: "50px", marginTop: "10px" }}
-          />
+          <LogoIcon />
         </Left>
         <CenterContainer>
           <NavWrapper>
