@@ -188,11 +188,15 @@ const CartPage = () => {
 
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
-    setIsEmpty(!newTotal.hasItems);
 
     if (cartListRef.current) {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
+
+      // 장바구니가 비어있는지 확인 (전체 아이템 기준)
+      setIsEmpty(allItems.length === 0);
+
+      // 전체 선택 여부도 다시 계산
       const isAllSelected =
         selectedItems.length > 0 && selectedItems.length === allItems.length;
       setIsAllSelected(isAllSelected);
