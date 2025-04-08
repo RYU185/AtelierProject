@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
-import logo from "../assets/LogoDesign/logo_atelier3.svg";
-import LogoIcon from "./LogoIcon";
+import LogoIconFinal from "./LogoIconFinal";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -40,11 +39,16 @@ const Overlay = styled.div`
 `;
 
 const Left = styled.div`
+  width: 180px;
+  height: 128px;
+  overflow: hidden;
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: start;
+  justify-content: center;
+  transform: translateY(-27px);
 `;
 
 const CenterContainer = styled.div`
@@ -230,7 +234,7 @@ const Header = () => {
       <Overlay $show={showDropdown !== null} />
       <HeaderWrapper>
         <Left onClick={() => navigate("/")}>
-          <LogoIcon style={{ width: "130px", height: "120px" }}/>
+          <LogoIconFinal />
         </Left>
         <CenterContainer>
           <NavWrapper>
