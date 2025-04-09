@@ -26,7 +26,7 @@ const InquiryNotifications = () => {
         onClick={() => setShowList(!showList)} // 클릭하면 목록 보이기/숨기기
         style={{
           background: "none",
-          top: "90px",
+          top: "1990px",
           marginLeft: "1600px",
           border: "none",
           fontSize: "40px",
