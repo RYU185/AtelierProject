@@ -211,7 +211,9 @@ const AdminTicketList = () => {
               <option value="asc">관람객 수 오름차순</option>
               <option value="desc">관람객 수 내림차순</option>
             </SortSelect>
-            <SearchButton>검색</SearchButton>
+            <SearchButton onClick={() => setSearchTerm(searchTerm)}>
+              검색
+            </SearchButton>
           </SearchContainer>
 
           <Table>
