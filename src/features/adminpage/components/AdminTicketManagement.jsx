@@ -6,38 +6,33 @@ import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 
 const initialTickets = [
-    {
-        id: 1,
-        title: '현대 산업디자인展',
-        dateRange: '2025.04.12 - 2025.04.25',
-        image: '/src/assets/ArtIMG/1.jpg',
-        visitors: 15,
-        reservationLimit: 50,
-        deadline: '2025-04-20',
-        reservations: [
-            { id: 101, name: '홍길동', status: 'reserved', reservedCount: 2 },
-            { id: 102, name: '김민지', status: 'confirmed', reservedCount: 1 },
-            { id: 103, name: '이수연', status: 'confirmed', reservedCount: 2 },
-            { id: 101, name: '홍길동', status: 'reserved', reservedCount: 2 },
-            { id: 102, name: '김민지', status: 'confirmed', reservedCount: 1 },
-            { id: 103, name: '이수연', status: 'confirmed', reservedCount: 2 },
-            { id: 101, name: '홍길동', status: 'reserved', reservedCount: 2 },
-            { id: 102, name: '김민지', status: 'confirmed', reservedCount: 1 },
-            { id: 103, name: '이수연', status: 'confirmed', reservedCount: 2 },
-        ],
-    },
-    {
-        id: 2,
-        title: '현대 산업디자인展',
-        dateRange: '2025.04.12 - 2025.04.25',
-        image: '/src/assets/ArtIMG/2.jpg',
-        visitors: 21,
-        reservationLimit: 70,
-        deadline: '2025-04-21',
-        reservations: [
-            { id: 201, name: '박서준', status: 'confirmed', reservedCount: 3 },
-        ],
-    },
+  {
+    id: 1,
+    title: '현대 산업디자인展',
+    dateRange: '2025.04.12 - 2025.04.25',
+    image: '/src/assets/ArtIMG/1.jpg',
+    visitors: 15,
+    reservationLimit: 50,
+    deadline: '2025-04-20',
+    reservations: [
+      { id: 101, name: '홍길동', status: 'reserved', reservedCount: 2, reservedDate: '2025-04-01', reservedTime: '10:00' },
+      { id: 104, name: '홍길동', status: 'reserved', reservedCount: 2, reservedDate: '2025-04-01', reservedTime: '11:00' },
+      { id: 105, name: '홍길동', status: 'reserved', reservedCount: 2, reservedDate: '2025-04-01', reservedTime: '12:00' },
+    ],
+  },
+  {
+    id: 2,
+    title: '현대 산업디자인展',
+    dateRange: '2025.04.12 - 2025.04.25',
+    image: '/src/assets/ArtIMG/2.jpg',
+    visitors: 21,
+    reservationLimit: 70,
+    deadline: '2025-04-21',
+    reservations: [
+      { id: 201, name: '박서준', status: 'confirmed', reservedCount: 3, confirmedDate: '2025-04-06', reservedTime: '13:00' },
+      { id: 202, name: '이영희', status: 'reserved', reservedCount: 1, reservedDate: '2025-04-05', reservedTime: '14:00' },
+    ],
+  },
 ];
 
 const Container = styled.div`
@@ -46,14 +41,6 @@ const Container = styled.div`
   margin-top: 46px;
   margin-left: 23px;
   position: relative;
-`;
-
-const AdminGoodsMenubarWrapper = styled.div`
-  position: relative;
-  top: 100px;
-  left: 45px;
-  z-index: 10;
-  margin-left: -85px;
 `;
 
 const AdminMenuWrapper = styled.div`
@@ -135,155 +122,151 @@ const ActionButton = styled.button`
   cursor: pointer;
   color: #333;
   background-color: ${props =>
-        props.variant === 'edit' ? '#a4d4f3' :
-            props.variant === 'delete' ? '#f7b6b6' : '#d6ccf7'};
+    props.variant === 'edit' ? '#a4d4f3' :
+    props.variant === 'delete' ? '#f7b6b6' : '#d6ccf7'};
 
   &:hover {
     background-color: ${props =>
-        props.variant === 'edit' ? '#7dc5f3' :
-            props.variant === 'delete' ? '#f48c8c' : '#c4b8f0'};
+      props.variant === 'edit' ? '#7dc5f3' :
+      props.variant === 'delete' ? '#f48c8c' : '#c4b8f0'};
 `;
 
 const AdminTicketManagement = () => {
-    const navigate = useNavigate();
-    const [tickets, setTickets] = useState(initialTickets);
-    const [editingId, setEditingId] = useState(null);
-    const [formData, setFormData] = useState({ deadline: '' });
-    const [visibleReservations, setVisibleReservations] = useState(null);
+  const navigate = useNavigate();
+  const [tickets, setTickets] = useState(initialTickets);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState({ deadline: '' });
+  const [visibleReservations, setVisibleReservations] = useState(null);
 
-    const handleThumbnailClick = (id) => {
-        navigate(`/gallery/artistgallery/${id}`);
-    };
+  const handleThumbnailClick = (id) => {
+    navigate(`/gallery/artistgallery/${id}`);
+  };
 
-    const handleEditClick = (ticket) => {
-        setEditingId(ticket.id);
-        setFormData({ deadline: ticket.deadline });
-    };
+  const handleEditClick = (ticket) => {
+    setEditingId(ticket.id);
+    setFormData({ deadline: ticket.deadline });
+  };
 
-    const handleSave = (id) => {
-        setTickets(prev =>
-            prev.map(ticket =>
-                ticket.id === id ? { ...ticket, deadline: formData.deadline } : ticket
-            )
-        );
-        setEditingId(null);
-    };
-
-    const handleDelete = (id) => {
-        setTickets(prev => prev.filter(ticket => ticket.id !== id));
-    };
-
-    const toggleReservationList = (id) => {
-        setVisibleReservations(visibleReservations === id ? null : id);
-    };
-
-    const calculateRevenue = (ticket) => {
-        const pricePerTicket = 10000;
-        return ticket.reservations
-            .filter(res => res.status === 'confirmed')
-            .reduce((sum, res) => sum + res.reservedCount * pricePerTicket, 0);
-    };
-
-    return (
-        <>
-            <Header />
-            <AdminGoodsMenubarWrapper />
-            <Container>
-                <AdminMenuWrapper>
-                    <AdminMenu />
-                </AdminMenuWrapper>
-
-                <MainContent>
-                    <Title>티켓 판매 내역 및 마감일 관리</Title>
-
-                    <Table>
-                        <thead>
-                            <tr>
-                                <Th>전시 이미지</Th>
-                                <Th>전시명</Th>
-                                <Th>기간</Th>
-                                <Th>예약 가능 수량</Th>
-                                <Th>예약 마감일</Th>
-                                <Th>수익</Th>
-                                <Th>관리</Th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tickets.map(ticket => (
-                                <React.Fragment key={ticket.id}>
-                                    <tr>
-                                        <Td>
-                                            <Thumbnail
-                                                src={ticket.image}
-                                                alt="전시 이미지"
-                                                onClick={() => handleThumbnailClick(ticket.id)}
-                                            />
-                                        </Td>
-                                        <Td>{ticket.title}</Td>
-                                        <Td>{ticket.dateRange}</Td>
-                                        <Td>{ticket.reservationLimit}</Td>
-                                        <Td>
-                                            {editingId === ticket.id ? (
-                                                <input
-                                                    type="date"
-                                                    value={formData.deadline}
-                                                    onChange={(e) =>
-                                                        setFormData({ ...formData, deadline: e.target.value })
-                                                    }
-                                                />
-                                            ) : (
-                                                ticket.deadline
-                                            )}
-                                        </Td>
-                                        <Td>{calculateRevenue(ticket).toLocaleString()}원</Td>
-                                        <Td>
-                                            {editingId === ticket.id ? (
-                                                <ActionButton variant="edit" onClick={() => handleSave(ticket.id)}>저장</ActionButton>
-                                            ) : (
-                                                <ActionButton variant="edit" onClick={() => handleEditClick(ticket)}>수정</ActionButton>
-                                            )}
-                                            <ActionButton variant="delete" onClick={() => handleDelete(ticket.id)}>삭제</ActionButton>
-                                            <ActionButton onClick={() => toggleReservationList(ticket.id)}>
-                                                {visibleReservations === ticket.id ? '숨기기' : '예약자 보기'}
-                                            </ActionButton>
-                                        </Td>
-                                    </tr>
-
-                                    {visibleReservations === ticket.id && ticket.reservations.length > 0 && (
-                                        <tr>
-                                            <Td colSpan="7">
-                                                <ScrollableWrapper>
-                                                    <ReservationTable>
-                                                        <thead>
-                                                            <tr>
-                                                                <th>이름</th>
-                                                                <th>예약 수량</th>
-                                                                <th>상태</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {ticket.reservations.map((res) => (
-                                                                <tr key={res.id}>
-                                                                    <td>{res.name}</td>
-                                                                    <td>{res.reservedCount}</td>
-                                                                    <td>{res.status === 'reserved' ? '예약' : '구매 확정'}</td>
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </ReservationTable>
-                                                </ScrollableWrapper>
-                                            </Td>
-                                        </tr>
-                                    )}
-                                </React.Fragment>
-                            ))}
-                        </tbody>
-                    </Table>
-                </MainContent>
-            </Container>
-            <Footer />
-        </>
+  const handleSave = (id) => {
+    setTickets(prev =>
+      prev.map(ticket =>
+        ticket.id === id ? { ...ticket, deadline: formData.deadline } : ticket
+      )
     );
+    setEditingId(null);
+  };
+
+  const handleDelete = (id) => {
+    setTickets(prev => prev.filter(ticket => ticket.id !== id));
+  };
+
+  const toggleReservationList = (id) => {
+    setVisibleReservations(visibleReservations === id ? null : id);
+  };
+
+  return (
+    <>
+      <Header />
+      <Container>
+        <AdminMenuWrapper>
+          <AdminMenu />
+        </AdminMenuWrapper>
+
+        <MainContent>
+          <Title>티켓 판매 내역 및 마감일 관리</Title>
+
+          <Table>
+            <thead>
+              <tr>
+                <Th>전시 이미지</Th>
+                <Th>전시명</Th>
+                <Th>기간</Th>
+                <Th>예약 가능 수량</Th>
+                <Th>예약 마감일</Th>
+                <Th>관리</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {tickets.map(ticket => (
+                <React.Fragment key={ticket.id}>
+                  <tr>
+                    <Td>
+                      <Thumbnail
+                        src={ticket.image}
+                        alt="전시 이미지"
+                        onClick={() => handleThumbnailClick(ticket.id)}
+                      />
+                    </Td>
+                    <Td>{ticket.title}</Td>
+                    <Td>{ticket.dateRange}</Td>
+                    <Td>{ticket.reservationLimit}</Td>
+                    <Td>
+                      {editingId === ticket.id ? (
+                        <input
+                          type="date"
+                          value={formData.deadline}
+                          onChange={(e) =>
+                            setFormData({ ...formData, deadline: e.target.value })
+                          }
+                        />
+                      ) : (
+                        ticket.deadline
+                      )}
+                    </Td>
+                    <Td>
+                      {editingId === ticket.id ? (
+                        <ActionButton variant="edit" onClick={() => handleSave(ticket.id)}>저장</ActionButton>
+                      ) : (
+                        <ActionButton variant="edit" onClick={() => handleEditClick(ticket)}>수정</ActionButton>
+                      )}
+                      <ActionButton variant="delete" onClick={() => handleDelete(ticket.id)}>삭제</ActionButton>
+                      <ActionButton onClick={() => toggleReservationList(ticket.id)}>
+                        {visibleReservations === ticket.id ? '숨기기' : '예약자 보기'}
+                      </ActionButton>
+                    </Td>
+                  </tr>
+
+                  {visibleReservations === ticket.id && ticket.reservations.filter(r => r.status === 'reserved').length > 0 && (
+                    <tr>
+                      <Td colSpan="6">
+                        <ScrollableWrapper>
+                          <ReservationTable>
+                            <thead>
+                              <tr>
+                                <th>이름</th>
+                                <th>예약 수량</th>
+                                <th>상태</th>
+                                <th>예약 일자</th>
+                                <th>예약 시간</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {ticket.reservations
+                                .filter(res => res.status === 'reserved')
+                                .map(res => (
+                                  <tr key={res.id}>
+                                    <td>{res.name}</td>
+                                    <td>{res.reservedCount}</td>
+                                    <td>예약</td>
+                                    <td>{res.reservedDate || '-'}</td>
+                                    <td>{res.reservedTime || '-'}</td>
+                                  </tr>
+                                ))}
+                            </tbody>
+                          </ReservationTable>
+                        </ScrollableWrapper>
+                      </Td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </Table>
+        </MainContent>
+      </Container>
+      <Footer />
+    </>
+  );
 };
 
 export default AdminTicketManagement;
