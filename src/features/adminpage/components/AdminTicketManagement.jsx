@@ -144,7 +144,7 @@ const ActionButton = styled.button`
   }
 `;
 
-const AdminTicketList = () => {
+const AdminTicketManagement = () => {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState(initialTickets);
   const [editingId, setEditingId] = useState(null);
@@ -281,4 +281,4 @@ const AdminTicketList = () => {
   );
 };
 
-export default AdminTicketList;
+export default AdminTicketManagement
