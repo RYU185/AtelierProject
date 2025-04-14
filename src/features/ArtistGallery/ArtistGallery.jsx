@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Datacontrol from "./components/Datacontrol";
 import ArtistGalleryLsit from "./components/ArtistGalleryLsit";
 import styled from "styled-components";
@@ -32,14 +32,20 @@ const Title = styled.h1`
 `;
 
 function ArtistGallery() {
+  const [filteredGalleryItems, setFilteredGalleryItems] = useState([]);
+
+  const handleFilterChange = (data) => {
+    setFilteredGalleryItems(data);
+  };
+
   return (
     <div>
       <TitleContainer>
         <BackTitle>ARTIST GALLERY</BackTitle>
         <Title>ARTIST GALLERY</Title>
       </TitleContainer>
-      <Datacontrol />
-      <ArtistGalleryLsit />
+      <Datacontrol onFilterChange={handleFilterChange} />
+      <ArtistGalleryLsit filteredItems={filteredGalleryItems} />
       <TopButton />
     </div>
   );
