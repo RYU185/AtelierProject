@@ -7,18 +7,37 @@ const InquiryContext = createContext();
 // Context Provider 컴포넌트
 export const InquiryProvider = ({ children }) => {
   const [inquiries, setInquiries] = useState(() => {
-    // localStorage에서 데이터 불러오기
     const savedInquiries = localStorage.getItem("inquiries");
     return savedInquiries ? JSON.parse(savedInquiries) : [];
   });
 
   useEffect(() => {
-    // inquiries가 변경될 때마다 localStorage에 저장
     localStorage.setItem("inquiries", JSON.stringify(inquiries));
   }, [inquiries]);
 
   const addInquiry = (newInquiry) => {
-    setInquiries((prev) => [...prev, newInquiry]);
+    const inquiryToAdd = {
+      id: newInquiry.id || Date.now(), // 고유 ID (없으면 timestamp 사용)
+      subject: newInquiry.subject || "제목 없음",
+      sender: newInquiry.sender || "사용자",
+      createdAt: new Date().toISOString(),
+    };
+
+    // 중복 여부 확인
+    setInquiries((prev) => {
+      const isDuplicate = prev.some(
+        (inquiry) =>
+          inquiry.id === inquiryToAdd.id ||
+          (inquiry.subject === inquiryToAdd.subject &&
+           inquiry.sender === inquiryToAdd.sender)
+      );
+
+      if (!isDuplicate) {
+        return [inquiryToAdd, ...prev];
+      } else {
+        return prev;
+      }
+    });
   };
 
   return (
@@ -28,7 +47,6 @@ export const InquiryProvider = ({ children }) => {
   );
 };
 
-// Context 사용을 쉽게 하기 위한 커스텀 훅
 export const useInquiry = () => {
   return useContext(InquiryContext);
 };
