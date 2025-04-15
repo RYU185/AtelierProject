@@ -57,55 +57,28 @@ const RightButton = styled(NavigationButton)`
   right: -80px;
 `;
 
-function DrawingList() {
-  const artWorks = [
-    {
-      image: "/src/assets/UserDrawingIMG/Drawing.jpg",
-      title: "발자취",
-      user: "김말자",
-      date: "2024.01.13",
-    },
-    {
-      image: "/src/assets/UserDrawingIMG/Drawing1.png",
-      title: "추구미",
-      user: "최미숙",
-      date: "2024.02.20",
-    },
-    {
-      image: "/src/assets/UserDrawingIMG/Drawing2.png",
-      title: "카우걸",
-      user: "이미자",
-      date: "2024.03.15",
-    },
-    {
-      image: "/src/assets/UserDrawingIMG/Drawing3.png",
-      title: "단잠",
-      user: "최민지",
-      date: "2024.04.05",
-    },
-  ];
-
+function DrawingList({ posters }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const prevImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? artWorks.length - 1 : prevIndex - 1
-    );
+    setCurrentIndex((prev) => (prev === 0 ? posters.length - 1 : prev - 1));
   };
 
   const nextImage = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === artWorks.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentIndex((prev) => (prev === posters.length - 1 ? 0 : prev + 1));
   };
 
   return (
     <Container>
-      <LeftButton onClick={prevImage}>❮</LeftButton>
-      <ImageWrapper key={currentIndex}>
-        <Drawing image={artWorks[currentIndex].image} />
-      </ImageWrapper>
-      <RightButton onClick={nextImage}>❯</RightButton>
+      {posters.length > 0 && (
+        <>
+          <LeftButton onClick={prevImage}>❮</LeftButton>
+          <ImageWrapper key={currentIndex}>
+            <Drawing image={posters[currentIndex]} />
+          </ImageWrapper>
+          <RightButton onClick={nextImage}>❯</RightButton>
+        </>
+      )}
     </Container>
   );
 }

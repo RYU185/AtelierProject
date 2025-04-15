@@ -9,6 +9,9 @@ import axios from "axios";
 const images = import.meta.glob("/src/assets/ArtistGalleryIMG/*", {
   eager: true,
 });
+const artImages = import.meta.glob("/src/assets/ArtListIMG/*", {
+  eager: true,
+});
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -84,8 +87,16 @@ function ArtistGalleryDetail() {
   const { id } = useParams(); // URL에서 id 추출
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+
   const getImageUrl = (filename) => {
     const matched = Object.entries(images).find(([path]) =>
+      path.endsWith(filename)
+    );
+    return matched ? matched[1].default : "";
+  };
+
+  const getArtImageUrl = (filename) => {
+    const matched = Object.entries(artImages).find(([path]) =>
       path.endsWith(filename)
     );
     return matched ? matched[1].default : "";
@@ -124,7 +135,7 @@ function ArtistGalleryDetail() {
       </Container>
 
       <Info>참여 작품</Info>
-      <ArtList />
+      <ArtList posters={(data?.artPoster || []).map(getArtImageUrl)} />
     </div>
   );
 }

@@ -53,34 +53,32 @@ const Info = styled.div`
   padding: 15px;
 `;
 
-function UserGalleryInformation() {
+function UserGalleryInformation({ data }) {
+  if (!data) return null;
   return (
     <InformationContainer>
       <InformationTitle>전시 정보</InformationTitle>
       <InformationItem>
         <ItemLabel>제목</ItemLabel>
-        <ItemValue>산업 디자인</ItemValue>
+        <ItemValue>{data.title}</ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>일정</ItemLabel>
-        <ItemValue>2024-11-29 ~ 2025-06-18</ItemValue>
+        <ItemValue>
+          {data.startDate} ~ {data.endDate}
+        </ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>티켓 가격</ItemLabel>
-        <ItemValue>25000 원</ItemValue>
+        <ItemValue>{data.price}</ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>작가</ItemLabel>
-        <ItemValue>김철용 화백, 곽두팔 화백, 김성우 작가</ItemValue>
+        <ItemValue>{data.userList.join(", ")}</ItemValue>
       </InformationItem>
       <InfoBox>
         <Title>전시 내용</Title>
-        <Info>
-          일상의 틀을 깨고 새로운 시각으로 세상을 바라보는 현대 미술. 작가들은
-          색과 형태, 감정의 조화를 통해 우리에게 질문을 던집니다. 시간과 공간을
-          초월한 감각적인 색채와 추상적인 형태. 현대 미술은 관객의 해석 속에서
-          완성됩니다.
-        </Info>
+        <Info>{data.description}</Info>
       </InfoBox>
     </InformationContainer>
   );
