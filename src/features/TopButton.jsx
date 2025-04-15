@@ -16,8 +16,8 @@ const Button = styled.button`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 999;
   transition: opacity 0.3s ease, transform 0.3s ease;
-  opacity: ${(props) => (props.visible ? 1 : 0)};
-  transform: ${(props) => (props.visible ? "scale(1)" : "scale(0.8)")};
+  opacity: ${(props) => (props.$visible ? 1 : 0)};
+  transform: ${(props) => (props.$visible ? "scale(1)" : "scale(0.8)")};
 
   &:hover {
     background-color: #0050ff;
@@ -41,7 +41,7 @@ function TopButton() {
   };
 
   return (
-    <Button onClick={scrollToTop} visible={visible}>
+    <Button onClick={scrollToTop} $visible={visible}>
       ▲ TOP
     </Button>
   );

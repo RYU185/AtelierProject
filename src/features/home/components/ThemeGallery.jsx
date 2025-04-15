@@ -48,8 +48,8 @@ const Image = styled.img`
 const ImageBox = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${({ align }) => align};
-  text-align: ${({ align }) => (align === "flex-start" ? "left" : "right")};
+  align-items: ${({ $align }) => $align};
+  text-align: ${({ $align }) => ($align === "flex-start" ? "left" : "right")};
 `;
 
 const LabelBox = styled.div`
@@ -89,7 +89,7 @@ const Dot = styled.div`
   background: #007aff;
   z-index: 2;
   transition: top 0.4s ease, opacity 0.4s ease;
-  opacity: ${({ show }) => (show ? 1 : 0)};
+  opacity: ${({ $show }) => ($show ? 1 : 0)};
 `;
 
 const themes = [
@@ -145,14 +145,14 @@ const ThemeGallery = () => {
   return (
     <Wrapper>
       <Line />
-      <Dot style={{ top: `${dotTop}px` }} show={showDot} />
+      <Dot style={{ top: `${dotTop}px` }} $show={showDot} />
       <Grid ref={gridRef}>
         {themes.map((item, i) => (
           <Item
             key={i}
             style={{ flexDirection: i % 2 === 0 ? "row" : "row-reverse" }}
           >
-            <ImageBox align={i % 2 === 0 ? "flex-start" : "flex-end"}>
+            <ImageBox $align={i % 2 === 0 ? "flex-start" : "flex-end"}>
               <Image src={item.img} alt={item.label} />
               <LabelBox>
                 <MainText>{item.label}</MainText>
