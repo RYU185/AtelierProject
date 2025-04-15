@@ -205,15 +205,29 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const submissionData = {
       ...formData,
       email: `${formData.emailId}@${formData.emailDomain}`,
     };
-    onSubmit(submissionData);
-  };
 
+    try {
+      await axios.put("/user/me", submissionData);
+      alert("회원 정보가 수정되었습니다.");
+      onSubmit(submissionData);
+    } catch (error) {
+      console.error("❌ 회원정보 수정 실패:", error);
+      console.log("📦 서버 응답:", error.response);
+      alert(
+        "수정 실패: " +
+          (error.response?.data?.message ||
+            error.response?.statusText ||
+            error.message)
+      );
+    }
+  }; // ✅ 여기에서 함수 닫기
   return (
     <>
       <Header />

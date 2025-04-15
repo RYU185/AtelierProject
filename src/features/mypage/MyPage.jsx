@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../api/axiosInstance";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -207,22 +208,44 @@ const MyPage = () => {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showTicketModal, setShowTicketModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [userInfo, setUserInfo] = useState({
-    id: "abc01234",
-    name: "RYU",
-    phone: "010-1234-5678",
-    birth: "1997-01-01",
-    email: "abc01234@gmail.com",
-    address: "서울시 동작구",
-    points: "50000",
-  });
+  const [userInfo, setUserInfo] = useState(null); // 사용자 정보 초기값 null
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
-  // location.state가 변경될 때마다 activeTab 업데이트
-  React.useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
+  const formatPhoneNumber = (phone) => {
+    if (!phone) return "";
+    return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      navigate("/login");
+      return;
     }
-  }, [location.state]);
+
+    // ✅ 토큰 권한 디코딩 로그
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      console.log("📦 JWT 권한 (auth):", payload.auth); // ex: ROLE_USER
+    } catch (e) {
+      console.warn("⚠️ JWT 디코딩 실패:", e);
+    }
+
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get("/user/me");
+        setUserInfo(response.data);
+      } catch (error) {
+        console.error("❌ 사용자 정보 가져오기 실패:", error);
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -259,6 +282,10 @@ const MyPage = () => {
   const handleEditCancel = () => {
     setIsEditing(false);
   };
+
+  if (loading || !userInfo) {
+    return <div>로딩 중...</div>;
+  }
 
   if (isEditing) {
     return (
@@ -298,7 +325,7 @@ const MyPage = () => {
 
         <ContentContainer>
           <ProfileSection>
-            <ProfileCircle>RYU</ProfileCircle>
+            <ProfileCircle>{userInfo.nickName[0]}</ProfileCircle>
             <AccountEmail>{userInfo.email}</AccountEmail>
             <AccountInfo>
               <AccountTitle>
@@ -308,15 +335,15 @@ const MyPage = () => {
               <ProfileInfo>
                 <ProfileField>
                   <Label>이름</Label>
-                  <Value>{userInfo.name}</Value>
+                  <Value>{userInfo.realName}</Value>
                 </ProfileField>
                 <ProfileField>
                   <Label>연락처</Label>
-                  <Value>{userInfo.phone}</Value>
+                  <Value>{formatPhoneNumber(userInfo.phone)}</Value>
                 </ProfileField>
                 <ProfileField>
                   <Label>생년월일</Label>
-                  <Value>{userInfo.birth}</Value>
+                  <Value>{userInfo.birthday}</Value>
                 </ProfileField>
                 <ProfileField>
                   <Label>이메일</Label>
@@ -328,7 +355,7 @@ const MyPage = () => {
                 </ProfileField>
               </ProfileInfo>
             </AccountInfo>
-            <Points>적립 포인트: {userInfo.points}</Points>
+            <Points>적립 포인트: {userInfo.point}</Points>
           </ProfileSection>
 
           <MainContent>

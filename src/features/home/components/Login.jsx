@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
+
 
 const Container = styled.div`
   display: flex;
@@ -115,29 +117,34 @@ const Login = () => {
   const [autoLogin, setAutoLogin] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const savedAutoLogin = localStorage.getItem("autoLogin");
-    if (savedAutoLogin === "true") {
-      navigate("/");
-    }
-  }, [navigate]);
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!userId.trim() || !password.trim()) {
       setError("아이디와 비밀번호를 모두 입력해주세요.");
       return;
     }
 
-    setError("");
+    try {
+      const response = await axios.post("/user/login", {
+        userId,
+        password,
+      });
 
-    if (autoLogin) {
-      localStorage.setItem("autoLogin", "true");
-    } else {
-      localStorage.removeItem("autoLogin");
+      const token = response.data;
+      localStorage.setItem("accessToken", token);
+      localStorage.setItem("username", userId);
+
+      if (autoLogin) {
+        localStorage.setItem("autoLogin", "true");
+      } else {
+        localStorage.removeItem("autoLogin");
+      }
+
+      setError("");
+      navigate("/");
+    } catch (err) {
+      console.error("로그인 에러:", err);
+      setError("아이디 또는 비밀번호를 다시 확인해주세요.");
     }
-
-    localStorage.setItem("username", userId); // ✅ 핵심!
-    navigate("/");
   };
 
   const handleKeyDown = (e) => {
