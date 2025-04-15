@@ -40,8 +40,8 @@ function ArtistGalleryLsit({ filteredItems }) {
   useEffect(() => {
     // filteredItems prop이 변경될 때 상태 업데이트
     if (filteredItems && filteredItems.length > 0) {
-      const transformed = filteredItems.map((item, index) => ({
-        id: index + 1,
+      const transformed = filteredItems.map((item) => ({
+        id: item.id,
         imageUrl: getImageUrl(item.posterUrl),
         title: item.title,
         date: `${item.startDate} ~ ${item.endDate}`,
@@ -58,8 +58,8 @@ function ArtistGalleryLsit({ filteredItems }) {
     axios
       .get(apiUrl)
       .then((res) => {
-        const transformed = res.data.map((item, index) => ({
-          id: index + 1,
+        const transformed = res.data.map((item) => ({
+          id: item.id,
           imageUrl: getImageUrl(item.posterUrl),
           title: item.title,
           date: `${item.startDate} ~ ${item.endDate}`,
