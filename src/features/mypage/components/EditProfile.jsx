@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import Header from "../../Header";
 import Footer from "../../Footer";
@@ -208,18 +209,21 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const submissionData = {
-      ...formData,
+    const payload = {
+      password: formData.password || undefined, // 비워도 괜찮게 처리
+      realName: formData.name,
+      phone: formData.phone.replace(/-/g, ""), // 하이픈 제거
       email: `${formData.emailId}@${formData.emailDomain}`,
+      address: formData.address,
+      gender: formData.gender?.toUpperCase() || "MALE", // 성별 선택이 있다면 대문자 변환
     };
 
     try {
-      await axios.put("/user/me", submissionData);
+      await axios.put("/user/me", payload);
       alert("회원 정보가 수정되었습니다.");
-      onSubmit(submissionData);
+      onSubmit(payload); // 부모 컴포넌트에 반영
     } catch (error) {
       console.error("❌ 회원정보 수정 실패:", error);
-      console.log("📦 서버 응답:", error.response);
       alert(
         "수정 실패: " +
           (error.response?.data?.message ||
@@ -227,7 +231,7 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
             error.message)
       );
     }
-  }; // ✅ 여기에서 함수 닫기
+  };
   return (
     <>
       <Header />
