@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../components/AuthContext";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -160,9 +162,9 @@ const ModalButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${(props) => (props.confirm ? "#dc3545" : "#333")};
+    background-color: ${(props) => (props.$confirm ? "#dc3545" : "#333")};
     color: white;
-    border-color: ${(props) => (props.confirm ? "#dc3545" : "#333")};
+    border-color: ${(props) => (props.$confirm ? "#dc3545" : "#333")};
   }
 `;
 
@@ -170,45 +172,47 @@ const NoticeEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-  });
+  const [formData, setFormData] = useState({ title: "", content: "" });
+  const { user } = useAuth();
+  const isAdmin = user?.roles?.includes("ADMIN");
 
   useEffect(() => {
-    // TODO: API 연동하여 기존 공지사항 데이터 불러오기
-    // 임시 데이터
-    setFormData({
-      title: "긴급 휴관 안내",
-      content: "휴관 관련 상세 내용...",
-    });
-  }, [id]);
+    const fetchNotice = async () => {
+      try {
+        const res = await axios.get(`/notices/${id}`);
+        setFormData({ title: res.data.title, content: res.data.content });
+      } catch (err) {
+        console.error("공지사항 불러오기 실패", err);
+        alert("공지사항 정보를 불러오지 못했습니다.");
+        navigate("/support/notice");
+      }
+    };
+
+    if (!isAdmin) {
+      alert("접근 권한이 없습니다.");
+      navigate("/support/notice"); // 일반 유저 접근시 자동 리디렉트
+      return;
+    }
+
+    fetchNotice(); // ✅ 관리자만 데이터 불러오기 실행
+  }, [id, isAdmin, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: API 연동
-    console.log("Submit:", formData);
-    navigate("/support/notice");
+    try {
+      await axios.put(`/notices/${id}`, formData); // ✅ PUT + id로 수정 요청
+      alert("공지사항이 수정되었습니다.");
+      navigate("/support/notice");
+    } catch (err) {
+      console.error("공지사항 수정 실패", err);
+      alert("공지사항 수정에 실패했습니다.");
+    }
   };
-
-  const handleDelete = () => {
-    setShowModal(true);
-  };
-
-  const handleDeleteConfirm = () => {
-    // TODO: API 연동
-    console.log("Delete:", id);
-    navigate("/support/notice");
-  };
-
   const handleCancel = () => {
     navigate("/support/notice");
   };
@@ -241,9 +245,6 @@ const NoticeEdit = () => {
         </InputGroup>
 
         <ButtonGroup>
-          <DeleteButton type="button" onClick={handleDelete}>
-            삭제
-          </DeleteButton>
           <RightButtonGroup>
             <CancelButton type="button" onClick={handleCancel}>
               취소

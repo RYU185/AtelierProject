@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "../../api/axiosInstance";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -93,7 +94,7 @@ const FilterDropdown = styled.div`
   margin-top: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  display: ${(props) => (props.show ? "block" : "none")};
+  display: ${(props) => (props.$show ? "block" : "none")};
 `;
 
 const FilterOption = styled.div`
@@ -201,8 +202,8 @@ const PageButton = styled.button`
   background: none;
   padding: 0.5rem;
   cursor: pointer;
-  color: ${(props) => (props.active ? "#007bff" : "#666")};
-  font-weight: ${(props) => (props.active ? "bold" : "normal")};
+  color: ${(props) => (props.$active ? "#007bff" : "#666")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
   font-size: 0.9rem;
 
   &:hover {
@@ -228,69 +229,83 @@ const SubmitButton = styled.button`
 // === 컴포넌트 ===
 const NoticePage = () => {
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState(null);
+
+  const [notices, setNotices] = useState([]);
   const [searchType, setSearchType] = useState("title");
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilter, setShowFilter] = useState(false);
   const [sortOrder, setSortOrder] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
-  const notices = [
-    { id: 1, date: "2025.03.15", title: "긴급 휴관 안내" },
-    { id: 2, date: "2025.03.14", title: "전시회 연장 안내" },
-    { id: 3, date: "2025.03.13", title: "주차장 공사 안내" },
-    { id: 4, date: "2025.03.12", title: "회원 이벤트 안내" },
-    { id: 5, date: "2025.03.11", title: "신규 전시 안내" },
-    { id: 6, date: "2025.03.10", title: "휴관일 변경 안내" },
-    { id: 7, date: "2025.03.09", title: "미술관 투어 안내" },
-    { id: 8, date: "2025.03.08", title: "전시 해설 프로그램" },
-  ];
+  // ✅ axios API 연동
+  useEffect(() => {
+    const fetchNotices = async () => {
+      const role = localStorage.getItem("role");
+      setUserRole(role);
 
+      try {
+        const res = await axios.get("/notices/paged", {
+          params: {
+            page: currentPage - 1,
+            size: itemsPerPage,
+            sort:
+              sortOrder === "newest" ? "createdDate,desc" : "createdDate,asc",
+          },
+        });
+
+        setNotices(res.data.content); // Page<NoticeDTO> 구조에서 content만
+        setTotalPages(res.data.totalPages); // 페이지 수도 세팅
+      } catch (err) {
+        console.error("❌ 공지사항 불러오기 실패", err);
+      }
+    };
+
+    fetchNotices();
+  }, [currentPage, sortOrder]);
+
+  // 🔍 검색 필터
   const filteredNotices = notices.filter((notice) => {
     if (!searchTerm) return true;
     if (searchType === "date") {
       return notice.date.includes(searchTerm);
-    } else {
-      return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
     }
+    return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
+  // ⬆️ 정렬 처리
   const sortedNotices = [...filteredNotices].sort((a, b) => {
-    const dateA = new Date(a.date.replace(/\./g, "-"));
-    const dateB = new Date(b.date.replace(/\./g, "-"));
+    const dateA = new Date(a.createdDate); // ← 여기로
+    const dateB = new Date(b.createdDate);
     return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
   });
 
-  const totalPages = Math.ceil(sortedNotices.length / itemsPerPage);
+  // ✅ 페이지네이션 처리
   const paginatedNotices = sortedNotices.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  // 페이지, 검색 초기화 처리
   useEffect(() => {
-    setCurrentPage(1); // 검색어 바뀌면 1페이지로 초기화
+    setCurrentPage(1);
   }, [searchTerm, searchType]);
 
+  // ====================== 핸들러 ======================
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
     setSearchTerm("");
   };
 
   const handleFilterClick = () => {
-    setShowFilter(!showFilter);
+    setShowFilter((prev) => !prev);
   };
 
   const handleSortChange = (order) => {
     setSortOrder(order);
     setShowFilter(false);
-  };
-
-  const handleCreateClick = () => {
-    navigate("create");
-  };
-
-  const handleNoticeClick = (noticeId) => {
-    navigate(`${noticeId}`);
   };
 
   const goToPage = (page) => {
@@ -299,10 +314,19 @@ const NoticePage = () => {
     }
   };
 
+  const handleNoticeClick = (id) => {
+    navigate(`${id}`);
+  };
+
+  const handleCreateClick = () => {
+    navigate("create");
+  };
+
+  // ====================== 렌더링 ======================
   return (
     <>
       <Title>NOTICE</Title>
-      <TabContainer></TabContainer>
+      <TabContainer />
       <SearchContainer>
         <SearchGroup>
           <SearchTypeSelect
@@ -316,7 +340,7 @@ const NoticePage = () => {
             <SearchInput
               type="text"
               placeholder={
-                searchType === "date" ? "YYYY.MM.DD" : "검색어를 입력하세요"
+                searchType === "date" ? "YYYY-MM-DD" : "검색어를 입력하세요"
               }
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -327,9 +351,9 @@ const NoticePage = () => {
           <FilterButton onClick={handleFilterClick}>
             정렬 {showFilter ? "▲" : "▼"}
           </FilterButton>
-          <FilterDropdown show={showFilter}>
+          <FilterDropdown $show={showFilter}>
             <FilterOption onClick={() => handleSortChange("newest")}>
-              최근 날짜순
+              최신순
             </FilterOption>
             <FilterOption onClick={() => handleSortChange("oldest")}>
               오래된 순
@@ -345,7 +369,7 @@ const NoticePage = () => {
               key={notice.id}
               onClick={() => handleNoticeClick(notice.id)}
             >
-              <NoticeDate>{notice.date}</NoticeDate>
+              <NoticeDate>{notice.createdDate}</NoticeDate>
               <NoticeTitle>{notice.title}</NoticeTitle>
               <Arrow>›</Arrow>
             </NoticeItem>
@@ -363,7 +387,7 @@ const NoticePage = () => {
           {Array.from({ length: totalPages }, (_, i) => (
             <PageButton
               key={i + 1}
-              active={currentPage === i + 1}
+              $active={currentPage === i + 1}
               onClick={() => goToPage(i + 1)}
             >
               {i + 1}
@@ -371,7 +395,9 @@ const NoticePage = () => {
           ))}
           <PageButton onClick={() => goToPage(currentPage + 1)}>›</PageButton>
         </PageButtonGroup>
-        <SubmitButton onClick={handleCreateClick}>등록</SubmitButton>
+        {userRole?.includes("ADMIN") && (
+          <SubmitButton onClick={handleCreateClick}>등록</SubmitButton>
+        )}
       </Pagination>
     </>
   );

@@ -1,6 +1,9 @@
 import React from "react";
+import axios from "../../../api/axiosInstance";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../components/AuthContext";
 
 const Container = styled.div`
   max-width: 800px;
@@ -108,28 +111,40 @@ const DeleteButton = styled(Button)`
 const NoticeDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [noticeData, setNoticeData] = useState(null);
+  const { user } = useAuth();
+  console.log("현재 유저 정보:", user); // 🔍 디버그 로그
+  const isAdmin = user?.roles?.includes("ADMIN");
 
-  // TODO: 실제 데이터는 API로 가져와야 함
-  const noticeData = {
-    id: id,
-    title: "긴급 휴관 안내",
-    date: "2025.03.15",
-    content:
-      "안녕하세요.\n\n저희 미술관은 시설 보수 공사로 인해 다음과 같이 휴관할 예정입니다.\n\n휴관기간: 2025년 3월 20일 ~ 2025년 3월 25일\n\n이용에 불편을 드려 죄송합니다.\n더 나은 서비스로 찾아뵙겠습니다.\n\n감사합니다.",
-  };
+  useEffect(() => {
+    const fetchNotice = async () => {
+      try {
+        const res = await axios.get(`/notices/${id}`); // ✅ 중복 /api 제거
+        setNoticeData(res.data);
+      } catch (error) {
+        console.error("공지사항 불러오기 실패:", error);
+        alert("공지사항 정보를 가져오는 데 실패했습니다.");
+        navigate("/support/notice");
+      }
+    };
 
-  const handleBackClick = () => {
-    navigate("/support/notice");
-  };
+    fetchNotice();
+  }, [id, navigate]);
 
-  const handleEditClick = () => {
-    navigate(`/support/notice/edit/${id}`);
-  };
+  if (!noticeData) return <div>로딩 중...</div>;
 
-  const handleDeleteClick = () => {
+  const handleBackClick = () => navigate("/support/notice");
+  const handleEditClick = () => navigate(`/support/notice/edit/${id}`);
+  const handleDeleteClick = async () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      console.log("Delete notice:", id);
-      navigate("/support/notice");
+      try {
+        await axios.delete(`/notices/${id}`); // ✅ 중복 api 제거
+        alert("삭제되었습니다.");
+        navigate("/support/notice");
+      } catch (error) {
+        console.error("삭제 실패:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -139,15 +154,19 @@ const NoticeDetail = () => {
       <NoticeContainer>
         <NoticeHeader>
           <NoticeTitle>{noticeData.title}</NoticeTitle>
-          <NoticeInfo>등록일: {noticeData.date}</NoticeInfo>
+          <NoticeInfo>등록일: {noticeData.createdDate || "N/A"}</NoticeInfo>
         </NoticeHeader>
         <NoticeContent>{noticeData.content}</NoticeContent>
+
         <ButtonGroup>
           <Button onClick={handleBackClick}>목록</Button>
-          <RightButtonGroup>
-            <EditButton onClick={handleEditClick}>수정</EditButton>
-            <DeleteButton onClick={handleDeleteClick}>삭제</DeleteButton>
-          </RightButtonGroup>
+
+          {isAdmin && ( // 🔥 여기 조건 추가!!!
+            <RightButtonGroup>
+              <EditButton onClick={handleEditClick}>수정</EditButton>
+              <DeleteButton onClick={handleDeleteClick}>삭제</DeleteButton>
+            </RightButtonGroup>
+          )}
         </ButtonGroup>
       </NoticeContainer>
     </Container>

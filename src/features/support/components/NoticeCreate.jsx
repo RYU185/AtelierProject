@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -143,9 +144,9 @@ const ModalButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background-color: ${(props) => (props.confirm ? "#0095ff" : "#333")};
+    background-color: ${(props) => (props.$confirm ? "#0095ff" : "#333")};
     color: white;
-    border-color: ${(props) => (props.confirm ? "#0095ff" : "#333")};
+    border-color: ${(props) => (props.$confirm ? "#0095ff" : "#333")};
   }
 `;
 
@@ -170,9 +171,16 @@ const NoticeCreate = () => {
     setShowModal(true);
   };
 
-  const handleConfirm = () => {
-    console.log("Form submitted:", formData);
-    navigate("../notice");
+  const handleConfirm = async () => {
+    try {
+      await axios.post("/notices", formData);
+      alert("공지사항이 등록되었습니다.");
+      navigate("../notice");
+    } catch (error) {
+      console.error("공지사항 등록 실패:", error);
+      alert("공지사항 등록에 실패했습니다.");
+      setShowModal(false);
+    }
   };
 
   const handleCancel = () => {
@@ -222,7 +230,7 @@ const NoticeCreate = () => {
               <ModalButton onClick={() => setShowModal(false)}>
                 취소
               </ModalButton>
-              <ModalButton confirm onClick={handleConfirm}>
+              <ModalButton $confirm onClick={handleConfirm}>
                 확인
               </ModalButton>
             </ModalButtonGroup>

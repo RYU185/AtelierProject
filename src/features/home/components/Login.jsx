@@ -3,7 +3,6 @@ import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 
-
 const Container = styled.div`
   display: flex;
   height: 100vh;
@@ -129,9 +128,10 @@ const Login = () => {
         password,
       });
 
-      const token = response.data;
+      const { token, role } = response.data;
       localStorage.setItem("accessToken", token);
       localStorage.setItem("username", userId);
+      localStorage.setItem("role", role);
 
       if (autoLogin) {
         localStorage.setItem("autoLogin", "true");
