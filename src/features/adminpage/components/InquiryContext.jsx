@@ -1,3 +1,4 @@
+// src/InquiryContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 
 // Context 생성

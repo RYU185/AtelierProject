@@ -1,6 +1,8 @@
-import { useState } from "react";
+// src/InquiryNotifications.js
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useInquiry } from "./InquiryContext";
+import useWebSocket from "../../../socket";
 
 const InquiryNotifications = () => {
   const { inquiries, setInquiries } = useInquiry(); // 전역 상태에서 문의 목록 가져오기
@@ -8,7 +10,7 @@ const InquiryNotifications = () => {
   const [showList, setShowList] = useState(false); // 문의 목록 표시 여부
   const navigate = useNavigate(); // 페이지 이동 함수
 
-  // 알람 클릭 시 동작
+  // 알림 클릭 시 동작
   const handleNotificationClick = () => {
     if (unreadCount > 0) {
       // 문의 목록 초기화
@@ -18,6 +20,13 @@ const InquiryNotifications = () => {
       navigate("/AdminContact"); // 문의 관리 페이지로 이동
     }
   };
+
+  // WebSocket 연결을 통해 알림을 받음
+  useWebSocket(); // WebSocket으로 실시간 알림을 받기
+
+  useEffect(() => {
+    console.log("🔄 inquiries 상태 업데이트:", inquiries); // inquiries 상태가 업데이트 될 때마다 확인
+  }, [inquiries]);
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
@@ -77,6 +86,7 @@ const InquiryNotifications = () => {
                 style={{ padding: "5px 0", cursor: "pointer" }}
                 onClick={handleNotificationClick}
               >
+                {/* 여기에서 제목을 출력 */}
                 {inquiry.subject}
               </li>
             ))}
