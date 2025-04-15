@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   align-items: center; /* 변경: 세로 방향 중앙 정렬 */
   cursor: pointer;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #a2a2a2;
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -20,10 +20,10 @@ const Container = styled.div`
 `;
 
 const Img = styled.img`
-  width: 180px;
-  height: 180px;
+  width: 220px;
+  height: 300px;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 5px;
   margin-right: 40px;
   margin-left: 40px;
   flex-shrink: 0;
@@ -66,7 +66,7 @@ const ArtistGalleryIntro = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* 두 줄로 제한 */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
 `;

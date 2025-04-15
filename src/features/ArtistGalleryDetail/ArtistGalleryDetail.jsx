@@ -1,10 +1,14 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import ArtistGalleryPoster from "./components/ArtistGalleryPoster";
 import ArtistGalleryInformation from "./components/ArtistGalleryInformation";
 import TicketButton from "./components/TicketButton";
 import ArtList from "./components/ArtList";
+import axios from "axios";
+const images = import.meta.glob("/src/assets/ArtistGalleryIMG/*", {
+  eager: true,
+});
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -60,9 +64,9 @@ const Container = styled.div`
 
 const PosterBox = styled.div`
   width: 30%;
-  height: 500px;
+  height: 560px;
   border-right: 1.3px solid #bababa;
-  padding-left: 40px;
+  padding-left: 30px;
 `;
 
 const InfoBox = styled.div`
@@ -77,7 +81,26 @@ const Info = styled.h1`
 `;
 
 function ArtistGalleryDetail() {
+  const { id } = useParams(); // URL에서 id 추출
   const navigate = useNavigate();
+  const [data, setData] = useState(null);
+  const getImageUrl = (filename) => {
+    const matched = Object.entries(images).find(([path]) =>
+      path.endsWith(filename)
+    );
+    return matched ? matched[1].default : "";
+  };
+
+  useEffect(() => {
+    axios
+      .get(`/api/artistgallery/id/${id}`)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("갤러리 정보를 불러오지 못했습니다:", error);
+      });
+  }, [id]);
 
   return (
     <div>
@@ -87,17 +110,16 @@ function ArtistGalleryDetail() {
       </TitleContainer>
       <ButtonDiv>
         <Button onClick={() => navigate("/gallery/artistgallery")}>
-          {" "}
           &lt; 목록 보기
         </Button>
       </ButtonDiv>
       <Container>
         <PosterBox>
-          <ArtistGalleryPoster />
+          {data && <ArtistGalleryPoster url={getImageUrl(data.posterUrl)} />}
           <TicketButton />
         </PosterBox>
         <InfoBox>
-          <ArtistGalleryInformation />
+          <ArtistGalleryInformation data={data} />
         </InfoBox>
       </Container>
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const InformationContainer = styled.div`
   width: 100%;
-  height: 500px;
+  height: auto;
   border-radius: 10px;
   padding: 20px;
   background-color: #f4f4f4;
@@ -46,42 +46,40 @@ const Title = styled.div`
 `;
 
 const Info = styled.div`
-  width: 589.85px;
+  width: 100%;
   top: 0;
   right: 0px;
-  position: absolute;
+  position: relative;
   padding: 15px;
 `;
 
-function ArtistGalleryInformation() {
+function ArtistGalleryInformation({ data }) {
+  if (!data) return null;
+
   return (
     <InformationContainer>
       <InformationTitle>전시 정보</InformationTitle>
       <InformationItem>
         <ItemLabel>제목</ItemLabel>
-        <ItemValue>삶의 예찬</ItemValue>
+        <ItemValue>{data.title}</ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>일정</ItemLabel>
-        <ItemValue>2024-11-29 ~ 2025-05-18</ItemValue>
+        <ItemValue>
+          {data.startDate} ~ {data.endDate}
+        </ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>티켓 가격</ItemLabel>
-        <ItemValue>25000 원</ItemValue>
+        <ItemValue>{data.price} 원</ItemValue>
       </InformationItem>
       <InformationItem>
         <ItemLabel>작가</ItemLabel>
-        <ItemValue>곽두팔 화백, 김철용 화백</ItemValue>
+        <ItemValue>{data.artistList.join(", ")}</ItemValue>
       </InformationItem>
       <InfoBox>
         <Title>전시 내용</Title>
-        <Info>
-          첫 번째 상영작인 앙리 조르주 클루조 감독의 &lt;피카소의
-          비밀&gt;(1956)은 끊임없는 생각들을 자신의 화폭에 담아가는 피카소의
-          작업 과정을 담은 다큐멘터리이다. 이어지는 &lt;알토&gt;(2020)는
-          핀란드를 대표하는 건축가 겸 디자이너 알바 알토와 건축가인 그의 아내
-          아이노 알토의 삶과 창작의 과정을 탐구한다.
-        </Info>
+        <Info>{data.description}</Info>
       </InfoBox>
     </InformationContainer>
   );

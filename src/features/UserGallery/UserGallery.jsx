@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DataControlUser from "./components/DataControlUser";
 import UserGalleryList from "./components/UserGalleryList";
 import styled from "styled-components";
@@ -12,6 +12,7 @@ const TitleContainer = styled.div`
   justify-content: center;
   height: 30px;
 `;
+
 const BackTitle = styled.h1`
   font-size: 80px;
   text-align: center;
@@ -21,6 +22,7 @@ const BackTitle = styled.h1`
   position: absolute;
   z-index: 1;
 `;
+
 const Title = styled.h1`
   font-size: 50px;
   text-align: center;
@@ -30,14 +32,20 @@ const Title = styled.h1`
 `;
 
 function UserGallery() {
+  const [filteredGalleryItems, setFilteredGalleryItems] = useState([]);
+
+  const handleFilterChange = (data) => {
+    setFilteredGalleryItems(data);
+  };
+
   return (
     <div>
       <TitleContainer>
-        <BackTitle>User GALLERY</BackTitle>
-        <Title>User GALLERY</Title>
+        <BackTitle>USER GALLERY</BackTitle>
+        <Title>USER GALLERY</Title>
       </TitleContainer>
-      <DataControlUser />
-      <UserGalleryList />
+      <DataControlUser onFilterChange={handleFilterChange} />
+      <UserGalleryList filteredItems={filteredGalleryItems} />
       <TopButton />
     </div>
   );

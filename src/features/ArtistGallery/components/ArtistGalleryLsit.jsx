@@ -3,6 +3,9 @@ import styled from "styled-components";
 import ArtistGallerys from "./ArtistGallerys";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+const images = import.meta.glob("/src/assets/ArtistGalleryIMG/*", {
+  eager: true,
+});
 
 const Container = styled.div`
   width: 94%;
@@ -22,6 +25,12 @@ const GalleryGrid = styled.div`
 function ArtistGalleryLsit({ filteredItems }) {
   const navigate = useNavigate();
   const [galleryItems, setGalleryItems] = useState([]);
+  const getImageUrl = (filename) => {
+    const matched = Object.entries(images).find(([path]) =>
+      path.endsWith(filename)
+    );
+    return matched ? matched[1].default : "";
+  };
 
   useEffect(() => {
     // 초기 데이터 로드 (전체 전시)
@@ -33,7 +42,7 @@ function ArtistGalleryLsit({ filteredItems }) {
     if (filteredItems && filteredItems.length > 0) {
       const transformed = filteredItems.map((item, index) => ({
         id: index + 1,
-        imageUrl: item.posterUrl,
+        imageUrl: getImageUrl(item.posterUrl),
         title: item.title,
         date: `${item.startDate} ~ ${item.endDate}`,
         description: item.description,
@@ -51,7 +60,7 @@ function ArtistGalleryLsit({ filteredItems }) {
       .then((res) => {
         const transformed = res.data.map((item, index) => ({
           id: index + 1,
-          imageUrl: item.posterUrl,
+          imageUrl: getImageUrl(item.posterUrl),
           title: item.title,
           date: `${item.startDate} ~ ${item.endDate}`,
           description: item.description,

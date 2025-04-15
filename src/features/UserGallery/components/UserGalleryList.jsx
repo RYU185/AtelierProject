@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UserGallerys from "./UserGallerys";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+const images = import.meta.glob("/src/assets/UserGalleryIMG/*", {
+  eager: true,
+});
 
 const Container = styled.div`
   width: 94%;
+  margin: 0 auto;
 `;
 
 const GalleryGrid = styled.div`
@@ -17,53 +22,55 @@ const GalleryGrid = styled.div`
   margin-bottom: 70px;
 `;
 
-function UserGalleryList() {
+function UserGalleryList({ filteredItems }) {
   const navigate = useNavigate();
-  const galleryItems = [
-    {
-      id: 1,
-      imageUrl: "/src/assets/ArtistGalleryIMG/산업디자인.jpg",
-      title: "삶의 예찬",
-      date: "2025.01.20 ~ 2025.02.01",
-      artists: "곽두팔 화백, 김철용 화백",
-      description: "아티스트 갤러리 포스터 설명...",
-    },
-    {
-      id: 2,
-      imageUrl: "/src/assets/ArtistGalleryIMG/산업디자인.jpg",
-      title: "자연의 숨결",
-      date: "2025.03.15 ~ 2025.04.01",
-      artists: "박서준 화백",
-      description: "자연의 아름다움을 표현한 작품들...",
-    },
-    {
-      id: 3,
-      imageUrl: "/src/assets/ArtistGalleryIMG/산업디자인.jpg",
-      title: "도시와 인간",
-      date: "2025.05.10 ~ 2025.06.01",
-      artists: "이정화 화백",
-      description: "도시 속에서 살아가는 인간의 모습을 조명한 전시...",
-    },
-    {
-      id: 1,
-      imageUrl: "/src/assets/ArtistGalleryIMG/산업디자인.jpg",
-      title: "삶의 예찬",
-      date: "2025.01.20 ~ 2025.02.01",
-      artists: "곽두팔 화백, 김철용 화백",
-      description:
-        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
-    },
+  const [galleryItems, setGalleryItems] = useState([]);
+  const getImageUrl = (filename) => {
+    const matched = Object.entries(images).find(([path]) =>
+      path.endsWith(filename)
+    );
+    return matched ? matched[1].default : "";
+  };
 
-    {
-      id: 1,
-      imageUrl: "/src/assets/ArtistGalleryIMG/산업디자인.jpg",
-      title: "삶의 예찬",
-      date: "2025.01.20 ~ 2025.02.01",
-      artists: "곽두팔 화백, 김철용 화백",
-      description:
-        "아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...아티스트 갤러리 포스터 설명...",
-    },
-  ];
+  useEffect(() => {
+    // 초기 데이터 로드 (전체 전시)
+    fetchGalleryData("/api/usergallery");
+  }, []);
+
+  useEffect(() => {
+    // filteredItems prop이 변경될 때 상태 업데이트
+    if (filteredItems && filteredItems.length > 0) {
+      const transformed = filteredItems.map((item, index) => ({
+        id: index + 1,
+        imageUrl: getImageUrl(item.posterUrl),
+        title: item.title,
+        date: `${item.startDate} ~ ${item.endDate}`,
+        description: item.description,
+      }));
+      setGalleryItems(transformed);
+    } else {
+      // filteredItems가 없거나 비어있으면 전체 데이터를 다시 불러옴 (선택 사항)
+      fetchGalleryData("/api/usergallery");
+    }
+  }, [filteredItems]);
+
+  const fetchGalleryData = (apiUrl) => {
+    axios
+      .get(apiUrl)
+      .then((res) => {
+        const transformed = res.data.map((item, index) => ({
+          id: index + 1,
+          imageUrl: getImageUrl(item.posterUrl),
+          title: item.title,
+          date: `${item.startDate} ~ ${item.endDate}`,
+          description: item.description,
+        }));
+        setGalleryItems(transformed);
+      })
+      .catch((err) => {
+        console.error("갤러리 데이터 불러오기 실패:", err);
+      });
+  };
 
   return (
     <Container>
