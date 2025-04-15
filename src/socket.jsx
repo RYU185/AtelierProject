@@ -25,7 +25,7 @@ const useWebSocket = () => {
 
           // 알림 객체 생성 (message와 sender로 중복 체크)
           const newInquiry = {
-            id: new Date().getTime(), // 메시지 고유 ID
+            id: notification.id, // 서버에서 전달된 고유 ID 사용
             subject: notification.message, // 메시지 제목
             sender: notification.sender,  // 보낸 사람
             createdAt: new Date().toISOString(), // 알림 받은 시간
@@ -35,8 +35,9 @@ const useWebSocket = () => {
           setInquiries((prevInquiries) => {
             const isDuplicate = prevInquiries.some(
               (inquiry) =>
-                inquiry.subject === newInquiry.subject &&
-                inquiry.sender === newInquiry.sender
+                inquiry.id === newInquiry.id || // 동일 ID가 존재하면 중복
+                (inquiry.subject === newInquiry.subject &&
+                 inquiry.sender === newInquiry.sender)
             );
 
             if (!isDuplicate) {

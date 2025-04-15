@@ -143,8 +143,8 @@ function AdminContact() {
       }
     }
 
-    // 관리자일 때만 WebSocket 연결
-    if (isAdmin) {
+    // WebSocket 연결, 이미 연결된 상태에서 추가 연결되지 않도록
+    if (isAdmin && !stompClient) {
       const socket = new SockJS("http://localhost:8081/ws");
       stompClient = over(socket);
 

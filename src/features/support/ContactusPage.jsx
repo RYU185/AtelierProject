@@ -1,58 +1,149 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useInquiry } from "../adminpage/components/InquiryContext"; // InquiryContext 사용
 
-const Container = styled.div`padding: 20px; max-width: 600px; margin: auto; background: white; border-radius: 8px;`;
-const Title = styled.h1`text-align: center;`;
-const Form = styled.form`display: flex; flex-direction: column; gap: 16px;`;
-const Input = styled.input`padding: 10px; border-radius: 4px; border: 1px solid #ccc;`;
-const TextArea = styled.textarea`padding: 10px; border-radius: 4px; border: 1px solid #ccc; min-height: 100px;`;
-const SubmitButton = styled.button`padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold;`;
+// 스타일 코드 (기존 유지)
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+`;
+
+const Form = styled.form`
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #333;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  min-height: 150px;
+  resize: vertical;
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+`;
 
 const ContactusPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
+  const { addInquiry } = useInquiry(); // 전역 상태 업데이트 함수 사용
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "", // 문의 내용 추가
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    const contactPayload = {
-      name: formData.name,
-      email: formData.email,
-      title: formData.subject,
-      message: formData.message,
-    };
-
-    try {
-      const res = await fetch("http://localhost:8081/api/contacts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(contactPayload),
-      });
-
-      if (!res.ok) throw new Error("문의 등록 실패");
-
-      console.log("✅ 문의 전송 성공");
-      navigate("/support");
-    } catch (err) {
-      console.error("❌ 오류 발생:", err);
-    }
+    addInquiry({
+      subject: formData.subject,
+      message: formData.message, // 문의 내용 추가
+    });
+    navigate("/support");
   };
 
   return (
     <Container>
       <Title>문의하기</Title>
       <Form onSubmit={handleSubmit}>
-        <Input name="name" placeholder="이름" onChange={handleChange} required />
-        <Input name="email" type="email" placeholder="이메일" onChange={handleChange} required />
-        <Input name="subject" placeholder="제목" onChange={handleChange} required />
-        <TextArea name="message" placeholder="문의 내용" onChange={handleChange} required />
-        <SubmitButton type="submit">문의 제출</SubmitButton>
+        <FormGroup>
+          <Label htmlFor="name">이름</Label>
+          <Input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="email">이메일</Label>
+          <Input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="subject">제목</Label>
+          <Input
+            type="text"
+            id="subject"
+            name="subject"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="message">문의내용</Label>
+          <TextArea
+            id="message"
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+        <SubmitButton type="submit">문의하기</SubmitButton>
       </Form>
     </Container>
   );
