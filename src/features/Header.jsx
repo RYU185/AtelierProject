@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
 import LogoIconFinal from "./LogoIconFinal";
+import { useAuth } from "../components/AuthContext";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -117,7 +118,7 @@ const DropdownItem = styled(NavItem)`
   white-space: nowrap;
 
   &:hover {
-    background-color:rgb(75, 75, 75);
+    background-color: rgb(75, 75, 75);
   }
 `;
 
@@ -152,14 +153,15 @@ const MenuIcon = styled.div`
   }
 `;
 
-// Component --------------------------------------
 const Header = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth(); // ✅ AuthContext 사용
+  const username = user?.username;
+  const role = user?.roles?.[0]; // ✅ roles 배열에서 첫 번째 값
+
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = useRef(null);
-  const [username, setUsername] = useState(localStorage.getItem("username"));
-  const [role, setRole] = useState(localStorage.getItem("role")); // ✅ role 상태 추가
 
   const handleMouseEnter = (menu) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -179,27 +181,10 @@ const Header = () => {
 
   const handleLogout = () => {
     if (window.confirm("정말 로그아웃 하시겠습니까?")) {
-      localStorage.removeItem("username");
-      localStorage.removeItem("autoLogin");
-      localStorage.removeItem("role"); // ✅ role도 제거
-      setUsername(null);
-      setRole(null);
+      logout();
       navigate("/login");
     }
   };
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setUsername(localStorage.getItem("username"));
-      setRole(localStorage.getItem("role"));
-    };
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("focus", handleStorageChange);
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener("focus", handleStorageChange);
-    };
-  }, []);
 
   const dropdownItems = {
     Gallery: [
@@ -239,41 +224,39 @@ const Header = () => {
         <CenterContainer>
           <NavWrapper>
             <NavList>
-              {["Gallery", "Artist", "Community", "Goods", "Notice"].map(
-                (menu) => (
-                  <NavItemContainer
-                    key={menu}
+              {Object.keys(mainRoutes).map((menu) => (
+                <NavItemContainer
+                  key={menu}
+                  onMouseEnter={() => handleMouseEnter(menu)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <NavItem
+                    onClick={() => {
+                      navigate(mainRoutes[menu]);
+                      setShowDropdown(null);
+                    }}
+                  >
+                    {menu}
+                  </NavItem>
+                  <DropdownMenu
+                    $show={showDropdown === menu}
                     onMouseEnter={() => handleMouseEnter(menu)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    <NavItem
-                      onClick={() => {
-                        navigate(mainRoutes[menu]);
-                        setShowDropdown(null);
-                      }}
-                    >
-                      {menu}
-                    </NavItem>
-                    <DropdownMenu
-                      $show={showDropdown === menu}
-                      onMouseEnter={() => handleMouseEnter(menu)}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      {dropdownItems[menu].map((item) => (
-                        <DropdownItem
-                          key={item.path}
-                          onClick={() => {
-                            navigate(item.path);
-                            setShowDropdown(null);
-                          }}
-                        >
-                          {item.label}
-                        </DropdownItem>
-                      ))}
-                    </DropdownMenu>
-                  </NavItemContainer>
-                )
-              )}
+                    {dropdownItems[menu].map((item) => (
+                      <DropdownItem
+                        key={item.path}
+                        onClick={() => {
+                          navigate(item.path);
+                          setShowDropdown(null);
+                        }}
+                      >
+                        {item.label}
+                      </DropdownItem>
+                    ))}
+                  </DropdownMenu>
+                </NavItemContainer>
+              ))}
             </NavList>
           </NavWrapper>
         </CenterContainer>

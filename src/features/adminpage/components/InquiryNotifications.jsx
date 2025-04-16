@@ -1,38 +1,72 @@
-// src/InquiryNotifications.js
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import { useInquiry } from "./InquiryContext";
+import { useNavigate } from "react-router-dom";
 import useWebSocket from "../../../socket";
 
 const InquiryNotifications = () => {
-  const { inquiries, setInquiries } = useInquiry(); // 전역 상태에서 문의 목록 가져오기
-  const unreadCount = inquiries.length; // 전체 문의 개수 표시
-  const [showList, setShowList] = useState(false); // 문의 목록 표시 여부
-  const navigate = useNavigate(); // 페이지 이동 함수
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { inquiries, setInquiries } = useInquiry();
+  const unreadCount = inquiries.length;
+  const [showList, setShowList] = useState(false);
+  const navigate = useNavigate();
 
-  // 알림 클릭 시 동작
-  const handleNotificationClick = () => {
-    if (unreadCount > 0) {
-      // 문의 목록 초기화
-      setInquiries([]);  // inquiries 상태 초기화
+  useWebSocket();
 
-      setShowList(false); // 목록 닫기
-      navigate("/AdminContact"); // 문의 관리 페이지로 이동
+  // 🧠 로그인 상태를 확인하는 함수
+  const checkAdminStatus = () => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const roles = decoded.auth || "";
+        setIsAdmin(roles.includes("ROLE_ADMIN"));
+      } catch (err) {
+        console.error("토큰 디코딩 실패", err);
+        setIsAdmin(false);
+      }
+    } else {
+      setIsAdmin(false);
     }
   };
 
-  // WebSocket 연결을 통해 알림을 받음
-  useWebSocket(); // WebSocket으로 실시간 알림을 받기
-
+  // ✅ 토큰이 변경될 때마다 관리자 상태를 다시 체크
   useEffect(() => {
-    console.log("🔄 inquiries 상태 업데이트:", inquiries); // inquiries 상태가 업데이트 될 때마다 확인
-  }, [inquiries]);
+    const handleStorageChange = () => {
+      checkAdminStatus();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    checkAdminStatus(); // 최초 한 번 실행
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  // ✅ 페이지 전환 또는 WebSocket 등에서 토큰 상태 변경 감지
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkAdminStatus(); // 1초마다 체크 (원하면 3초로 늘릴 수도 있음)
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleNotificationClick = () => {
+    if (unreadCount > 0) {
+      setInquiries([]);
+      setShowList(false);
+      navigate("/AdminContact");
+    }
+  };
+
+  if (!isAdmin) return null;
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
-      {/* 🔔 알림 아이콘 */}
       <button
-        onClick={() => setShowList(!showList)} // 클릭하면 목록 보이기/숨기기
+        onClick={() => setShowList(!showList)}
         style={{
           background: "none",
           top: "100px",
@@ -63,7 +97,6 @@ const InquiryNotifications = () => {
         )}
       </button>
 
-      {/* 문의 목록 (알림 클릭하면 보이기/숨기기) */}
       {showList && unreadCount > 0 && (
         <div
           style={{
@@ -86,7 +119,6 @@ const InquiryNotifications = () => {
                 style={{ padding: "5px 0", cursor: "pointer" }}
                 onClick={handleNotificationClick}
               >
-                {/* 여기에서 제목을 출력 */}
                 {inquiry.subject}
               </li>
             ))}
