@@ -65,7 +65,7 @@ const DayCell = styled.div`
 
   background-color: ${({ $isSelected, $isActive }) => {
     if ($isSelected) return "#0066ff";
-    if ($isActive) return "#90caf9";  // ✅ 진한 음영
+    if ($isActive) return "#90caf9";  
     return "transparent";
   }};
 
