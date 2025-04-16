@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../../api/axiosInstance";
+import { useAuth } from "../../../components/AuthContext";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -111,10 +112,12 @@ const ErrorMessage = styled.p`
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth(); 
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [autoLogin, setAutoLogin] = useState(false);
   const [error, setError] = useState("");
+  
 
   const handleLogin = async () => {
     if (!userId.trim() || !password.trim()) {
@@ -123,15 +126,24 @@ const Login = () => {
     }
 
     try {
+      // ✅ 이전 로그인 정보 초기화
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("username");
+      localStorage.removeItem("role");
+
       const response = await axios.post("/user/login", {
         userId,
         password,
       });
 
-      const { token, role } = response.data;
+     const { token, role } = response.data;
+
+      // ✅ 새 로그인 정보 저장
       localStorage.setItem("accessToken", token);
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
+
+      login({ username: userId, role });
 
       if (autoLogin) {
         localStorage.setItem("autoLogin", "true");

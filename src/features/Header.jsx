@@ -159,18 +159,15 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = useRef(null);
   const [username, setUsername] = useState(localStorage.getItem("username"));
+  const [role, setRole] = useState(localStorage.getItem("role")); // ✅ role 상태 추가
 
   const handleMouseEnter = (menu) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setShowDropdown(menu);
   };
 
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setShowDropdown(null);
-    }, 300);
+    timeoutRef.current = setTimeout(() => setShowDropdown(null), 300);
   };
 
   const handleMenuOpen = () => {
@@ -184,24 +181,26 @@ const Header = () => {
     if (window.confirm("정말 로그아웃 하시겠습니까?")) {
       localStorage.removeItem("username");
       localStorage.removeItem("autoLogin");
+      localStorage.removeItem("role"); // ✅ role도 제거
+      setUsername(null);
+      setRole(null);
       navigate("/login");
     }
   };
+
   useEffect(() => {
     const handleStorageChange = () => {
       setUsername(localStorage.getItem("username"));
+      setRole(localStorage.getItem("role"));
     };
     window.addEventListener("storage", handleStorageChange);
     window.addEventListener("focus", handleStorageChange);
-
     return () => {
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("focus", handleStorageChange);
     };
   }, []);
-  useEffect(() => {
-    return () => {};
-  }, []);
+
   const dropdownItems = {
     Gallery: [
       { label: "Artist Gallery", path: "/gallery/artistgallery" },
@@ -220,6 +219,7 @@ const Header = () => {
       { label: "문의하기", path: "/support/contactus" },
     ],
   };
+
   const mainRoutes = {
     Gallery: "/gallery/artistgallery",
     Artist: "/artist",
@@ -239,57 +239,81 @@ const Header = () => {
         <CenterContainer>
           <NavWrapper>
             <NavList>
-              {["Gallery", "Artist", "Community", "Goods", "Notice"].map((menu) => (
-                <NavItemContainer
-                  key={menu}
-                  onMouseEnter={() => handleMouseEnter(menu)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <NavItem
-                    onClick={() => {
-                      navigate(mainRoutes[menu]);
-                      setShowDropdown(null);
-                    }}
-                  >
-                    {menu}
-                  </NavItem>
-                  <DropdownMenu
-                    $show={showDropdown === menu}
+              {["Gallery", "Artist", "Community", "Goods", "Notice"].map(
+                (menu) => (
+                  <NavItemContainer
+                    key={menu}
                     onMouseEnter={() => handleMouseEnter(menu)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    {dropdownItems[menu].map((item) => (
-                      <DropdownItem
-                        key={item.path}
-                        onClick={() => {
-                          navigate(item.path);
-                          setShowDropdown(null);
-                        }}
-                      >
-                        {item.label}
-                      </DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </NavItemContainer>
-              ))}
+                    <NavItem
+                      onClick={() => {
+                        navigate(mainRoutes[menu]);
+                        setShowDropdown(null);
+                      }}
+                    >
+                      {menu}
+                    </NavItem>
+                    <DropdownMenu
+                      $show={showDropdown === menu}
+                      onMouseEnter={() => handleMouseEnter(menu)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {dropdownItems[menu].map((item) => (
+                        <DropdownItem
+                          key={item.path}
+                          onClick={() => {
+                            navigate(item.path);
+                            setShowDropdown(null);
+                          }}
+                        >
+                          {item.label}
+                        </DropdownItem>
+                      ))}
+                    </DropdownMenu>
+                  </NavItemContainer>
+                )
+              )}
             </NavList>
           </NavWrapper>
         </CenterContainer>
+
         <Right>
           {username ? (
             <>
               <RightNavItem>{username}님</RightNavItem>
               <RightNavItem onClick={handleLogout}>로그아웃</RightNavItem>
+
+              {/* 👤 일반 유저 메뉴 */}
+              {role === "USER" && (
+                <>
+                  <RightNavItem onClick={() => navigate("/mypage")}>
+                    마이페이지
+                  </RightNavItem>
+                  <RightNavItem onClick={() => navigate("/cart")}>
+                    장바구니
+                  </RightNavItem>
+                </>
+              )}
+
+              {/* 🛡 관리자 메뉴 */}
+              {role === "ADMIN" && (
+                <RightNavItem onClick={() => navigate("/adminpage")}>
+                  관리자페이지
+                </RightNavItem>
+              )}
             </>
           ) : (
             <>
-              <RightNavItem onClick={() => navigate("/join")}>회원가입</RightNavItem>
-              <RightNavItem onClick={() => navigate("/login")}>로그인</RightNavItem>
+              <RightNavItem onClick={() => navigate("/join")}>
+                회원가입
+              </RightNavItem>
+              <RightNavItem onClick={() => navigate("/login")}>
+                로그인
+              </RightNavItem>
             </>
           )}
-          <RightNavItem onClick={() => navigate("/mypage")}>마이페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/adminpage")}>관리자페이지</RightNavItem>
-          <RightNavItem onClick={() => navigate("/cart")}>장바구니</RightNavItem>
+
           <MenuIcon onClick={handleMenuOpen}>MENU</MenuIcon>
         </Right>
       </HeaderWrapper>
