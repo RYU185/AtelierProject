@@ -88,7 +88,7 @@ function AppRoutes() {
         <Route path="location" element={<LocationPage />} />
         <Route path="contactus" element={<ContactusPage />} />
       </Route>
-      <Route path="/ticket" element={<TicketPage />} />
+      <Route path="/ticket/:galleryId" element={<TicketPage />} />
       <Route path="/ticket/complete" element={<TicketComplete />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/purchase-complete" element={<PurchaseCompletePage />} />

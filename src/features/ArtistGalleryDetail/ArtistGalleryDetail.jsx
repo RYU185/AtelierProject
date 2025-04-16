@@ -117,7 +117,7 @@ function ArtistGalleryDetail() {
       <Container>
         <PosterBox>
           {data && <ArtistGalleryPoster url={getImageUrl(data.posterUrl)} />}
-          <TicketButton />
+          {data && <TicketButton galleryId={id} />}
         </PosterBox>
         <InfoBox>
           <ArtistGalleryInformation data={data} />

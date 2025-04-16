@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import TicketCalendar from "./components/TicketCalendar";
 import TicketInfo from "./components/TicketInfo";
 import Header from "../Header";
@@ -56,24 +56,28 @@ const ExhibitionCapacity = styled.p`
   color: #666;
 `;
 
-const TicketPage = () => {
+function TicketPage() {
+  const { galleryId } = useParams();
+  console.log("🎯 galleryId:", galleryId);
   const navigate = useNavigate();
+
+  const [galleryInfo, setGalleryInfo] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [count, setCount] = useState(1);
   const [isReserving, setIsReserving] = useState(false);
-  const [galleryInfo, setGalleryInfo] = useState(null);
 
-  useEffect(()=>{
-    const fetchGallery = async () =>{
-      try{
-        const res = await axiosInstance.get(`/api/artistgallery/id/${id}`);
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const res = await axiosInstance.get(`/api/artistgallery/id/${galleryId}`);
         setGalleryInfo(res.data);
-      }catch(error){
-        console.error("전시정보 불러오기 실패:", error);
+      } catch (error) {
+        console.error("전시 정보 불러오기 실패:", error);
       }
     };
+
     fetchGallery();
-  },[id]);
+  }, [galleryId]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -92,13 +96,15 @@ const TicketPage = () => {
     }
 
     setIsReserving(true);
+
     try {
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       navigate("/ticket/complete", {
         state: {
-          title: "GRAPHIC",
-          price: 30000 * count,
+          title: galleryInfo?.title,
+          price: galleryInfo?.price * count,
           memberName: "홍길동",
           date: selectedDate,
           count: count,
@@ -118,23 +124,26 @@ const TicketPage = () => {
         <ContentWrapper>
           <ExhibitionCard>
             <ExhibitionImage
-              src={`/public/`}
-
+              src={`/images/ArtistGalleryIMG/${galleryInfo?.posterUrl}`}
+              alt={galleryInfo?.title}
             />
-            <ExhibitionTitle>GRAPHIC</ExhibitionTitle>
-            <ExhibitionDate>2025년 3월 24일</ExhibitionDate>
-            <ExhibitionCapacity>인원: 3명</ExhibitionCapacity>
+            <ExhibitionTitle>{galleryInfo?.title}</ExhibitionTitle>
+            <ExhibitionDate>
+              {selectedDate ? selectedDate : "날짜를 선택해주세요"}
+            </ExhibitionDate>
+            <ExhibitionCapacity>인원: {count}명</ExhibitionCapacity>
           </ExhibitionCard>
 
           <TicketCalendar
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
+            galleryId={galleryId}
           />
 
           <TicketInfo
-            title="GRAPHIC"
+            title={galleryInfo?.title}
             date={selectedDate}
-            price={30000 * count}
+            price={galleryInfo?.price * count}
             count={count}
             onCountChange={handleCountChange}
             onReserve={handleReservation}
@@ -145,6 +154,6 @@ const TicketPage = () => {
       <Footer />
     </>
   );
-};
+}
 
 export default TicketPage;
