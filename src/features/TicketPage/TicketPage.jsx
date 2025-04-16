@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import TicketCalendar from "./components/TicketCalendar";
 import TicketInfo from "./components/TicketInfo";
 import Header from "../Header";
 import Footer from "../Footer";
+import axiosInstance from "../../api/axiosInstance";
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -60,6 +61,19 @@ const TicketPage = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [count, setCount] = useState(1);
   const [isReserving, setIsReserving] = useState(false);
+  const [galleryInfo, setGalleryInfo] = useState(null);
+
+  useEffect(()=>{
+    const fetchGallery = async () =>{
+      try{
+        const res = await axiosInstance.get(`/api/artistgallery/id/${id}`);
+        setGalleryInfo(res.data);
+      }catch(error){
+        console.error("전시정보 불러오기 실패:", error);
+      }
+    };
+    fetchGallery();
+  },[id]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -104,8 +118,8 @@ const TicketPage = () => {
         <ContentWrapper>
           <ExhibitionCard>
             <ExhibitionImage
-              src="./images/삶의 예찬.jpg"
-              alt="GRAPHIC 전시회"
+              src={`/public/`}
+
             />
             <ExhibitionTitle>GRAPHIC</ExhibitionTitle>
             <ExhibitionDate>2025년 3월 24일</ExhibitionDate>

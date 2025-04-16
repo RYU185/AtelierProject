@@ -6,12 +6,7 @@ import ArtistGalleryInformation from "./components/ArtistGalleryInformation";
 import TicketButton from "./components/TicketButton";
 import ArtList from "./components/ArtList";
 import axios from "axios";
-const images = import.meta.glob("/src/assets/ArtistGalleryIMG/*", {
-  eager: true,
-});
-const artImages = import.meta.glob("/src/assets/ArtListIMG/*", {
-  eager: true,
-});
+import axiosInstance from "../../api/axiosInstance";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -88,29 +83,24 @@ function ArtistGalleryDetail() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
-  const getImageUrl = (filename) => {
-    const matched = Object.entries(images).find(([path]) =>
-      path.endsWith(filename)
-    );
-    return matched ? matched[1].default : "";
-  };
+  const getImageUrl = (filename) =>
+    filename ? `/images/ArtistGalleryIMG/${filename}` : "";
 
-  const getArtImageUrl = (filename) => {
-    const matched = Object.entries(artImages).find(([path]) =>
-      path.endsWith(filename)
-    );
-    return matched ? matched[1].default : "";
-  };
+  const getArtImageUrl = (filename) =>
+    filename ? `/images/ArtListIMG/${filename}` : "";
+
 
   useEffect(() => {
-    axios
-      .get(`/api/artistgallery/id/${id}`)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("갤러리 정보를 불러오지 못했습니다:", error);
-      });
+    const fetchGalleryDetail = async()=>{
+      try{
+        const res = await axiosInstance.get(`/artistgallery/id/${id}`)
+        setData(res.data);
+      }catch(error){
+        console.error(error)
+      }
+    };
+
+    fetchGalleryDetail();
   }, [id]);
 
   return (

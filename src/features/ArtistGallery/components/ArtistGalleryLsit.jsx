@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ArtistGallerys from "./ArtistGallerys";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosInstance from "../../../api/axiosInstance";
 const images = import.meta.glob("/src/assets/ArtistGalleryIMG/*", {
   eager: true,
 });
@@ -25,20 +26,14 @@ const GalleryGrid = styled.div`
 function ArtistGalleryLsit({ filteredItems }) {
   const navigate = useNavigate();
   const [galleryItems, setGalleryItems] = useState([]);
-  const getImageUrl = (filename) => {
-    const matched = Object.entries(images).find(([path]) =>
-      path.endsWith(filename)
-    );
-    return matched ? matched[1].default : "";
-  };
+
+  const getImageUrl = (filename) => (filename ? `/images/ArtistGalleryIMG/${filename}` : "");
 
   useEffect(() => {
-    // 초기 데이터 로드 (전체 전시)
-    fetchGalleryData("/api/artistgallery");
+    fetchGalleryData("/artistgallery");
   }, []);
 
   useEffect(() => {
-    // filteredItems prop이 변경될 때 상태 업데이트
     if (filteredItems && filteredItems.length > 0) {
       const transformed = filteredItems.map((item) => ({
         id: item.id,
@@ -49,37 +44,31 @@ function ArtistGalleryLsit({ filteredItems }) {
       }));
       setGalleryItems(transformed);
     } else {
-      // filteredItems가 없거나 비어있으면 전체 데이터를 다시 불러옴 (선택 사항)
-      fetchGalleryData("/api/artistgallery");
+      fetchGalleryData("/artistgallery");
     }
   }, [filteredItems]);
 
-  const fetchGalleryData = (apiUrl) => {
-    axios
-      .get(apiUrl)
-      .then((res) => {
-        const transformed = res.data.map((item) => ({
-          id: item.id,
-          imageUrl: getImageUrl(item.posterUrl),
-          title: item.title,
-          date: `${item.startDate} ~ ${item.endDate}`,
-          description: item.description,
-        }));
-        setGalleryItems(transformed);
-      })
-      .catch((err) => {
-        console.error("갤러리 데이터 불러오기 실패:", err);
-      });
+  const fetchGalleryData = async (apiUrl) => {
+    try {
+      const res = await axiosInstance.get(apiUrl);
+      const transformed = res.data.map((item) => ({
+        id: item.id,
+        imageUrl: getImageUrl(item.posterUrl),
+        title: item.title,
+        date: `${item.startDate} ~ ${item.endDate}`,
+        description: item.description,
+      }));
+      setGalleryItems(transformed);
+    } catch (error) {
+      console.error("갤러리 데이터 불러오기 실패:", error);
+    }
   };
 
   return (
     <Container>
       <GalleryGrid>
         {galleryItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => navigate(`/gallery/artistgallery/${item.id}`)}
-          >
+          <div key={item.id} onClick={() => navigate(`/gallery/artistgallery/${item.id}`)}>
             <ArtistGallerys {...item} />
           </div>
         ))}
