@@ -208,6 +208,67 @@ const MenuItem = styled.button`
     background: rgba(255, 255, 255, 0.1);
   }
 `;
+const ModalOverlay = styled.div`
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+`;
+
+const ModalBox = styled.div`
+  background: white;
+  padding: 30px 20px;
+  border-radius: 10px;
+  width: 320px;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 20px;
+  margin-bottom: 15px;
+`;
+
+const ModalInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  &:focus {
+    outline: none;
+    border-color: #007aff;
+  }
+`;
+
+const ModalButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+const ModalButton = styled.button`
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: ${(props) => (props.cancel ? "#ccc" : "#0038a8")};
+  color: ${(props) => (props.cancel ? "#333" : "white")};
+
+  &:hover {
+    background-color: ${(props) => (props.cancel ? "#bbb" : "#002c85")};
+  }
+`;
 
 const DrawingCanvas = () => {
   const canvasRef = useRef(null);
@@ -503,6 +564,12 @@ const DrawingCanvas = () => {
     }
 
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("로그인이 필요합니다.");
+        return;
+      }
+
       const response = await axios.post(
         "/api/realdrawing/save",
         {
@@ -512,7 +579,8 @@ const DrawingCanvas = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
