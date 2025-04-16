@@ -1,7 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ArtCard from './ArtCard';
+import ArtCard from '../components/ArtCard';
 import { Link } from 'react-router-dom';
+import api from "../../../api/axiosInstance";
+
+const artImages = import.meta.glob("/src/assets/ArtListIMG/*", {
+  eager: true,
+});
+
+const getImageUrl = (filename) => {
+  const matched = Object.entries(artImages).find(([path]) =>
+    path.endsWith(filename)
+  );
+  if (!matched) {
+    console.error(`이미지 ${filename}을 찾을 수 없습니다.`);
+    return '/path/to/default-image.png';
+  }
+  return matched[1].default;
+};
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -24,7 +40,6 @@ const ArtListTitle = styled.h2`
 const ArtListContainer = styled.div`
   width: 1200px;
   margin: 0 auto;
-
   padding: 10px;
   border-radius: 8px;
   margin-top: 20px;
@@ -94,21 +109,23 @@ const MoreOptions = styled.div`
   cursor: pointer;
   font-size: 30px;
   position: absolute;
-  top: 290px;
-  right: 5px;
-  z-index: 100; /* 다른 요소 위로 올림 */
-  color: #4e5b69; /* 테스트용으로 빨간색으로 변경 */
-  
-  padding: 2px 5px; /* 아이콘 주변에 여백 추가 */
-  border-radius: 4px;
-`;
+  bottom: 10px;  /* 이미지 하단에서 10px 위로 고정 */
+  right: 10px;   /* 이미지 오른쪽에서 10px 여유로 고정 */
+  z-index: 100;
+  color: #4e5b69;
+  padding: 2px 5px;
 
+
+
+  transition: all 0.3s ease;
+  pointer-events: auto;  /* 클릭 가능하도록 설정 */
+`;
 const OptionsMenu = styled.div`
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   position: absolute;
   top: 100%;
-  margin-top: -43px;
-  right: 0;
+  margin-top: -20px;
+  margin-left: 180px;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -119,19 +136,18 @@ const OptionsMenu = styled.div`
 
 const OptionButton = styled.button`
   width: 100%;
+  left: 30px;
   padding: 8px;
   border: none;
   background: white;
   cursor: pointer;
   font-size: 14px;
   color: ${({ danger }) => (danger ? "#e16060" : "#018ec8")};
-
   &:hover {
     background: #f0f0f0;
   }
 `;
 
-/* === 모달 스타일 추가 === */
 const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -176,7 +192,7 @@ const ModalImageContainer = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-
+  
   & > img {
     width: 100%;
     height: 100%;
@@ -204,8 +220,33 @@ const ModalDescriptionContainer = styled.div`
 `;
 
 const AdminArtList = () => {
+  const [artList, setArtList] = useState([]);
   const [menuOpen, setMenuOpen] = useState({});
   const [selectedArt, setSelectedArt] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    fetchArtList();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setMenuOpen({});
+    };
+    window.addEventListener("click", handleClickOutside);
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  const fetchArtList = async () => {
+    try {
+      const response = await api.get('/art');
+      setArtList(response.data);
+    } catch (error) {
+      console.error('작품 목록을 불러오는 중 오류 발생:', error);
+    }
+  };
 
   const toggleMenu = (id) => {
     setMenuOpen((prev) => ({
@@ -222,72 +263,23 @@ const AdminArtList = () => {
     setSelectedArt(null);
   };
 
-  const artData = [
-    {
-      id: 1,
-      title: 'Starry Night',
-      artist: 'Vincent van Gogh',
-      date: '1889',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'A beautiful night sky painted by Van GoghThe world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa..'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
-    },
-    {
-      id: 2,
-      title: 'Mona Lisa',
-      artist: 'Leonardo da Vinci',
-      date: '1503',
-      imageUrl: '/src/assets/ArtIMG/1.jpg',
-      description: 'The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.The world-famous portrait of Mona Lisa.'
+  const handleDelete = async (id) => {
+    try {
+      await api.post(`/art/${id}/delete`);
+      setMenuOpen({});
+      fetchArtList();
+    } catch (error) {
+      console.error('삭제 중 오류 발생:', error);
     }
-  ];
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredArtList = artList.filter((art) =>
+    art.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <PageContainer>
@@ -295,8 +287,13 @@ const AdminArtList = () => {
       <ArtListContainer>
         <ArtListHeader>
           <SearchContainer>
-            <SearchInput type="text" placeholder="작품명을 검색하세요" />
-            <SearchButton>검색</SearchButton>
+            <SearchInput
+              type="text"
+              placeholder="작품명을 검색하세요"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <SearchButton onClick={() => {}}>검색</SearchButton>
           </SearchContainer>
 
           <Link to="/AdminArtAdd">
@@ -305,35 +302,38 @@ const AdminArtList = () => {
         </ArtListHeader>
 
         <ArtGrid>
-          {artData.map((art) => (
+          {filteredArtList.map((art) => (
             <ArtItem key={art.id}>
               <MoreOptions onClick={(e) => {
                 e.stopPropagation();
                 toggleMenu(art.id);
               }}>⋮</MoreOptions>
-              <OptionsMenu visible={menuOpen[art.id]}>
-                <OptionButton onClick={() => console.log('수정 클릭')}>수정</OptionButton>
-                <OptionButton danger onClick={() => console.log('삭제 클릭')}>삭제</OptionButton>
+
+              <OptionsMenu
+                visible={menuOpen[art.id]}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <OptionButton danger onClick={() => handleDelete(art.id)}>삭제</OptionButton>
               </OptionsMenu>
+
               <ArtCard
                 title={art.title}
-                artist={art.artist}
-                date={art.date}
-                imageUrl={art.imageUrl}
-                onImageClick={() => openModal(art)} // 이미지 클릭 시 모달 열기
+                artist={art.artistName}
+                date={art.completionDate}
+                imageUrl={getImageUrl(art.imgUrl)}
+                onImageClick={() => openModal(art)}
               />
             </ArtItem>
           ))}
         </ArtGrid>
       </ArtListContainer>
 
-      {/* 모달 */}
       <ModalOverlay isOpen={selectedArt !== null} onClick={closeModal}>
         {selectedArt && (
           <Modal onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={closeModal}>×</CloseButton>
             <ModalImageContainer>
-              <img src={selectedArt.imageUrl} alt={selectedArt.title} />
+              <img src={getImageUrl(selectedArt.imgUrl)} alt={selectedArt.title} />
             </ModalImageContainer>
             <ModalDescriptionContainer>
               <h2>{selectedArt.title}</h2>
