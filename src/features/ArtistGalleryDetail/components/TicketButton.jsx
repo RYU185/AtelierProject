@@ -16,11 +16,12 @@ export const Button = styled.div`
   }
 `;
 
-function TicketButton() {
+function TicketButton({ galleryId }) {
   const navigate = useNavigate();
+
   return (
     <div>
-      <Button onClick={() => navigate("/ticket")}>티켓 예매하기</Button>
+      <Button onClick={() => navigate(`/ticket/${galleryId}`)}>티켓 예매하기</Button>
     </div>
   );
 }
