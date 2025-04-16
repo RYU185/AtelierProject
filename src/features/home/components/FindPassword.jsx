@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "../../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaArrowLeft, FaLock } from "react-icons/fa";
 
-// === 스타일 컴포넌트 ===
+// ✅ 스타일 컴포넌트
 const PageWrapper = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #d2e0f0, #f2f8fc);
@@ -77,11 +78,32 @@ const Button = styled.button`
     transform: scale(1.03);
     box-shadow: 0 0 20px #0038a8c0;
   }
+
+  &:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+`;
+
+const ProgressBarWrapper = styled.div`
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  margin-top: 10px;
+  overflow: hidden;
+`;
+
+const MotionProgress = styled(motion.div)`
+  height: 100%;
+  background-color: #0038a8;
+  border-radius: 4px;
 `;
 
 const Result = styled.p`
   margin-top: 18px;
-  color: ${({ success }) => (success ? "green" : "red")};
+  color: ${({ $success }) => ($success ? "green" : "red")};
   font-weight: bold;
 `;
 
@@ -110,10 +132,8 @@ const BackButton = styled.button`
   }
 `;
 
-// === 컴포넌트 ===
 const FindPassword = () => {
   const navigate = useNavigate();
-  const DUMMY_CODE = "123456";
 
   const [userId, setUserId] = useState("");
   const [email, setEmail] = useState("");
@@ -123,30 +143,90 @@ const FindPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [result, setResult] = useState("");
+  const [isSuccess, setIsSuccess] = useState(null);
+  const [hasResetPw, setHasResetPw] = useState(false);
+  const [redirectPending, setRedirectPending] = useState(false);
+
+  const [countdown, setCountdown] = useState(3);
+  const [progress, setProgress] = useState(0);
 
   const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isValidPassword = (pw) =>
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(pw);
 
-  const handleSendAuthCode = () => {
+  useEffect(() => {
+    if (!hasResetPw) return;
+
+    setCountdown(3);
+    setProgress(0);
+
+    const interval = 100;
+    const duration = 3000;
+
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        const next = prev + (100 * interval) / duration;
+        return next >= 100 ? 100 : next;
+      });
+
+      setCountdown((prev) => {
+        if (prev <= 0.1) {
+          clearInterval(timer);
+          setRedirectPending(true); // ✅ navigate 대신 상태 변경
+        }
+        return prev - 0.1;
+      });
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [hasResetPw]);
+
+  useEffect(() => {
+    if (redirectPending) {
+      navigate("/login");
+    }
+  }, [redirectPending, navigate]);
+
+  const handleSendAuthCode = async () => {
     if (userId.trim() === "" || !isValidEmail(email)) {
       setResult("❌ 아이디와 이메일을 정확히 입력해주세요.");
       return;
     }
-    setAuthSent(true);
-    setResult("📧 인증코드를 전송했습니다. (더미: 123456)");
-  };
 
-  const handleVerifyCode = () => {
-    if (authCode === DUMMY_CODE) {
-      setAuthVerified(true);
-      setResult("✅ 인증 성공! 새 비밀번호를 설정하세요.");
-    } else {
-      setResult("❌ 인증코드가 일치하지 않습니다.");
+    try {
+      const res = await axios.post("/user/send-authcode", { userId, email });
+      const code = res.data.message.match(/\d{6}/)?.[0] || "";
+      setAuthSent(true);
+      setResult(`📧 인증코드 전송됨! (테스트 코드: ${code})`);
+      setIsSuccess(true);
+    } catch (err) {
+      setResult("❌ 인증코드 전송에 실패했습니다.");
+      setIsSuccess(false);
     }
   };
 
-  const handleResetPassword = () => {
+  const handleVerifyCode = async () => {
+    try {
+      const res = await axios.post("/user/verify-authcode", {
+        userId,
+        code: authCode,
+      });
+
+      if (res.data.status === "success") {
+        setAuthVerified(true);
+        setResult("✅ 인증 성공! 새 비밀번호를 설정하세요.");
+        setIsSuccess(true);
+      } else {
+        setResult("❌ " + res.data.message);
+        setIsSuccess(false);
+      }
+    } catch (err) {
+      setResult("❌ 인증 실패: 서버 오류");
+      setIsSuccess(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
     if (!isValidPassword(password)) {
       setResult("❌ 비밀번호는 영문+숫자 포함 8자 이상이어야 합니다.");
       return;
@@ -155,7 +235,27 @@ const FindPassword = () => {
       setResult("❌ 비밀번호가 일치하지 않습니다.");
       return;
     }
-    setResult("✅ 비밀번호가 성공적으로 재설정되었습니다!");
+
+    try {
+      const res = await axios.post("/user/reset-password", {
+        userId,
+        newPassword: password,
+      });
+
+      if (res.data.status === "success") {
+        setResult("✅ 비밀번호 재설정 완료! 로그인 화면으로 이동합니다...");
+        setIsSuccess(true);
+        setHasResetPw(true);
+      } else {
+        setResult("❌ " + res.data.message);
+        setIsSuccess(false);
+        setHasResetPw(false);
+      }
+    } catch (err) {
+      setResult("❌ 서버 오류로 비밀번호 변경 실패");
+      setIsSuccess(false);
+      setHasResetPw(false);
+    }
   };
 
   return (
@@ -251,12 +351,32 @@ const FindPassword = () => {
           </>
         )}
 
-        {result && <Result success={result.includes("✅")}>{result}</Result>}
+        {result && (
+          <>
+            <Result $success={isSuccess}>{result}</Result>
 
-        <BackButton onClick={() => navigate("/login")}>
-          <FaArrowLeft />
-          로그인으로 돌아가기
-        </BackButton>
+            {hasResetPw && (
+              <>
+                <ProgressBarWrapper>
+                  <MotionProgress
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 3, ease: "easeInOut" }}
+                  />
+                </ProgressBarWrapper>
+                <p
+                  style={{ fontSize: "13px", marginTop: "8px", color: "#666" }}
+                >
+                  로그인 화면으로 이동 중... ({Math.ceil(countdown)}초)
+                </p>
+                <BackButton onClick={() => navigate("/login")}>
+                  <FaArrowLeft />
+                  로그인으로 돌아가기
+                </BackButton>
+              </>
+            )}
+          </>
+        )}
       </GlassCard>
     </PageWrapper>
   );
