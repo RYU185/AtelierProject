@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 
 const CalendarContainer = styled.div`
   background-color: #f8f9fa;
@@ -59,18 +59,36 @@ const DayCell = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  cursor: pointer;
+  cursor: ${({ $isCurrentMonth, $isActive }) =>
+    $isCurrentMonth && $isActive ? "pointer" : "default"};
   border-radius: 50%;
-  color: ${props => props.isCurrentMonth ? '#333' : '#ccc'};
-  background-color: ${props => props.isSelected ? '#0066ff' : 'transparent'};
-  color: ${props => props.isSelected ? '#fff' : props.isCurrentMonth ? '#333' : '#ccc'};
+
+  background-color: ${({ $isSelected, $isActive }) => {
+    if ($isSelected) return "#0066ff";
+    if ($isActive) return "#90caf9";  // ✅ 진한 음영
+    return "transparent";
+  }};
+
+  color: ${({ $isSelected, $isCurrentMonth, $isActive }) => {
+    if ($isSelected) return "#fff";
+    if ($isCurrentMonth && $isActive) return "#333";
+    return "#ccc";
+  }};
+
+  pointer-events: ${({ $isActive }) => ($isActive ? "auto" : "none")};
 
   &:hover {
-    background-color: ${props => props.isCurrentMonth && !props.isSelected ? '#e9ecef' : props.isSelected ? '#0066ff' : 'transparent'};
+    background-color: ${({ $isSelected, $isCurrentMonth, $isActive }) =>
+      $isCurrentMonth && $isActive && !$isSelected ? "#64b5f6" : ""};
   }
 `;
 
-const TicketCalendar = ({ selectedDate, onDateSelect }) => {
+const isSameDate = (a, b) =>
+  a.getFullYear() === b.getFullYear() &&
+  a.getMonth() === b.getMonth() &&
+  a.getDate() === b.getDate();
+
+const TicketCalendar = ({ selectedDate, onDateSelect, activeDates = [] }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState([]);
 
@@ -85,20 +103,17 @@ const TicketCalendar = ({ selectedDate, onDateSelect }) => {
     const lastDay = new Date(year, month + 1, 0);
     const days = [];
 
-    // 이전 달의 날짜들
     const firstDayOfWeek = firstDay.getDay();
     for (let i = firstDayOfWeek - 1; i >= 0; i--) {
       const date = new Date(year, month, -i);
       days.push({ date, isCurrentMonth: false });
     }
 
-    // 현재 달의 날짜들
     for (let i = 1; i <= lastDay.getDate(); i++) {
       const date = new Date(year, month, i);
       days.push({ date, isCurrentMonth: true });
     }
 
-    // 다음 달의 날짜들
     const remainingDays = 42 - days.length;
     for (let i = 1; i <= remainingDays; i++) {
       const date = new Date(year, month + 1, i);
@@ -117,21 +132,24 @@ const TicketCalendar = ({ selectedDate, onDateSelect }) => {
   };
 
   const isSelected = (date) => {
-    return selectedDate && 
-           date.getDate() === selectedDate.getDate() &&
-           date.getMonth() === selectedDate.getMonth() &&
-           date.getFullYear() === selectedDate.getFullYear();
+    return selectedDate && isSameDate(date, selectedDate);
+  };
+
+  const isActive = (date) => {
+    return activeDates.some((active) => isSameDate(new Date(active), date));
   };
 
   return (
     <CalendarContainer>
       <CalendarHeader>
-        <NavigationButton onClick={handlePrevMonth}>{'<'}</NavigationButton>
-        <MonthTitle>{currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월</MonthTitle>
-        <NavigationButton onClick={handleNextMonth}>{'>'}</NavigationButton>
+        <NavigationButton onClick={handlePrevMonth}>{"<"}</NavigationButton>
+        <MonthTitle>
+          {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
+        </MonthTitle>
+        <NavigationButton onClick={handleNextMonth}>{">"}</NavigationButton>
       </CalendarHeader>
       <WeekdayHeader>
-        {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
+        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
           <WeekdayCell key={day}>{day}</WeekdayCell>
         ))}
       </WeekdayHeader>
@@ -139,9 +157,12 @@ const TicketCalendar = ({ selectedDate, onDateSelect }) => {
         {calendarDays.map(({ date, isCurrentMonth }, index) => (
           <DayCell
             key={index}
-            isCurrentMonth={isCurrentMonth}
-            isSelected={isSelected(date)}
-            onClick={() => isCurrentMonth && onDateSelect(date)}
+            $isCurrentMonth={isCurrentMonth}
+            $isSelected={isSelected(date)}
+            $isActive={isActive(date)}
+            onClick={() =>
+              isCurrentMonth && isActive(date) && onDateSelect(date)
+            }
           >
             {date.getDate()}
           </DayCell>
@@ -151,4 +172,4 @@ const TicketCalendar = ({ selectedDate, onDateSelect }) => {
   );
 };
 
-export default TicketCalendar; 
+export default TicketCalendar;

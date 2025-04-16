@@ -58,18 +58,38 @@ const ExhibitionCapacity = styled.p`
 
 function TicketPage() {
   const { galleryId } = useParams();
-  console.log("🎯 galleryId:", galleryId);
   const navigate = useNavigate();
 
   const [galleryInfo, setGalleryInfo] = useState(null);
+
   const [selectedDate, setSelectedDate] = useState(null);
   const [count, setCount] = useState(1);
   const [isReserving, setIsReserving] = useState(false);
+  const [reserveDateList, setReserveDateList] = useState([]);
+  const [availableTimes, setAvailableTimes] = useState([]);
+
+  useEffect(() => {
+    const fetchReserveTimes = async () => {
+      const reserveDateId = findReserveDateId(selectedDate);
+      if (!reserveDateId) return;
+
+      try {
+        const res = await axiosInstance.get(
+          `/reservation/reserve-time?reserveDateId=${reserveDateId}`
+        );
+        setAvailableTimes(res.data);
+      } catch (error) {
+        console.error("예약 가능 시간 조회 실패:", error);
+      }
+    };
+
+    if (selectedDate) fetchReserveTimes();
+  }, [selectedDate, reserveDateList]);
 
   useEffect(() => {
     const fetchGallery = async () => {
       try {
-        const res = await axiosInstance.get(`/api/artistgallery/id/${galleryId}`);
+        const res = await axiosInstance.get(`/artistgallery/id/${galleryId}`);
         setGalleryInfo(res.data);
       } catch (error) {
         console.error("전시 정보 불러오기 실패:", error);
@@ -77,6 +97,21 @@ function TicketPage() {
     };
 
     fetchGallery();
+  }, [galleryId]);
+
+  useEffect(() => {
+    const fetchReserveDates = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/reservation/reserve-date?galleryId=${galleryId}`
+        );
+        setReserveDateList(res.data); // [{ id: 1, date: '2025-04-20' }, ...]
+      } catch (error) {
+        console.error("예약 가능 날짜 조회 실패:", error);
+      }
+    };
+
+    if (galleryId) fetchReserveDates();
   }, [galleryId]);
 
   const handleDateSelect = (date) => {
@@ -89,6 +124,28 @@ function TicketPage() {
     }
   };
 
+  const getActiveDates = () => {
+    if (!galleryInfo.startDate || !galleryInfo.endDate) return [];
+
+    const start = new Date(galleryInfo.startDate);
+    const end = new Date(galleryInfo.endDate);
+    const dateArray = [];
+
+    let current = new Date(start);
+    while (current <= end) {
+      dateArray.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+    return dateArray;
+  };
+
+  const findReserveDateId = (selectedDate) => {
+    const match = reserveDateList.find(
+      (d) => new Date(d.date).toDateString() === selectedDate.toDateString()
+    );
+    return match ? match.id : null;
+  };
+
   const handleReservation = async () => {
     if (!selectedDate) {
       alert("날짜를 선택해주세요.");
@@ -98,7 +155,6 @@ function TicketPage() {
     setIsReserving(true);
 
     try {
-
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       navigate("/ticket/complete", {
@@ -116,6 +172,12 @@ function TicketPage() {
     }
   };
 
+  console.log("🎯 reserveDateList:", reserveDateList);
+  console.log(
+    "🎯 activeDates:",
+    reserveDateList.map((d) => new Date(d.date + "T00:00:00"))
+  );
+
   return (
     <>
       <Header />
@@ -129,7 +191,13 @@ function TicketPage() {
             />
             <ExhibitionTitle>{galleryInfo?.title}</ExhibitionTitle>
             <ExhibitionDate>
-              {selectedDate ? selectedDate : "날짜를 선택해주세요"}
+              {selectedDate
+                ? selectedDate.toLocaleDateString("ko-KR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })
+                : "날짜를 선택해주세요"}
             </ExhibitionDate>
             <ExhibitionCapacity>인원: {count}명</ExhibitionCapacity>
           </ExhibitionCard>
@@ -137,7 +205,11 @@ function TicketPage() {
           <TicketCalendar
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
-            galleryId={galleryId}
+            activeDates={
+              Array.isArray(reserveDateList)
+                ? reserveDateList.map((d) => new Date(d.date + "T00:00:00"))
+                : []
+            }
           />
 
           <TicketInfo
@@ -148,6 +220,7 @@ function TicketPage() {
             onCountChange={handleCountChange}
             onReserve={handleReservation}
             isReserving={isReserving}
+            availableTimes={availableTimes}
           />
         </ContentWrapper>
       </PageContainer>
