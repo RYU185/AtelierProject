@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import Header from "../Header";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   display: flex;
@@ -92,41 +93,6 @@ const CustomColorInput = styled.input`
   height: 100%;
   opacity: 0;
   cursor: pointer;
-`;
-
-const TopToolBar = styled.div`
-  position: fixed;
-  top: 90px;
-  right: 20px;
-  z-index: 100;
-  display: flex;
-  gap: 15px;
-  background: rgba(34, 34, 34, 0.9);
-  padding: 10px;
-  border-radius: 8px;
-`;
-
-const TopButton = styled.button`
-  font-size: 24px;
-  padding: 8px 12px;
-  background: transparent;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
 `;
 
 const CanvasContainer = styled.div`
@@ -246,6 +212,11 @@ const MenuItem = styled.button`
 const DrawingCanvas = () => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
+  const containerRef = useRef(null);
+  const canvasWrapperRef = useRef(null);
+  const navigate = useNavigate();
+
+  // State variables
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState("#000000");
   const [tool, setTool] = useState("pencil");
@@ -264,19 +235,16 @@ const DrawingCanvas = () => {
   const [showSizeControl, setShowSizeControl] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const containerRef = useRef(null);
-  const canvasWrapperRef = useRef(null);
   const [isPanning, setIsPanning] = useState(false);
   const [startPanPosition, setStartPanPosition] = useState({ x: 0, y: 0 });
   const [showMenu, setShowMenu] = useState(false);
-  const navigate = useNavigate();
 
+  // Initialize canvas context and center canvas on mount
   useEffect(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
 
-    // 캔버스 크기를 적절하게 조정
-    canvas.width = 1920; // Full HD 크기로 변경
+    canvas.width = 1920;
     canvas.height = 1080;
 
     const ctx = canvas.getContext("2d");
@@ -285,26 +253,17 @@ const DrawingCanvas = () => {
     ctx.strokeStyle = brushColor;
     contextRef.current = ctx;
 
-    // 초기 위치만 중앙 정렬
     centerCanvas();
   }, []);
 
-  const centerCanvas = () => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!container || !canvas) return;
-
-    const centerX = (container.clientWidth - canvas.width) / 2;
-    const centerY = (container.clientHeight - canvas.height) / 2;
-    setOffset({ x: centerX, y: centerY });
-  };
-
+  // Update stroke style when brush color changes (except for eraser)
   useEffect(() => {
     if (tool !== "eraser" && contextRef.current) {
       contextRef.current.strokeStyle = brushColor;
     }
-  }, [brushColor]);
+  }, [brushColor, tool]);
 
+  // Apply tool-specific styles
   const applyToolStyle = (toolName) => {
     const ctx = contextRef.current;
     if (!ctx) return;
@@ -341,39 +300,35 @@ const DrawingCanvas = () => {
     }
   };
 
+  // Handle tool size changes
   const handleSizeChange = (toolName, value) => {
-    setToolSizes((prev) => ({
-      ...prev,
-      [toolName]: parseInt(value),
-    }));
+    setToolSizes((prev) => ({ ...prev, [toolName]: parseInt(value) }));
     applyToolStyle(toolName);
   };
 
+  // Select a drawing tool
   const selectTool = (toolName) => {
     setTool(toolName);
     setSelectedTool((prev) => (prev === toolName ? null : toolName));
     applyToolStyle(toolName);
   };
 
+  // Get mouse position relative to the canvas, considering zoom and offset
   const getMousePos = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-
-    // 줌과 오프셋을 고려한 정확한 좌표 계산
     const x = (e.clientX - rect.left) / zoom;
     const y = (e.clientY - rect.top) / zoom;
-
     return { x, y };
   };
 
+  // Handle mouse down event
   const handleMouseDown = (e) => {
     if (e.button === 1) {
-      // 휠 클릭
       e.preventDefault();
       setIsPanning(true);
       setStartPanPosition({ x: e.clientX - offset.x, y: e.clientY - offset.y });
     } else if (e.button === 0) {
-      // 좌클릭
       const pos = getMousePos(e);
       contextRef.current.beginPath();
       contextRef.current.moveTo(pos.x, pos.y);
@@ -382,13 +337,13 @@ const DrawingCanvas = () => {
     }
   };
 
+  // Handle mouse move event
   const handleMouseMove = (e) => {
     if (isPanning) {
-      const newOffset = {
+      setOffset({
         x: e.clientX - startPanPosition.x,
         y: e.clientY - startPanPosition.y,
-      };
-      setOffset(newOffset);
+      });
     } else if (isDrawing) {
       const pos = getMousePos(e);
       contextRef.current.lineTo(pos.x, pos.y);
@@ -396,78 +351,72 @@ const DrawingCanvas = () => {
     }
   };
 
-  const handleMouseUp = (e) => {
+  // Handle mouse up and leave events to stop drawing/panning
+  const handleMouseUp = () => {
     if (isPanning) {
       setIsPanning(false);
-    } else {
+    } else if (isDrawing) {
       stopDrawing();
     }
   };
 
-  const handleWheel = (e) => {
-    if (e.ctrlKey) {
-      e.preventDefault();
-
-      const container = containerRef.current;
-      const rect = container.getBoundingClientRect();
-
-      // 마우스 위치 (컨테이너 기준)
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-
-      // 현재 마우스 위치의 캔버스 상의 좌표
-      const canvasX = (mouseX - offset.x) / zoom;
-      const canvasY = (mouseY - offset.y) / zoom;
-
-      // 새로운 줌 계산
-      const newZoom =
-        e.deltaY > 0 ? Math.max(zoom * 0.9, 0.1) : Math.min(zoom * 1.1, 5);
-
-      // 새로운 오프셋 계산 (마우스 포인터 위치 기준)
-      const newOffset = {
-        x: mouseX - canvasX * newZoom,
-        y: mouseY - canvasY * newZoom,
-      };
-
-      setZoom(newZoom);
-      setOffset(newOffset);
+  const handleMouseLeave = () => {
+    if (isDrawing) {
+      stopDrawing();
+    }
+    if (isPanning) {
+      setIsPanning(false);
     }
   };
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const wheelHandler = (e) => handleWheel(e);
-    container.addEventListener("wheel", wheelHandler, { passive: false });
-
-    return () => {
-      container.removeEventListener("wheel", wheelHandler);
-    };
-  }, [zoom, offset]);
-
+  // Stop drawing and save the drawing to history
   const stopDrawing = () => {
     if (!isDrawing) return;
-
     contextRef.current.closePath();
     setIsDrawing(false);
-
-    // Save the current state to history
     const snapshot = canvasRef.current.toDataURL();
     setHistory((prev) => [...prev, snapshot]);
-    // Clear redo history when new drawing is made
-    setFutureHistory([]);
+    setFutureHistory([]); // Clear redo history on new drawing
   };
 
+  // Handle canvas zooming
+  const handleWheel = (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const mouseX = e.clientX - containerRect.left;
+      const mouseY = e.clientY - containerRect.top;
+      const canvasX = (mouseX - offset.x) / zoom;
+      const canvasY = (mouseY - offset.y) / zoom;
+      const newZoom =
+        e.deltaY > 0 ? Math.max(zoom * 0.9, 0.1) : Math.min(zoom * 1.1, 5);
+      setOffset({
+        x: mouseX - canvasX * newZoom,
+        y: mouseY - canvasY * newZoom,
+      });
+      setZoom(newZoom);
+    }
+  };
+
+  // Center the canvas initially
+  const centerCanvas = () => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!container || !canvas) return;
+    setOffset({
+      x: (container.clientWidth - canvas.width) / 2,
+      y: (container.clientHeight - canvas.height) / 2,
+    });
+  };
+
+  // Undo the last drawing action
   const handleUndo = () => {
     if (history.length < 2) return;
     const ctx = contextRef.current;
     const image = new Image();
     const last = history[history.length - 2];
     const current = history[history.length - 1];
-
     setFutureHistory((prev) => [...prev, current]);
-
     image.src = last;
     image.onload = () => {
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -476,12 +425,12 @@ const DrawingCanvas = () => {
     };
   };
 
+  // Redo the last undone action
   const handleRedo = () => {
     if (futureHistory.length === 0) return;
     const ctx = contextRef.current;
     const image = new Image();
     const next = futureHistory[futureHistory.length - 1];
-
     image.src = next;
     image.onload = () => {
       ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -491,21 +440,17 @@ const DrawingCanvas = () => {
     };
   };
 
+  // Temporarily save the drawing to local storage
   const handleTempSave = () => {
     const image = canvasRef.current.toDataURL("image/png");
-
     const drawings = JSON.parse(localStorage.getItem("myDrawings")) || [];
-    drawings.push({
-      id: Date.now(),
-      image,
-      isTemporary: true,
-    });
-
+    drawings.push({ id: Date.now(), image, isTemporary: true });
     localStorage.setItem("myDrawings", JSON.stringify(drawings));
     alert("임시저장 완료! 마이페이지로 이동합니다.");
     navigate("/mypage", { state: { activeTab: "drawing" } });
   };
 
+  // Download the drawing as a PNG image
   const handleDownload = () => {
     const image = canvasRef.current.toDataURL("image/png");
     const link = document.createElement("a");
@@ -514,23 +459,18 @@ const DrawingCanvas = () => {
     link.click();
   };
 
+  // Save the drawing to local storage and navigate to the community page
   const handleSave = () => {
     if (!window.confirm("정말 저장하시겠습니까?")) return;
-
     const image = canvasRef.current.toDataURL("image/png");
-
     const drawings = JSON.parse(localStorage.getItem("myDrawings")) || [];
-    drawings.push({
-      id: Date.now(),
-      image,
-      isTemporary: false,
-    });
-
+    drawings.push({ id: Date.now(), image, isTemporary: false });
     localStorage.setItem("myDrawings", JSON.stringify(drawings));
     alert("저장 완료! 커뮤니티로 이동합니다.");
     navigate("/community");
   };
 
+  // Clear the entire canvas
   const handleClear = () => {
     contextRef.current.clearRect(
       0,
@@ -538,30 +478,73 @@ const DrawingCanvas = () => {
       canvasRef.current.width,
       canvasRef.current.height
     );
+    setHistory([]);
+    setFutureHistory([]);
   };
 
+  // Handle color selection from the palette
   const handleColorSelect = (color) => {
     setBrushColor(color);
     setSelectedColor(color);
   };
 
+  // Toggle the dropdown menu for additional actions
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
 
+  const sendDrawingToServer = async (isTemporary) => {
+    const imageData = canvasRef.current.toDataURL("image/png");
+
+    const title = window.prompt("제목을 입력하세요:");
+    if (!title || title.trim() === "") {
+      alert("제목은 필수입니다!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "/api/realdrawing/save",
+        {
+          imageData,
+          isTemporary,
+          title,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (isTemporary) {
+        alert("📝 임시 저장 완료! 마이페이지로 이동합니다.");
+        navigate("/mypage", { state: { activeTab: "drawing" } });
+      } else {
+        alert("💾 저장 완료! 커뮤니티로 이동합니다.");
+        navigate("/community");
+      }
+    } catch (error) {
+      console.error("❌ 저장 중 오류 발생:", error);
+      alert("저장에 실패했습니다.");
+    }
+  };
+  // Handle clicks on menu items
   const handleMenuItemClick = (action) => {
     switch (action) {
       case "new":
         handleClear();
         break;
       case "save":
-        handleSave();
+        sendDrawingToServer(false);
+        break;
+      case "tempSave":
+        sendDrawingToServer(true);
         break;
       case "download":
         handleDownload();
         break;
-      case "tempSave":
-        handleTempSave();
+      default:
         break;
     }
     setShowMenu(false);
@@ -570,7 +553,7 @@ const DrawingCanvas = () => {
   return (
     <>
       <Header />
-      <Container>
+      <Container ref={containerRef} onWheel={handleWheel}>
         <LeftToolBar>
           <ToolGroup>
             <ToolIcon
@@ -737,7 +720,7 @@ const DrawingCanvas = () => {
           </ColorPalette>
         </LeftToolBar>
 
-        <CanvasContainer ref={containerRef} onWheel={handleWheel}>
+        <CanvasContainer>
           <CanvasWrapper
             ref={canvasWrapperRef}
             style={{
@@ -752,7 +735,7 @@ const DrawingCanvas = () => {
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
+              onMouseLeave={handleMouseLeave}
               style={{
                 cursor: isPanning ? "grabbing" : undefined,
               }}
