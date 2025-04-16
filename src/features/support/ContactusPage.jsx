@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 
 
 // 스타일 정의
@@ -64,7 +66,7 @@ const ContactusPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("accessToken"); // ✅ 수정!
     let userId = null;
     let isMember = false;
 

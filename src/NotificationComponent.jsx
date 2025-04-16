@@ -16,7 +16,7 @@ const NotificationComponent = () => {
 
   return (
     <div>
-      <h2>알림</h2>
+      
       <ul>
         {notifications.map((notification, index) => (
           <li key={index}>
