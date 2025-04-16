@@ -527,8 +527,9 @@ function GoodsDetail() {
 
 
   const currentProductImages = goods.imgUrlList?.map(
-    (filename) => `/src/assets/GoodsIMG/${filename}`
+    (filename) => `/public/images/goods-images/${filename}`
   ) || [];
+
 
   return (
     <>

@@ -239,7 +239,7 @@ function Goods() {
           {filteredAndSortedGoods.map((goods) => (
             <ProductCard key={goods.id} onClick={() => handleProductClick(goods.id)}>
               <ProductImage
-                src={`/src/assets/GoodsIMG/${goods.imgUrlList?.[0]}`}
+                src={`/public/images/goods-images/${goods.imgUrlList?.[0]}`}
                 alt={goods.name}
               />
               <ProductInfo>
