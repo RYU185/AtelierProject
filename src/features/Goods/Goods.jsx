@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -15,6 +15,7 @@ import goods9 from "../../assets/GoodsIMG/goods9.jpg";
 import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import { useNavigate } from "react-router-dom";
 import TopButton from "../TopButton";
+import axios from "../../api/axiosInstance";
 
 const Container = styled.div`
   max-width: 1200px;
@@ -167,71 +168,22 @@ const ProductCard = styled.div`
 
 function Goods() {
   const navigate = useNavigate();
+  const [goodsList, setGoodsList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("");
 
-  const products = [
-    {
-      id: 1,
-      name: "전시 굿즈 1",
-      price: 30000,
-      image: goods1,
-    },
-    {
-      id: 2,
-      name: "전시 굿즈 2",
-      price: 25000,
-      image: goods2,
-    },
-    {
-      id: 3,
-      name: "전시 굿즈 3",
-      price: 35000,
-      image: goods3,
-    },
-    {
-      id: 4,
-      name: "전시 굿즈 4",
-      price: 28000,
-      image: goods4,
-    },
-    {
-      id: 5,
-      name: "전시 굿즈 5",
-      price: 32000,
-      image: goods5,
-    },
-    {
-      id: 6,
-      name: "전시 굿즈 6",
-      price: 27000,
-      image: goods6,
-    },
-    {
-      id: 7,
-      name: "전시 굿즈 7",
-      price: 33000,
-      image: goods7,
-    },
-    {
-      id: 8,
-      name: "전시 굿즈 8",
-      price: 29000,
-      image: goods8,
-    },
-    {
-      id: 9,
-      name: "전시 굿즈 9",
-      price: 31000,
-      image: goods9,
-    },
-    {
-      id: 10,
-      name: "전시 굿즈 10",
-      price: 26000,
-      image: goods10,
-    },
-  ];
+  useEffect(()=> {
+    const fetchGoods = async () =>{
+      try{
+        const res = await axios.get("/goods");
+        setGoodsList(res.data);
+      }catch (err){
+        console.error("굿즈 불러오기 실패:", err);
+      }
+    };
+
+    fetchGoods();
+  }, []);
 
   const handleProductClick = (productId) => {
     navigate(`/goods/${productId}`);
@@ -245,9 +197,9 @@ function Goods() {
     setSortOption(e.target.value);
   };
 
-  const filteredAndSortedProducts = products
-    .filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAndSortedGoods = goodsList
+    .filter((goods) =>
+      goods.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
       switch (sortOption) {
@@ -288,15 +240,15 @@ function Goods() {
         </DataController>
 
         <ProductGrid>
-          {filteredAndSortedProducts.map((product) => (
+          {filteredAndSortedGoods.map((goods) => (
             <ProductCard
-              key={product.id}
-              onClick={() => handleProductClick(product.id)}
+              key={goods.id}
+              onClick={() => handleProductClick(goods.id)}
             >
-              <ProductImage src={product.image} alt={product.name} />
+              <ProductImage src={goods.imgUrlList?.[0] || ""} alt={goods.name} />
               <ProductInfo>
-                <ProductName>{product.name}</ProductName>
-                <ProductPrice>{product.price.toLocaleString()}원</ProductPrice>
+                <ProductName>{goods.name}</ProductName>
+                <ProductPrice>{goods.price.toLocaleString()}원</ProductPrice>
               </ProductInfo>
             </ProductCard>
           ))}
