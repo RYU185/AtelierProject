@@ -6,12 +6,12 @@ import useWebSocket from "../../../socket";
 
 const InquiryNotifications = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const { inquiries, setInquiries } = useInquiry();
-  const unreadCount = inquiries.length;
-  const [showList, setShowList] = useState(false);
+  const { inquiries, setInquiries } = useInquiry(); // 문의목록 가져옴
+  const unreadCount = inquiries.length; // 안 읽은 문의 수
+  const [showList, setShowList] = useState(false); // 리스트 열기 닫기
   const navigate = useNavigate();
 
-  useWebSocket();
+  useWebSocket(); // 실시간 알림 받기 
 
   // 🧠 로그인 상태를 확인하는 함수
   const checkAdminStatus = () => {
@@ -20,7 +20,7 @@ const InquiryNotifications = () => {
       try {
         const decoded = jwtDecode(token);
         const roles = decoded.auth || "";
-        setIsAdmin(roles.includes("ROLE_ADMIN"));
+        setIsAdmin(roles.includes("ROLE_ADMIN")); // admin 확인 
       } catch (err) {
         console.error("토큰 디코딩 실패", err);
         setIsAdmin(false);
@@ -47,21 +47,21 @@ const InquiryNotifications = () => {
   // ✅ 페이지 전환 또는 WebSocket 등에서 토큰 상태 변경 감지
   useEffect(() => {
     const interval = setInterval(() => {
-      checkAdminStatus(); // 1초마다 체크 (원하면 3초로 늘릴 수도 있음)
-    }, 1000);
+      checkAdminStatus(); // 1초마다 관리자여부 체크 (원하면 3초로 늘릴 수도 있음)
+    }, 1000); 
 
     return () => clearInterval(interval);
   }, []);
 
   const handleNotificationClick = () => {
     if (unreadCount > 0) {
-      setInquiries([]);
+      setInquiries([]); 
       setShowList(false);
       navigate("/AdminContact");
     }
   };
 
-  if (!isAdmin) return null;
+  if (!isAdmin) return null; // 관리자 아니면 렌더링 안함
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
