@@ -3,16 +3,6 @@ import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
 import { FaSearch } from "react-icons/fa";
-import goods1 from "../../assets/GoodsIMG/goods1.jpg";
-import goods2 from "../../assets/GoodsIMG/goods2.jpg";
-import goods3 from "../../assets/GoodsIMG/goods3.jpg";
-import goods4 from "../../assets/GoodsIMG/goods4.jpg";
-import goods5 from "../../assets/GoodsIMG/goods5.jpg";
-import goods6 from "../../assets/GoodsIMG/goods6.jpg";
-import goods7 from "../../assets/GoodsIMG/goods7.jpg";
-import goods8 from "../../assets/GoodsIMG/goods8.jpg";
-import goods9 from "../../assets/GoodsIMG/goods9.jpg";
-import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import { useNavigate } from "react-router-dom";
 import TopButton from "../TopButton";
 import axios from "../../api/axiosInstance";
@@ -170,6 +160,7 @@ function Goods() {
   const navigate = useNavigate();
   const [goodsList, setGoodsList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("");
 
   useEffect(() => {
@@ -185,12 +176,18 @@ function Goods() {
     fetchGoods();
   }, []);
 
-  const handleProductClick = (productId) => {
-    navigate(`/goods/${productId}`);
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setSearchQuery(searchTerm); // Enter 시 실제 검색어 확정
+    }
+  };
+
+  const handleProductClick = (productId) => {
+    navigate(`/goods/${productId}`);
   };
 
   const handleSort = (e) => {
@@ -198,7 +195,7 @@ function Goods() {
   };
 
   const filteredAndSortedGoods = goodsList
-    .filter((goods) => goods.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter((goods) => goods.name.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort((a, b) => {
       switch (sortOption) {
         case "price_asc":
@@ -226,7 +223,8 @@ function Goods() {
             <SearchBar
               placeholder="검색어를 입력하세요"
               value={searchTerm}
-              onChange={handleSearch}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
             />
           </SearchContainer>
           <SortBar value={sortOption} onChange={handleSort}>

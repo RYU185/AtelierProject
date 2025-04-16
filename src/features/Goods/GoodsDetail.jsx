@@ -1,22 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
-import goods1 from "../../assets/GoodsIMG/goods1.jpg";
-import goods2 from "../../assets/GoodsIMG/goods2.jpg";
-import goods3 from "../../assets/GoodsIMG/goods3.jpg";
-import goods4 from "../../assets/GoodsIMG/goods4.jpg";
-import goods5 from "../../assets/GoodsIMG/goods5.jpg";
-import goods6 from "../../assets/GoodsIMG/goods6.jpg";
-import goods7 from "../../assets/GoodsIMG/goods7.jpg";
-import goods8 from "../../assets/GoodsIMG/goods8.jpg";
-import goods9 from "../../assets/GoodsIMG/goods9.jpg";
-import goods10 from "../../assets/GoodsIMG/goods10.jpg";
 import Review from "./components/Review";
 import TopButton from "../TopButton";
-import PurchaseCompletePage from "../cart/PurchaseCompletePage";
-import { image } from "framer-motion/client";
+import axiosInstance from "../../api/axiosInstance";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -364,16 +353,37 @@ const ModalButton = styled.button`
 
 function GoodsDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [quantity, setQuantity] = useState(1);
   const [stock, setStock] = useState(10);
   const [stockWarning, setStockWarning] = useState(false); // 재고 경고 표시
   const [selectedImage, setSelectedImage] = useState(0); // 선택된 이미지 썸네일 알려주기
+  const [goods, setGoods] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   // 확대 창 상태관리
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 }); // 배웠던거 - drowing에서 썼던 상태관리
   const [showCartNotice, setshowCartNotice] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchGoodsDetail = async () => {
+      try {
+        const res = await axiosInstance.get(`/goods/id/${id}`);
+        setGoods(res.data);
+        setStock(res.data.stock);
+      } catch (err) {
+        console.error("굿즈 상세 조회 실패:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGoodsDetail();
+  }, [id]);
+
 
   const handleIncrease = () => {
     if (stock > 0) {
@@ -460,20 +470,19 @@ function GoodsDetail() {
     // 구매 처리 로직 추가
     setShowPurchaseModal(false);
 
-    const items = 
-      {
-        id: id,
-        name: product.name,
-        image:product.image,
-        quantity,
-        price: product.price,
-      };
+    const items = {
+      id: goods.id,
+      name: goods.name,
+      image: currentProductImages[selectedImage],
+      quantity,
+      price: goods.price,
+    };
 
-    const totalPrice = product.price * quantity;
+    const totalPrice = goods.price * quantity;
 
-    navigate("/purchase-complete", { 
-      state: { 
-        items:[items],
+    navigate("/purchase-complete", {
+      state: {
+        items: [items],
         totalPrice,
       },
     }); // 결제 페이지로 이동
@@ -483,82 +492,23 @@ function GoodsDetail() {
     setShowPurchaseModal(false);
   };
 
-  const products = {
-    1: {
-      name: "전시 굿즈 1",
-      price: 30000,
-      image: goods1,
-      description:
-        "전시 굿즈 1에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    2: {
-      name: "전시 굿즈 2",
-      price: 25000,
-      image: goods2,
-      description:
-        "전시 굿즈 2에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    3: {
-      name: "전시 굿즈 3",
-      price: 35000,
-      image: goods3,
-      description:
-        "전시 굿즈 3에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    4: {
-      name: "전시 굿즈 4",
-      price: 28000,
-      image: goods4,
-      description:
-        "전시 굿즈 4에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    5: {
-      name: "전시 굿즈 5",
-      price: 32000,
-      image: goods5,
-      description:
-        "전시 굿즈 5에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    6: {
-      name: "전시 굿즈 6",
-      price: 27000,
-      image: goods6,
-      description:
-        "전시 굿즈 6에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    7: {
-      name: "전시 굿즈 7",
-      price: 33000,
-      image: goods7,
-      description:
-        "전시 굿즈 7에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    8: {
-      name: "전시 굿즈 8",
-      price: 29000,
-      image: goods8,
-      description:
-        "전시 굿즈 8에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    9: {
-      name: "전시 굿즈 9",
-      price: 31000,
-      image: goods9,
-      description:
-        "전시 굿즈 9에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-    10: {
-      name: "전시 굿즈 10",
-      price: 26000,
-      image: goods10,
-      description:
-        "전시 굿즈 10에 대한 자세한 설명입니다. 이 상품은 전시회에서만 구매할 수 있는 특별한 아이템입니다.",
-    },
-  };
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <TitleContainer>
+          <BackTitle>Gallery Goods</BackTitle>
+          <Title>Gallery Goods</Title>
+        </TitleContainer>
+        <Container>
+          <ProductTitle>로딩중...</ProductTitle>
+        </Container>
+        <Footer />
+      </>
+    );
+  }
 
-  const product = products[id];
-
-  if (!product) {
+  if (!goods) {
     return (
       <>
         <Header />
@@ -574,20 +524,11 @@ function GoodsDetail() {
     );
   }
 
-  const productImages = {
-    1: [goods1, goods2, goods3, goods4, goods5],
-    2: [goods2, goods3, goods4, goods5, goods6],
-    3: [goods3, goods4, goods5, goods6, goods7],
-    4: [goods4, goods5, goods6, goods7, goods8],
-    5: [goods5, goods6, goods7, goods8, goods9],
-    6: [goods6, goods7, goods8, goods9, goods10],
-    7: [goods7, goods8, goods9, goods10, goods1],
-    8: [goods8, goods9, goods10, goods1, goods2],
-    9: [goods9, goods10, goods1, goods2, goods3],
-    10: [goods10, goods1, goods2, goods3, goods4],
-  };
 
-  const currentProductImages = productImages[id];
+
+  const currentProductImages = goods.imgUrlList?.map(
+    (filename) => `/src/assets/GoodsIMG/${filename}`
+  ) || [];
 
   return (
     <>
@@ -601,7 +542,7 @@ function GoodsDetail() {
           <ImageSection>
             <MainImage
               src={currentProductImages[selectedImage]}
-              alt={product.name}
+              alt={goods.name}
               onMouseMove={handleMouseMove}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
@@ -611,7 +552,7 @@ function GoodsDetail() {
                 <ThumbnailImage
                   key={index}
                   src={image}
-                  alt={`${product.name} 썸네일 ${index + 1}`}
+                  alt={`썸네일 ${index + 1}`}
                   active={selectedImage === index}
                   onClick={() => setSelectedImage(index)}
                 />
@@ -620,7 +561,6 @@ function GoodsDetail() {
             <ZoomedImage isVisible={isZoomed}>
               <ZoomedImageContent
                 src={currentProductImages[selectedImage]}
-                alt={`${product.name} 확대`}
                 style={{
                   transform: `scale(2) translate(${-mousePosition.x * 4}px, ${
                     -mousePosition.y * 4
@@ -631,11 +571,11 @@ function GoodsDetail() {
             </ZoomedImage>
           </ImageSection>
           <InfoSection>
-            <ProductTitle>{product.name}</ProductTitle>
+            <ProductTitle>{goods.name}</ProductTitle>
             <hr />
             <ProductDescription>
-              {product.description}
-              <ProductPrice>{product.price.toLocaleString()}원</ProductPrice>
+              {goods.description}
+              <ProductPrice>{goods.price.toLocaleString()}원</ProductPrice>
             </ProductDescription>
 
             <CounterWrapper>
@@ -655,26 +595,18 @@ function GoodsDetail() {
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCountText>
-                {(product.price * quantity).toLocaleString()}원
-              </AmountCountText>
+              <AmountCountText>{(goods.price * quantity).toLocaleString()}원</AmountCountText>
             </AmountCountContainer>
 
             <ButtonContainer>
-              <GoToCartButton onClick={handleAddToCart}>
-                장바구니 담기
-              </GoToCartButton>
+              <GoToCartButton onClick={handleAddToCart}>장바구니 담기</GoToCartButton>
               {showCartNotice && (
                 <CartNotification>
                   <NotificationText>장바구니에 담겼습니다</NotificationText>
-                  <GoToCartLink onClick={handleGoToCart}>
-                    장바구니로 가기
-                  </GoToCartLink>
+                  <GoToCartLink onClick={handleGoToCart}>장바구니로 가기</GoToCartLink>
                 </CartNotification>
               )}
-              <PurchaseButton onClick={handlePurchase}>
-                바로 구매하기
-              </PurchaseButton>
+              <PurchaseButton onClick={handlePurchase}>바로 구매하기</PurchaseButton>
             </ButtonContainer>
           </InfoSection>
         </ProductContainer>
@@ -688,7 +620,7 @@ function GoodsDetail() {
         <ModalOverlay>
           <ModalContent>
             <ModalTitle>구매하시겠습니까?</ModalTitle>
-            <p>총 금액: {(product.price * quantity).toLocaleString()}원</p>
+            <p>총 금액: {(goods.price * quantity).toLocaleString()}원</p>
             <ModalButtonContainer>
               <ModalButton onClick={handleConfirmPurchase}>확인</ModalButton>
               <ModalButton onClick={handleCancelPurchase}>취소</ModalButton>
