@@ -6,7 +6,6 @@ import AdminMenu from './AdminMenu';
 
 const Container = styled.div`
   padding: 20px;
-  
   min-height: 100vh;
   display: flex;
 `;
@@ -127,6 +126,7 @@ const PlaceholderText = styled.div`
 
 function AdminArtAdd() {
   const [image, setImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);  // 추가된 상태
   const [title, setTitle] = useState('');
   const [artist, setArtist] = useState('');
   const [description, setDescription] = useState('');
@@ -136,7 +136,43 @@ function AdminArtAdd() {
     const file = event.target.files[0];
     if (file) {
       setImage(URL.createObjectURL(file));
+      setImageFile(file);  // 이미지 파일 상태도 업데이트
     }
+  };
+
+    const handleSubmit = () => {
+      const token = localStorage.getItem("authToken");  // 토큰을 로컬스토리지에서 가져옵니다.
+if (!token) {
+  console.error("토큰이 로컬스토리지에 없습니다");
+  // 로그인 페이지로 리디렉션
+  window.location.href = "/login";  // 로그인 페이지 URL로 변경
+  return;
+}
+    const formData = new FormData();
+    formData.append("file", imageFile);  // 이미지 파일 추가
+    formData.append("title", title);
+    formData.append("artist", artist);
+    formData.append("description", description);
+    formData.append("year", year);
+
+     // JWT 토큰 가져오기
+
+     fetch("/api/art/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        "Authorization": `Bearer ${token}`,  // JWT 토큰을 Authorization 헤더에 추가
+      },
+      body: formData,
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`서버 응답 오류: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => console.log("작품 등록 완료", data))
+    .catch(error => console.error("Error:", error));
   };
 
   return (
@@ -185,16 +221,17 @@ function AdminArtAdd() {
           </FlexContainer>
         </AdminContent>
       </Container>
-     
+
       <ButtonContainer>
-  <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
-  <SubmitButton 
-    disabled={!image} 
-    onClick={() => console.log("작품 등록: ", { title, artist, description, year, image })}
-  >
-    등록
-  </SubmitButton>
-</ButtonContainer>
+        <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
+        <SubmitButton
+          disabled={!image}
+          onClick={handleSubmit}
+        >
+          등록
+        </SubmitButton>
+      </ButtonContainer>
+
       <FileInput
         type="file"
         id="file-input"
