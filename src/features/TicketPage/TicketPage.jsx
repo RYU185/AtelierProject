@@ -61,14 +61,53 @@ function TicketPage() {
   const navigate = useNavigate();
 
   const [galleryInfo, setGalleryInfo] = useState(null);
-
   const [selectedDate, setSelectedDate] = useState(null);
   const [count, setCount] = useState(1);
   const [isReserving, setIsReserving] = useState(false);
   const [reserveDateList, setReserveDateList] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
 
+  const getActiveDates = () => {
+    return reserveDateList.map((d) => new Date(d.date + "T00:00:00"));
+  };
+
+  const findReserveDateId = (selectedDate) => {
+    const match = reserveDateList.find(
+      (d) => new Date(d.date).toDateString() === selectedDate.toDateString()
+    );
+    return match ? match.id : null;
+  };
+
   useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const res = await axiosInstance.get(`/artistgallery/id/${galleryId}`);
+        setGalleryInfo(res.data);
+      } catch (error) {
+        console.error("전시 정보 불러오기 실패:", error);
+      }
+    };
+
+    const fetchReserveDates = async () => {
+      try {
+        const res = await axiosInstance.get(
+          `/reservation/reserve-date?galleryId=${galleryId}`
+        );
+        setReserveDateList(res.data);
+      } catch (error) {
+        console.error("예약 가능 날짜 조회 실패:", error);
+      }
+    };
+
+    if (galleryId) {
+      fetchGallery();
+      fetchReserveDates();
+    }
+  }, [galleryId]);
+
+  useEffect(() => {
+    if (!selectedDate || reserveDateList.length === 0) return;
+
     const fetchReserveTimes = async () => {
       const reserveDateId = findReserveDateId(selectedDate);
       if (!reserveDateId) return;
@@ -83,36 +122,8 @@ function TicketPage() {
       }
     };
 
-    if (selectedDate) fetchReserveTimes();
+    fetchReserveTimes();
   }, [selectedDate, reserveDateList]);
-
-  useEffect(() => {
-    const fetchGallery = async () => {
-      try {
-        const res = await axiosInstance.get(`/artistgallery/id/${galleryId}`);
-        setGalleryInfo(res.data);
-      } catch (error) {
-        console.error("전시 정보 불러오기 실패:", error);
-      }
-    };
-
-    fetchGallery();
-  }, [galleryId]);
-
-  useEffect(() => {
-    const fetchReserveDates = async () => {
-      try {
-        const res = await axiosInstance.get(
-          `/reservation/reserve-date?galleryId=${galleryId}`
-        );
-        setReserveDateList(res.data); // [{ id: 1, date: '2025-04-20' }, ...]
-      } catch (error) {
-        console.error("예약 가능 날짜 조회 실패:", error);
-      }
-    };
-
-    if (galleryId) fetchReserveDates();
-  }, [galleryId]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -122,28 +133,6 @@ function TicketPage() {
     if (newCount >= 1 && newCount <= 10) {
       setCount(newCount);
     }
-  };
-
-  const getActiveDates = () => {
-    if (!galleryInfo.startDate || !galleryInfo.endDate) return [];
-
-    const start = new Date(galleryInfo.startDate);
-    const end = new Date(galleryInfo.endDate);
-    const dateArray = [];
-
-    let current = new Date(start);
-    while (current <= end) {
-      dateArray.push(new Date(current));
-      current.setDate(current.getDate() + 1);
-    }
-    return dateArray;
-  };
-
-  const findReserveDateId = (selectedDate) => {
-    const match = reserveDateList.find(
-      (d) => new Date(d.date).toDateString() === selectedDate.toDateString()
-    );
-    return match ? match.id : null;
   };
 
   const handleReservation = async () => {
@@ -172,12 +161,6 @@ function TicketPage() {
     }
   };
 
-  console.log("🎯 reserveDateList:", reserveDateList);
-  console.log(
-    "🎯 activeDates:",
-    reserveDateList.map((d) => new Date(d.date + "T00:00:00"))
-  );
-
   return (
     <>
       <Header />
@@ -205,11 +188,7 @@ function TicketPage() {
           <TicketCalendar
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
-            activeDates={
-              Array.isArray(reserveDateList)
-                ? reserveDateList.map((d) => new Date(d.date + "T00:00:00"))
-                : []
-            }
+            activeDates={getActiveDates()}
           />
 
           <TicketInfo
