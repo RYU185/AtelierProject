@@ -189,6 +189,10 @@ function TicketPage() {
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
             activeDates={getActiveDates()}
+            exhibitionRange={{
+              start: new Date(galleryInfo?.startDate),
+              end: new Date(galleryInfo?.endDate),
+            }}
           />
 
           <TicketInfo

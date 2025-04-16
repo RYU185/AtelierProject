@@ -65,7 +65,7 @@ const DayCell = styled.div`
 
   background-color: ${({ $isSelected, $isActive }) => {
     if ($isSelected) return "#0066ff";
-    if ($isActive) return "#90caf9";  
+    if ($isActive) return "#90caf9";
     return "transparent";
   }};
 
@@ -88,7 +88,12 @@ const isSameDate = (a, b) =>
   a.getMonth() === b.getMonth() &&
   a.getDate() === b.getDate();
 
-const TicketCalendar = ({ selectedDate, onDateSelect, activeDates = [] }) => {
+const TicketCalendar = ({
+  selectedDate,
+  onDateSelect,
+  activeDates = [],
+  exhibitionRange,
+}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState([]);
 
@@ -124,11 +129,15 @@ const TicketCalendar = ({ selectedDate, onDateSelect, activeDates = [] }) => {
   };
 
   const handlePrevMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
+    );
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
+    );
   };
 
   const isSelected = (date) => {
@@ -137,6 +146,11 @@ const TicketCalendar = ({ selectedDate, onDateSelect, activeDates = [] }) => {
 
   const isActive = (date) => {
     return activeDates.some((active) => isSameDate(new Date(active), date));
+  };
+
+  const isInExhibitionPeriod = (date) => {
+    if (!exhibitionRange?.start || !exhibitionRange?.end) return false;
+    return date >= exhibitionRange.start && date <= exhibitionRange.end;
   };
 
   return (
@@ -160,6 +174,7 @@ const TicketCalendar = ({ selectedDate, onDateSelect, activeDates = [] }) => {
             $isCurrentMonth={isCurrentMonth}
             $isSelected={isSelected(date)}
             $isActive={isActive(date)}
+            $inExhibitionRange={isInExhibitionPeriod(date)}
             onClick={() =>
               isCurrentMonth && isActive(date) && onDateSelect(date)
             }
