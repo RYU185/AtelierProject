@@ -172,12 +172,12 @@ function Goods() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("");
 
-  useEffect(()=> {
-    const fetchGoods = async () =>{
-      try{
+  useEffect(() => {
+    const fetchGoods = async () => {
+      try {
         const res = await axios.get("/goods");
         setGoodsList(res.data);
-      }catch (err){
+      } catch (err) {
         console.error("굿즈 불러오기 실패:", err);
       }
     };
@@ -198,9 +198,7 @@ function Goods() {
   };
 
   const filteredAndSortedGoods = goodsList
-    .filter((goods) =>
-      goods.name.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    .filter((goods) => goods.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
       switch (sortOption) {
         case "price_asc":
@@ -241,11 +239,11 @@ function Goods() {
 
         <ProductGrid>
           {filteredAndSortedGoods.map((goods) => (
-            <ProductCard
-              key={goods.id}
-              onClick={() => handleProductClick(goods.id)}
-            >
-              <ProductImage src={goods.imgUrlList?.[0] || ""} alt={goods.name} />
+            <ProductCard key={goods.id} onClick={() => handleProductClick(goods.id)}>
+              <ProductImage
+                src={`/src/assets/GoodsIMG/${goods.imgUrlList?.[0]}`}
+                alt={goods.name}
+              />
               <ProductInfo>
                 <ProductName>{goods.name}</ProductName>
                 <ProductPrice>{goods.price.toLocaleString()}원</ProductPrice>
