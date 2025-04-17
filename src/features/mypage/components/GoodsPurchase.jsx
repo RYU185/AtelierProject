@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import RefundModal from "./RefundModal";
+import ExchangeRefundModal from "./ExchangeRefundModal";
 import axios from "axios";
 
 const Container = styled.div`
@@ -123,8 +123,8 @@ const ActionButton = styled.button`
 
 const GoodsPurchase = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [showRefundModal, setShowRefundModal] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPurchase, setSelectedPurchase] = useState(null);
   const [purchases, setPurchases] = useState([]);
 
   useEffect(() => {
@@ -149,16 +149,8 @@ const GoodsPurchase = () => {
     purchase.goodsName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleReview = (purchase) => {
-    // 리뷰 작성 로직
-  };
-
-  const handleAddToCart = (purchase) => {
-    // 장바구니 담기 로직
-  };
-
   const handleRefund = (purchase) => {
-    const ticketData = {
+    const formatted = {
       id: purchase.purchaseId,
       title: purchase.goodsName,
       image: `/public/images/goods-images/${purchase.thumbnailUrl}`,
@@ -171,8 +163,8 @@ const GoodsPurchase = () => {
       ).toLocaleDateString()}`,
     };
 
-    setSelectedItem(ticketData);
-    setShowRefundModal(true);
+    setSelectedPurchase(formatted);
+    setShowModal(true);
   };
 
   return (
@@ -217,17 +209,13 @@ const GoodsPurchase = () => {
                   <GoodsDetails>수량: {purchase.quantity}개</GoodsDetails>
                   <Price>
                     총 금액:{" "}
-                    {(purchase.quantity * purchase.price).toLocaleString()}원 (
+                    {(purchase.price * purchase.quantity).toLocaleString()}원 (
                     1개 당 {purchase.price.toLocaleString()}원 )
                   </Price>
                 </div>
                 <ButtonContainer>
-                  <ActionButton onClick={() => handleReview(purchase)}>
-                    리뷰 작성하기
-                  </ActionButton>
-                  <ActionButton onClick={() => handleAddToCart(purchase)}>
-                    장바구니 담기
-                  </ActionButton>
+                  <ActionButton>리뷰 작성하기</ActionButton>
+                  <ActionButton>장바구니 담기</ActionButton>
                   <ActionButton onClick={() => handleRefund(purchase)}>
                     교환/환불 신청
                   </ActionButton>
@@ -238,10 +226,10 @@ const GoodsPurchase = () => {
         )}
       </PurchaseList>
 
-      {showRefundModal && (
-        <RefundModal
-          ticket={selectedItem}
-          onClose={() => setShowRefundModal(false)}
+      {showModal && (
+        <ExchangeRefundModal
+          purchase={selectedPurchase}
+          onClose={() => setShowModal(false)}
         />
       )}
     </Container>

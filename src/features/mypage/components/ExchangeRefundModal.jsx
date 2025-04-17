@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import React, { useState } from "react";
+import axios from "axios";
 
 const Overlay = styled.div`
   position: fixed;
@@ -41,7 +42,7 @@ const Title = styled.h2`
   margin: 0 0 32px;
 `;
 
-const TicketInfo = styled.div`
+const PurchaseInfo = styled.div`
   background-color: #f8f9fa;
   border-radius: 4px;
   padding: 24px;
@@ -159,7 +160,13 @@ const Button = styled.button`
   }
 `;
 
-const RefundModal = ({ ticket, onClose }) => {
+const ErrorMessage = styled.div`
+  color: #ff4d4f;
+  font-size: 14px;
+  margin-top: 8px;
+`;
+
+const ExchangeRefundModal = ({ purchase, onClose }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [details, setDetails] = useState("");
   const [error, setError] = useState("");
@@ -169,14 +176,26 @@ const RefundModal = ({ ticket, onClose }) => {
     setError("");
   };
 
-  const handleSubmit = () => {
-    if (selectedReason === " 기타 다른 이유" && details.trim() === "") {
+  const handleSubmit = async () => {
+    if (selectedReason === "기타 다른 이유" && details.trim() === "") {
       setError("기타 사유를 입력해주세요.");
       return;
     }
 
-    alert("환불 처리가 완료 되었습니다.");
-    onClose();
+    try {
+      const token = localStorage.getItem("accessToken");
+      await axios.post(`/api/purchase/delete/${purchase.purchaseId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("환불 처리가 완료되었습니다.");
+      onClose();
+    } catch (e) {
+      console.error(e);
+      alert("환불 요청 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -185,21 +204,21 @@ const RefundModal = ({ ticket, onClose }) => {
         <CloseButton onClick={onClose}>×</CloseButton>
         <Title>교환 / 환불 신청</Title>
 
-        <TicketInfo>
+        <PurchaseInfo>
           <ProductSection>
-            <ProductImage src={ticket.image} alt={ticket.title} />
+            <ProductImage src={purchase.image} alt={purchase.title} />
             <ProductDetails>
-              <ProductTitle>{ticket.title}</ProductTitle>
-              <ProductSubInfo>{ticket.description}</ProductSubInfo>
+              <ProductTitle>{purchase.title}</ProductTitle>
+              <ProductSubInfo>{purchase.description}</ProductSubInfo>
               <ProductPrice>
-                {ticket.price.split(" · ")[0]}
+                {purchase.price.split(" · ")[0]}
                 <span style={{ color: "#666", marginLeft: "8px" }}>
-                  수량: {ticket.price.split(" · ")[1]}
+                  수량: {purchase.price.split(" · ")[1]}
                 </span>
               </ProductPrice>
             </ProductDetails>
           </ProductSection>
-        </TicketInfo>
+        </PurchaseInfo>
 
         <ReasonSection>
           <ReasonTitle>어떤 문제가 있었나요?</ReasonTitle>
@@ -271,4 +290,4 @@ const RefundModal = ({ ticket, onClose }) => {
   );
 };
 
-export default RefundModal;
+export default ExchangeRefundModal;

@@ -6,7 +6,7 @@ import Footer from "../Footer";
 import MyTickets from "./components/MyTickets";
 import GoodsPurchase from "./components/GoodsPurchase";
 import MyDrawing from "./components/MyDrawing";
-import RefundModal from "./components/RefundModal";
+import RefundModal from "./components/ExchangeRefundModal";
 import TicketCheckModal from "./components/TicketCheckModal";
 import EditProfile from "./components/EditProfile";
 import { useNavigate, useLocation } from "react-router-dom";
