@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import AdminGoodsMenubar from './AdminGoodsMenubar';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import axios from '../../../api/axiosInstance';
 
+// ✅ 정적 이미지 불러오기 (public/images/GoodsListIMG)
+const goodsImages = import.meta.glob("/public/images/goods-images/*", {
+  eager: true,
+});
+
+// ✅ 이미지 경로 처리 함수
+const getGoodsImageUrl = (filename) => {
+  if (!filename) return '/default.jpg';
+
+  const matched = Object.entries(goodsImages).find(([path]) =>
+    path.endsWith(filename)
+  );
+  if (matched) {
+    return matched[1].default;
+  }
+
+  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
+};
+
+// 스타일 컴포넌트 정의
 const Container = styled.div`
   display: flex;
   padding: 23px;
   margin-left: 23px;
-  position: relative; /* ✅ AddButton absolute 위치 적용을 위해 추가 */
+  position: relative;
 `;
 
 const AdminMenuWrapper = styled.div`
@@ -19,14 +40,12 @@ const AdminMenuWrapper = styled.div`
   margin-left: 13px;
 `;
 
-/* ✅ 버튼을 감싸는 새로운 Wrapper 추가 */
 const AddButtonWrapper = styled.div`
   position: absolute;
   top: 10px;
-  right: 115px; /* 오른쪽 정렬 */
+  right: 115px;
   z-index: 10;
   margin-top: 16px;
-  
 `;
 
 const AddButton = styled.button`
@@ -37,7 +56,6 @@ const AddButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
-
   &:hover {
     background: #3da0e5;
   }
@@ -123,8 +141,6 @@ const ProductCell = styled.td`
   padding: 6px;
   border-right: 1px solid #bbb;
   border-bottom: 1px solid #bbb;
-
-  
 `;
 
 const ProductImage = styled.img`
@@ -135,8 +151,7 @@ const ProductImage = styled.img`
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
-  pointer-events: auto; /* ✅ 이미지만 클릭 가능 */
-
+  pointer-events: auto;
   &:hover {
     transform: scale(1.05);
   }
@@ -151,21 +166,30 @@ const ProductInfo = styled.div`
   flex: 1;
   min-width: 110px;
   word-break: keep-all;
-  pointer-events: auto; /* ✅ 텍스트 클릭 가능 */
+  pointer-events: auto;
 `;
 
-
-const GoodsData = [
-  { id: 1, image: 'goods1.jpg', name: '전통 부채', price: 20000, stock: 137, sold: 145 },
-  { id: 2, image: 'goods1.jpg', name: '우산', price: 20000, stock: 26, sold: 87 },
-  { id: 3, image: 'goods1.jpg', name: '가방', price: 20000, stock: 45, sold: 31 },
-  { id: 4, image: 'goods1.jpg', name: '다기 세트', price: 20000, stock: 63, sold: 24 },
-  { id: 5, image: 'goods1.jpg', name: '검정 부채', price: 20000, stock: 5, sold: 101 },
-  { id: 5, image: 'goods1.jpg', name: '검정 부채', price: 20000, stock: 5, sold: 101 },
-  
-];
-
 function AdminGoods() {
+  const [goodsData, setGoodsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGoods = async () => {
+      try {
+        const response = await axios.get('/goods/admin');
+        setGoodsData(response.data);
+      } catch (error) {
+        console.error('굿즈 데이터를 불러오는 중 오류 발생:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGoods();
+  }, []);
+
+  if (loading) return <div>굿즈 데이터를 불러오는 중...</div>;
+
   return (
     <>
       <Header />
@@ -179,7 +203,6 @@ function AdminGoods() {
           <AdminMenu />
         </AdminMenuWrapper>
 
-        {/* ✅ AddButton을 별도 Wrapper에 감싸 위치 조정 */}
         <AddButtonWrapper>
           <Link to="/AdminGoodsAdd" style={{ textDecoration: 'none' }}>
             <AddButton>굿즈 추가</AddButton>
@@ -196,23 +219,21 @@ function AdminGoods() {
               </tr>
             </thead>
             <tbody>
-              {GoodsData.map((item) => (
+              {goodsData.map((item) => (
                 <ProductRow key={item.id}>
                   <ProductCell>
-                    {/* ✅ 이미지에만 링크 적용 */}
                     <Link to={`/goods/${item.id}`} style={{ display: 'inline-block' }}>
-                      <ProductImage src={`/images/${item.image}`} alt={item.name} />
+                      <ProductImage
+                        src={getGoodsImageUrl(item.imgUrlList?.[0])}
+                        alt={item.name}
+                      />
                     </Link>
                     <ProductInfo>
                       <strong style={{ fontSize: '16px' }}>{item.name}</strong>
-                      <span style={{ color: '#666', fontSize: '13px' }}>
-                        {item.price.toLocaleString()}원
-                      </span>
                     </ProductInfo>
                   </ProductCell>
-
                   <Td>{item.stock}</Td>
-                  <TdLast>{item.sold}</TdLast>
+                  <TdLast>{item.totalSales}</TdLast>
                 </ProductRow>
               ))}
             </tbody>
