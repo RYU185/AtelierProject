@@ -220,7 +220,7 @@ const AdminTicketList = () => {
             <thead>
               <tr>
                 <Th>전시 정보</Th>
-                <Th>누적 관람객</Th>
+                <Th>예약 관람객</Th>
                 <Th>수익</Th>
               </tr>
             </thead>
