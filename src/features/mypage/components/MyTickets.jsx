@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../../api/axiosInstance";
 
 const Container = styled.div`
   width: 100%;
@@ -105,48 +106,55 @@ const ActionButton = styled.button`
 `;
 
 const MyTickets = ({ onTicketClick, onRefundClick }) => {
-  const tickets = [
-    {
-      id: 1,
-      title: "삶의 예찬",
-      date: "2025.03.27",
-      image: "/images/삶의 예찬.jpg",
-      description: "김도영, 김준기, 노보캣, 이다은, 이봉일, 정은진, 최혜원",
-      price: "42000원 · 성인 1인",
-    },
-    {
-      id: 2,
-      title: "FOLDER [:record and archive]",
-      date: "2025.04.12",
-      image: "/images/산업디자인.jpg",
-      description: "한밭대 산업디자인과",
-      price: "21000원 · 성인 2인",
-    },
-  ];
+  const [reserve , setReserve] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =>{
+    const fetchMyreserve = async () =>{
+      try{
+        const res = await axiosInstance.get("/reservation/my")
+        setReserve(res.data);
+      }catch(error){
+        console.error("예약 내역 조회 실패:", error);
+        setError("예약 정보를 불러올 수 없습니다");
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMyreserve();
+  }, []);
+
+  if (loading) return <div>로딩 중...</div>;
+  if (error) return <div>{error}</div>;
+
 
   return (
     <Container>
       <TicketCount>
-        총 {tickets.length}개의 티켓이 활성화 되어 있습니다.
+        총 {reserve.length}개의 전시가 예약되어 있습니다.
       </TicketCount>
       <TicketList>
-        {tickets.map((ticket) => (
-          <TicketCard key={ticket.id}>
+        {reserve.map((rv) => (
+          <TicketCard key={rv.id}>
             <MoreButton>⋮</MoreButton>
             <TicketInfo>
-              <TicketImage src={ticket.image} alt={ticket.title} />
+              <TicketImage src={rv.image} alt={rv.title} />
               <TicketDetails>
-                <h3>{ticket.title}</h3>
-                <p>{ticket.date}</p>
-                <p>{ticket.description}</p>
-                <p>{ticket.price}</p>
+                <h3>{rv.galleryTitle}</h3>
+                <p>{rv.date}</p>
+                <p>{rv.time}</p>
+                <p>{rv.headcount}</p>
+                <p>{rv.description}</p>
               </TicketDetails>
             </TicketInfo>
             <TicketActions>
-              <ActionButton onClick={() => onTicketClick(ticket)}>
+              <ActionButton onClick={() => onTicketClick(rv)}>
                 티켓 확인하기
               </ActionButton>
-              <ActionButton onClick={() => onRefundClick(ticket)}>
+              <ActionButton onClick={() => onRefundClick(rv)}>
                 환불 신청
               </ActionButton>
             </TicketActions>
