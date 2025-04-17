@@ -42,7 +42,7 @@ const WeekdayHeader = styled.div`
 `;
 
 const WeekdayCell = styled.div`
-  color: #666;
+  color: #000d36;
   font-size: 0.9rem;
   padding: 10px;
 `;
@@ -50,38 +50,45 @@ const WeekdayCell = styled.div`
 const DaysGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+
 `;
 
 const DayCell = styled.div`
-  aspect-ratio: 1;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  cursor: ${({ $isCurrentMonth, $isActive }) =>
-    $isCurrentMonth && $isActive ? "pointer" : "default"};
-  border-radius: 50%;
-
-  background-color: ${({ $isSelected, $isActive }) => {
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: ${({ $isSelected, $isActive, $inExhibitionRange }) => {
     if ($isSelected) return "#0066ff";
     if ($isActive) return "#90caf9";
+    if ($inExhibitionRange) return "#ebebeb";
     return "transparent";
   }};
 
-  color: ${({ $isSelected, $isCurrentMonth, $isActive }) => {
+  color: ${({ $isSelected, $isCurrentMonth, $isActive, $inExhibitionRange }) => {
     if ($isSelected) return "#fff";
-    if ($isCurrentMonth && $isActive) return "#333";
+    if ($isCurrentMonth && ($isActive || $inExhibitionRange)) return "#333";
+    if ($inExhibitionRange) return "#aaaaaa";
     return "#ccc";
   }};
 
+  cursor: ${({ $isCurrentMonth, $isActive }) =>
+    $isCurrentMonth && $isActive ? "pointer" : "default"};
   pointer-events: ${({ $isActive }) => ($isActive ? "auto" : "none")};
+
+  transition: background-color 0.2s ease;
 
   &:hover {
     background-color: ${({ $isSelected, $isCurrentMonth, $isActive }) =>
       $isCurrentMonth && $isActive && !$isSelected ? "#64b5f6" : ""};
   }
 `;
+
+
 
 const isSameDate = (a, b) =>
   a.getFullYear() === b.getFullYear() &&
@@ -92,8 +99,11 @@ const TicketCalendar = ({
   selectedDate,
   onDateSelect,
   activeDates = [],
-  exhibitionRange,
+  exhibitionStartDate,
+  exhibitionEndDate,
 }) => {
+  console.log(exhibitionStartDate, "~", exhibitionEndDate);
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState([]);
 
@@ -129,28 +139,28 @@ const TicketCalendar = ({
   };
 
   const handlePrevMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
-    );
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
-    );
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
   };
 
-  const isSelected = (date) => {
-    return selectedDate && isSameDate(date, selectedDate);
-  };
+  const isSelected = (date) => selectedDate && isSameDate(date, selectedDate);
 
   const isActive = (date) => {
-    return activeDates.some((active) => isSameDate(new Date(active), date));
+    const target = date.toISOString().slice(0, 10);
+    return activeDates.includes(target);
   };
 
   const isInExhibitionPeriod = (date) => {
-    if (!exhibitionRange?.start || !exhibitionRange?.end) return false;
-    return date >= exhibitionRange.start && date <= exhibitionRange.end;
+    if (!exhibitionStartDate || !exhibitionEndDate) return false;
+
+    const dateStr = date.toISOString().slice(0, 10);
+    const startStr = exhibitionStartDate.slice(0, 10);
+    const endStr = exhibitionEndDate.slice(0, 10);
+
+    return dateStr >= startStr && dateStr <= endStr;
   };
 
   return (
@@ -168,20 +178,32 @@ const TicketCalendar = ({
         ))}
       </WeekdayHeader>
       <DaysGrid>
-        {calendarDays.map(({ date, isCurrentMonth }, index) => (
-          <DayCell
-            key={index}
-            $isCurrentMonth={isCurrentMonth}
-            $isSelected={isSelected(date)}
-            $isActive={isActive(date)}
-            $inExhibitionRange={isInExhibitionPeriod(date)}
-            onClick={() =>
-              isCurrentMonth && isActive(date) && onDateSelect(date)
-            }
-          >
-            {date.getDate()}
-          </DayCell>
-        ))}
+        {calendarDays.map(({ date, isCurrentMonth }, index) => {
+          const inRange = isInExhibitionPeriod(date);
+          console.log(
+            "날짜:",
+            date.toISOString().slice(0, 10),
+            "전시:",
+            exhibitionStartDate,
+            "~",
+            exhibitionEndDate,
+            "→ inRange:",
+            inRange
+          );
+
+          return (
+            <DayCell
+              key={index}
+              $isCurrentMonth={isCurrentMonth}
+              $isSelected={isSelected(date)}
+              $isActive={isActive(date)}
+              $inExhibitionRange={inRange}
+              onClick={() => isCurrentMonth && isActive(date) && onDateSelect(date)}
+            >
+              {date.getDate()}
+            </DayCell>
+          );
+        })}
       </DaysGrid>
     </CalendarContainer>
   );

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import TicketCalendar from "./components/TicketCalendar";
-import TicketInfo from "./components/TicketInfo";
+import TicketCalendar from "../TicketPage/TicketCalendar";
+import TicketInfo from "../TicketPage/TicketInfo";
 import Header from "../Header";
 import Footer from "../Footer";
 import axiosInstance from "../../api/axiosInstance";
@@ -56,6 +56,8 @@ const ExhibitionCapacity = styled.p`
   color: #666;
 `;
 
+const formatDateForServer = (date) => date.toISOString().slice(0, 10);
+
 function TicketPage() {
   const { galleryId } = useParams();
   const navigate = useNavigate();
@@ -67,14 +69,11 @@ function TicketPage() {
   const [reserveDateList, setReserveDateList] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
 
-  const getActiveDates = () => {
-    return reserveDateList.map((d) => new Date(d.date + "T00:00:00"));
-  };
+  const getActiveDates = () => reserveDateList.map((d) => d.date);
 
   const findReserveDateId = (selectedDate) => {
-    const match = reserveDateList.find(
-      (d) => new Date(d.date).toDateString() === selectedDate.toDateString()
-    );
+    const selectedStr = formatDateForServer(selectedDate);
+    const match = reserveDateList.find((d) => d.date === selectedStr);
     return match ? match.id : null;
   };
 
@@ -90,9 +89,7 @@ function TicketPage() {
 
     const fetchReserveDates = async () => {
       try {
-        const res = await axiosInstance.get(
-          `/reservation/reserve-date?galleryId=${galleryId}`
-        );
+        const res = await axiosInstance.get(`/reservation/reserve-date?galleryId=${galleryId}`);
         setReserveDateList(res.data);
       } catch (error) {
         console.error("예약 가능 날짜 조회 실패:", error);
@@ -151,7 +148,7 @@ function TicketPage() {
           title: galleryInfo?.title,
           price: galleryInfo?.price * count,
           memberName: "홍길동",
-          date: selectedDate,
+          date: formatDateForServer(selectedDate),
           count: count,
         },
       });
@@ -161,6 +158,16 @@ function TicketPage() {
     }
   };
 
+  if (!galleryInfo) return null;
+  if (!galleryInfo?.startDate || !galleryInfo?.endDate) return null;
+
+  console.log("📤 Calendar에 넘기기:", {
+    start: galleryInfo?.startDate,
+    end: galleryInfo?.endDate
+  });
+
+
+  
   return (
     <>
       <Header />
@@ -189,10 +196,8 @@ function TicketPage() {
             selectedDate={selectedDate}
             onDateSelect={handleDateSelect}
             activeDates={getActiveDates()}
-            exhibitionRange={{
-              start: new Date(galleryInfo?.startDate),
-              end: new Date(galleryInfo?.endDate),
-            }}
+            exhibitionStartDate={galleryInfo.startDate}
+            exhibitionEndDate={galleryInfo.endDate}
           />
 
           <TicketInfo
