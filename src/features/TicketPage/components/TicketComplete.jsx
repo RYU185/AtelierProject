@@ -117,7 +117,7 @@ const TicketComplete = () => {
       <Header />
       <PageContainer>
         <CompleteMessage>
-          티켓이 <span>예약 완료</span>되었습니다!
+          전시가 <span>예약 완료</span>되었습니다!
         </CompleteMessage>
 
         <TicketInfoContainer>
@@ -126,11 +126,11 @@ const TicketComplete = () => {
             <Value>{ticketInfo.title}</Value>
           </InfoRow>
           <InfoRow>
-            <Label>예매 날짜</Label>
+            <Label>예약 날짜</Label>
             <Value>{formatDate(ticketInfo.date)}</Value>
           </InfoRow>
           <InfoRow>
-            <Label>예매 인원</Label>
+            <Label>예약 인원</Label>
             <Value>{ticketInfo.count}명</Value>
           </InfoRow>
           <InfoRow>
