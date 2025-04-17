@@ -107,11 +107,10 @@ function TicketPage() {
         console.error("예약 가능 날짜 조회 실패:", error);
       }
     };
-
-    if (galleryId) {
-      fetchGallery();
-      fetchReserveDates();
-    }
+    fetchGallery();
+    fetchReserveDates();
+    const interval = setInterval(fetchReserveDates, 60000);
+    return () => clearInterval(interval);
   }, [galleryId]);
 
   useEffect(() => {
@@ -137,6 +136,10 @@ function TicketPage() {
   const handleDateSelect = (date) => {
     setSelectedDate(date);
   };
+
+  const remainingCount = reserveDateList.find(
+    (d) => d.date === selectedDate?.toISOString().slice(0, 10)
+  )?.remaining;
 
   const handleCountChange = (newCount) => {
     if (newCount >= 1 && newCount <= 10) {
@@ -233,7 +236,7 @@ function TicketPage() {
                   top: 0,
                   left: 0,
                   width: "100%",
-                  height: "500px",
+                  height: "420px",
                   backgroundColor: "#ffffff",
                   padding: "30px",
                   zIndex: 10,
@@ -257,13 +260,18 @@ function TicketPage() {
                   &times;
                 </button>
 
-                <h4 style={{ marginBottom: "20px", fontSize: "1.2rem" }}>시간 선택</h4>
+                <h4 style={{ marginBottom: "40px", fontSize: "1.2rem" }}>
+                  시간 선택 <br />
+                  <span style={{ fontSize: "0.95rem", color: "#888" }}>
+                    남은 정원: {remainingCount}명
+                  </span>
+                </h4>
 
                 <div
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: "16px",
+                    gap:"20px"
                   }}
                 >
                   {availableTimes.map((time) => (
@@ -271,13 +279,15 @@ function TicketPage() {
                       key={time.id}
                       onClick={() => setSelectedTime(time)}
                       style={{
-                        padding: "12px 20px",
-                        borderRadius: "8px",
-                        fontSize: "1rem",
+                        padding: "14px 14px",
+                        borderRadius: "4px",
+                        fontSize: "1.1rem",
+                        fontWeight:"bold",
                         width: "100%",
                         backgroundColor: selectedTime?.id === time.id ? "#0066ff" : "#f0f0f0",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
-                        border: "none",
+                        transition: "background-color 0.3s ease, color 0.3s ease",
+                        border:  selectedTime?.id === time.id ? "#222222" : "#333",
                         cursor: "pointer",
                       }}
                     >
