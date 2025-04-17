@@ -1,10 +1,11 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const InfoContainer = styled.div`
   background-color: #f8f9fa;
   padding: 30px;
   border-radius: 12px;
+  width: 300px;
 `;
 
 const Title = styled.h3`
@@ -119,17 +120,9 @@ const Notice = styled.p`
   margin-top: 10px;
 `;
 
-const TicketInfo = ({ 
-  title, 
-  date, 
-  price, 
-  count, 
-  onCountChange, 
-  onReserve, 
-  isReserving 
-}) => {
+const TicketInfo = ({ title, time, date, price, count, onCountChange, onReserve, isReserving }) => {
   const formatDate = (date) => {
-    if (!date) return '날짜를 선택해주세요';
+    if (!date) return "날짜를 선택해주세요";
     return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
   };
 
@@ -144,20 +137,18 @@ const TicketInfo = ({
         <Label>날짜</Label>
         <Value>{formatDate(date)}</Value>
       </InfoSection>
+      <InfoSection>
+        <Label>시간</Label>
+        <Value>{time ? time.slice(0, 5) : "시간을 선택해주세요"}</Value>
+      </InfoSection>
       <CounterSection>
         <CounterLabel>인원 선택</CounterLabel>
         <CounterControls>
-          <CountButton 
-            onClick={() => onCountChange(count - 1)}
-            disabled={count <= 1}
-          >
+          <CountButton onClick={() => onCountChange(count - 1)} disabled={count <= 1}>
             -
           </CountButton>
           <CountDisplay>{count}</CountDisplay>
-          <CountButton 
-            onClick={() => onCountChange(count + 1)}
-            disabled={count >= 10}
-          >
+          <CountButton onClick={() => onCountChange(count + 1)} disabled={count >= 10}>
             +
           </CountButton>
         </CounterControls>
@@ -166,15 +157,12 @@ const TicketInfo = ({
         <Label>총 금액</Label>
         <TotalPrice>{price.toLocaleString()}원</TotalPrice>
       </PriceSection>
-      <ReserveButton 
-        onClick={onReserve}
-        disabled={!date || isReserving}
-      >
-        {isReserving ? '예매 처리중...' : '예매하기'}
+      <ReserveButton onClick={onReserve} disabled={!date || isReserving}>
+        {isReserving ? "예매 처리중..." : "예매하기"}
       </ReserveButton>
       <Notice>* 인원 10명까지만 예매하실 수 있습니다.</Notice>
     </InfoContainer>
   );
 };
 
-export default TicketInfo; 
+export default TicketInfo;

@@ -6,6 +6,7 @@ import TicketInfo from "../TicketPage/TicketInfo";
 import Header from "../Header";
 import Footer from "../Footer";
 import axiosInstance from "../../api/axiosInstance";
+import { motion } from "framer-motion";
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -45,15 +46,18 @@ const ExhibitionImage = styled.img`
 const ExhibitionTitle = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 10px;
+  margin-left: 20px;
 `;
 
 const ExhibitionDate = styled.p`
   color: #666;
   margin-bottom: 5px;
+  margin-left: 20px;
 `;
 
 const ExhibitionCapacity = styled.p`
   color: #666;
+  margin-left: 20px;
 `;
 
 const formatDateForServer = (date) => date.toISOString().slice(0, 10);
@@ -68,6 +72,12 @@ function TicketPage() {
   const [isReserving, setIsReserving] = useState(false);
   const [reserveDateList, setReserveDateList] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const handleCloseTimeOverlay = () => {
+    setSelectedDate(null);
+    setSelectedTime(null);
+  };
 
   const getActiveDates = () => reserveDateList.map((d) => d.date);
 
@@ -111,7 +121,7 @@ function TicketPage() {
 
       try {
         const res = await axiosInstance.get(
-          `/reservation/reserve-time?reserveDateId=${reserveDateId}`
+          `/reservation/available-times?date=${selectedDate.toISOString().slice(0, 10)}`
         );
         setAvailableTimes(res.data);
       } catch (error) {
@@ -137,7 +147,6 @@ function TicketPage() {
       alert("날짜를 선택해주세요.");
       return;
     }
-
     setIsReserving(true);
 
     try {
@@ -161,13 +170,11 @@ function TicketPage() {
   if (!galleryInfo) return null;
   if (!galleryInfo?.startDate || !galleryInfo?.endDate) return null;
 
-  console.log("📤 Calendar에 넘기기:", {
+  console.log("Calendar에 넘기기:", {
     start: galleryInfo?.startDate,
-    end: galleryInfo?.endDate
+    end: galleryInfo?.endDate,
   });
 
-
-  
   return (
     <>
       <Header />
@@ -180,29 +187,100 @@ function TicketPage() {
               alt={galleryInfo?.title}
             />
             <ExhibitionTitle>{galleryInfo?.title}</ExhibitionTitle>
-            <ExhibitionDate>
-              {selectedDate
-                ? selectedDate.toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })
-                : "날짜를 선택해주세요"}
-            </ExhibitionDate>
-            <ExhibitionCapacity>인원: {count}명</ExhibitionCapacity>
+
+            {galleryInfo?.artistList?.length > 0 && (
+              <ExhibitionDate style={{ fontWeight: "bold", color: "#444" }}>
+                {galleryInfo.artistList.join(", ")}
+              </ExhibitionDate>
+            )}
+            <ExhibitionCapacity style={{ color: "#666", whiteSpace: "pre-line", lineHeight: 1.6 }}>
+              {galleryInfo?.startDate} 
+              <span style={{ margin: "0 12px" }}>-</span>
+              {galleryInfo?.endDate}
+            </ExhibitionCapacity>
           </ExhibitionCard>
 
-          <TicketCalendar
-            selectedDate={selectedDate}
-            onDateSelect={handleDateSelect}
-            activeDates={getActiveDates()}
-            exhibitionStartDate={galleryInfo.startDate}
-            exhibitionEndDate={galleryInfo.endDate}
-          />
+          <div style={{ position: "relative" }}>
+            <TicketCalendar
+              selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
+              activeDates={getActiveDates()}
+              exhibitionStartDate={galleryInfo.startDate}
+              exhibitionEndDate={galleryInfo.endDate}
+            />
+            {/* 시간 선택 UI : FRAMER MOTION 사용
+            10:00 ~ 17:00 , 1시간 단위 */}
+            {selectedDate && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "500px",
+                  backgroundColor: "#ffffff",
+                  padding: "30px",
+                  zIndex: 10,
+                  borderRadius: "12px",
+                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
+                }}
+              >
+                <button
+                  onClick={handleCloseTimeOverlay}
+                  style={{
+                    position: "absolute",
+                    top: "16px",
+                    right: "20px",
+                    background: "none",
+                    border: "none",
+                    fontSize: "20px",
+                    color: "#888",
+                    cursor: "pointer",
+                  }}
+                >
+                  &times;
+                </button>
+
+                <h4 style={{ marginBottom: "20px", fontSize: "1.2rem" }}>시간 선택</h4>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "16px",
+                  }}
+                >
+                  {availableTimes.map((time) => (
+                    <button
+                      key={time.id}
+                      onClick={() => setSelectedTime(time)}
+                      style={{
+                        padding: "12px 20px",
+                        borderRadius: "8px",
+                        fontSize: "1rem",
+                        width: "100%",
+                        backgroundColor: selectedTime?.id === time.id ? "#0066ff" : "#f0f0f0",
+                        color: selectedTime?.id === time.id ? "#fff" : "#333",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {time.time.slice(0, 5)}
+                    </button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </div>
 
           <TicketInfo
             title={galleryInfo?.title}
             date={selectedDate}
+            time={selectedTime?.time}
             price={galleryInfo?.price * count}
             count={count}
             onCountChange={handleCountChange}
