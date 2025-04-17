@@ -31,9 +31,10 @@ const ContentWrapper = styled.div`
 
 const ExhibitionCard = styled.div`
   background: white;
+  border: 1px solid #e0e0e0;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
   padding: 20px;
 `;
 
@@ -240,8 +241,9 @@ function TicketPage() {
                   backgroundColor: "#ffffff",
                   padding: "30px",
                   zIndex: 10,
+                  border: "1px solid #d4d4d4",
                   borderRadius: "12px",
-                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
+                  // boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
                 }}
               >
                 <button
@@ -255,6 +257,7 @@ function TicketPage() {
                     fontSize: "20px",
                     color: "#888",
                     cursor: "pointer",
+                    
                   }}
                 >
                   &times;
@@ -280,14 +283,14 @@ function TicketPage() {
                       onClick={() => setSelectedTime(time)}
                       style={{
                         padding: "14px 14px",
-                        borderRadius: "4px",
+                        borderRadius: "5px",
                         fontSize: "1.1rem",
                         fontWeight:"bold",
                         width: "100%",
-                        backgroundColor: selectedTime?.id === time.id ? "#0066ff" : "#f0f0f0",
+                        backgroundColor: selectedTime?.id === time.id ? "#0066ff" : "#ffffff",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
                         transition: "background-color 0.3s ease, color 0.3s ease",
-                        border:  selectedTime?.id === time.id ? "#222222" : "#333",
+                        border: selectedTime?.id === time.id ? "#0066ff" : "1px solid #b9b9b9",
                         cursor: "pointer",
                       }}
                     >

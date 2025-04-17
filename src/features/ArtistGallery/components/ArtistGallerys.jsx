@@ -10,7 +10,7 @@ const Container = styled.div`
   align-items: center; /* 변경: 세로 방향 중앙 정렬 */
   cursor: pointer;
   border: 1px solid #a2a2a2;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
