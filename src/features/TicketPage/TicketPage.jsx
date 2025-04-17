@@ -261,7 +261,7 @@ function TicketPage() {
                 </button>
 
                 <h4 style={{ marginBottom: "40px", fontSize: "1.2rem" }}>
-                  시간 선택 <br />
+                  예약할 시간을 선택해주세요 <br />
                   <span style={{ fontSize: "0.95rem", color: "#888" }}>
                     남은 정원: {remainingCount}명
                   </span>
