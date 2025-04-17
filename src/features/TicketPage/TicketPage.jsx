@@ -7,6 +7,7 @@ import Header from "../Header";
 import Footer from "../Footer";
 import axiosInstance from "../../api/axiosInstance";
 import { motion } from "framer-motion";
+import { useAuth } from "../../components/AuthContext";
 
 const PageContainer = styled.div`
   max-width: 1200px;
@@ -65,6 +66,7 @@ const formatDateForServer = (date) => date.toISOString().slice(0, 10);
 function TicketPage() {
   const { galleryId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [galleryInfo, setGalleryInfo] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -143,26 +145,36 @@ function TicketPage() {
   };
 
   const handleReservation = async () => {
-    if (!selectedDate) {
-      alert("날짜를 선택해주세요.");
+    if (!selectedTime || count <= 0) {
+      alert("시간과 인원을 선택해주세요.");
       return;
     }
     setIsReserving(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await axiosInstance.post("/reservation", {
+        reserveTimeId: selectedTime.id,
+        headcount: count,
+      });
 
       navigate("/ticket/complete", {
         state: {
           title: galleryInfo?.title,
           price: galleryInfo?.price * count,
-          memberName: "홍길동",
-          date: formatDateForServer(selectedDate),
-          count: count,
+          memberName: user?.username,
+          date: selectedDate.toISOString().slice(0, 10),
+          time: selectedTime.time,
+          count,
         },
       });
     } catch (error) {
-      alert("예매 처리 중 오류가 발생했습니다.");
+      const data = error.response?.data;
+      const message =
+        typeof data === "object" && data !== null
+          ? Object.values(data)[0] // 첫 번째 value 가져오기
+          : "예약에 실패했습니다.";
+      alert(message);
+    } finally {
       setIsReserving(false);
     }
   };
@@ -194,7 +206,7 @@ function TicketPage() {
               </ExhibitionDate>
             )}
             <ExhibitionCapacity style={{ color: "#666", whiteSpace: "pre-line", lineHeight: 1.6 }}>
-              {galleryInfo?.startDate} 
+              {galleryInfo?.startDate}
               <span style={{ margin: "0 12px" }}>-</span>
               {galleryInfo?.endDate}
             </ExhibitionCapacity>
