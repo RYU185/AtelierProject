@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
+import axios from 'axios';
 
 const Container = styled.div`
   padding: 20px;
@@ -15,7 +16,7 @@ const AdminContent = styled.div`
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 중앙 정렬 */
+  align-items: center;
 `;
 
 const Title = styled.h2`
@@ -42,13 +43,13 @@ const InputField = styled.input`
 
 const TextAreaField = styled.textarea`
   width: 500px;
-  height: 150px; /* 기본 높이를 크게 설정 */
+  height: 150px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
   border-color: #2a7fbc;
-  resize: vertical; /* 세로 크기만 조정 가능 */
+  resize: vertical;
 `;
 
 const FileInput = styled.input`
@@ -96,13 +97,13 @@ const FlexContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 50px;
-  margin-top: 100px; /* 위로 올리기 */
+  margin-top: 100px;
   margin-right: 400px;
 `;
 
 const ImagePreviewContainer = styled.div`
   width: 400px;
-  height: 350px; /* 높이 줄여서 조정 */
+  height: 350px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,54 +126,70 @@ const PlaceholderText = styled.div`
 `;
 
 function AdminArtAdd() {
-  const [image, setImage] = useState(null);
-  const [imageFile, setImageFile] = useState(null);  // 추가된 상태
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
-  const [description, setDescription] = useState('');
-  const [year, setYear] = useState('');
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [year, setYear] = useState("");
+  const [uploadDate, setUploadDate] = useState("");
+  const [artistId, setArtistId] = useState("");
+  const [artistList, setArtistList] = useState([]);
+
+  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = !!token;
+
+  useEffect(() => {
+    axios.get('/api/artist')
+      .then(res => setArtistList(res.data))
+      .catch(err => console.error("작가 목록 불러오기 실패", err));
+  }, []);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file));
-      setImageFile(file);  // 이미지 파일 상태도 업데이트
+      setImagePreview(URL.createObjectURL(file));
+      setImageFile(file);
     }
   };
 
-    const handleSubmit = () => {
-      const token = localStorage.getItem("authToken");  // 토큰을 로컬스토리지에서 가져옵니다.
-if (!token) {
-  console.error("토큰이 로컬스토리지에 없습니다");
-  // 로그인 페이지로 리디렉션
-  window.location.href = "/login";  // 로그인 페이지 URL로 변경
-  return;
-}
+  const handleSubmit = async () => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("file", imageFile);  // 이미지 파일 추가
+    formData.append("image", imageFile);
     formData.append("title", title);
-    formData.append("artist", artist);
     formData.append("description", description);
-    formData.append("year", year);
+    formData.append("completionDate", `${year}-01-01`);
+    formData.append("uploadDate", uploadDate || new Date().toISOString().split("T")[0]);
+    formData.append("artistId", artistId);
 
-     // JWT 토큰 가져오기
+    try {
+      const response = await axios.post("/api/art/add", formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
+        }
+      });
 
-     fetch("/api/art/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "Authorization": `Bearer ${token}`,  // JWT 토큰을 Authorization 헤더에 추가
-      },
-      body: formData,
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`서버 응답 오류: ${response.statusText}`);
+      if (response.status === 201) {
+        alert("작품 등록 완료!");
+
+        // 작품 등록 후 미리보기와 입력값 초기화
+        setImagePreview(null);
+        setImageFile(null);
+        setTitle("");
+        setDescription("");
+        setYear("");
+        setUploadDate("");
+        setArtistId("");
       }
-      return response.json();
-    })
-    .then(data => console.log("작품 등록 완료", data))
-    .catch(error => console.error("Error:", error));
+    } catch (err) {
+      console.error("업로드 실패:", err);
+      alert("작품 등록 실패. 관리자에게 문의해주세요.");
+    }
   };
 
   return (
@@ -180,14 +197,12 @@ if (!token) {
       <Header />
       <Container>
         <AdminMenu />
-
         <AdminContent>
           <Title>작품 추가</Title>
-
           <FlexContainer>
             <ImagePreviewContainer>
-              {image ? (
-                <ImagePreview src={image} alt="Uploaded Image" />
+              {imagePreview ? (
+                <ImagePreview src={imagePreview} alt="미리보기" />
               ) : (
                 <PlaceholderText>이미지를 업로드 해주세요</PlaceholderText>
               )}
@@ -200,22 +215,38 @@ if (!token) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <InputField
-                type="text"
-                placeholder="작가명"
-                value={artist}
-                onChange={(e) => setArtist(e.target.value)}
-              />
+
+              <select
+                value={artistId}
+                onChange={(e) => setArtistId(e.target.value)}
+                style={{ width: '500px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '1px solid #2a7fbc' }}
+              >
+                <option value="">작가 선택</option>
+                {artistList.map((artist) => (
+                  <option key={artist.id} value={artist.id}>
+                    {artist.name}
+                  </option>
+                ))}
+              </select>
+
               <TextAreaField
-                placeholder="상세 설명"
+                placeholder="작품 설명"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
+
               <InputField
                 type="number"
-                placeholder="제작 연도"
+                placeholder="제작 연도 (예: 2023)"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
+              />
+
+              <InputField
+                type="date"
+                placeholder="업로드 날짜"
+                value={uploadDate}
+                onChange={(e) => setUploadDate(e.target.value)}
               />
             </InputContainer>
           </FlexContainer>
@@ -224,10 +255,7 @@ if (!token) {
 
       <ButtonContainer>
         <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
-        <SubmitButton
-          disabled={!image}
-          onClick={handleSubmit}
-        >
+        <SubmitButton disabled={!imageFile} onClick={handleSubmit}>
           등록
         </SubmitButton>
       </ButtonContainer>
@@ -238,6 +266,7 @@ if (!token) {
         accept="image/*"
         onChange={handleImageUpload}
       />
+
       <Footer />
     </>
   );

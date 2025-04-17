@@ -4,21 +4,28 @@ import ArtCard from '../components/ArtCard';
 import { Link } from 'react-router-dom';
 import api from "../../../api/axiosInstance";
 
-const artImages = import.meta.glob("/src/assets/ArtListIMG/*", {
+const artImages = import.meta.glob("/public/images/ArtListIMG/*", {
   eager: true,
 });
-
 const getImageUrl = (filename) => {
   const matched = Object.entries(artImages).find(([path]) =>
     path.endsWith(filename)
   );
-  if (!matched) {
-    console.error(`이미지 ${filename}을 찾을 수 없습니다.`);
-    return '/path/to/default-image.png';
+  if (matched) {
+    return matched[1].default;
   }
-  return matched[1].default;
-};
 
+  // 중복 방지 처리
+  if (filename) {
+    const cleanFilename = filename.startsWith("/uploads/")
+      ? filename
+      : `/uploads/${filename}`;
+    console.log("업로드된 이미지 경로: ", cleanFilename);
+    return cleanFilename;
+  }
+
+  return '/path/to/default-image.png';
+};
 const PageContainer = styled.div`
   padding: 20px;
   margin-top: 10px;
@@ -114,12 +121,10 @@ const MoreOptions = styled.div`
   z-index: 100;
   color: #4e5b69;
   padding: 2px 5px;
-
-
-
   transition: all 0.3s ease;
   pointer-events: auto;  /* 클릭 가능하도록 설정 */
 `;
+
 const OptionsMenu = styled.div`
   display: ${({ visible }) => (visible ? 'block' : 'none')};
   position: absolute;
