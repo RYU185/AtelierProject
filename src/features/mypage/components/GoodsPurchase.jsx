@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ExchangeRefundModal from "./ExchangeRefundModal";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Container = styled.div`
@@ -126,6 +127,7 @@ const GoodsPurchase = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedPurchase, setSelectedPurchase] = useState(null);
   const [purchases, setPurchases] = useState([]);
+  const navigate = useNavigate(); // useNavigate 훅 초기화
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -156,7 +158,7 @@ const GoodsPurchase = () => {
       image: `/public/images/goods-images/${purchase.thumbnailUrl}`,
       price: `환불금액: ${(
         purchase.price * purchase.quantity
-      ).toLocaleString()}원 · ${purchase.quantity}개 
+      ).toLocaleString()}원 · ${purchase.quantity}개
       (1개 당 ${purchase.price.toLocaleString()}원) `,
       description: `구매일: ${new Date(
         purchase.purchaseDate
@@ -165,6 +167,17 @@ const GoodsPurchase = () => {
 
     setSelectedPurchase(formatted);
     setShowModal(true);
+  };
+  const handleRefundSuccess = (deletedId) => {
+    setPurchases((prev) =>
+      prev.filter((purchase) => purchase.purchaseId !== deletedId)
+    );
+  };
+
+  // 리뷰 작성하기 버튼 클릭 핸들러
+  const handleWriteReview = (goodsId) => {
+    console.log("이동할 goodsId:", goodsId);
+    navigate(`/goods/${goodsId}`); // 해당 goodsId를 파라미터로 상세 페이지로 이동
   };
 
   return (
@@ -214,7 +227,11 @@ const GoodsPurchase = () => {
                   </Price>
                 </div>
                 <ButtonContainer>
-                  <ActionButton>리뷰 작성하기</ActionButton>
+                  <ActionButton
+                    onClick={() => handleWriteReview(purchase.goodsId)}
+                  >
+                    리뷰 작성하기
+                  </ActionButton>
                   <ActionButton>장바구니 담기</ActionButton>
                   <ActionButton onClick={() => handleRefund(purchase)}>
                     교환/환불 신청
@@ -230,6 +247,7 @@ const GoodsPurchase = () => {
         <ExchangeRefundModal
           purchase={selectedPurchase}
           onClose={() => setShowModal(false)}
+          onSuccess={handleRefundSuccess} // 👈 콜백 전달
         />
       )}
     </Container>

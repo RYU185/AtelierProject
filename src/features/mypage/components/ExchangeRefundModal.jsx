@@ -166,7 +166,7 @@ const ErrorMessage = styled.div`
   margin-top: 8px;
 `;
 
-const ExchangeRefundModal = ({ purchase, onClose }) => {
+const ExchangeRefundModal = ({ purchase, onClose, onSuccess }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [details, setDetails] = useState("");
   const [error, setError] = useState("");
@@ -177,20 +177,26 @@ const ExchangeRefundModal = ({ purchase, onClose }) => {
   };
 
   const handleSubmit = async () => {
-    if (selectedReason === "기타 다른 이유" && details.trim() === "") {
+    if (selectedReason === " 기타 다른 이유" && details.trim() === "") {
       setError("기타 사유를 입력해주세요.");
       return;
     }
 
+    const token = localStorage.getItem("accessToken");
+
     try {
-      const token = localStorage.getItem("accessToken");
-      await axios.post(`/api/purchase/delete/${purchase.purchaseId}`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        `/api/purchase/delete/${purchase.id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       alert("환불 처리가 완료되었습니다.");
+      onSuccess?.(purchase.id); // ✅ 성공 시 호출
       onClose();
     } catch (e) {
       console.error(e);

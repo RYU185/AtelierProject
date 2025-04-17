@@ -384,7 +384,6 @@ function GoodsDetail() {
     fetchGoodsDetail();
   }, [id]);
 
-
   const handleIncrease = () => {
     if (stock > 0) {
       setQuantity((prev) => prev + 1);
@@ -524,12 +523,10 @@ function GoodsDetail() {
     );
   }
 
-
-
-  const currentProductImages = goods.imgUrlList?.map(
-    (filename) => `/public/images/goods-images/${filename}`
-  ) || [];
-
+  const currentProductImages =
+    goods.imgUrlList?.map(
+      (filename) => `/public/images/goods-images/${filename}`
+    ) || [];
 
   return (
     <>
@@ -596,18 +593,26 @@ function GoodsDetail() {
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCountText>{(goods.price * quantity).toLocaleString()}원</AmountCountText>
+              <AmountCountText>
+                {(goods.price * quantity).toLocaleString()}원
+              </AmountCountText>
             </AmountCountContainer>
 
             <ButtonContainer>
-              <GoToCartButton onClick={handleAddToCart}>장바구니 담기</GoToCartButton>
+              <GoToCartButton onClick={handleAddToCart}>
+                장바구니 담기
+              </GoToCartButton>
               {showCartNotice && (
                 <CartNotification>
                   <NotificationText>장바구니에 담겼습니다</NotificationText>
-                  <GoToCartLink onClick={handleGoToCart}>장바구니로 가기</GoToCartLink>
+                  <GoToCartLink onClick={handleGoToCart}>
+                    장바구니로 가기
+                  </GoToCartLink>
                 </CartNotification>
               )}
-              <PurchaseButton onClick={handlePurchase}>바로 구매하기</PurchaseButton>
+              <PurchaseButton onClick={handlePurchase}>
+                바로 구매하기
+              </PurchaseButton>
             </ButtonContainer>
           </InfoSection>
         </ProductContainer>
