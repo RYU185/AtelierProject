@@ -7,10 +7,10 @@ import styled from "styled-components";
 import axios from "axios";
 import TicketButton from "../ArtistGalleryDetail/components/TicketButton";
 
-const images = import.meta.glob("/src/assets/UserGalleryIMG/*", {
+const images = import.meta.glob("/public/images/UserGalleryIMG/*", {
   eager: true,
 });
-const dImages = import.meta.glob("/src/assets/DrawingIMG/*", {
+const dImages = import.meta.glob("/public/images/DrawingIMG/*", {
   eager: true,
 });
 

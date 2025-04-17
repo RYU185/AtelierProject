@@ -112,12 +112,11 @@ const ErrorMessage = styled.p`
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [autoLogin, setAutoLogin] = useState(false);
   const [error, setError] = useState("");
-  
 
   const handleLogin = async () => {
     if (!userId.trim() || !password.trim()) {
@@ -136,7 +135,7 @@ const Login = () => {
         password,
       });
 
-     const { token, role } = response.data;
+      const { token, role } = response.data;
 
       // ✅ 새 로그인 정보 저장
       localStorage.setItem("accessToken", token);
@@ -152,6 +151,7 @@ const Login = () => {
       }
 
       setError("");
+      alert("로그인이 완료되었습니다.");
       navigate("/");
     } catch (err) {
       console.error("로그인 에러:", err);

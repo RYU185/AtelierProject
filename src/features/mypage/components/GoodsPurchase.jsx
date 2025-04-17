@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import RefundModal from "./RefundModal";
+import axios from "axios";
 
 const Container = styled.div`
   width: 722px;
@@ -124,22 +125,28 @@ const GoodsPurchase = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [purchases, setPurchases] = useState([]);
 
-  const purchases = [
-    {
-      id: 1,
-      title: "빈가사유실 미니어쳐 vol.5 (8종중)",
-      date: "2025.03.02",
-      image: "/images/goods1.jpg",
-      description: "",
-      price: "42000원 · 1개",
-    },
-  ];
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) return;
 
-  const filteredPurchases = purchases.filter(
-    (purchase) =>
-      purchase.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      purchase.description.toLowerCase().includes(searchQuery.toLowerCase())
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    const fetchPurchases = async () => {
+      try {
+        const response = await axios.get("/api/purchase");
+        setPurchases(response.data);
+      } catch (error) {
+        console.error("❌ 구매내역 불러오기 실패:", error);
+      }
+    };
+
+    fetchPurchases();
+  }, []);
+
+  const filteredPurchases = purchases.filter((purchase) =>
+    purchase.goodsName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleReview = (purchase) => {
@@ -151,7 +158,20 @@ const GoodsPurchase = () => {
   };
 
   const handleRefund = (purchase) => {
-    setSelectedItem(purchase);
+    const ticketData = {
+      id: purchase.purchaseId,
+      title: purchase.goodsName,
+      image: `/public/images/goods-images/${purchase.thumbnailUrl}`,
+      price: `환불금액: ${(
+        purchase.price * purchase.quantity
+      ).toLocaleString()}원 · ${purchase.quantity}개 
+      (1개 당 ${purchase.price.toLocaleString()}원) `,
+      description: `구매일: ${new Date(
+        purchase.purchaseDate
+      ).toLocaleDateString()}`,
+    };
+
+    setSelectedItem(ticketData);
     setShowRefundModal(true);
   };
 
@@ -168,32 +188,54 @@ const GoodsPurchase = () => {
       </SearchContainer>
 
       <PurchaseList>
-        {filteredPurchases.map((purchase) => (
-          <PurchaseCard key={purchase.id}>
-            <GoodsImage src={purchase.image} alt={purchase.title} />
-            <GoodsInfo>
-              <div>
-                <GoodsHeader>
-                  <GoodsTitle>{purchase.title}</GoodsTitle>
-                  <PurchaseDate>{purchase.date}</PurchaseDate>
-                </GoodsHeader>
-                <GoodsDetails>{purchase.description}</GoodsDetails>
-                <Price>{purchase.price}</Price>
-              </div>
-              <ButtonContainer>
-                <ActionButton onClick={() => handleReview(purchase)}>
-                  리뷰 작성하기
-                </ActionButton>
-                <ActionButton onClick={() => handleAddToCart(purchase)}>
-                  장바구니 담기
-                </ActionButton>
-                <ActionButton onClick={() => handleRefund(purchase)}>
-                  교환/환불 신청
-                </ActionButton>
-              </ButtonContainer>
-            </GoodsInfo>
-          </PurchaseCard>
-        ))}
+        {filteredPurchases.length === 0 ? (
+          <div
+            style={{
+              color: "#999",
+              fontSize: "14px",
+              padding: "20px",
+              textAlign: "center",
+            }}
+          >
+            구매내역이 없습니다.
+          </div>
+        ) : (
+          filteredPurchases.map((purchase) => (
+            <PurchaseCard key={purchase.purchaseId}>
+              <GoodsImage
+                src={`/public/images/goods-images/${purchase.thumbnailUrl}`}
+                alt={purchase.goodsName}
+              />
+              <GoodsInfo>
+                <div>
+                  <GoodsHeader>
+                    <GoodsTitle>{purchase.goodsName}</GoodsTitle>
+                    <PurchaseDate>
+                      {new Date(purchase.purchaseDate).toLocaleDateString()}
+                    </PurchaseDate>
+                  </GoodsHeader>
+                  <GoodsDetails>수량: {purchase.quantity}개</GoodsDetails>
+                  <Price>
+                    총 금액:{" "}
+                    {(purchase.quantity * purchase.price).toLocaleString()}원 (
+                    1개 당 {purchase.price.toLocaleString()}원 )
+                  </Price>
+                </div>
+                <ButtonContainer>
+                  <ActionButton onClick={() => handleReview(purchase)}>
+                    리뷰 작성하기
+                  </ActionButton>
+                  <ActionButton onClick={() => handleAddToCart(purchase)}>
+                    장바구니 담기
+                  </ActionButton>
+                  <ActionButton onClick={() => handleRefund(purchase)}>
+                    교환/환불 신청
+                  </ActionButton>
+                </ButtonContainer>
+              </GoodsInfo>
+            </PurchaseCard>
+          ))
+        )}
       </PurchaseList>
 
       {showRefundModal && (

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import styled from "styled-components";
+import React, { useState } from "react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -84,27 +84,6 @@ const ProductPrice = styled.div`
   font-weight: 500;
 `;
 
-const InfoRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-`;
-
-const Label = styled.span`
-  color: #666;
-  font-size: 14px;
-`;
-
-const Value = styled.span`
-  color: #333;
-  font-size: 14px;
-  font-weight: 500;
-`;
-
 const ReasonSection = styled.div`
   margin-bottom: 24px;
 `;
@@ -123,16 +102,8 @@ const RadioGroup = styled.div`
 `;
 
 const RadioLabel = styled.label`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
   font-size: 14px;
   color: #333;
-`;
-
-const RadioInput = styled.input`
-  cursor: pointer;
 `;
 
 const TextArea = styled.textarea`
@@ -173,7 +144,6 @@ const Button = styled.button`
     background-color: white;
     border: 1px solid #e1e1e1;
     color: #666;
-
     &:hover {
       background-color: #f8f9fa;
     }
@@ -183,74 +153,30 @@ const Button = styled.button`
     background-color: #4199ff;
     border: none;
     color: white;
-
     &:hover {
       background-color: #357abd;
     }
   }
 `;
 
-const ErrorMessage = styled.div`
-  color: #ff4d4f;
-  font-size: 14px;
-  margin-top: 8px;
-`;
-
 const RefundModal = ({ ticket, onClose }) => {
-  const [reason, setReason] = useState("");
+  const [selectedReason, setSelectedReason] = useState("");
   const [details, setDetails] = useState("");
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!ticket) return null;
+  const handleReasonChange = (e) => {
+    setSelectedReason(e.target.value);
+    setError("");
+  };
 
-  const refundReasons = [
-    "변심에 의한 상품 교환",
-    "상품을 잘못 주문함",
-    "상품 파손 또는 불량",
-    "다른 상품 오배송 또는 구성품 누락",
-    "상품 정보와 다름",
-  ];
-
-  const handleSubmit = async () => {
-    try {
-      // 유효성 검사
-      if (!reason) {
-        setError("환불 사유를 선택해주세요.");
-        return;
-      }
-
-      if (!details.trim()) {
-        setError("상세 사유를 입력해주세요.");
-        return;
-      }
-
-      setError("");
-      setIsSubmitting(true);
-
-      // 환불 신청 데이터
-      const refundData = {
-        ticketId: ticket.id,
-        reason: reason,
-        details: details.trim(),
-        productInfo: {
-          title: ticket.title,
-          price: ticket.price.split(" · ")[0],
-          quantity: ticket.price.split(" · ")[1],
-        },
-      };
-
-      // API 호출을 시뮬레이션 (실제로는 여기에 API 호출 코드가 들어갑니다)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // 성공 처리
-      alert("환불 신청이 완료되었습니다.");
-      onClose();
-    } catch (error) {
-      setError("환불 신청 중 오류가 발생했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsSubmitting(false);
+  const handleSubmit = () => {
+    if (selectedReason === " 기타 다른 이유" && details.trim() === "") {
+      setError("기타 사유를 입력해주세요.");
+      return;
     }
+
+    alert("환불 처리가 완료 되었습니다.");
+    onClose();
   };
 
   return (
@@ -278,19 +204,23 @@ const RefundModal = ({ ticket, onClose }) => {
         <ReasonSection>
           <ReasonTitle>어떤 문제가 있었나요?</ReasonTitle>
           <RadioGroup>
-            {refundReasons.map((option) => (
-              <RadioLabel key={option}>
-                <RadioInput
+            {[
+              " 변심에 의한 상품 교환",
+              " 상품을 잘못 주문함",
+              " 상품 파손 또는 불량",
+              " 다른 상품 오배송 또는 구성품 누락",
+              " 상품 정보와 다름",
+              " 기타 다른 이유",
+            ].map((reason, index) => (
+              <RadioLabel key={index}>
+                <input
                   type="radio"
-                  name="reason"
-                  value={option}
-                  checked={reason === option}
-                  onChange={(e) => {
-                    setReason(e.target.value);
-                    setError("");
-                  }}
+                  name="refundReason"
+                  value={reason}
+                  onChange={handleReasonChange}
+                  checked={selectedReason === reason}
                 />
-                {option}
+                {reason}
               </RadioLabel>
             ))}
           </RadioGroup>
@@ -302,23 +232,38 @@ const RefundModal = ({ ticket, onClose }) => {
               setDetails(e.target.value);
               setError("");
             }}
+            style={{
+              borderColor:
+                selectedReason === " 기타 다른 이유" && details.trim() === ""
+                  ? "#ff4d4f"
+                  : "#e1e1e1",
+            }}
           />
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </ReasonSection>
 
         <ButtonContainer>
-          <Button onClick={onClose} disabled={isSubmitting}>
-            취소
-          </Button>
+          <Button onClick={onClose}>취소</Button>
           <Button
             onClick={handleSubmit}
-            disabled={isSubmitting}
+            disabled={
+              !selectedReason ||
+              (selectedReason === " 기타 다른 이유" && details.trim() === "")
+            }
             style={{
-              opacity: isSubmitting ? 0.7 : 1,
-              cursor: isSubmitting ? "not-allowed" : "pointer",
+              opacity:
+                !selectedReason ||
+                (selectedReason === " 기타 다른 이유" && details.trim() === "")
+                  ? 0.6
+                  : 1,
+              cursor:
+                !selectedReason ||
+                (selectedReason === " 기타 다른 이유" && details.trim() === "")
+                  ? "not-allowed"
+                  : "pointer",
             }}
           >
-            {isSubmitting ? "처리중..." : "제출"}
+            제출
           </Button>
         </ButtonContainer>
       </ModalContainer>

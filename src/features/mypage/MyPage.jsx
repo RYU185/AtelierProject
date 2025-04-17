@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../api/axiosInstance";
+import axios from "axios";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -63,6 +63,7 @@ const ContentContainer = styled.div`
 
 const ProfileSection = styled.div`
   width: 320px;
+  height: 500px;
   background-color: #01acf033;
   padding: 32px;
   border-radius: 4px;
@@ -101,7 +102,7 @@ const AccountInfo = styled.div`
     left: 0;
     right: 0;
     height: 1px;
-    background-color: #e1e1e1;
+    background-color: #414141;
   }
 `;
 
@@ -150,52 +151,11 @@ const Value = styled.span`
   margin-left: 40px;
 `;
 
-const Points = styled.div`
-  text-align: right;
-  color: #333;
-  font-size: 14px;
-  padding-top: 20px;
-`;
-
 const MainContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-`;
-
-const TicketItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #eee;
-
-  img {
-    width: 80px;
-    height: 120px;
-    object-fit: cover;
-    margin-right: 20px;
-  }
-`;
-
-const TicketInfo = styled.div`
-  flex: 1;
-
-  h3 {
-    margin: 0 0 10px 0;
-    font-weight: 300;
-  }
-
-  p {
-    margin: 5px 0;
-    color: #666;
-    font-weight: 300;
-  }
-`;
-
-const Price = styled.div`
-  color: #333;
-  font-weight: 300;
 `;
 
 const MyPage = () => {
@@ -219,25 +179,17 @@ const MyPage = () => {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     if (!token) {
       navigate("/login");
       return;
     }
 
-    // ✅ 토큰 권한 디코딩 로그
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      console.log("📦 JWT 권한 (auth):", payload.auth); // ex: ROLE_USER
-    } catch (e) {
-      console.warn("⚠️ JWT 디코딩 실패:", e);
-    }
-
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/user/me");
+        const response = await axios.get("/api/user/me");
         setUserInfo(response.data);
       } catch (error) {
-        console.error("❌ 사용자 정보 가져오기 실패:", error);
         navigate("/login");
       } finally {
         setLoading(false);
@@ -307,7 +259,7 @@ const MyPage = () => {
             active={activeTab === "ticket"}
             onClick={() => handleTabChange("ticket")}
           >
-            나의 티켓 현황
+            나의 예약 현황
           </TabButton>
           <TabButton
             active={activeTab === "purchase"}
@@ -353,9 +305,24 @@ const MyPage = () => {
                   <Label>주소</Label>
                   <Value>{userInfo.address}</Value>
                 </ProfileField>
+                <ProfileField>
+                  <Label>성별</Label>
+                  <Value>
+                    {userInfo.gender === "MALE"
+                      ? "남성"
+                      : userInfo.gender === "FEMALE"
+                      ? "여성"
+                      : "기타"}
+                  </Value>
+                </ProfileField>
+                <ProfileField>
+                  <Label>가입일</Label>
+                  <Value>
+                    {new Date(userInfo.enrolmentDate).toLocaleDateString()}
+                  </Value>
+                </ProfileField>
               </ProfileInfo>
             </AccountInfo>
-            <Points>적립 포인트: {userInfo.point}</Points>
           </ProfileSection>
 
           <MainContent>

@@ -104,36 +104,6 @@ const ActionButton = styled.button`
   }
 `;
 
-const TicketItem = styled.div`
-  display: flex;
-  padding: 20px;
-  border-bottom: 1px solid #eee;
-  align-items: center;
-`;
-
-const TicketTitle = styled.h3`
-  margin: 0 0 8px 0;
-  font-size: 16px;
-  font-weight: 200;
-  font-family: "Pretendard", sans-serif;
-`;
-
-const TicketDescription = styled.p`
-  margin: 4px 0;
-  color: #666;
-  font-size: 14px;
-  font-weight: 200;
-  font-family: "Pretendard", sans-serif;
-`;
-
-const TicketPrice = styled.p`
-  margin: 4px 0;
-  color: #333;
-  font-size: 14px;
-  font-weight: 200;
-  font-family: "Pretendard", sans-serif;
-`;
-
 const MyTickets = ({ onTicketClick, onRefundClick }) => {
   const tickets = [
     {

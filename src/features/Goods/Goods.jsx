@@ -195,7 +195,9 @@ function Goods() {
   };
 
   const filteredAndSortedGoods = goodsList
-    .filter((goods) => goods.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((goods) =>
+      goods.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     .sort((a, b) => {
       switch (sortOption) {
         case "price_asc":
@@ -237,7 +239,10 @@ function Goods() {
 
         <ProductGrid>
           {filteredAndSortedGoods.map((goods) => (
-            <ProductCard key={goods.id} onClick={() => handleProductClick(goods.id)}>
+            <ProductCard
+              key={goods.id}
+              onClick={() => handleProductClick(goods.id)}
+            >
               <ProductImage
                 src={`/public/images/goods-images/${goods.imgUrlList?.[0]}`}
                 alt={goods.name}

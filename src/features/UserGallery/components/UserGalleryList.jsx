@@ -3,7 +3,7 @@ import UserGallerys from "./UserGallerys";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const images = import.meta.glob("/src/assets/UserGalleryIMG/*", {
+const images = import.meta.glob("/public/images/UserGalleryIMG/*", {
   eager: true,
 });
 
