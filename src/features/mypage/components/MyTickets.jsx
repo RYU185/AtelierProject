@@ -71,7 +71,7 @@ const TicketDetails = styled.div`
   }
 
   p {
-    font-size: 21px;
+    font-size: 18px;
     color: #141414;
     line-height: 1.8;
     font-weight: 300;
