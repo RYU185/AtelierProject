@@ -25,7 +25,6 @@ const LeftBox = styled.div`
 const Title = styled.h2`
   font-size: 45px;
   font-weight: 700;
-  
 `;
 
 const Subtitle = styled.p`
@@ -45,8 +44,6 @@ const RightBox = styled.div`
   background-size: cover;
   background-position: center;
 `;
-
-
 
 const HighlightExhibition = () => {
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SLIDE_INTERVAL = 5000;
 const IMAGE_BASE_URL = "/images/ArtistGalleryIMG/";
@@ -61,6 +62,7 @@ const Slide = styled.div`
   backface-visibility: hidden;
   transform-style: preserve-3d;
   will-change: transform, opacity;
+  cursor: pointer;
 
   img {
     width: 100%;
@@ -76,6 +78,7 @@ const EventInfo = styled.div`
   width: 100%;
   text-align: center;
   opacity: 0.8;
+  cursor: pointer;
 `;
 
 const EventTitle = styled.div`
@@ -115,9 +118,14 @@ export default function WhatsOn() {
   const [artistGalleries, setArtistGalleries] = useState([]);
   const timeoutRef = useRef(null);
   const total = artistGalleries.length;
+  const navigate = useNavigate(); // useNavigate 훅 초기화
 
   const nextSlide = () => {
     setIndex((prev) => (prev + 1) % total);
+  };
+
+  const handleGalleryClick = (id) => {
+    navigate(`/gallery/artistgallery/${id}`); // 올바른 경로 템플릿 리터럴 사용
   };
 
   useEffect(() => {
@@ -175,10 +183,11 @@ export default function WhatsOn() {
                   zIndex,
                   transition: "all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1)",
                 }}
+                onClick={() => handleGalleryClick(gallery.id)}
               >
                 {imageUrl && <img src={imageUrl} alt={gallery.title} />}
                 {offset === 0 && (
-                  <EventInfo>
+                  <EventInfo onClick={() => handleGalleryClick(gallery.id)}>
                     <EventTitle>{gallery.title}</EventTitle>
                     <EventDate>{displayDate}</EventDate>
                   </EventInfo>

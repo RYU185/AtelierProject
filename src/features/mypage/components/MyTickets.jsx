@@ -124,7 +124,7 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
       <TicketCount>
         총 {reserve.length}개의 전시가 예약되어 있습니다.
       </TicketCount>
-  
+
       <TicketList>
         {loading ? (
           <p>로딩 중...</p>
@@ -147,8 +147,12 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
                 </TicketDetails>
               </TicketInfo>
               <TicketActions>
-                <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
-                <ActionButton onClick={() => onRefundClick(rv)}>환불 신청</ActionButton>
+                <ActionButton onClick={() => onTicketClick(rv)}>
+                  티켓 확인하기
+                </ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>
+                  환불 신청
+                </ActionButton>
               </TicketActions>
             </TicketCard>
           ))
@@ -156,6 +160,6 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
       </TicketList>
     </Container>
   );
-}  
+};
 
 export default MyTickets;

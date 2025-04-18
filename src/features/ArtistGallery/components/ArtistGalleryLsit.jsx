@@ -4,9 +4,6 @@ import ArtistGallerys from "./ArtistGallerys";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import axiosInstance from "../../../api/axiosInstance";
-const images = import.meta.glob("/src/assets/ArtistGalleryIMG/*", {
-  eager: true,
-});
 
 const Container = styled.div`
   width: 94%;
@@ -27,7 +24,8 @@ function ArtistGalleryLsit({ filteredItems }) {
   const navigate = useNavigate();
   const [galleryItems, setGalleryItems] = useState([]);
 
-  const getImageUrl = (filename) => (filename ? `/images/ArtistGalleryIMG/${filename}` : "");
+  const getImageUrl = (filename) =>
+    filename ? `/images/ArtistGalleryIMG/${filename}` : "";
 
   useEffect(() => {
     fetchGalleryData("/artistgallery");
@@ -68,7 +66,10 @@ function ArtistGalleryLsit({ filteredItems }) {
     <Container>
       <GalleryGrid>
         {galleryItems.map((item) => (
-          <div key={item.id} onClick={() => navigate(`/gallery/artistgallery/${item.id}`)}>
+          <div
+            key={item.id}
+            onClick={() => navigate(`/gallery/artistgallery/${item.id}`)}
+          >
             <ArtistGallerys {...item} />
           </div>
         ))}
