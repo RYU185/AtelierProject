@@ -222,7 +222,7 @@ function TicketPage() {
               onDateSelect={handleDateSelect}
               activeDates={getActiveDates()}
               exhibitionStartDate={galleryInfo.startDate}
-              exhibitionEndDate={galleryInfo.endDate}
+              exhibitionEndDate={galleryInfo.deadline} // 🔥 수정된 부분
             />
             {/* 시간 선택 UI : FRAMER MOTION 사용
             10:00 ~ 17:00 , 1시간 단위 */}
@@ -257,7 +257,7 @@ function TicketPage() {
                     fontSize: "20px",
                     color: "#888",
                     cursor: "pointer",
-                    
+
                   }}
                 >
                   &times;
@@ -274,7 +274,7 @@ function TicketPage() {
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap:"20px"
+                    gap: "20px"
                   }}
                 >
                   {availableTimes.map((time) => (
@@ -285,7 +285,7 @@ function TicketPage() {
                         padding: "14px 14px",
                         borderRadius: "5px",
                         fontSize: "1.1rem",
-                        fontWeight:"bold",
+                        fontWeight: "bold",
                         width: "100%",
                         backgroundColor: selectedTime?.id === time.id ? "#0066ff" : "#ffffff",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
