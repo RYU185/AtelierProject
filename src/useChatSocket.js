@@ -1,60 +1,59 @@
-// src/hooks/useChatSocket.js
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
 const useChatSocket = ({ userId, onMessageReceive }) => {
   const clientRef = useRef(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || clientRef.current) return;
 
     const client = new Client({
-      brokerURL: undefined, // SockJS 사용 시 생략
+      brokerURL: undefined,
       webSocketFactory: () => new SockJS("http://localhost:8081/ws"),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
+      reconnectDelay: 5000,
       onConnect: () => {
-        console.log("채팅 WebSocket 연결됨");
-
+        console.log("WebSocket 연결됨");
+        setIsConnected(true);
         client.subscribe(`/user/queue/messages`, (msg) => {
           const message = JSON.parse(msg.body);
-          console.log("메시지 수신:", message);
-          onMessageReceive(message); // 콜백으로 메시지 처리
+          onMessageReceive(message);
         });
       },
-      onStompError: (frame) => {
-        console.error("STOMP 오류:", frame);
+      onDisconnect: () => {
+        console.log("WebSocket 연결 해제됨");
+        setIsConnected(false);
       },
-      onWebSocketError: (error) => {
-        console.error("WebSocket 오류:", error);
-      },
+      onStompError: console.error,
+      onWebSocketError: console.error,
     });
 
     client.activate();
     clientRef.current = client;
 
     return () => {
-      if (clientRef.current) {
-        clientRef.current.deactivate();
-        console.log("채팅 WebSocket 종료됨");
-      }
+      clientRef.current?.deactivate();
+      clientRef.current = null;
+      console.log("WebSocket 종료");
     };
-  }, [userId, onMessageReceive]);
+  }, [userId]);
 
   const sendMessage = (payload) => {
-    if (clientRef.current && clientRef.current.connected) {
+    if (clientRef.current && isConnected) {
       clientRef.current.publish({
         destination: "/app/chat.send",
         body: JSON.stringify(payload),
       });
     } else {
-      console.warn("WebSocket 연결되지 않음, 메시지 전송 실패");
+      console.warn("WebSocket 연결 안됨 - 메시지 전송 실패");
     }
   };
 
-  return { sendMessage };
+  return { sendMessage, isConnected };
 };
 
 export default useChatSocket;

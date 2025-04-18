@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axiosInstance from "../../../api/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const RoomListContainer = styled.div`
   padding: 20px 40px;
@@ -28,25 +29,37 @@ const LastMessage = styled.p`
   color: #666;
 `;
 
-const ChatRoomList = ({ onSelectRoom }) => {
+const ChatRoomList = () => {
   const [rooms, setRooms] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const res = await axiosInstance.get("/chat-room/my");
+        console.log("서버 응답:", res.data);
         setRooms(res.data);
       } catch (err) {
         console.error("채팅방 목록 불러오기 실패:", err);
       }
-    };
+    };  
     fetchRooms();
   }, []);
 
+  const handleRoomClick = async (artistId) => {
+    try {
+      const res = await axiosInstance.post(`/chat-room/${artistId}`);
+      onSelectRoom(res.data);
+    } catch (err) {
+      console.error("채팅방 생성 실패:", err);
+    }
+  };
+
   return (
     <RoomListContainer>
+      {console.log("렌더링될 rooms:", rooms)}
       {rooms.map((room) => (
-        <RoomItem key={room.id} onClick={() => onSelectRoom(room)}>
+        <RoomItem key={room.artistId} onClick={() => handleRoomClick(room.artistId)}>
           <RoomTitle>{room.artistName}</RoomTitle>
           <LastMessage>{room.lastMessage || "채팅을 시작해보세요."}</LastMessage>
         </RoomItem>

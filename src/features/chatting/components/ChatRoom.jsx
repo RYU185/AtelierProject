@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ChatMessage from "./ChatMessage";
 import Header from "../../Header";
 import Footer from "../../Footer";
+import axiosInstance from "../../../api/axiosInstance";
 import useChatSocket from "../../../useChatsocket";
 
 const ChatContainer = styled.div`
@@ -309,8 +310,8 @@ const ChatRoom = () => {
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
 
-  const { sendMessage } = useChatSocket({
-    senderId: room.userId,
+  const { sendMessage, isConnected } = useChatSocket({
+    userId: room.userId,
     receiverId: room.artistId,
     onMessageReceive: (msg) => {
       const formatted = {
@@ -376,6 +377,11 @@ const ChatRoom = () => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
+
+    if (!isConnected) {
+      alert("서버와 연결 중입니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
 
     const payload = {
       sender: room.userId,

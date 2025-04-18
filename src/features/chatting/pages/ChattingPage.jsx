@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ChatRoom from "../components/ChatRoom";
 import ChatRoomList from "../components/ChatRoomList";
 
@@ -50,7 +50,8 @@ const Title = styled.h1`
 
 const ChattingPage = () => {
   const navigate = useNavigate();
-  const [selectedRoom, setSelectedRoom] = useState(null);
+  const location = useLocation();
+  const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
 
   return (
     <PageContainer>
@@ -63,7 +64,6 @@ const ChattingPage = () => {
       ) : (
         <ChatRoom room={selectedRoom} />
       )}
-      <ChatRoom />
     </PageContainer>
   );
 };

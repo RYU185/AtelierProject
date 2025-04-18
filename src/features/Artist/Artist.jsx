@@ -48,23 +48,19 @@ const ArtistContainer = styled.div`
 `;
 
 const Artist = () => {
-  const[artist, setArtist] = useState([]);
-  
-  useEffect(()=> {
-    const fetchArtist = async() =>{
-      try{
-        const res = await axiosInstance.get("/artist")
+  const [artist, setArtist] = useState([]);
+
+  useEffect(() => {
+    const fetchArtist = async () => {
+      try {
+        const res = await axiosInstance.get("/artist");
         setArtist(res.data);
-      }catch(err){
-        console.error("작가 목록 불러오기 실패:",err);
+      } catch (err) {
+        console.error("작가 목록 불러오기 실패:", err);
       }
-    }
+    };
     fetchArtist();
   }, []);
-
-
-
-  
 
   return (
     <div>
@@ -75,11 +71,11 @@ const Artist = () => {
       </TitleContainer>
       <ArtistContainer>
         {artist.map((a) => (
-          <ArtistIntro 
-          key={a.id} 
-          id= {a.id}
-          name={a.name}
-          imageUrl = {`/images/ArtistIMG/${a.profile_img}`}
+          <ArtistIntro
+            key={a.userId}
+            userId={a.userId}
+            name={a.name}
+            imageUrl={`/images/ArtistIMG/${a.profile_img}`}
           />
         ))}
       </ArtistContainer>

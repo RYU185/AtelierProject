@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate, NavLink } from "react-router-dom";
+import axiosInstance from "../../../api/axiosInstance";
 
 const ArtistCard = styled.div`
   display: flex;
@@ -81,11 +82,26 @@ const ArtistBio = styled.p`
   text-align: center;
 `;
 
-const ArtistIntro = ({ id, name, bio, imageUrl }) => {
+const ArtistIntro = ({ userId, name, bio, imageUrl }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(`/artist/${id}`);
+  };
+
+  const handleChat = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const res = await axiosInstance.post(`/chat-room/${userId}`);
+      const room = res.data;
+
+      navigate(`/artist/${userId}/chat`, {
+        state: { room },
+      });
+    } catch (err) {
+      console.error("채팅방 생성 실패:", err);
+    }
   };
 
   return (
@@ -93,10 +109,7 @@ const ArtistIntro = ({ id, name, bio, imageUrl }) => {
       <ArtistImage src={imageUrl} alt={name} />
       <ArtistInfo className="artist-info">
         <ArtistName>{name}</ArtistName>
-        <CommunicateButton
-          to={`/artist/${id}/chat`}
-          onClick={(e) => e.stopPropagation()}
-        >
+        <CommunicateButton as="button" onClick={handleChat}>
           작가와의 소통
         </CommunicateButton>
       </ArtistInfo>
