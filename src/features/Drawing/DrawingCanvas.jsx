@@ -210,6 +210,73 @@ const MenuItem = styled.button`
   }
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001; /* LeftToolBar 보다 높게 */
+`;
+
+const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 400px; /* 적절한 너비 */
+`;
+
+const ModalTitle = styled.h2`
+  margin-bottom: 15px;
+  color: #333;
+`;
+
+const InputField = styled.input`
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+`;
+
+const ModalButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &.confirm {
+    background-color: #007bff;
+    color: white;
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  &.cancel {
+    background-color: #f0f0f0;
+    color: #333;
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+`;
+
 const DrawingCanvas = () => {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
@@ -240,6 +307,9 @@ const DrawingCanvas = () => {
   const [isPanning, setIsPanning] = useState(false);
   const [startPanPosition, setStartPanPosition] = useState({ x: 0, y: 0 });
   const [showMenu, setShowMenu] = useState(false);
+  const [showTitleModal, setShowTitleModal] = useState(false);
+  const [drawingTitle, setDrawingTitle] = useState("");
+  const [isTemporarySave, setIsTemporarySave] = useState(false); // 임시 저장 여부 상태
 
   // Initialize canvas context and center canvas on mount
   useEffect(() => {
@@ -444,10 +514,35 @@ const DrawingCanvas = () => {
     setShowMenu(!showMenu);
   };
 
-  const sendDrawingToServer = async (isTemporary) => {
+  const handleSaveClick = (isTemporary) => {
+    setShowTitleModal(true);
+    setIsTemporarySave(isTemporary); // 임시 저장 여부 상태 업데이트
+  };
+
+  const handleTitleChange = (e) => {
+    setDrawingTitle(e.target.value);
+  };
+
+  const handleConfirmSave = () => {
+    if (drawingTitle.trim() === "") {
+      alert("제목을 입력해주세요!");
+      return;
+    }
+    sendDrawingToServer(isTemporarySave, drawingTitle); // 제목을 서버로 전달
+    setShowTitleModal(false);
+    setDrawingTitle("");
+    setIsTemporarySave(false); // 상태 초기화
+  };
+
+  const handleCancelSave = () => {
+    setShowTitleModal(false);
+    setDrawingTitle("");
+    setIsTemporarySave(false); // 상태 초기화
+  };
+
+  const sendDrawingToServer = async (isTemporary, title) => {
     const imageData = canvasRef.current.toDataURL("image/png");
 
-    const title = window.prompt("제목을 입력하세요:");
     if (!title || title.trim() === "") {
       alert("제목은 필수입니다!");
       return;
@@ -466,7 +561,7 @@ const DrawingCanvas = () => {
           id: editId,
           imageData,
           isTemporary,
-          title,
+          title, // 제목 포함
         },
         {
           headers: {
@@ -495,10 +590,10 @@ const DrawingCanvas = () => {
         handleClear();
         break;
       case "save":
-        sendDrawingToServer(false);
+        handleSaveClick(false); // 저장 클릭 시 모달 표시 (임시 저장 아님)
         break;
       case "tempSave":
-        sendDrawingToServer(true);
+        handleSaveClick(true); // 임시 저장 클릭 시 모달 표시
         break;
       case "download":
         handleDownload();
@@ -745,6 +840,29 @@ const DrawingCanvas = () => {
             />
           </CanvasWrapper>
         </CanvasContainer>
+
+        {/* 제목 입력 모달 */}
+        {showTitleModal && (
+          <ModalOverlay>
+            <ModalContent>
+              <ModalTitle>제목을 입력하세요</ModalTitle>
+              <InputField
+                type="text"
+                value={drawingTitle}
+                onChange={handleTitleChange}
+                placeholder="제목을 입력해주세요."
+              />
+              <ButtonGroup>
+                <ModalButton className="confirm" onClick={handleConfirmSave}>
+                  확인
+                </ModalButton>
+                <ModalButton className="cancel" onClick={handleCancelSave}>
+                  취소
+                </ModalButton>
+              </ButtonGroup>
+            </ModalContent>
+          </ModalOverlay>
+        )}
       </Container>
     </>
   );
