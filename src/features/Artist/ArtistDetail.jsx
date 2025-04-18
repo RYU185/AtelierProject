@@ -68,6 +68,7 @@ const BioGraphyText = styled.div`
 
 const WorksContainer = styled.div`
   margin-top: 40px;
+  margin-bottom: 10rem;
 `;
 
 const WorksTitle = styled.h2`
@@ -90,9 +91,7 @@ const WorkCard = styled.div`
   aspect-ratio: 1 / 1;
   overflow: hidden;
   cursor: pointer;
-
 `;
-
 
 const WorkImage = styled.img`
   width: 100%;
@@ -124,7 +123,7 @@ const Modal = styled.div`
   background-color: white;
   max-width: 900px;
   width: 100%;
-  height: 60%;
+  height: auto;
   position: relative;
 `;
 
@@ -285,28 +284,21 @@ const ArtistDetail = () => {
           </WorksGrid>
         </WorksContainer>
       </DetailWrapper>
-      {modalOpen && (
+      {modalOpen && selectedWork && (
         <Overlay onClick={handleOverlayClick}>
           <Modal onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={() => setModalOpen(false)}>X</CloseButton>
             <ArtDetailImageContainer>
-              <img src={`/images/ArtIMG/sample${selectedWork}.jpg`} alt={`작품 ${selectedWork}`} />
+              <img src={`/images/ArtListIMG/${selectedWork.imgUrl}`} alt={selectedWork.title} />
             </ArtDetailImageContainer>
             <ArtDetailDescriptionContainer>
-              <h2>TITLE</h2>
-              <p>
-                {/* {art.description} */}
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum
-                dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit
-                amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet
-                consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur
-                adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </p>
+              <h2>{selectedWork.title}</h2>
+              <p>{selectedWork.description}</p>
             </ArtDetailDescriptionContainer>
           </Modal>
         </Overlay>
       )}
+
       <Footer />
     </div>
   );
