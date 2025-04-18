@@ -88,7 +88,7 @@ const DrawingTitle = styled.div`
   align-items: center;
 
   span.status {
-    color: ${(props) => (props.status === "임시저장" ? "#e7563c" : "#0551ea")};
+    color: ${(props) => (props.status === "임시저장" ? "#029149" : "#0551ea")};
     font-size: 15px;
   }
 `;
@@ -134,7 +134,7 @@ const ActionButton = styled.button`
 
   &.delete {
     background: #fff;
-    color: #c11919;
+    color: #cb1919;
     &:hover {
       background: #e5e5e5;
     }

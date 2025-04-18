@@ -26,7 +26,7 @@ const PageContainer = styled.div`
 `;
 
 const PageTitle = styled.h1`
-  font-size: 28px;
+  font-size: 35px;
   font-weight: 600;
   color: #333;
   margin-bottom: 32px;
@@ -253,7 +253,7 @@ const MyPage = () => {
     <Wrapper>
       <Header />
       <PageContainer>
-        <PageTitle>마이 페이지</PageTitle>
+        <PageTitle>MY PAGE</PageTitle>
         <TabContainer>
           <TabButton
             $active={activeTab === "ticket"}

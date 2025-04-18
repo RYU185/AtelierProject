@@ -95,7 +95,9 @@ const DropdownMenu = styled.ul`
   top: 100%;
   left: 50%;
   transform: ${(props) =>
-    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
+    props.$show
+      ? "translateX(-50%) translateY(0px)"
+      : "translateX(-50%) translateY(-10px)"};
   background-color: rgba(47, 47, 47, 1);
   border-radius: 23px;
   list-style: none;
@@ -264,17 +266,19 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem>{username}님</RightNavItem>
-              <RightNavItem onClick={handleLogout}>로그아웃</RightNavItem>
+              <RightNavItem>
+                {role === "ADMIN" ? "관리자 님" : `${username}님`}
+              </RightNavItem>
+              <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>
 
               {/* 👤 일반 유저 메뉴 */}
               {role === "USER" && (
                 <>
                   <RightNavItem onClick={() => navigate("/mypage")}>
-                    마이페이지
+                    MYPAGE
                   </RightNavItem>
                   <RightNavItem onClick={() => navigate("/cart")}>
-                    장바구니
+                    CART
                   </RightNavItem>
                 </>
               )}
@@ -282,17 +286,17 @@ const Header = () => {
               {/* 🛡 관리자 메뉴 */}
               {role === "ADMIN" && (
                 <RightNavItem onClick={() => navigate("/adminpage")}>
-                  관리자페이지
+                  ADMINPAGE
                 </RightNavItem>
               )}
             </>
           ) : (
             <>
               <RightNavItem onClick={() => navigate("/join")}>
-                회원가입
+                REGISTER
               </RightNavItem>
               <RightNavItem onClick={() => navigate("/login")}>
-                로그인
+                LOGIN
               </RightNavItem>
             </>
           )}
