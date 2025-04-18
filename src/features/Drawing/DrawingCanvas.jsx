@@ -480,8 +480,8 @@ const DrawingCanvas = () => {
         alert("📝 임시 저장 완료! 마이페이지로 이동합니다.");
         navigate("/mypage", { state: { activeTab: "drawing" } });
       } else {
-        alert("💾 저장 완료! 커뮤니티로 이동합니다.");
-        navigate("/community");
+        alert("💾 저장 완료! 마이페이지로로 이동합니다.");
+        navigate("/mypage", { state: { activeTab: "drawing" } });
       }
     } catch (error) {
       console.error("❌ 저장 중 오류 발생:", error);

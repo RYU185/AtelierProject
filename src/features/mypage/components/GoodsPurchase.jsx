@@ -6,7 +6,7 @@ import axios from "axios";
 
 const Container = styled.div`
   padding: 15px;
-  width: 722px;
+  width: 730px;
   align-self: stretch;
 `;
 
@@ -47,6 +47,22 @@ const PurchaseList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  max-height: 435px;
+  overflow-y: auto;
+  padding-right: 2px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #02a5e637;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
 `;
 
 const PurchaseCard = styled.div`

@@ -5,7 +5,7 @@ import axios from "axios";
 
 const Container = styled.div`
   padding: 15px;
-  width: 722px;
+  width: 730px;
   align-self: stretch;
 `;
 
@@ -45,17 +45,35 @@ const SearchIcon = styled.span`
 const DrawingGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 8px;
+  padding-bottom: 20px;
+  max-height: 435px;
+  overflow-y: auto;
+  padding-right: 2px;
+  /* 예쁜 스크롤바를 원한다면: */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #02a5e637;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
 `;
 
 const DrawingItem = styled.div`
-  background: #fff;
+  background: #f1f1f1;
+  border: 0.1px solid #b5b4b4;
 `;
 
 const DrawingImage = styled.div`
   width: 100%;
   aspect-ratio: 1;
-  background: #f5f5f5;
+  background: #ffffff;
 `;
 
 const DrawingInfo = styled.div`
@@ -70,7 +88,7 @@ const DrawingTitle = styled.div`
   align-items: center;
 
   span.status {
-    color: ${(props) => (props.status === "임시저장" ? "#fc7c05" : "#0551ea")};
+    color: ${(props) => (props.status === "임시저장" ? "#e7563c" : "#0551ea")};
     font-size: 15px;
   }
 `;
@@ -82,7 +100,7 @@ const DrawingDate = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 0px;
+  gap: 3px;
   padding: 8px;
   background: #f5f5f5;
 `;
@@ -116,7 +134,7 @@ const ActionButton = styled.button`
 
   &.delete {
     background: #fff;
-    color: #666;
+    color: #c11919;
     &:hover {
       background: #e5e5e5;
     }
