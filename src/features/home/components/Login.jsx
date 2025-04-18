@@ -23,6 +23,21 @@ const RightSection = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative; /* Added for positioning the home link */
+`;
+
+const HomeLink = styled(Link)`
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  font-size: 18px;
+  color: #333;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #007aff;
+  }
 `;
 
 const FormWrapper = styled.div`
@@ -169,6 +184,7 @@ const Login = () => {
     <Container>
       <LeftSection />
       <RightSection>
+        <HomeLink to="/">홈페이지로 이동 &#8594; </HomeLink>
         <FormWrapper>
           <Logo>LOGO</Logo>
           <Subtitle>로그인</Subtitle>
