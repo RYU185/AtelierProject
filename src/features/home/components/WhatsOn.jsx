@@ -1,24 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-
-const events = [
-  { id: 1, image: "/images/event1.jpg", title: "그림1", date: "2025.05.17", location: "DW" },
-  { id: 2, image: "/images/event2.jpg", title: "그림2", date: "2025.04.15", location: "블루스퀘어" },
-  { id: 3, image: "/images/event3.jpg", title: "그림3", date: "2025.04.20", location: "블루스퀘어" },
-  { id: 4, image: "/images/event4.jpg", title: "그림4", date: "2025.04.05", location: "SOL드림홀" },
-  { id: 5, image: "/images/event5.jpg", title: "그림5", date: "2025.05.01", location: "블루스퀘어" },
-  { id: 6, image: "/images/event6.jpg", title: "그림6", date: "2025.05.10", location: "블루스퀘어" },
-  { id: 7, image: "/images/event7.jpg", title: "그림7", date: "2025.05.15", location: "블루스퀘어" },
-  { id: 8, image: "/images/event8.jpg", title: "그림8", date: "2025.05.20", location: "블루스퀘어" },
-  { id: 9, image: "/images/event9.jpg", title: "그림9", date: "2025.05.25", location: "블루스퀘어" },
-  { id: 10, image: "/images/event10.jpg", title: "그림10", date: "2025.05.30", location: "블루스퀘어" },
-];
+import axios from "axios";
 
 const SLIDE_INTERVAL = 5000;
+const IMAGE_BASE_URL = "/images/ArtistGalleryIMG/";
 
 const WhatsOnSection = styled.section`
   position: relative;
-  min-height: 90vh;
+  min-height: 95vh;
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -52,8 +41,7 @@ const SliderContainer = styled.div`
   height: 500px;
   perspective: 2000px;
   perspective-origin: center 100%;
-  transform: translateY(-350px)
-
+  transform: translateY(-350px);
 `;
 
 const SlideWrapper = styled.div`
@@ -84,25 +72,28 @@ const Slide = styled.div`
 
 const EventInfo = styled.div`
   position: absolute;
-  bottom: -70px;
+  bottom: -90px; /* 이미지와 간격 조절 */
   width: 100%;
   text-align: center;
   opacity: 0.8;
+`;
 
-  .title {
-    font-size: 20px;
-    font-weight: 600;
-  }
+const EventTitle = styled.div`
+  font-size: 28px; /* 글씨 크기 더 키움 */
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px; /* 제목과 날짜 간 간격 조절 */
+`;
 
-  .date {
-    font-size: 16px;
-    opacity: 0.7;
-  }
+const EventDate = styled.div`
+  font-size: 20px; /* 글씨 크기 더 키움 */
+  opacity: 0.7;
+  color: #555;
 `;
 
 const getSlideStyle = (offset) => {
   const radius = 1200;
-  const angle = offset * 26
+  const angle = offset * 26;
   const rad = (Math.PI / 180) * angle;
 
   const x = Math.sin(rad) * radius;
@@ -119,35 +110,64 @@ const getSlideStyle = (offset) => {
   };
 };
 
-
 export default function WhatsOn() {
   const [index, setIndex] = useState(0);
+  const [artistGalleries, setArtistGalleries] = useState([]);
   const timeoutRef = useRef(null);
-  const total = events.length;
+  const total = artistGalleries.length;
 
-  const nextSlide = () => setIndex((prev) => (prev + 1) % total);
+  const nextSlide = () => {
+    setIndex((prev) => (prev + 1) % total);
+  };
 
   useEffect(() => {
-    timeoutRef.current = setInterval(nextSlide, SLIDE_INTERVAL);
-    return () => timeoutRef.current && clearInterval(timeoutRef.current);
+    const fetchArtistGalleries = async () => {
+      try {
+        const response = await axios.get("/api/artistgallery");
+        setArtistGalleries(response.data);
+      } catch (error) {
+        console.error("Error fetching artist galleries:", error);
+      }
+    };
+
+    fetchArtistGalleries();
   }, []);
+
+  useEffect(() => {
+    if (artistGalleries.length > 0) {
+      timeoutRef.current = setInterval(nextSlide, SLIDE_INTERVAL);
+      return () => clearInterval(timeoutRef.current);
+    }
+  }, [artistGalleries]);
 
   return (
     <WhatsOnSection>
       <Title>WHAT'S ON</Title>
       <SliderContainer>
         <SlideWrapper>
-          {events.map((event, i) => {
+          {artistGalleries.map((gallery, i) => {
             let offset = i - index;
             const half = Math.floor(total / 2);
             if (offset < -half) offset += total;
             if (offset > half) offset -= total;
 
-            const { transform, transformOrigin, opacity, zIndex } = getSlideStyle(offset);
+            const { transform, transformOrigin, opacity, zIndex } =
+              getSlideStyle(offset);
+            const displayDate =
+              gallery.startDate && gallery.endDate
+                ? `${new Date(
+                    gallery.startDate
+                  ).toLocaleDateString()} ~ ${new Date(
+                    gallery.endDate
+                  ).toLocaleDateString()}`
+                : "";
+            const imageUrl = gallery.posterUrl
+              ? IMAGE_BASE_URL + gallery.posterUrl
+              : "";
 
             return (
               <Slide
-                key={event.id}
+                key={gallery.id}
                 style={{
                   transform,
                   transformOrigin,
@@ -156,13 +176,11 @@ export default function WhatsOn() {
                   transition: "all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1)",
                 }}
               >
-                <img src={event.image} alt={event.title} />
+                {imageUrl && <img src={imageUrl} alt={gallery.title} />}
                 {offset === 0 && (
                   <EventInfo>
-                    <div className="title">{event.title}</div>
-                    <div className="date">
-                      {event.date} | {event.location}
-                    </div>
+                    <EventTitle>{gallery.title}</EventTitle>
+                    <EventDate>{displayDate}</EventDate>
                   </EventInfo>
                 )}
               </Slide>
