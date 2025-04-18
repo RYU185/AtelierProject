@@ -1,46 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
+import AdminTicketMenubar from './AdminTicketMenubar';
 
-const initialTickets = [
-  {
-    id: 1,
-    title: '현대 산업디자인展',
-    dateRange: '2025.04.12 - 2025.04.25',
-    image: '/src/assets/ArtIMG/1.jpg',
-    visitors: 15,
-    reservationLimit: 50,
-    deadline: '2025-04-20',
-    reservations: [
-      { id: 101, name: '홍길동', status: 'reserved', reservedCount: 2, reservedDate: '2025-04-01', reservedTime: '10:00' },
-      { id: 104, name: '홍길동', status: 'reserved', reservedCount: 2, reservedDate: '2025-04-01', reservedTime: '11:00' },
-      { id: 105, name: '홍길동', status: 'reserved', reservedCount: 2, reservedDate: '2025-04-01', reservedTime: '12:00' },
-    ],
-  },
-  {
-    id: 2,
-    title: '현대 산업디자인展',
-    dateRange: '2025.04.12 - 2025.04.25',
-    image: '/src/assets/ArtIMG/2.jpg',
-    visitors: 21,
-    reservationLimit: 70,
-    deadline: '2025-04-21',
-    reservations: [
-      { id: 201, name: '박서준', status: 'confirmed', reservedCount: 3, confirmedDate: '2025-04-06', reservedTime: '13:00' },
-      { id: 202, name: '이영희', status: 'reserved', reservedCount: 1, reservedDate: '2025-04-05', reservedTime: '14:00' },
-    ],
-  },
-];
+// ✅ 정적 이미지 처리
+const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", {
+  eager: true,
+});
+const getImageUrl = (filename) => {
+  if (!filename) return '/images/default-image.png';
+  const matched = Object.entries(artImages).find(([path]) =>
+    path.endsWith(filename)
+  );
+  return matched ? matched[1].default : '/images/default-image.png';
+};
 
+// ✅ 스타일
 const Container = styled.div`
   display: flex;
   padding: 20px;
-  margin-top: 46px;
   margin-left: 23px;
   position: relative;
+`;
+
+const AdminGoodsMenubarWrapper = styled.div`
+  position: relative;
+  top: 100px;
+  left: 45px;
+  z-index: 10;
+  margin-left: -85px;
 `;
 
 const AdminMenuWrapper = styled.div`
@@ -133,10 +124,36 @@ const ActionButton = styled.button`
 
 const AdminTicketManagement = () => {
   const navigate = useNavigate();
-  const [tickets, setTickets] = useState(initialTickets);
+  const [tickets, setTickets] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ deadline: '' });
   const [visibleReservations, setVisibleReservations] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/artistgallery/now');
+        const galleries = await response.json();
+
+        const formatted = galleries.map((gallery) => ({
+          id: gallery.id,
+          title: gallery.title,
+          dateRange: `${gallery.startDate} - ${gallery.endDate}`,
+          image: getImageUrl(gallery.posterUrl),
+          visitors: 0,
+          reservationLimit: 100,
+          deadline: gallery.deadline,
+          reservations: [] // 예약자 리스트 추후 연결
+        }));
+
+        setTickets(formatted);
+      } catch (error) {
+        console.error('전시 정보를 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleThumbnailClick = (id) => {
     navigate(`/gallery/artistgallery/${id}`);
@@ -147,13 +164,34 @@ const AdminTicketManagement = () => {
     setFormData({ deadline: ticket.deadline });
   };
 
-  const handleSave = (id) => {
-    setTickets(prev =>
-      prev.map(ticket =>
-        ticket.id === id ? { ...ticket, deadline: formData.deadline } : ticket
-      )
-    );
-    setEditingId(null);
+  const handleSave = async (id) => {
+    try {
+      const response = await fetch(`/api/artistgallery/deadline/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ deadline: formData.deadline }),
+      });
+
+      if (!response.ok) {
+        throw new Error('마감일 수정 실패');
+      }
+
+      const message = await response.text();
+      alert(message);
+
+      setTickets(prev =>
+        prev.map(ticket =>
+          ticket.id === id ? { ...ticket, deadline: formData.deadline } : ticket
+        )
+      );
+
+      setEditingId(null);
+    } catch (error) {
+      console.error('마감일 수정 오류:', error);
+      alert('마감일 수정 중 오류가 발생했습니다.');
+    }
   };
 
   const handleDelete = (id) => {
@@ -167,6 +205,9 @@ const AdminTicketManagement = () => {
   return (
     <>
       <Header />
+      <AdminGoodsMenubarWrapper>
+        <AdminTicketMenubar />
+      </AdminGoodsMenubarWrapper>
       <Container>
         <AdminMenuWrapper>
           <AdminMenu />
@@ -226,7 +267,7 @@ const AdminTicketManagement = () => {
                     </Td>
                   </tr>
 
-                  {visibleReservations === ticket.id && ticket.reservations.filter(r => r.status === 'reserved').length > 0 && (
+                  {visibleReservations === ticket.id && ticket.reservations.length > 0 && (
                     <tr>
                       <Td colSpan="6">
                         <ScrollableWrapper>
@@ -241,17 +282,15 @@ const AdminTicketManagement = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              {ticket.reservations
-                                .filter(res => res.status === 'reserved')
-                                .map(res => (
-                                  <tr key={res.id}>
-                                    <td>{res.name}</td>
-                                    <td>{res.reservedCount}</td>
-                                    <td>예약</td>
-                                    <td>{res.reservedDate || '-'}</td>
-                                    <td>{res.reservedTime || '-'}</td>
-                                  </tr>
-                                ))}
+                              {ticket.reservations.map(res => (
+                                <tr key={res.id}>
+                                  <td>{res.name}</td>
+                                  <td>{res.reservedCount}</td>
+                                  <td>{res.status === 'reserved' ? '예약' : '확정'}</td>
+                                  <td>{res.reservedDate || '-'}</td>
+                                  <td>{res.reservedTime || '-'}</td>
+                                </tr>
+                              ))}
                             </tbody>
                           </ReservationTable>
                         </ScrollableWrapper>

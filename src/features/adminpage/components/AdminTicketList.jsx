@@ -1,10 +1,23 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import styled from 'styled-components';
 import AdminTicketMenubar from './AdminTicketMenubar';
+
+// ✅ 정적 이미지 + 업로드 이미지 모두 처리 (현재는 정적만 사용)
+const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", {
+  eager: true,
+});
+const getImageUrl = (filename) => {
+  if (!filename) return '/images/default-image.png';
+
+  const matched = Object.entries(artImages).find(([path]) =>
+    path.endsWith(filename)
+  );
+  return matched ? matched[1].default : '/images/default-image.png';
+};
 
 // ✅ 스타일 정의
 const Container = styled.div`
@@ -51,7 +64,7 @@ const SearchContainer = styled.div`
 `;
 
 const SearchInput = styled.input`
-position: relative;
+  position: relative;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -60,7 +73,7 @@ position: relative;
 `;
 
 const SortSelect = styled.select`
-position: relative;
+  position: relative;
   padding: 8px;
   top: -40px;
   margin-right: 150px;
@@ -102,13 +115,10 @@ const Th = styled.th`
   text-align: center;
 
   &:first-child {
-    width: 65%;
+    width: 70%;
   }
   &:nth-child(2) {
-    width: 15%;
-  }
-  &:nth-child(3) {
-    width: 20%;
+    width: 30%;
   }
 `;
 
@@ -137,25 +147,38 @@ const Thumbnail = styled.img`
   }
 `;
 
-const Summary = styled.div`
-  margin-top: 20px;
-  text-align: right;
-  font-size: 18px;
-  font-weight: bold;
-`;
-
 const AdminTicketList = () => {
   const navigate = useNavigate();
-  const pricePerTicket = 10000;
-
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('default');
+  const [ticketData, setTicketData] = useState([]);
 
-  const ticketData = [
-    { id: 1, image: '/src/assets/ArtIMG/1.jpg', dateRange: '2025.04.12 - 2025.04.25', title: '현대 산업디자인展', visitors: 15 },
-    { id: 2, image: '/src/assets/ArtIMG/2.jpg', dateRange: '2025.04.12 - 2025.04.25', title: '현대 산업디자인展', visitors: 21 },
-    { id: 3, image: '/src/assets/ArtIMG/3.jpg', dateRange: '2025.04.12 - 2025.04.25', title: '현대 산업디자인展', visitors: 21 },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/artistgallery/now');
+        const galleries = await response.json();
+
+        const updatedData = await Promise.all(
+          galleries.map(async (gallery) => {
+            return {
+              id: gallery.id,
+              image: getImageUrl(gallery.posterUrl),
+              dateRange: `${gallery.startDate} - ${gallery.endDate}`,
+              title: gallery.title,
+              visitors: 0 // 예약자 수 추후 추가
+            };
+          })
+        );
+
+        setTicketData(updatedData);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleThumbnailClick = (id) => {
     navigate(`/gallery/artistgallery/${id}`);
@@ -177,10 +200,7 @@ const AdminTicketList = () => {
     }
 
     return data;
-  }, [searchTerm, sortOption]);
-
-  const totalVisitors = filteredAndSortedData.reduce((sum, ticket) => sum + ticket.visitors, 0);
-  const totalRevenue = totalVisitors * pricePerTicket;
+  }, [searchTerm, sortOption, ticketData]);
 
   return (
     <>
@@ -194,7 +214,7 @@ const AdminTicketList = () => {
         </AdminMenuWrapper>
 
         <MainContent>
-          <Title>티켓 판매 내역</Title>
+          <Title>티켓 예약 현황</Title>
 
           <SearchContainer>
             <SearchInput
@@ -221,7 +241,6 @@ const AdminTicketList = () => {
               <tr>
                 <Th>전시 정보</Th>
                 <Th>예약 관람객</Th>
-                <Th>수익</Th>
               </tr>
             </thead>
             <tbody>
@@ -233,22 +252,16 @@ const AdminTicketList = () => {
                       alt="전시 이미지"
                       onClick={() => handleThumbnailClick(ticket.id)}
                     />
-                    <div>
+                    <div style={{ marginTop: '200px' }}>
                       <p>{ticket.dateRange}</p>
-                      <p><strong>FOLDER [record and archive]</strong></p>
-                      <p>{ticket.title}</p>
+                      <p><strong>{ticket.title}</strong></p>
                     </div>
                   </Td>
                   <Td>{ticket.visitors} 명</Td>
-                  <Td>{(ticket.visitors * pricePerTicket).toLocaleString()} 원</Td>
                 </tr>
               ))}
             </tbody>
           </Table>
-
-          <Summary>
-            총 관람객: {totalVisitors}명 | 총 수익: {totalRevenue.toLocaleString()} 원
-          </Summary>
         </MainContent>
       </Container>
       <Footer />

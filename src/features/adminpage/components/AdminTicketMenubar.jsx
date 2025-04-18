@@ -49,8 +49,8 @@ function AdminTicketMenubar({ className }) {
       {className === 'chart-menubar' ? (
         <>
           <ChartTabButton
-            active={location.pathname === '/AdminTicketList'}
-            onClick={() => navigate('/AdminTicketList')}
+            active={location.pathname === '/AdminTicketManagement'}
+            onClick={() => navigate('/AdminTicketManagement')}
           >
             전시회 별 현황
           </ChartTabButton>
@@ -64,8 +64,8 @@ function AdminTicketMenubar({ className }) {
       ) : (
         <>
           <TabButton
-            active={location.pathname === '/AdminTicketList'}
-            onClick={() => navigate('/AdminTicketList')}
+            active={location.pathname === '/AdminTicketManagement'}
+            onClick={() => navigate('/AdminTicketManagement')}
           >
             전시회 별 현황
           </TabButton>

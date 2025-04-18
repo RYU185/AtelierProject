@@ -78,11 +78,7 @@ const AdminMenu = () => {
             </Link>
           </MenuItem>
           {/* ✅ AdminTicketList와 AdminTicketChart 둘 다 활성화되도록 수정 */}
-          <MenuItem active={location.pathname.includes('/AdminTicketList') || location.pathname.includes('/AdminTicketChart')}>
-            <Link to="/AdminTicketList" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
-              티켓 판매 내역
-            </Link>
-          </MenuItem>
+         
           <MenuItem active={location.pathname === '/AdminTicketManagement'}>
             <Link to="/AdminTicketManagement" style={{ textDecoration: 'none', color: 'inherit', display: 'block', width: '100%', height: '100%' }}>
               티켓 관리
