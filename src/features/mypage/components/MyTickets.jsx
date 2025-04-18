@@ -14,7 +14,7 @@ const TicketCount = styled.div`
   margin-bottom: 20px;
   font-size: 14px;
   color: #666;
-  width: 722px;
+  width: 730px;
   margin-left: auto;
   font-weight: 100;
 `;
@@ -106,19 +106,18 @@ const ActionButton = styled.button`
 `;
 
 const MyTickets = ({ onTicketClick, onRefundClick }) => {
-  const [reserve , setReserve] = useState([]);
+  const [reserve, setReserve] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() =>{
-    const fetchMyreserve = async () =>{
-      try{
-        const res = await axiosInstance.get("/reservation/my")
+  useEffect(() => {
+    const fetchMyreserve = async () => {
+      try {
+        const res = await axiosInstance.get("/reservation/my");
         setReserve(res.data);
-      }catch(error){
+      } catch (error) {
         console.error("예약 내역 조회 실패:", error);
         setError("예약 정보를 불러올 수 없습니다");
-
       } finally {
         setLoading(false);
       }
@@ -129,7 +128,6 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
 
   if (loading) return <div>로딩 중...</div>;
   if (error) return <div>{error}</div>;
-
 
   return (
     <Container>
