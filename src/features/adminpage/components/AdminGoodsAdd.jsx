@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
+import axios from 'axios';
 
 const Container = styled.div`
   padding: 20px;
- 
   min-height: 100vh;
   display: flex;
 `;
@@ -16,7 +16,7 @@ const AdminContent = styled.div`
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 중앙 정렬 */
+  align-items: center;
 `;
 
 const Title = styled.h2`
@@ -43,13 +43,13 @@ const InputField = styled.input`
 
 const TextAreaField = styled.textarea`
   width: 500px;
-  height: 150px; /* 기본 높이를 크게 설정 */
+  height: 150px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
   border-color: #2a7fbc;
-  resize: vertical; /* 세로 크기만 조정 가능 */
+  resize: vertical;
 `;
 
 const FileInput = styled.input`
@@ -71,7 +71,6 @@ const UploadButton = styled.label`
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
-  text-align: center;
 
   &:hover {
     background-color: #2a7fbc;
@@ -86,7 +85,6 @@ const SubmitButton = styled.button`
   border-radius: 4px;
   border: none;
   cursor: pointer;
-  text-align: center;
 
   &:hover {
     background-color: #2a7fbc;
@@ -97,24 +95,25 @@ const FlexContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 50px;
-  margin-top: 100px; /* 위로 올리기 */
+  margin-top: 100px;
   margin-right: 400px;
 `;
 
 const ImagePreviewContainer = styled.div`
   width: 400px;
-  height: 350px; /* 높이 줄여서 조정 */
+  min-height: 350px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
   border: 1px dashed #aaa;
   border-radius: 8px;
   background-color: #fff;
+  padding: 10px;
 `;
 
 const ImagePreview = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 8px;
 `;
@@ -126,16 +125,58 @@ const PlaceholderText = styled.div`
 `;
 
 function AdminGoodsAdd() {
-  const [image, setImage] = useState(null);
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [imageFiles, setImageFiles] = useState([]);
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [stock, setStock] = useState('');
   const [description, setDescription] = useState('');
-  const [year, setYear] = useState('');
+
+  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = !!token;
 
   const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
+    const files = Array.from(event.target.files);
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(previews);
+    setImageFiles(files);
+  };
+
+  const handleSubmit = async () => {
+    if (!isLoggedIn) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    const formData = new FormData();
+    imageFiles.forEach((file) => {
+      formData.append("images", file);
+    });
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("stock", stock);
+
+    try {
+      const response = await axios.post("/api/goods/add", formData, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      if (response.status === 201) {
+        alert("굿즈 등록 완료!");
+        setImagePreviews([]);
+        setImageFiles([]);
+        setName('');
+        setPrice('');
+        setStock('');
+        setDescription('');
+      }
+    } catch (err) {
+      console.error("굿즈 등록 실패:", err);
+      alert("굿즈 등록에 실패했습니다. 관리자에게 문의하세요.");
     }
   };
 
@@ -144,14 +185,14 @@ function AdminGoodsAdd() {
       <Header />
       <Container>
         <AdminMenu />
-
         <AdminContent>
           <Title>굿즈 추가</Title>
-
           <FlexContainer>
             <ImagePreviewContainer>
-              {image ? (
-                <ImagePreview src={image} alt="Uploaded Image" />
+              {imagePreviews.length > 0 ? (
+                imagePreviews.map((src, index) => (
+                  <ImagePreview key={index} src={src} alt={`미리보기 ${index + 1}`} />
+                ))
               ) : (
                 <PlaceholderText>이미지를 업로드 해주세요</PlaceholderText>
               )}
@@ -161,25 +202,25 @@ function AdminGoodsAdd() {
               <InputField
                 type="text"
                 placeholder="상품명"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
               <InputField
-                type="text"
+                type="number"
                 placeholder="가격"
-                value={artist}
-                onChange={(e) => setArtist(e.target.value)}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+              <InputField
+                type="number"
+                placeholder="재고 수량"
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
               />
               <TextAreaField
                 placeholder="상세 설명"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-              />
-              <InputField
-                type="number"
-                placeholder="수량"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
               />
             </InputContainer>
           </FlexContainer>
@@ -188,19 +229,19 @@ function AdminGoodsAdd() {
 
       <ButtonContainer>
         <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
-        <SubmitButton
-          disabled={!image}
-          onClick={() => console.log("작품 등록: ", { title, artist, description, year, image })}
-        >
+        <SubmitButton disabled={imageFiles.length === 0} onClick={handleSubmit}>
           등록
         </SubmitButton>
       </ButtonContainer>
+
       <FileInput
         type="file"
         id="file-input"
         accept="image/*"
+        multiple
         onChange={handleImageUpload}
       />
+
       <Footer />
     </>
   );

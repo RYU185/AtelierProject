@@ -155,8 +155,28 @@ const ProductCard = styled.div`
     }
   }
 `;
+// ✅ 이미지 처리 함수 (정적 or 업로드)
+const goodsImages = import.meta.glob("/public/images/goods-images/*", {
+  eager: true, // 즉시 이미지를 불러옵니다.
+});
 
-function Goods() {
+// ✅ 이미지 경로 처리 함수
+const getGoodsImageUrl = (filename) => {
+  if (!filename) return '/default.jpg';
+
+  // 정적 이미지 경로 처리
+  const matched = Object.entries(goodsImages).find(([path]) =>
+    path.endsWith(filename)
+  );
+  if (matched) {
+    return matched[1].default;  // 정적 이미지 경로 반환
+  }
+
+  // 업로드된 이미지 경로 처리
+  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
+};
+
+const Goods = () => {
   const navigate = useNavigate();
   const [goodsList, setGoodsList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -176,23 +196,12 @@ function Goods() {
     fetchGoods();
   }, []);
 
-  const handleInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
+  const handleInputChange = (e) => setSearchTerm(e.target.value);
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      setSearchQuery(searchTerm); // Enter 시 실제 검색어 확정
-    }
+    if (e.key === "Enter") setSearchQuery(searchTerm);
   };
-
-  const handleProductClick = (productId) => {
-    navigate(`/goods/${productId}`);
-  };
-
-  const handleSort = (e) => {
-    setSortOption(e.target.value);
-  };
+  const handleProductClick = (productId) => navigate(`/goods/${productId}`);
+  const handleSort = (e) => setSortOption(e.target.value);
 
   const filteredAndSortedGoods = goodsList
     .filter((goods) =>
@@ -200,65 +209,63 @@ function Goods() {
     )
     .sort((a, b) => {
       switch (sortOption) {
-        case "price_asc":
-          return a.price - b.price;
-        case "price_desc":
-          return b.price - a.price;
-        case "name_asc":
-          return a.name.localeCompare(b.name);
-        default:
-          return 0;
+        case "price_asc": return a.price - b.price;
+        case "price_desc": return b.price - a.price;
+        case "name_asc": return a.name.localeCompare(b.name);
+        default: return 0;
       }
     });
 
-  return (
-    <>
-      <Header />
-      <Container>
-        <TitleContainer>
-          <BackTitle>Gallery Goods</BackTitle>
-          <Title>Gallery Goods</Title>
-        </TitleContainer>
-        <DataController>
-          <SearchContainer>
-            <SearchIcon />
-            <SearchBar
-              placeholder="검색어를 입력하세요"
-              value={searchTerm}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-            />
-          </SearchContainer>
-          <SortBar value={sortOption} onChange={handleSort}>
-            <option value="">정렬</option>
-            <option value="price_asc">가격 낮은순</option>
-            <option value="price_desc">가격 높은순</option>
-            <option value="name_asc">이름순</option>
-          </SortBar>
-        </DataController>
-
-        <ProductGrid>
-          {filteredAndSortedGoods.map((goods) => (
-            <ProductCard
-              key={goods.id}
-              onClick={() => handleProductClick(goods.id)}
-            >
-              <ProductImage
-                src={`/public/images/goods-images/${goods.imgUrlList?.[0]}`}
-                alt={goods.name}
+    return (
+      <>
+        <Header />
+        <Container>
+          <TitleContainer>
+            <BackTitle>Gallery Goods</BackTitle>
+            <Title>Gallery Goods</Title>
+          </TitleContainer>
+  
+          <DataController>
+            <SearchContainer>
+              <SearchIcon />
+              <SearchBar
+                placeholder="검색어를 입력하세요"
+                value={searchTerm}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
               />
-              <ProductInfo>
-                <ProductName>{goods.name}</ProductName>
-                <ProductPrice>{goods.price.toLocaleString()}원</ProductPrice>
-              </ProductInfo>
-            </ProductCard>
-          ))}
-        </ProductGrid>
-      </Container>
-      <TopButton />
-      <Footer />
-    </>
-  );
-}
-
-export default Goods;
+            </SearchContainer>
+  
+            <SortBar value={sortOption} onChange={handleSort}>
+              <option value="">정렬</option>
+              <option value="price_asc">가격 낮은순</option>
+              <option value="price_desc">가격 높은순</option>
+              <option value="name_asc">이름순</option>
+            </SortBar>
+          </DataController>
+  
+          <ProductGrid>
+            {filteredAndSortedGoods.map((goods) => (
+              <ProductCard
+                key={goods.id}
+                onClick={() => handleProductClick(goods.id)}
+              >
+                <ProductImage
+                  src={getGoodsImageUrl(goods.imgUrlList?.[0])}
+                  alt={goods.name}
+                />
+                <ProductInfo>
+                  <ProductName>{goods.name}</ProductName>
+                  <ProductPrice>{goods.price.toLocaleString()}원</ProductPrice>
+                </ProductInfo>
+              </ProductCard>
+            ))}
+          </ProductGrid>
+        </Container>
+        <TopButton />
+        <Footer />
+      </>
+    );
+  };
+  
+  export default Goods;
