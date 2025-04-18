@@ -55,8 +55,7 @@ const TicketInfo = styled.div`
 `;
 
 const TicketImage = styled.img`
-  width: 80px;
-  height: 120px;
+  width: 110px;
   object-fit: cover;
   border-radius: 4px;
 `;
@@ -65,23 +64,17 @@ const TicketDetails = styled.div`
   flex: 1;
 
   h3 {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 12px;
+    font-size: 23px;
+    color: #141414;
+    margin-bottom: 5px;
     font-weight: 500;
-    font-weight: 100;
   }
 
   p {
-    font-size: 14px;
-    color: #666;
-    margin: 4px 0;
+    font-size: 21px;
+    color: #141414;
     line-height: 1.8;
-    font-weight: 100;
-
-    &:last-child {
-      margin-top: 12px;
-    }
+    font-weight: 300;
   }
 `;
 
@@ -131,30 +124,23 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
 
   return (
     <Container>
-      <TicketCount>
-        총 {reserve.length}개의 전시가 예약되어 있습니다.
-      </TicketCount>
+      <TicketCount>총 {reserve.length}개의 전시가 예약되어 있습니다.</TicketCount>
       <TicketList>
         {reserve.map((rv) => (
           <TicketCard key={rv.id}>
             <MoreButton>⋮</MoreButton>
             <TicketInfo>
-              <TicketImage src={rv.image} alt={rv.title} />
+              <TicketImage src={`/images/ArtistGalleryIMG/${rv.posterImg}`} alt={rv.title} />
               <TicketDetails>
                 <h3>{rv.galleryTitle}</h3>
-                <p>{rv.date}</p>
-                <p>{rv.time}</p>
-                <p>{rv.headcount}</p>
-                <p>{rv.description}</p>
+                <p>예약 날짜: {rv.date}</p>
+                <p>예약 시간: {rv.time?.slice(0, 5)}</p>
+                <p>성인 {rv.headcount}명</p>
               </TicketDetails>
             </TicketInfo>
             <TicketActions>
-              <ActionButton onClick={() => onTicketClick(rv)}>
-                티켓 확인하기
-              </ActionButton>
-              <ActionButton onClick={() => onRefundClick(rv)}>
-                환불 신청
-              </ActionButton>
+              <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
+              <ActionButton onClick={() => onRefundClick(rv)}>환불 신청</ActionButton>
             </TicketActions>
           </TicketCard>
         ))}
