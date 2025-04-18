@@ -19,8 +19,10 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
       onConnect: () => {
         console.log("WebSocket 연결됨");
         setIsConnected(true);
+
         client.subscribe(`/user/queue/messages`, (msg) => {
           const message = JSON.parse(msg.body);
+          console.log("수신한 메시지:", message);
           onMessageReceive(message);
         });
       },
