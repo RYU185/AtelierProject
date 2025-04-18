@@ -119,34 +119,43 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
     fetchMyreserve();
   }, []);
 
-  if (loading) return <div>로딩 중...</div>;
-  if (error) return <div>{error}</div>;
-
   return (
     <Container>
-      <TicketCount>총 {reserve.length}개의 전시가 예약되어 있습니다.</TicketCount>
+      <TicketCount>
+        총 {reserve.length}개의 전시가 예약되어 있습니다.
+      </TicketCount>
+  
       <TicketList>
-        {reserve.map((rv) => (
-          <TicketCard key={rv.id}>
-            <MoreButton>⋮</MoreButton>
-            <TicketInfo>
-              <TicketImage src={`/images/ArtistGalleryIMG/${rv.posterImg}`} alt={rv.title} />
-              <TicketDetails>
-                <h3>{rv.galleryTitle}</h3>
-                <p>예약 날짜: {rv.date}</p>
-                <p>예약 시간: {rv.time?.slice(0, 5)}</p>
-                <p>성인 {rv.headcount}명</p>
-              </TicketDetails>
-            </TicketInfo>
-            <TicketActions>
-              <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
-              <ActionButton onClick={() => onRefundClick(rv)}>환불 신청</ActionButton>
-            </TicketActions>
-          </TicketCard>
-        ))}
+        {loading ? (
+          <p>로딩 중...</p>
+        ) : reserve.length === 0 ? (
+          <p>예약된 전시가 없습니다.</p>
+        ) : (
+          reserve.map((rv) => (
+            <TicketCard key={rv.reservationId}>
+              <MoreButton>⋮</MoreButton>
+              <TicketInfo>
+                <TicketImage
+                  src={`/images/ArtistGalleryIMG/${rv.posterImg}`}
+                  alt={rv.galleryTitle}
+                />
+                <TicketDetails>
+                  <h3>{rv.galleryTitle}</h3>
+                  <p>예약 날짜: {rv.date}</p>
+                  <p>예약 시간: {rv.time?.slice(0, 5)}</p>
+                  <p>성인 {rv.headcount}명</p>
+                </TicketDetails>
+              </TicketInfo>
+              <TicketActions>
+                <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>환불 신청</ActionButton>
+              </TicketActions>
+            </TicketCard>
+          ))
+        )}
       </TicketList>
     </Container>
   );
-};
+}  
 
 export default MyTickets;

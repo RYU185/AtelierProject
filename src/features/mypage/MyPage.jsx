@@ -43,15 +43,15 @@ const TabButton = styled.button`
   padding: 16px 40px;
   font-size: 15px;
   border: none;
-  background-color: ${(props) => (props.active ? "#4199FF" : "#F1F1F1")};
-  color: ${(props) => (props.active ? "#fff" : "#666")};
+  background-color: ${(props) => (props.$active ? "#4199FF" : "#F1F1F1")};
+  color: ${(props) => (props.$active ? "#fff" : "#666")};
   cursor: pointer;
   font-weight: 500;
   min-width: 240px;
   text-align: center;
 
   &:hover {
-    background-color: ${(props) => (props.active ? "#4199FF" : "#E5E5E5")};
+    background-color: ${(props) => (props.$active ? "#4199FF" : "#E5E5E5")};
   }
 `;
 
@@ -256,19 +256,19 @@ const MyPage = () => {
         <PageTitle>마이 페이지</PageTitle>
         <TabContainer>
           <TabButton
-            active={activeTab === "ticket"}
+            $active={activeTab === "ticket"}
             onClick={() => handleTabChange("ticket")}
           >
             나의 예약 현황
           </TabButton>
           <TabButton
-            active={activeTab === "purchase"}
+            $active={activeTab === "purchase"}
             onClick={() => handleTabChange("purchase")}
           >
             굿즈 구매내역
           </TabButton>
           <TabButton
-            active={activeTab === "drawing"}
+            $active={activeTab === "drawing"}
             onClick={() => handleTabChange("drawing")}
           >
             나의 드로잉
