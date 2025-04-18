@@ -5,18 +5,21 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Container = styled.div`
+  padding: 15px;
   width: 722px;
+  align-self: stretch;
 `;
 
 const SearchContainer = styled.div`
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  max-width: 1000px;
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e1e1e1;
+  padding: 10px 20px;
+  border: 2px solid #e1e1e1;
   border-radius: 4px;
   font-size: 14px;
   color: #333;
@@ -36,8 +39,8 @@ const SearchIcon = styled.span`
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #999;
   cursor: pointer;
+  color: #0095e1;
 `;
 
 const PurchaseList = styled.div`
@@ -194,16 +197,9 @@ const GoodsPurchase = () => {
 
       <PurchaseList>
         {filteredPurchases.length === 0 ? (
-          <div
-            style={{
-              color: "#999",
-              fontSize: "14px",
-              padding: "20px",
-              textAlign: "center",
-            }}
-          >
+          <p style={{ textAlign: "center", fontSize: "16px", color: "#888" }}>
             구매내역이 없습니다.
-          </div>
+          </p>
         ) : (
           filteredPurchases.map((purchase) => (
             <PurchaseCard key={purchase.purchaseId}>

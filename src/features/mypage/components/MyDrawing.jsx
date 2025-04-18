@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Container = styled.div`
   padding: 15px;
-  width: 100%;
+  width: 722px;
   align-self: stretch;
 `;
 
@@ -123,64 +124,66 @@ const ActionButton = styled.button`
 `;
 
 const MyDrawings = () => {
-  const [activeTab, setActiveTab] = useState("drawing"); // drawing, ticket, goods
+  const [drawings, setDrawings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const drawings = [
-    {
-      id: 1,
-      title: "TITLE",
-      description: "DESCRIPTION IS NULLABLE T...",
-      date: "2025.02.14",
-      status: "임시저장",
-    },
-    {
-      id: 2,
-      title: "TITLE",
-      description: "DESCRIPTION IS NULLABLE T...",
-      date: "2023.11.21",
-      status: "완성",
-    },
-    {
-      id: 3,
-      title: "TITLE",
-      description: "DESCRIPTION IS NULLABLE T...",
-      date: "2022.03.18",
-      status: "완성",
-    },
-    {
-      id: 4,
-      title: "TITLE",
-      description: "DESCRIPTION IS NULLABLE T...",
-      date: "2022.03.18",
-      status: "완성",
-    },
-    {
-      id: 5,
-      title: "TITLE",
-      description: "DESCRIPTION IS NULLABLE T...",
-      date: "2022.03.18",
-      status: "완성",
-    },
-    {
-      id: 6,
-      title: "TITLE",
-      description: "DESCRIPTION IS NULLABLE T...",
-      date: "2022.03.18",
-      status: "완성",
-    },
-  ];
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    const fetchDrawings = async () => {
+      try {
+        const response = await axios.get("/api/realdrawing/my");
+        const mapped = response.data.map((item) => ({
+          id: item.id,
+          title: item.title || "무제",
+          date: new Date(item.updatedAt).toLocaleDateString(),
+          status: item.isTemporary ? "임시저장" : "완성",
+          imageData: item.imageData,
+        }));
+        setDrawings(mapped);
+      } catch (err) {
+        alert("드로잉 정보를 불러오지 못했습니다.");
+        console.error(err);
+      }
+    };
+
+    fetchDrawings();
+  }, [navigate]);
 
   const handleEdit = (drawingId) => {
     navigate(`/drawingcanvas?edit=${drawingId}`);
   };
 
-  const handleDelete = (drawingId) => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      // Implement the delete logic here
+  const handleDelete = async (drawingId) => {
+    const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      await axios.delete(`/api/realdrawing/delete/${drawingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("삭제되었습니다.");
+      setDrawings((prev) => prev.filter((drawing) => drawing.id !== drawingId));
+    } catch (error) {
+      console.error("삭제 중 오류:", error);
+      alert("삭제에 실패했습니다.");
     }
   };
+
+  const filteredDrawings = drawings.filter((d) =>
+    d.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Container>
@@ -194,10 +197,21 @@ const MyDrawings = () => {
         <SearchIcon>🔍</SearchIcon>
       </SearchContainer>
 
+      {filteredDrawings.length === 0 && (
+        <p style={{ textAlign: "center", fontSize: "16px", color: "#888" }}>
+          아직 저장된 드로잉이 없습니다. 🎨
+        </p>
+      )}
       <DrawingGrid>
-        {drawings.map((drawing) => (
+        {filteredDrawings.map((drawing) => (
           <DrawingItem key={drawing.id}>
-            <DrawingImage />
+            <DrawingImage
+              style={{
+                backgroundImage: `url(${drawing.imageData})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
             <DrawingInfo>
               <DrawingTitle status={drawing.status}>
                 {drawing.title}
@@ -206,48 +220,20 @@ const MyDrawings = () => {
               <DrawingDate>최근 수정일: {drawing.date}</DrawingDate>
             </DrawingInfo>
             <ButtonContainer>
-              {drawing.status === "임시저장" ? (
-                <>
-                  <ActionButton
-                    className="continue"
-                    onClick={() => handleEdit(drawing.id)}
-                  >
-                    이어서 그리기
-                  </ActionButton>
-                  <ActionButton
-                    className="delete"
-                    onClick={() => handleDelete(drawing.id)}
-                  >
-                    삭제
-                  </ActionButton>
-                </>
-              ) : (
-                <>
-                  <ActionButton
-                    className="view"
-                    onClick={() =>
-                      navigate("/community", {
-                        state: {
-                          id: drawing.id,
-                          title: drawing.title,
-                          date: drawing.date,
-                          image: `/images/${drawing.id}.jpg`, // 실제 이미지 경로로 수정해줘!
-                          nickname: "RYU", // 예시
-                          content: "그림에 대한 설명 또는 내용", // 필요시
-                        },
-                      })
-                    }
-                  >
-                    나의 그림보기
-                  </ActionButton>
-                  <ActionButton
-                    className="delete"
-                    onClick={() => handleDelete(drawing.id)}
-                  >
-                    삭제
-                  </ActionButton>
-                </>
+              {drawing.status === "임시저장" && (
+                <ActionButton
+                  className="continue"
+                  onClick={() => handleEdit(drawing.id)}
+                >
+                  이어서 그리기
+                </ActionButton>
               )}
+              <ActionButton
+                className="delete"
+                onClick={() => handleDelete(drawing.id)}
+              >
+                삭제
+              </ActionButton>
             </ButtonContainer>
           </DrawingItem>
         ))}

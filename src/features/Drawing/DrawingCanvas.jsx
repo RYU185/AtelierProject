@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "../Header";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const Container = styled.div`
   display: flex;
@@ -208,67 +209,6 @@ const MenuItem = styled.button`
     background: rgba(255, 255, 255, 0.1);
   }
 `;
-const ModalOverlay = styled.div`
-  position: fixed;
-  z-index: 9999;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-`;
-
-const ModalBox = styled.div`
-  background: white;
-  padding: 30px 20px;
-  border-radius: 10px;
-  width: 320px;
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const ModalTitle = styled.h3`
-  font-size: 20px;
-  margin-bottom: 15px;
-`;
-
-const ModalInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-
-  &:focus {
-    outline: none;
-    border-color: #007aff;
-  }
-`;
-
-const ModalButtons = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-`;
-
-const ModalButton = styled.button`
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  background-color: ${(props) => (props.cancel ? "#ccc" : "#0038a8")};
-  color: ${(props) => (props.cancel ? "#333" : "white")};
-
-  &:hover {
-    background-color: ${(props) => (props.cancel ? "#bbb" : "#002c85")};
-  }
-`;
 
 const DrawingCanvas = () => {
   const canvasRef = useRef(null);
@@ -276,6 +216,8 @@ const DrawingCanvas = () => {
   const containerRef = useRef(null);
   const canvasWrapperRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [editId, setEditId] = useState(null);
 
   // State variables
   const [isDrawing, setIsDrawing] = useState(false);
@@ -293,7 +235,6 @@ const DrawingCanvas = () => {
   });
   const [selectedTool, setSelectedTool] = useState(null);
   const [selectedColor, setSelectedColor] = useState("#000000");
-  const [showSizeControl, setShowSizeControl] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
@@ -303,7 +244,6 @@ const DrawingCanvas = () => {
   // Initialize canvas context and center canvas on mount
   useEffect(() => {
     const canvas = canvasRef.current;
-    const container = containerRef.current;
 
     canvas.width = 1920;
     canvas.height = 1080;
@@ -471,45 +411,6 @@ const DrawingCanvas = () => {
   };
 
   // Undo the last drawing action
-  const handleUndo = () => {
-    if (history.length < 2) return;
-    const ctx = contextRef.current;
-    const image = new Image();
-    const last = history[history.length - 2];
-    const current = history[history.length - 1];
-    setFutureHistory((prev) => [...prev, current]);
-    image.src = last;
-    image.onload = () => {
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      ctx.drawImage(image, 0, 0);
-      setHistory((prev) => prev.slice(0, prev.length - 1));
-    };
-  };
-
-  // Redo the last undone action
-  const handleRedo = () => {
-    if (futureHistory.length === 0) return;
-    const ctx = contextRef.current;
-    const image = new Image();
-    const next = futureHistory[futureHistory.length - 1];
-    image.src = next;
-    image.onload = () => {
-      ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      ctx.drawImage(image, 0, 0);
-      setHistory((prev) => [...prev, next]);
-      setFutureHistory((prev) => prev.slice(0, prev.length - 1));
-    };
-  };
-
-  // Temporarily save the drawing to local storage
-  const handleTempSave = () => {
-    const image = canvasRef.current.toDataURL("image/png");
-    const drawings = JSON.parse(localStorage.getItem("myDrawings")) || [];
-    drawings.push({ id: Date.now(), image, isTemporary: true });
-    localStorage.setItem("myDrawings", JSON.stringify(drawings));
-    alert("임시저장 완료! 마이페이지로 이동합니다.");
-    navigate("/mypage", { state: { activeTab: "drawing" } });
-  };
 
   // Download the drawing as a PNG image
   const handleDownload = () => {
@@ -518,17 +419,6 @@ const DrawingCanvas = () => {
     link.href = image;
     link.download = "drawing.png";
     link.click();
-  };
-
-  // Save the drawing to local storage and navigate to the community page
-  const handleSave = () => {
-    if (!window.confirm("정말 저장하시겠습니까?")) return;
-    const image = canvasRef.current.toDataURL("image/png");
-    const drawings = JSON.parse(localStorage.getItem("myDrawings")) || [];
-    drawings.push({ id: Date.now(), image, isTemporary: false });
-    localStorage.setItem("myDrawings", JSON.stringify(drawings));
-    alert("저장 완료! 커뮤니티로 이동합니다.");
-    navigate("/community");
   };
 
   // Clear the entire canvas
@@ -573,6 +463,7 @@ const DrawingCanvas = () => {
       const response = await axios.post(
         "/api/realdrawing/save",
         {
+          id: editId,
           imageData,
           isTemporary,
           title,
@@ -617,6 +508,50 @@ const DrawingCanvas = () => {
     }
     setShowMenu(false);
   };
+
+  const loadImageToCanvas = (imageData) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+
+    // base64 prefix 중복 방지
+    if (imageData.startsWith("data:image")) {
+      img.src = imageData;
+    } else {
+      img.src = `data:image/png;base64,${imageData}`;
+    }
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const id = params.get("edit");
+    setEditId(id);
+
+    if (!id) return;
+
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    axios
+      .get(`/api/realdrawing/temporary/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        loadImageToCanvas(res.data.imageData);
+      })
+      .catch((err) => {
+        console.error("🛑 드로잉 로드 실패:", err);
+        alert("그림을 불러오는 데 실패했습니다.");
+      });
+  }, [location.search, navigate]);
 
   return (
     <>
