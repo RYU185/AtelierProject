@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 import styled from "styled-components";
 import ArtistIntro from "./components/ArtistIntro";
-import artist1 from "../../assets/ArtistIMG/artist1.jpg";
-import artist2 from "../../assets/ArtistIMG/artist2.png";
-import artist3 from "../../assets/ArtistIMG/artist3.jpg";
-import artist4 from "../../assets/ArtistIMG/artist4.jpg";
+import axiosInstance from "../../api/axiosInstance";
+import { useState } from "react";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -50,16 +48,23 @@ const ArtistContainer = styled.div`
 `;
 
 const Artist = () => {
-  const artists = [
-    { id: 1, name: "Artist 1", bio: "", imageUrl: artist1 },
-    { id: 2, name: "Artist 2", bio: "", imageUrl: artist2 },
-    { id: 3, name: "Artist 3", bio: "", imageUrl: artist3 },
-    { id: 4, name: "Artist 4", bio: "", imageUrl: artist4 },
-    { id: 1, name: "Artist 1", bio: "", imageUrl: artist1 },
-    { id: 2, name: "Artist 2", bio: "", imageUrl: artist2 },
-    { id: 3, name: "Artist 3", bio: "", imageUrl: artist3 },
-    { id: 4, name: "Artist 4", bio: "", imageUrl: artist4 },
-  ];
+  const[artist, setArtist] = useState([]);
+  
+  useEffect(()=> {
+    const fetchArtist = async() =>{
+      try{
+        const res = await axiosInstance.get("/artist")
+        setArtist(res.data);
+      }catch(err){
+        console.error("작가 목록 불러오기 실패:",err);
+      }
+    }
+    fetchArtist();
+  }, []);
+
+
+
+  
 
   return (
     <div>
@@ -69,8 +74,13 @@ const Artist = () => {
         <Title>ARTIST</Title>
       </TitleContainer>
       <ArtistContainer>
-        {artists.map((artist) => (
-          <ArtistIntro key={artist.id} {...artist} />
+        {artist.map((a) => (
+          <ArtistIntro 
+          key={a.id} 
+          id= {a.id}
+          name={a.name}
+          imageUrl = {`/images/ArtistIMG/${a.profile_img}`}
+          />
         ))}
       </ArtistContainer>
       <Footer />

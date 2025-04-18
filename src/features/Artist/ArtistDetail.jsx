@@ -10,6 +10,7 @@ import artist4 from "../../assets/ArtistIMG/artist4.jpg";
 import art1 from "../../assets/ArtIMG/1.jpg";
 import art2 from "../../assets/ArtIMG/2.jpg";
 import art3 from "../../assets/ArtIMG/3.jpg";
+import axiosInstance from "../../api/axiosInstance";
 
 const DetailWrapper = styled.div`
   width: 50%;
@@ -58,7 +59,7 @@ const BioGraphyTitle = styled.h2`
   padding: 5px 10px;
 `;
 
-const BioGraphyText = styled.p`
+const BioGraphyText = styled.div`
   font-size: 16px;
   color: #666;
   line-height: 1.5;
@@ -85,16 +86,19 @@ const WorksGrid = styled.div`
 `;
 
 const WorkCard = styled.div`
-  border: none;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  width: 300px;
-  height: 300px;
   cursor: pointer;
+
 `;
+
 
 const WorkImage = styled.img`
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 `;
 
 /* 모달 오버레이 */
@@ -172,47 +176,34 @@ const ArtDetailDescriptionContainer = styled.div`
 
 const ArtistDetail = () => {
   const { id } = useParams();
-
-  const getArtistImage = (id) => {
-    switch (id) {
-      case "1":
-        return artist1;
-      case "2":
-        return artist2;
-      case "3":
-        return artist3;
-      case "4":
-        return artist4;
-      default:
-        return artist1;
-    }
-  };
-
-  const getArtImage = (id) => {
-    switch (id) {
-      case "1":
-        return art1;
-      case "2":
-        return art2;
-      case "3":
-        return art3;
-    }
-  };
-
-  const art = {
-    id: id,
-    imageUrl: getArtImage(id),
-  };
-
-  const artist = {
-    id: id,
-    name: `작가 ${id}`,
-    bio: ` ${id}.`,
-    imageUrl: getArtistImage(id),
-  };
-
+  const [artist, setArtist] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedWork, setSelectedWork] = useState(null);
+  const [arts, setArts] = useState([]);
+
+  useEffect(() => {
+    const fetchArtistDetail = async () => {
+      try {
+        const res = await axiosInstance.get(`/artist/id/${id}`);
+        setArtist(res.data);
+      } catch (err) {
+        console.error("작가 상세정보 불러오기 실패:", err);
+      }
+    };
+    fetchArtistDetail();
+  }, [id]);
+
+  useEffect(() => {
+    const fetchArt = async () => {
+      try {
+        const res = await axiosInstance.get(`/art/artist/${id}`);
+        setArts(res.data);
+      } catch (err) {
+        console.error("참여작품 불러오기 실패:", err);
+      }
+    };
+    fetchArt();
+  }, [id]);
 
   const handleOverlayClick = () => {
     setModalOpen(false); // 모달 닫기
@@ -236,6 +227,10 @@ const ArtistDetail = () => {
     };
   }, [modalOpen]);
 
+  if (!artist) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <Header />
@@ -243,26 +238,10 @@ const ArtistDetail = () => {
       <DetailWrapper>
         <DetailContainer>
           <ImageContainer>
-            <ArtistImage src={artist.imageUrl} alt={artist.name} />
+            <ArtistImage src={`/images/ArtistIMG/${artist.profile_img}`} alt={artist.name} />
           </ImageContainer>
           <DescriptionContainer>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit
-              amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur
-              adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing
-              elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Quisquam, quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-              quos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.
-            </p>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum
-              dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit
-              amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Quisquam, quos.
-            </p>
+            <p>{artist.description}</p>
           </DescriptionContainer>
         </DetailContainer>
 
@@ -270,68 +249,39 @@ const ArtistDetail = () => {
           <BioGraphyTitle>BIOGRAPHY</BioGraphyTitle>
           <h2>{artist.name}</h2>
           <BioGraphyText>
-            개인전 14회
-            <br />
-            2024. 03. 05~11 13회 'Make New Wave' 스페이스엄 후원: 숲인더문 음악:박찬재
-            <br />
-            2022. 11. 01~15 11회 'MODERN TIMES' 초대개인전, 갤러리 자인제노
-            <br />
-            2022. 03. 09~15 10회 'Beyond' 초대개인전, 갤러리 이즈 / 주최 : 갤러리탐
-            후원:탐앤탐스커피
-            <br />
-            2019. 09. 04~10 5회 '비밀의 숲' 일호갤러리 초대개인전, 삼청동
-            <br />
-            2014. 07. 29~08.03 1회 '바람이 분다.' 아라아트센터, 인사동, 대한민국 외 다수
-            <br />
-            <br />
-            국내외 아트패어 18회
-            <br />
-            2025 ART FUTURE TAIPAI, 아트보다 갤러리
-            <br />
-            2024 뱅크아트페어 싱가포르, 아트보다 갤러리
-            <br />
-            2024 홍콩 어포더블 청화랑
-            <br />
-            2024 화랑미술제 갤러리자인제노 코엑스 Hall C
-            <br />
-            2019 싱가포르 어포더블, 일호갤러리
-            <br />
-            2019 뉴욕어포더블, 메크로폴리탄, 미국
-            <br />
-            <br />
-            그룹전 37회
-            <br />
-            2025 안소영, 지나유 2인전, 명주갤러리
-            <br />
-            2022 '선과 색' 김미아, 지나유 2인전, 갤러리이즈 /주최:갤러리탐, 후원:탐앤탐스커피
-            <br />
-            2021 'VISUAL ARTIST MARKET' 예술경영지원센터가 지원하는 2021 온라인 기획
-            경매작가미술장터와 케이옥션이 선정한 주목할 만한 작가 30명의 작품 68점 공개케이옥션,
-            지원:예술경영지원센터, 문화체육관광부
-            <br />
-            2015 아시아 태평양 미술대상전. 동경도립미술관, 동경, 일본
-            <br />
-            2015 한국현대미술 대만 (그룹초대전) Chuto Hotel Special, 타이페이, 타이완
-            <br />
-            2015 미국 히달고 국경페스티벌 한국작가 (초대전) (우수작가상). 외 다수
+            {artist.biographyList && artist.biographyList.length > 0 ? (
+              [...artist.biographyList]
+                .sort((a, b) => new Date(a.year) - new Date(b.year))
+                .map((bio) => (
+                  <div key={bio.id}>
+                    <strong>{bio.year}</strong> - {bio.award}
+                    <br />
+                  </div>
+                ))
+            ) : (
+              <p>수상 경력이 없습니다.</p>
+            )}
           </BioGraphyText>
         </BioGraphyContainer>
 
         <WorksContainer>
           <WorksTitle>EXHIBITIONS</WorksTitle>
           <WorksGrid>
-            {[1, 2, 3, 4].map((workId) => {
-              const handleWorkClick = () => {
-                // 모달창 상태관리
-                setModalOpen(true);
-                setSelectedWork(workId);
-              };
-              return (
-                <WorkCard key={workId} onClick={handleWorkClick}>
-                  <WorkImage src={art.imageUrl} alt={`작품 ${workId}`} />
-                </WorkCard>
-              );
-            })}
+            {arts.length > 0 ? (
+              arts.map((art) => {
+                const handleWorkClick = () => {
+                  setModalOpen(true);
+                  setSelectedWork(art);
+                };
+                return (
+                  <WorkCard key={art.id} onClick={handleWorkClick}>
+                    <WorkImage src={`/images/ArtListIMG/${art.imgUrl}`} alt={art.title} />
+                  </WorkCard>
+                );
+              })
+            ) : (
+              <p>등록된 작품이 없습니다.</p>
+            )}
           </WorksGrid>
         </WorksContainer>
       </DetailWrapper>
@@ -340,7 +290,7 @@ const ArtistDetail = () => {
           <Modal onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={() => setModalOpen(false)}>X</CloseButton>
             <ArtDetailImageContainer>
-              <img src={art.imageUrl} alt={`작품 ${selectedWork}`} />
+              <img src={`/images/ArtIMG/sample${selectedWork}.jpg`} alt={`작품 ${selectedWork}`} />
             </ArtDetailImageContainer>
             <ArtDetailDescriptionContainer>
               <h2>TITLE</h2>
