@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import ChatRoom from "../components/ChatRoom";
+import ChatRoomList from "../components/ChatRoomList";
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -49,6 +50,7 @@ const Title = styled.h1`
 
 const ChattingPage = () => {
   const navigate = useNavigate();
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   return (
     <PageContainer>
@@ -56,6 +58,11 @@ const ChattingPage = () => {
         <Title>Chatting with ARTIST</Title>
         <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
       </Header>
+      {!selectedRoom ? (
+        <ChatRoomList onSelectRoom={(room) => setSelectedRoom(room)} />
+      ) : (
+        <ChatRoom room={selectedRoom} />
+      )}
       <ChatRoom />
     </PageContainer>
   );

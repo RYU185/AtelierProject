@@ -9,7 +9,7 @@ const IMAGE_BASE_URL = "/images/ArtistGalleryIMG/";
 const WhatsOnSection = styled.section`
   position: relative;
   min-height: 95vh;
-  background: #fff;
+  background: #1f1f1f;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,15 +20,15 @@ const WhatsOnSection = styled.section`
 
 const Title = styled.h1`
   font-size: 140px;
-  opacity: 0.06;
+  opacity: 0.15;
   position: absolute;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
   font-weight: 900;
   white-space: nowrap;
   letter-spacing: -5px;
+  color: aliceblue;
 `;
 
 const SliderContainer = styled.div`

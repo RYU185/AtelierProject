@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ChatMessage from "./ChatMessage";
 import Header from "../../Header";
 import Footer from "../../Footer";
+import useChatSocket from "../../../useChatsocket";
 
 const ChatContainer = styled.div`
   max-width: 1200px;
@@ -115,8 +116,7 @@ const ProfileCircle = styled.div`
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: ${(props) =>
-    props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none"};
+  box-shadow: ${(props) => (props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none")};
 `;
 
 const ProfileText = styled.div`
@@ -288,22 +288,40 @@ const SendButton = styled.button`
 `;
 
 const ChatRoom = () => {
+  const location = useLocation();
   const navigate = useNavigate();
-  const [messages, setMessages] = useState([
-    { id: 1, message: "안녕하세요!", timestamp: "13:19", isArtist: true },
-    {
-      id: 2,
-      message: "작품에 대해 궁금한 점이 있으신가요?",
-      timestamp: "13:21",
-      isArtist: true,
-    },
-  ]);
+  const room = location.state?.room;
+
+  if (!room) {
+    return (
+      <div>
+        <p>채팅방 정보가 없습니다.</p>
+        <button onClick={() => navigate("/artist")}>작가 목록으로 이동</button>
+      </div>
+    );
+  }
+
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const messagesEndRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
+
+  const { sendMessage } = useChatSocket({
+    senderId: room.userId,
+    receiverId: room.artistId,
+    onMessageReceive: (msg) => {
+      const formatted = {
+        id: Date.now(),
+        message: msg.content,
+        timestamp: msg.timestamp?.slice(11, 16),
+        isArtist: msg.sender === room.artistId,
+      };
+      setMessages((prev) => [...prev, formatted]);
+    },
+  });
 
   const scrollToBottom = () => {
     if (!isUserScrolled && messagesEndRef.current) {
@@ -314,45 +332,43 @@ const ChatRoom = () => {
   const handleScroll = () => {
     if (chatMessagesRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
-      const isScrolledToBottom =
-        Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
+      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
       setIsUserScrolled(!isScrolledToBottom);
     }
   };
 
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const res = await axiosInstance.get(`/chat-room/${room.id}/messages`);
+        const loaded = res.data.map((msg, index) => ({
+          id: index,
+          message: msg.content,
+          timestamp: msg.timestamp?.slice(11, 16) ?? "??:??",
+          isArtist: msg.sender === room.artistId,
+        }));
+        setMessages(loaded);
+      } catch (err) {
+        console.error("메시지 로딩 실패:", err);
+      }
+    };
+    fetchMessages();
+  }, [room.id]);
+
+  useEffect(() => {
     if (isInitialLoad) {
       setIsInitialLoad(false);
       const inputElement = document.querySelector('input[type="text"]');
-      if (inputElement) {
-        inputElement.focus();
-      }
+      if (inputElement) inputElement.focus();
       return;
     }
-
-    if (messages.length > 2) {
-      scrollToBottom();
-    }
+    if (messages.length > 2) scrollToBottom();
   }, [messages, isInitialLoad]);
-
-  // 작가 자동 응답 함수
-  const generateArtistResponse = (userMessage) => {
-    const responses = [
-      "네, 말씀해 주세요.",
-      "자세히 설명해 주시겠어요?",
-      "아, 그렇군요. 더 궁금하신 점이 있으신가요?",
-      "네, 이해했습니다.",
-      "흥미로운 질문이네요.",
-    ];
-
-    return responses[Math.floor(Math.random() * responses.length)];
-  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
-      // 파일이 선택되면 파일 이름을 메시지 입력창에 표시
       setNewMessage(`파일: ${file.name}`);
     }
   };
@@ -361,38 +377,29 @@ const ChatRoom = () => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
 
-    const currentTime = new Date().toLocaleTimeString("ko-KR", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-
-    const newMsg = {
-      id: messages.length + 1,
-      message: newMessage,
-      timestamp: currentTime,
-      isArtist: false,
-      file: selectedFile,
+    const payload = {
+      sender: room.userId,
+      receiver: room.artistId,
+      content: newMessage,
     };
+    sendMessage(payload);
 
-    setMessages([...messages, newMsg]);
-    setNewMessage("");
-    setSelectedFile(null);
-
-    // 작가 응답 추가 (1초 후)
-    setTimeout(() => {
-      const artistResponse = {
-        id: messages.length + 2,
-        message: generateArtistResponse(newMessage),
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        message: newMessage,
         timestamp: new Date().toLocaleTimeString("ko-KR", {
           hour: "2-digit",
           minute: "2-digit",
           hour12: false,
         }),
-        isArtist: true,
-      };
-      setMessages((prev) => [...prev, artistResponse]);
-    }, 1000);
+        isArtist: false,
+      },
+    ]);
+
+    setNewMessage("");
+    setSelectedFile(null);
   };
 
   return (
@@ -400,9 +407,7 @@ const ChatRoom = () => {
       <Header />
       <ChatContainer>
         <PageTitle>
-          <BackButton onClick={() => navigate("/artist")}>
-            Artist List
-          </BackButton>
+          <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
           <Title>Chatting with ARTIST</Title>
         </PageTitle>
         <MainContent>
@@ -425,9 +430,7 @@ const ChatRoom = () => {
               <OnlineStatus>온라인</OnlineStatus>
             </ChatHeader>
             <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
-              <MessageBox>
-                작품에 대해 궁금하신 점을 자유롭게 문의해주세요.
-              </MessageBox>
+              <MessageBox>작품에 대해 궁금하신 점을 자유롭게 문의해주세요.</MessageBox>
               {messages.map((msg) => (
                 <ChatMessage
                   key={msg.id}
