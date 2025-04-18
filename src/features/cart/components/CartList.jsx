@@ -1,4 +1,10 @@
-import React, { useState, forwardRef, useImperativeHandle } from "react";
+import React, {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+} from "react";
+import axiosInstance from "../../../api/axiosInstance";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -103,24 +109,35 @@ const DeleteButton = styled.button`
 `;
 
 const CartList = forwardRef(({ onUpdateTotal }, ref) => {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "반가사유상 미니어처 ver3 (8조)",
-      price: 42000,
-      quantity: 2,
-      image: "/images/goods1.jpg",
-      checked: false,
-    },
-    {
-      id: 2,
-      name: "반가사유상 미니어처 ver3 (8조)",
-      price: 42000,
-      quantity: 1,
-      image: "/images/goods1.jpg",
-      checked: false,
-    },
-  ]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const userId = localStorage.getItem("username");
+        const response = await axiosInstance.get(`/cart/user/${userId}`);
+        const data = response.data;
+
+        const transformed = data.map((item) => ({
+          id: item.id,
+          name: item.goodsName,
+          price: item.goodsPrice,
+          quantity: item.amount,
+          image: item.imgUrl?.includes("/uploads")
+            ? `http://localhost:8081${item.imgUrl}`
+            : `/images/goods-images/${item.imgUrl?.replace(/^.*[\\/]/, "")}`,
+          checked: false,
+        }));
+
+        setItems(transformed);
+        calculateTotal(transformed);
+      } catch (err) {
+        console.error("장바구니 불러오기 실패:", err);
+      }
+    };
+
+    fetchCart();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -131,6 +148,9 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
         checked,
       }));
       setItems(updatedItems);
+      setTimeout(() => {
+        calculateTotal(updatedItems);
+      }, 0);
 
       // 전체 선택 시 즉시 총액 업데이트
       const selectedItems = updatedItems.filter((item) => item.checked);
@@ -153,6 +173,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
     getSelectedItems: () => {
       return items.filter((item) => item.checked);
     },
+    getAllItems: () => [...items],
   }));
 
   const handleQuantityChange = (index, newQuantity) => {
@@ -201,6 +222,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
         price: 0,
         selectedItems: [],
         hasItems: false,
+        hasItems: currentItems.length > 0,
       });
       return;
     }

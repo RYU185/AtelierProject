@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import axiosInstance from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CartList from "./components/CartList";
@@ -188,13 +189,14 @@ const CartPage = () => {
 
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
+    setIsEmpty(!newTotal.hasItems);
 
     if (cartListRef.current) {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
 
       // 장바구니가 비어있는지 확인 (전체 아이템 기준)
-      setIsEmpty(allItems.length === 0);
+      setIsEmpty(newTotal.hasItems === false);
 
       // 전체 선택 여부도 다시 계산
       const isAllSelected =
@@ -214,17 +216,30 @@ const CartPage = () => {
     setShowModal(true);
   };
 
-  const handleConfirmPurchase = () => {
+  const handleConfirmPurchase = async () => {
     if (!cartListRef.current) return;
 
     const selectedItems = cartListRef.current.getSelectedItems();
-    setShowModal(false);
-    navigate("/purchase-complete", {
-      state: {
-        items: selectedItems,
-        totalPrice: total.price,
-      },
-    });
+    const cartIds = selectedItems.map((item) => item.id);
+
+    try {
+      const response = await axiosInstance.post("/purchase", cartIds);
+      const { data } = response;
+
+      navigate("/purchase-complete", {
+        state: {
+          items: data.goods,
+          totalPrice: data.totalPrice,
+          purchaseDate: data.purchaseDate,
+          purchaseId: data.purchaseId,
+        },
+      });
+    } catch (err) {
+      console.error("구매 실패:", err);
+      alert("구매 처리 중 문제가 발생했습니다.");
+    } finally {
+      setShowModal(false);
+    }
   };
 
   return (

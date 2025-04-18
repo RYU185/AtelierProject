@@ -170,20 +170,34 @@ const PurchaseCompletePage = () => {
         <CompletedMessage>구매해 주셔서 감사합니다.</CompletedMessage>
         <PurchaseInfo>
           <ItemList>
-            {items.map((item) => (
-              <ItemRow key={item.id}>
-                <ItemInfo>
-                  <ItemImage src={item.image} alt={item.name} />
-                  <ItemDetails>
-                    <ItemName>{item.name}</ItemName>
-                    <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
-                  </ItemDetails>
-                </ItemInfo>
-                <ItemPrice>
-                  {(item.price * item.quantity).toLocaleString()}원
-                </ItemPrice>
-              </ItemRow>
-            ))}
+            {items.map((item, idx) => {
+              const imgUrl = item.thumbnailUrl || item.image || "";
+
+              return (
+                <ItemRow key={idx}>
+                  <ItemInfo>
+                    <ItemImage
+                      src={
+                        imgUrl.includes("/uploads")
+                          ? `http://localhost:8081${imgUrl}`
+                          : `/images/goods-images/${imgUrl.replace(
+                              /^.*[\\/]/,
+                              ""
+                            )}`
+                      }
+                      alt={item.goodsName}
+                    />
+                    <ItemDetails>
+                      <ItemName>{item.goodsName}</ItemName>
+                      <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
+                    </ItemDetails>
+                  </ItemInfo>
+                  <ItemPrice>
+                    {(item.price * item.quantity).toLocaleString()}원
+                  </ItemPrice>
+                </ItemRow>
+              );
+            })}
           </ItemList>
           <TotalRow>
             <TotalLabel>총 결제 금액</TotalLabel>

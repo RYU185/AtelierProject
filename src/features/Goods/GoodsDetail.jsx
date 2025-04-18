@@ -421,7 +421,29 @@ function GoodsDetail() {
     setMousePosition({ x: centeredX, y: centeredY });
   };
 
-  const handleAddToCart = () => setshowCartNotice(true);
+  const handleAddToCart = async () => {
+    try {
+      const userId = localStorage.getItem("username");
+      if (!userId) {
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+        return;
+      }
+
+      const dto = {
+        amount: quantity,
+        sum: goods.price * quantity,
+        goodsId: goods.id,
+        userId: userId,
+      };
+
+      await axiosInstance.post("/cart", dto);
+      setshowCartNotice(true);
+    } catch (err) {
+      console.error("장바구니 담기 실패:", err);
+      alert("장바구니 담기에 실패했습니다.");
+    }
+  };
   const handleGoToCart = () => {
     setshowCartNotice(false);
     navigate("/cart");
@@ -436,7 +458,7 @@ function GoodsDetail() {
     const items = {
       id: goods.id,
       name: goods.name,
-      image: currentProductImages[selectedImage],
+      thumbnailUrl: currentProductImages[selectedImage],
       quantity,
       price: goods.price,
     };

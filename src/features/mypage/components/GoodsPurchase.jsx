@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axiosInstance from "../../../api/axiosInstance";
 import styled from "styled-components";
 import ExchangeRefundModal from "./ExchangeRefundModal";
 import { useNavigate } from "react-router-dom";
@@ -156,7 +157,7 @@ const GoodsPurchase = () => {
 
     const fetchPurchases = async () => {
       try {
-        const response = await axios.get("/api/purchase");
+        const response = await axiosInstance.get("/purchase"); // ✅ baseURL에 이미 /api 있음!
         setPurchases(response.data);
       } catch (error) {
         console.error("❌ 구매내역 불러오기 실패:", error);
@@ -217,10 +218,16 @@ const GoodsPurchase = () => {
             구매내역이 없습니다.
           </p>
         ) : (
-          filteredPurchases.map((purchase) => (
-            <PurchaseCard key={purchase.purchaseId}>
+          filteredPurchases.map((purchase, index) => (
+            <PurchaseCard
+              key={`${purchase.goodsId}-${purchase.purchaseDate}-${index}`}
+            >
               <GoodsImage
-                src={`/public/images/goods-images/${purchase.thumbnailUrl}`}
+                src={
+                  purchase.thumbnailUrl?.startsWith("/uploads")
+                    ? `http://localhost:8081${purchase.thumbnailUrl}`
+                    : `/images/goods-images/${purchase.thumbnailUrl}`
+                }
                 alt={purchase.goodsName}
               />
               <GoodsInfo>
