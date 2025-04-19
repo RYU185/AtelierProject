@@ -193,7 +193,10 @@ const Header = () => {
       { label: "Artist Gallery", path: "/gallery/artistgallery" },
       { label: "User Gallery", path: "/gallery/usergallery" },
     ],
-    Artist: [{ label: "작가 소개", path: "/artist" }],
+    Artist: [
+      { label: "작가 소개", path: "/artist" },
+      { label: "채팅 문의함", path: "/chatting" },
+    ],
     Community: [
       { label: "커뮤니티", path: "/community" },
       { label: "나만의 작품 그리기", path: "/drawingcanvas" },
@@ -245,7 +248,13 @@ const Header = () => {
                     onMouseEnter={() => handleMouseEnter(menu)}
                     onMouseLeave={handleMouseLeave}
                   >
-                    {dropdownItems[menu].map((item) => (
+                    {dropdownItems[menu]
+                    .filter((item) =>{
+                      if(item.label === "채팅 문의함" && !user?.isArtist) return false;
+                      return true;
+                    })
+                    
+                    .map((item) => (
                       <DropdownItem
                         key={item.path}
                         onClick={() => {

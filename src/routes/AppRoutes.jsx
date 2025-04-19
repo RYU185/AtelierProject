@@ -94,6 +94,7 @@ function AppRoutes() {
       <Route path="/purchase-complete" element={<PurchaseCompletePage />} />
       <Route path="/drawingcanvas" element={<DrawingCanvas />} />
       <Route path="/chat" element={<ChattingPage />} />
+      <Route path="/chatting" element={<ChattingPage />} />
       <Route path="/artist/:artistId/chat" element={<ChattingPage />} />
     </Routes>
   );

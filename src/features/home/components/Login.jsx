@@ -140,7 +140,6 @@ const Login = () => {
     }
 
     try {
-      // ✅ 이전 로그인 정보 초기화
       localStorage.removeItem("accessToken");
       localStorage.removeItem("username");
       localStorage.removeItem("role");
@@ -150,14 +149,24 @@ const Login = () => {
         password,
       });
 
-      const { token, role } = response.data;
+      const token = response.data.token;
+      const role = response.data.role;
+      const isArtist = response.data.isArtist;
 
-      // ✅ 새 로그인 정보 저장
       localStorage.setItem("accessToken", token);
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
 
-      login({ username: userId, role });
+      const loginPayload = {
+        username: userId,
+        role,
+      };
+
+      if (typeof isArtist !== "undefined") {
+        loginPayload.isArtist = isArtist;
+      }
+
+      login(loginPayload);
 
       if (autoLogin) {
         localStorage.setItem("autoLogin", "true");
