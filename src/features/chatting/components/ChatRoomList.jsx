@@ -30,23 +30,20 @@ const LastMessage = styled.p`
 `;
 
 const ChatRoomList = ({ onSelectRoom }) => {
+  const [rooms, setRooms] = useState([]);
+  const navigate = useNavigate();
   const { user } = useAuth();
   const currentUserId = user?.username;
   const isArtist = user?.isArtist;
-  const [rooms, setRooms] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const res = await axiosInstance.get("/chat-room/my");
-        console.log("서버 응답:", res.data);
-
-        const filteredRooms = res.data.filter(
+        const filtered = res.data.filter(
           (room) => room.userId !== room.artistId
         );
-
-        setRooms(filteredRooms);
+        setRooms(filtered);
       } catch (err) {
         console.error("채팅방 목록 불러오기 실패:", err);
       }
