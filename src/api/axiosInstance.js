@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // 🔹 인증 제외할 공용 API 경로 (정렬 기준으로 분리)
-const PUBLIC_PATHS = ["/user/login", "/user/register", "/user/findid"];
+const PUBLIC_PATHS = ["/user/login", "/user/register", "/user/findid", "/user/check-email", "/user/check-id"];
 
 // 🔹 Axios 인스턴스 생성
 const axiosInstance = axios.create({

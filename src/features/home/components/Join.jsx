@@ -1,11 +1,10 @@
-// src/features/home/components/Join.jsx
+import axiosInstance from "../../../api/axiosInstance";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import Header from "../../Header";
 import Footer from "../../Footer";
-// ✅ 스타일 정의
+
 const Wrapper = styled.div`
   padding: 80px 20px;
   max-width: 600px;
@@ -42,6 +41,22 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: #0099ff;
+  }
+`;
+const ConfirmButton = styled.button`
+  padding: 10px 16px;
+  background-color: #0099ff;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #007acc;
   }
 `;
 const Select = styled.select`
@@ -83,6 +98,30 @@ const CheckboxGroup = styled.div`
 const Join = () => {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    userId: "",
+    password: "",
+    confirmPassword: "",
+    realName: "",
+    nickName: "",
+    phone: "",
+    gender: "",
+    address: "",
+    email: "",
+    birthYear: "",
+    birthMonth: "",
+    birthDay: "",
+  });
+  const [idChecked, setIdChecked] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
+  const [terms, setTerms] = useState({
+    all: false,
+    service: false,
+    privacy: false,
+    marketing: false,
+  });
+  const [errors, setErrors] = useState({});
+
   const formatPhoneNumberInput = (value) => {
     const onlyNums = value.replace(/[^0-9]/g, "");
     if (onlyNums.length < 4) return onlyNums;
@@ -94,38 +133,14 @@ const Join = () => {
     )}`;
   };
 
-  const [formData, setFormData] = useState({
-    userId: "",
-    password: "",
-    confirmPassword: "",
-    realName: "",
-    nickName: "",
-    phone: "",
-    gender: "",
-    address: "",
-    email: "",
-    birthday: "",
-  });
-
-  const [terms, setTerms] = useState({
-    all: false,
-    service: false,
-    privacy: false,
-    marketing: false,
-  });
-
-  const [errors, setErrors] = useState({});
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     let newValue = value;
-    if (name === "phone") {
-      newValue = formatPhoneNumberInput(value);
-    }
-
+    if (name === "phone") newValue = formatPhoneNumberInput(value);
     setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
+
+  
 
   const handleCheckAll = (e) => {
     const checked = e.target.checked;
@@ -148,10 +163,49 @@ const Join = () => {
   const isValidPassword = (pw) =>
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/.test(pw);
   const isValidPhone = (phone) => /^010\d{8}$/.test(phone.replace(/-/g, ""));
+  const checkIdDuplicate = async () => {
+    if (!formData.userId) return alert("아이디를 입력해주세요.");
+
+    try {
+      const res = await axiosInstance.get(
+        `/user/check-id?userId=${formData.userId}`
+      );
+      console.log("📤 요청 URL:", `/user/check-id?userId=${formData.userId}`);
+      if (res.data.exists) {
+        alert("이미 사용 중인 아이디입니다.");
+        setIdChecked(false);
+      } else {
+        alert("사용 가능한 아이디입니다!");
+        setIdChecked(true);
+      }
+    } catch (err) {
+      console.error("❌ 중복 확인 실패:", err.response?.data || err.message);
+      alert("아이디 중복 확인 중 오류 발생");
+      setIdChecked(false);
+    }
+  };
+
+  const checkEmailDuplicate = async () => {
+    if (!formData.email) return alert("이메일을 입력해주세요.");
+    try {
+      const res = await axiosInstance.get(
+        `/user/check-email?email=${formData.email}`
+      );
+      if (res.data.exists) {
+        alert("이미 사용 중인 이메일입니다.");
+        setEmailChecked(false);
+      } else {
+        alert("사용 가능한 이메일입니다!");
+        setEmailChecked(true);
+      }
+    } catch (err) {
+      alert("이메일 중복 확인 중 오류 발생");
+      setEmailChecked(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const {
       userId,
       password,
@@ -159,11 +213,18 @@ const Join = () => {
       realName,
       nickName,
       email,
-      birthday,
+      birthYear,
+      birthMonth,
+      birthDay,
       address,
       gender,
       phone,
     } = formData;
+
+    const birthday = `${birthYear}-${birthMonth}-${birthDay}`;
+
+    if (!idChecked) return alert("아이디 중복 확인을 해주세요.");
+    if (!emailChecked) return alert("이메일 중복 확인을 해주세요.");
 
     const newErrors = {};
     if (!isValidEmail(email)) newErrors.email = "이메일 형식 오류";
@@ -171,12 +232,8 @@ const Join = () => {
     if (password !== confirmPassword)
       newErrors.confirmPassword = "비밀번호 불일치";
     if (!isValidPhone(phone)) newErrors.phone = "전화번호 형식 오류";
-
-    if (!terms.service || !terms.privacy) {
-      alert("필수 약관에 동의해주세요");
-      return;
-    }
-
+    if (!terms.service || !terms.privacy)
+      return alert("필수 약관에 동의해주세요");
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -193,15 +250,14 @@ const Join = () => {
       gender: gender.toUpperCase(),
       point: 0,
       enrolmentDate: new Date().toISOString().split("T")[0],
-      phone: phone.replace(/-/g, ""), //  꼭 포함시켜줘야 함!
+      phone: phone.replace(/-/g, ""),
     };
 
     try {
-      await axios.post("/user/register", payload);
+      await axiosInstance.post("/user/register", payload);
       alert("회원가입 성공! 로그인 페이지로 이동합니다.");
       navigate("/login");
     } catch (err) {
-      console.error("회원가입 실패:", err);
       alert("회원가입 실패: " + (err.response?.data?.message || err.message));
     }
   };
@@ -216,7 +272,20 @@ const Join = () => {
             <Label>
               아이디<span>*</span>
             </Label>
-            <Input name="userId" onChange={handleChange} required />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Input
+                name="userId"
+                value={formData.userId}
+                onChange={(e) => {
+                  handleChange(e);
+                  setIdChecked(false);
+                }}
+                required
+              />
+              <ConfirmButton type="button" onClick={checkIdDuplicate}>
+                중복 확인
+              </ConfirmButton>
+            </div>
           </FormItem>
 
           <FormItem>
@@ -265,7 +334,20 @@ const Join = () => {
             <Label>
               이메일<span>*</span>
             </Label>
-            <Input name="email" type="email" onChange={handleChange} required />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Input
+                name="email"
+                value={formData.email}
+                onChange={(e) => {
+                  handleChange(e);
+                  setEmailChecked(false);
+                }}
+                required
+              />
+              <ConfirmButton type="button" onClick={checkEmailDuplicate}>
+                중복 확인
+              </ConfirmButton>
+            </div>
             {errors.email && <SmallError>{errors.email}</SmallError>}
           </FormItem>
 
@@ -273,19 +355,70 @@ const Join = () => {
             <Label>
               생년월일<span>*</span>
             </Label>
-            <Input
-              name="birthday"
-              type="date"
-              onChange={handleChange}
-              required
-            />
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Select
+                name="birthYear"
+                value={formData.birthYear}
+                onChange={handleChange}
+                required
+              >
+                <option value="">년</option>
+                {[...Array(85)].map((_, i) => {
+                  const year = new Date().getFullYear() - i;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </Select>
+
+              <Select
+                name="birthMonth"
+                value={formData.birthMonth}
+                onChange={handleChange}
+                required
+              >
+                <option value="">월</option>
+                {[...Array(12)].map((_, i) => {
+                  const month = String(i + 1).padStart(2, "0");
+                  return (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  );
+                })}
+              </Select>
+
+              <Select
+                name="birthDay"
+                value={formData.birthDay}
+                onChange={handleChange}
+                required
+              >
+                <option value="">일</option>
+                {[...Array(31)].map((_, i) => {
+                  const day = String(i + 1).padStart(2, "0");
+                  return (
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
+                  );
+                })}
+              </Select>
+            </div>
           </FormItem>
 
           <FormItem>
             <Label>
               전화번호<span>*</span>
             </Label>
-            <Input name="phone" onChange={handleChange} required />
+            <Input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
             {errors.phone && <SmallError>{errors.phone}</SmallError>}
           </FormItem>
 
