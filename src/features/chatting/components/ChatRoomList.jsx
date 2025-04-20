@@ -29,7 +29,7 @@ const LastMessage = styled.p`
   color: #666;
 `;
 
-const ChatRoomList = () => {
+const ChatRoomList = ({ onSelectRoom }) => {
   const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
 
@@ -59,7 +59,7 @@ const ChatRoomList = () => {
     <RoomListContainer>
       {console.log("렌더링될 rooms:", rooms)}
       {rooms.map((room) => (
-        <RoomItem key={room.artistId} onClick={() => handleRoomClick(room.artistId)}>
+        <RoomItem key={`${room.id}-${room.artistId}`} onClick={() => handleRoomClick(room.artistId)}>
           <RoomTitle>{room.artistName}</RoomTitle>
           <LastMessage>{room.lastMessage || "채팅을 시작해보세요."}</LastMessage>
         </RoomItem>

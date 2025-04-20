@@ -51,7 +51,9 @@ const Title = styled.h1`
 const ChattingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
+  const [selectedRoom, setSelectedRoom] = useState(
+    location.state?.room ?? null
+  );
 
   return (
     <PageContainer>
@@ -60,7 +62,7 @@ const ChattingPage = () => {
         <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
       </Header>
       {!selectedRoom ? (
-        <ChatRoomList onSelectRoom={(room) => setSelectedRoom(room)} />
+        <ChatRoomList onSelectRoom={setSelectedRoom} />
       ) : (
         <ChatRoom room={selectedRoom} />
       )}

@@ -6,6 +6,7 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import axiosInstance from "../../../api/axiosInstance";
 import useChatSocket from "../../../useChatsocket";
+import { useAuth } from "../../../components/AuthContext";
 
 const ChatContainer = styled.div`
   max-width: 1200px;
@@ -117,7 +118,8 @@ const ProfileCircle = styled.div`
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: ${(props) => (props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none")};
+  box-shadow: ${(props) =>
+    props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none"};
 `;
 
 const ProfileText = styled.div`
@@ -288,10 +290,17 @@ const SendButton = styled.button`
   }
 `;
 
-const ChatRoom = () => {
+const ChatRoom = ({ room: propRoom }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const room = location.state?.room;
+  const { user } = useAuth();
+
+  const room = propRoom || location.state?.room;
+
+  if (!user) {
+    console.warn("user가 존재하지 않음");
+    return null;
+  }
 
   if (!room) {
     return (
@@ -309,6 +318,10 @@ const ChatRoom = () => {
   const messagesEndRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
+
+  if (!user) {
+    return <div> 로그인 정보를 불러오는 중입니다...</div>;
+  }
 
   const { sendMessage, isConnected } = useChatSocket({
     userId: room.userId,
@@ -333,7 +346,8 @@ const ChatRoom = () => {
   const handleScroll = () => {
     if (chatMessagesRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
-      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
+      const isScrolledToBottom =
+        Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
       setIsUserScrolled(!isScrolledToBottom);
     }
   };
@@ -384,10 +398,11 @@ const ChatRoom = () => {
     }
 
     const payload = {
-      sender: room.userId,
-      receiver: room.artistId,
+      sender: currentUserId,
+      receiver: currentUserId === room.artistId ? room.userId : room.artistId,
       content: newMessage,
     };
+
     sendMessage(payload);
 
     setMessages((prev) => [
@@ -413,19 +428,25 @@ const ChatRoom = () => {
       <Header />
       <ChatContainer>
         <PageTitle>
-          <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
+          <BackButton onClick={() => navigate("/artist")}>
+            Artist List
+          </BackButton>
           <Title>Chatting with ARTIST</Title>
         </PageTitle>
         <MainContent>
           <ProfileSection>
             <ProfileBox>
               <ProfileItem>
-                <ProfileCircle $isArtist={true}>A</ProfileCircle>
-                <ProfileText>ARTIST</ProfileText>
+                <ProfileCircle $isArtist={true}>
+                  {room.artistName?.[0] ?? "A"}
+                </ProfileCircle>
+                <ProfileText>{room.artistName ?? "작가"}</ProfileText>
               </ProfileItem>
               <ProfileItem>
-                <ProfileCircle $isArtist={false}>N</ProfileCircle>
-                <ProfileText>NICKNAME</ProfileText>
+                <ProfileCircle $isArtist={false}>
+                  {room.userName?.[0] ?? "U"}
+                </ProfileCircle>
+                <ProfileText>{room.userName ?? "유저"}</ProfileText>
               </ProfileItem>
               <DateText>2023.03.28</DateText>
             </ProfileBox>
@@ -436,7 +457,9 @@ const ChatRoom = () => {
               <OnlineStatus>온라인</OnlineStatus>
             </ChatHeader>
             <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
-              <MessageBox>작품에 대해 궁금하신 점을 자유롭게 문의해주세요.</MessageBox>
+              <MessageBox>
+                작품에 대해 궁금하신 점을 자유롭게 문의해주세요.
+              </MessageBox>
               {messages.map((msg) => (
                 <ChatMessage
                   key={msg.id}
