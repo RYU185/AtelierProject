@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ChatMessage from "./ChatMessage";
 import Header from "../../Header";
 import Footer from "../../Footer";
@@ -294,15 +294,28 @@ const ChatRoom = ({ room: propRoom }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
-
-  const room = propRoom || location.state?.room;
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const messagesEndRef = useRef(null);
+  const chatMessagesRef = useRef(null);
+  const [isUserScrolled, setIsUserScrolled] = useState(false);
+  const { artistId } = useParams();
+  const [room, setRoom] = useState(propRoom || location.state?.room || null);
 
   if (!user) {
-    console.warn("user가 존재하지 않음");
-    return null;
+    console.error("user가 존재하지 않음");
+    return <p>로그인 정보가 없습니다.</p>;
   }
 
+  const currentUserId = user.username;
+  const isArtistSender = currentUserId === room.artistId;
+
   if (!room) {
+    if (artistId) {
+      return <div>채팅방 정보를 불러오는 중입니다...</div>;
+    }
     return (
       <div>
         <p>채팅방 정보가 없습니다.</p>
@@ -311,21 +324,11 @@ const ChatRoom = ({ room: propRoom }) => {
     );
   }
 
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-  const messagesEndRef = useRef(null);
-  const chatMessagesRef = useRef(null);
-  const [isUserScrolled, setIsUserScrolled] = useState(false);
-
-  if (!user) {
-    return <div> 로그인 정보를 불러오는 중입니다...</div>;
-  }
+  const isArtist = room && currentUserId === room.artistId;
 
   const { sendMessage, isConnected } = useChatSocket({
-    userId: room.userId,
-    receiverId: room.artistId,
+    userId: currentUserId,
+    receiverId: isArtistSender ? room.userId : room.artistId,
     onMessageReceive: (msg) => {
       const formatted = {
         id: Date.now(),
@@ -388,9 +391,25 @@ const ChatRoom = ({ room: propRoom }) => {
     }
   };
 
+  useEffect(() => {
+    if (!room?.id && artistId) {
+      const fetchRoom = async () => {
+        try {
+          const res = await axiosInstance.get(`/chat-room/${artistId}`);
+          setRoom(res.data);
+        } catch (err) {
+          console.error("채팅방 조회실패:", err);
+        }
+      };
+      fetchRoom();
+    }
+  }, [artistId, room]);
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
+
+    const isArtistSender = currentUserId === room.artistId;
 
     if (!isConnected) {
       alert("서버와 연결 중입니다. 잠시 후 다시 시도해주세요.");
@@ -399,7 +418,7 @@ const ChatRoom = ({ room: propRoom }) => {
 
     const payload = {
       sender: currentUserId,
-      receiver: currentUserId === room.artistId ? room.userId : room.artistId,
+      receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
     };
 
@@ -415,7 +434,7 @@ const ChatRoom = ({ room: propRoom }) => {
           minute: "2-digit",
           hour12: false,
         }),
-        isArtist: false,
+        isArtist: isArtistSender,
       },
     ]);
 
@@ -433,29 +452,38 @@ const ChatRoom = ({ room: propRoom }) => {
           </BackButton>
           <Title>Chatting with ARTIST</Title>
         </PageTitle>
+
         <MainContent>
           <ProfileSection>
             <ProfileBox>
               <ProfileItem>
                 <ProfileCircle $isArtist={true}>
-                  {room.artistName?.[0] ?? "A"}
+                  {(room && isArtist ? room.artistName : room.userName)?.[0] ??
+                    "?"}
                 </ProfileCircle>
-                <ProfileText>{room.artistName ?? "작가"}</ProfileText>
+                <ProfileText>
+                  {room && isArtist ? room.artistName : room.userName}
+                </ProfileText>
               </ProfileItem>
               <ProfileItem>
                 <ProfileCircle $isArtist={false}>
-                  {room.userName?.[0] ?? "U"}
+                  {(room && !isArtist ? room.artistName : room.userName)?.[0] ??
+                    "?"}
                 </ProfileCircle>
-                <ProfileText>{room.userName ?? "유저"}</ProfileText>
+                <ProfileText>
+                  {room && !isArtist ? room.artistName : room.userName}
+                </ProfileText>
               </ProfileItem>
               <DateText>2023.03.28</DateText>
             </ProfileBox>
           </ProfileSection>
+
           <ChatSection>
             <ChatHeader>
               <ChatTitle>ARTIST와의 대화</ChatTitle>
               <OnlineStatus>온라인</OnlineStatus>
             </ChatHeader>
+
             <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
               <MessageBox>
                 작품에 대해 궁금하신 점을 자유롭게 문의해주세요.
@@ -471,6 +499,7 @@ const ChatRoom = ({ room: propRoom }) => {
               ))}
               <div ref={messagesEndRef} />
             </ChatMessages>
+
             <ChatFooter>
               <InputContainer>
                 <ClipButton htmlFor="file-upload">
