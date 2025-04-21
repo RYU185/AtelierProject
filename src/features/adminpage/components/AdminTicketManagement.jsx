@@ -6,19 +6,13 @@ import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import AdminTicketMenubar from './AdminTicketMenubar';
 
-// ✅ 정적 이미지 처리
-const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", {
-  eager: true,
-});
+const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", { eager: true });
 const getImageUrl = (filename) => {
   if (!filename) return '/images/default-image.png';
-  const matched = Object.entries(artImages).find(([path]) =>
-    path.endsWith(filename)
-  );
+  const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
   return matched ? matched[1].default : '/images/default-image.png';
 };
 
-// ✅ 스타일 정의
 const Container = styled.div`
   display: flex;
   padding: 20px;
@@ -101,34 +95,16 @@ const AdminTicketManagement = () => {
       const token = localStorage.getItem("token");
 
       try {
-        const galleryRes = await fetch('/api/artistgallery/now');
-        const galleries = await galleryRes.json();
+        const res = await fetch('/api/reservation/admin/summary/gallery/all', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        const formatted = await Promise.all(
-          galleries.map(async (gallery) => {
-            try {
-              const res = await fetch(`/api/reservation/admin/users/by-gallery/${gallery.id}`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
+        if (!res.ok) throw new Error("데이터 불러오기 실패");
 
-              if (!res.ok) {
-                console.warn(`ID ${gallery.id} 예약자 불러오기 실패: ${res.status}`);
-                return formatTicket(gallery, 0);
-              }
-
-              const reservations = await res.json();
-              const totalVisitors = reservations.reduce((sum, r) => sum + r.headcount, 0);
-              return formatTicket(gallery, totalVisitors);
-
-            } catch (err) {
-              console.error(`ID ${gallery.id} 예약자 호출 실패`, err);
-              return formatTicket(gallery, 0);
-            }
-          })
-        );
-
+        const summary = await res.json();
+        const formatted = summary.map(formatTicket);
         setTickets(formatted);
       } catch (error) {
         console.error('데이터 로딩 오류:', error);
@@ -138,14 +114,15 @@ const AdminTicketManagement = () => {
     fetchData();
   }, []);
 
-  const formatTicket = (gallery, visitorCount) => ({
-    id: gallery.id,
-    title: gallery.title,
-    dateRange: `${gallery.startDate} - ${gallery.endDate}`,
-    image: getImageUrl(gallery.posterUrl),
-    visitors: visitorCount, // 방문자 수를 표시
-    reservationLimit: 100, // 예약 한도
-    deadline: gallery.deadline,
+  const formatTicket = (data) => ({
+    id: data.galleryId,
+    title: data.title,
+    dateRange: `${data.startDate} - ${data.endDate}`,
+    image: getImageUrl(data.posterUrl),
+    visitors: data.totalReserved,
+    reservationLimit: data.capacity,
+    remaining: data.capacity - data.totalReserved,
+    deadline: data.deadline,
   });
 
   const handleThumbnailClick = (id) => {
@@ -210,7 +187,8 @@ const AdminTicketManagement = () => {
                 <Th>전시명</Th>
                 <Th>기간</Th>
                 <Th>예약 가능 수량</Th>
-                <Th>예약자 수</Th> {/* 예약자 수 열 */}
+                <Th>예약자 수</Th>
+                <Th>남은 수량</Th>
                 <Th>예약 마감일</Th>
                 <Th>관리</Th>
               </tr>
@@ -228,7 +206,10 @@ const AdminTicketManagement = () => {
                   <Td>{ticket.title}</Td>
                   <Td>{ticket.dateRange}</Td>
                   <Td>{ticket.reservationLimit}</Td>
-                  <Td>{ticket.visitors}</Td> {/* 예약자 수 표시 */}
+                  <Td>{ticket.visitors}</Td>
+                  <Td style={{ color: ticket.remaining === 0 ? 'red' : ticket.remaining <= 10 ? 'orange' : 'inherit' }}>
+                    {ticket.remaining === 0 ? '마감' : ticket.remaining}
+                  </Td>
                   <Td>
                     {editingId === ticket.id ? (
                       <input
