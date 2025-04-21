@@ -5,63 +5,59 @@ import { useNavigate } from "react-router-dom";
 import useWebSocket from "../../../socket";
 
 const InquiryNotifications = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const { inquiries, setInquiries } = useInquiry(); // 문의목록 가져옴
-  const unreadCount = inquiries.length; // 안 읽은 문의 수
-  const [showList, setShowList] = useState(false); // 리스트 열기 닫기
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { inquiries, setInquiries } = useInquiry();
+  const unreadCount = inquiries.length;
+  const [showList, setShowList] = useState(false);
   const navigate = useNavigate();
 
-  useWebSocket(); // 실시간 알림 받기 
+  useWebSocket();
 
-  // 🧠 로그인 상태를 확인하는 함수
-  const checkAdminStatus = () => {
+  const checkLoginStatus = () => {
     const token = localStorage.getItem("accessToken");
     if (token) {
       try {
-        const decoded = jwtDecode(token);
-        const roles = decoded.auth || "";
-        setIsAdmin(roles.includes("ROLE_ADMIN")); // admin 확인 
+        jwtDecode(token); // 토큰 유효성만 체크
+        setIsLoggedIn(true);
       } catch (err) {
         console.error("토큰 디코딩 실패", err);
-        setIsAdmin(false);
+        setIsLoggedIn(false);
       }
     } else {
-      setIsAdmin(false);
+      setIsLoggedIn(false);
     }
   };
 
-  // ✅ 토큰이 변경될 때마다 관리자 상태를 다시 체크
-  useEffect(() => {
-    const handleStorageChange = () => {
-      checkAdminStatus();
-    };
+useEffect(() => {
+  checkLoginStatus(); // 🔥 최초 렌더 직후 즉시 실행
 
-    window.addEventListener("storage", handleStorageChange);
-    checkAdminStatus(); // 최초 한 번 실행
+  const handleStorageChange = () => {
+    checkLoginStatus(); // 스토리지 변경 감지
+  };
 
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
+  window.addEventListener("storage", handleStorageChange);
 
-  // ✅ 페이지 전환 또는 WebSocket 등에서 토큰 상태 변경 감지
+  return () => {
+    window.removeEventListener("storage", handleStorageChange);
+  };
+}, []);
   useEffect(() => {
     const interval = setInterval(() => {
-      checkAdminStatus(); // 1초마다 관리자여부 체크 (원하면 3초로 늘릴 수도 있음)
-    }, 1000); 
+      checkLoginStatus();
+    }, 3000); // 3초마다 로그인 체크
 
     return () => clearInterval(interval);
   }, []);
 
   const handleNotificationClick = () => {
     if (unreadCount > 0) {
-      setInquiries([]); 
+      setInquiries([]);
       setShowList(false);
       navigate("/AdminContact");
     }
   };
 
-  if (!isAdmin) return null; // 관리자 아니면 렌더링 안함
+  if (!isLoggedIn) return null; // 로그인 안 했으면 렌더링 안함
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
