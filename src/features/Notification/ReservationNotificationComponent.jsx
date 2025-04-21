@@ -18,7 +18,7 @@ const ReservationNotificationComponent = () => {
 
   useNotificationWebSocket({
     onNotification: (noti) => {
-      console.log("[WebSocket 수신] 예약 알림:", noti);
+      console.log("✅ WebSocket 수신 알림 도착:", noti); // ✅ [1-1] 여기 찍혀야 정상
       addNotification(noti);
     },
   });

@@ -73,6 +73,7 @@ const Artist = () => {
         {artist.map((a) => (
           <ArtistIntro
             key={a.userId}
+            artistId={a.id}
             userId={a.userId}
             name={a.name}
             imageUrl={`/images/ArtistIMG/${a.profile_img}`}

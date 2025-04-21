@@ -82,11 +82,11 @@ const ArtistBio = styled.p`
   text-align: center;
 `;
 
-const ArtistIntro = ({ userId, name, bio, imageUrl }) => {
+const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/artist/${id}`);
+    navigate(`/artist/${artistId}`);
   };
 
   const handleChat = async (e) => {
