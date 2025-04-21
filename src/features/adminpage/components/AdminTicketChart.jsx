@@ -9,16 +9,15 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
   Legend
 } from 'chart.js';
 import styled from 'styled-components';
 import axios from 'axios';
+import { format, subDays } from 'date-fns';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 // Styled Components
 const Container = styled.div`
@@ -75,7 +74,7 @@ const FilterSelect = styled.select`
 `;
 
 function AdminTicketChart() {
-  const [filterType, setFilterType] = useState('monthly');
+  const [filterType, setFilterType] = useState('daily');
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: []
@@ -107,7 +106,7 @@ function AdminTicketChart() {
               ? trendResponse.data
               : Array.isArray(trendResponse.data?.data)
                 ? trendResponse.data.data
-                : [])
+                : [] )
           : [];
 
         let labels = [];
@@ -115,51 +114,30 @@ function AdminTicketChart() {
         let trendData = [];
 
         if (filterType === 'daily') {
-          // 날짜 기준 정렬
-          const sortedData = [...countDataRaw].sort((a, b) => new Date(a.label) - new Date(b.label));
+          const dataMap = countDataRaw.reduce((map, item) => {
+            map[item.label] = item.totalHeadcount;
+            return map;
+          }, {});
 
-          const grouped = [];
-          let groupStart = new Date(sortedData[0]?.label);
-          groupStart.setHours(0, 0, 0, 0);
+          const today = new Date();
+          const start = subDays(today, 6);  // 오늘로부터 7일 전
+          const end = today;  // 오늘 날짜
 
-          const groupEnd = (start) => {
-            const end = new Date(start);
-            end.setDate(end.getDate() + 6);
-            return end;
-          };
+          let currentStart = new Date(start);
+          const days = [];
 
-          let currentGroup = {
-            label: '',
-            totalHeadcount: 0
-          };
+          while (currentStart <= end) {
+            const dateStr = currentStart.toISOString().split('T')[0]; // yyyy-mm-dd 형식
+            days.push(dateStr);
 
-          sortedData.forEach((item) => {
-            const itemDate = new Date(item.label);
-            itemDate.setHours(0, 0, 0, 0);
+            // 해당 날짜의 예약 데이터
+            const totalHeadcount = dataMap[dateStr] || 0;
 
-            if (!currentGroup.start || itemDate > groupEnd(currentGroup.start)) {
-              // 새로운 그룹 시작
-              if (currentGroup.start) {
-                currentGroup.label = `${currentGroup.start.getMonth() + 1}/${currentGroup.start.getDate()} ~ ${groupEnd(currentGroup.start).getMonth() + 1}/${groupEnd(currentGroup.start).getDate()}`;
-                grouped.push({ ...currentGroup });
-              }
-              currentGroup = {
-                start: new Date(itemDate),
-                totalHeadcount: 0
-              };
-            }
+            labels.push(dateStr);
+            countData.push(totalHeadcount);
 
-            currentGroup.totalHeadcount += item.totalHeadcount || 0;
-          });
-
-          // 마지막 그룹도 추가
-          if (currentGroup.start) {
-            currentGroup.label = `${currentGroup.start.getMonth() + 1}/${currentGroup.start.getDate()} ~ ${groupEnd(currentGroup.start).getMonth() + 1}/${groupEnd(currentGroup.start).getDate()}`;
-            grouped.push({ ...currentGroup });
+            currentStart.setDate(currentStart.getDate() + 1);
           }
-
-          labels = grouped.map(g => g.label);
-          countData = grouped.map(g => g.totalHeadcount);
         } else if (filterType === 'weekday') {
           const weekdayKoreanMap = {
             Monday: '월요일',
@@ -231,7 +209,7 @@ function AdminTicketChart() {
   return (
     <>
       <Header />
-      <TitleWrapper>전체 티켓 판매량 통계</TitleWrapper>
+      <TitleWrapper>최근 7일간의 티켓 판매량</TitleWrapper>
 
       <FilterSelect value={filterType} onChange={(e) => setFilterType(e.target.value)}>
         <option value="daily">날짜별</option>
