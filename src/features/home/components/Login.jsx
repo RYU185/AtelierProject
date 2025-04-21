@@ -152,14 +152,22 @@ const Login = () => {
       const token = response.data.token;
       const role = response.data.role;
       const isArtist = response.data.isArtist;
+      const nickname = response.data.nickname;
+
+      console.log("nickname 응답값:", response.data.nickname);
+
 
       localStorage.setItem("accessToken", token);
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
+      localStorage.setItem("nickname", nickname);
+      
 
       const loginPayload = {
         username: userId,
         role,
+        isArtist,
+        nickname
       };
 
       if (typeof isArtist !== "undefined") {
@@ -188,6 +196,7 @@ const Login = () => {
       handleLogin();
     }
   };
+  
 
   return (
     <Container>

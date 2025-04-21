@@ -33,8 +33,7 @@ const MessageBubble = styled.div`
   background: ${(props) => (props.$isArtist ? "#f0f0f0" : "#0095E1")};
   color: ${(props) => (props.$isArtist ? "#333" : "#fff")};
   padding: 8px 12px;
-  border-radius: ${(props) =>
-    props.$isArtist ? "0 12px 12px 12px" : "12px 0 12px 12px"};
+  border-radius: ${(props) => (props.$isArtist ? "0 12px 12px 12px" : "12px 0 12px 12px")};
   word-break: break-word;
   font-size: 15px;
   max-width: 600px;
@@ -96,27 +95,30 @@ const ChatMessage = ({ message, timestamp, isArtist, file, nickname }) => {
     return <FileInfo $isArtist={isArtist}>📎 {file.name}</FileInfo>;
   };
 
-  const displayNickname =
-    nickname && nickname.trim() !== "" ? nickname : "익명";
+  const displayNickname = nickname && nickname.trim() !== "" ? nickname : "익명";
 
   return (
     <MessageContainer $isArtist={isArtist}>
-      {isArtist && (
-        <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>
-      )}
+      {isArtist && <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>}
       <MessageContent $isArtist={isArtist}>
         <MessageInfo>
           <ProfileName>{displayNickname}</ProfileName>
-          <TimeStamp>{timestamp ?? "??:??"}</TimeStamp>
+          <TimeStamp>
+            {timestamp
+              ? new Date(timestamp).toLocaleTimeString("ko-KR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })
+              : "??:??"}
+          </TimeStamp>
         </MessageInfo>
         <MessageBubble $isArtist={isArtist}>
           {message}
           {renderFilePreview()}
         </MessageBubble>
       </MessageContent>
-      {!isArtist && (
-        <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>
-      )}
+      {!isArtist && <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>}
     </MessageContainer>
   );
 };

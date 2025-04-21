@@ -7,17 +7,19 @@ export const AuthProvider = ({ children }) => {
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
     const isArtist = localStorage.getItem("isArtist") === "true";
+    const nickname = localStorage.getItem("nickname");
 
     return username && role
-    ? { username, roles: [role], isArtist }
+    ? { username, roles: [role], isArtist , nickname}
     : null;
   });
 
-  const login = ({ username, role, isArtist =false }) => {
+  const login = ({ username, role, isArtist =false, nickname }) => {
     localStorage.setItem("username", username);
     localStorage.setItem("role", role);
     localStorage.setItem("isArtist", isArtist);
-  setUser({ username, roles: [role], isArtist });
+    localStorage.setItem("nickname", nickname);
+  setUser({ username, roles: [role], isArtist, nickname });
   };
 
   const logout = () => {

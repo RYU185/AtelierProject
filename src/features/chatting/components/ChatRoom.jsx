@@ -293,6 +293,7 @@ const ChatRoom = ({ room: propRoom }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -311,13 +312,7 @@ const ChatRoom = ({ room: propRoom }) => {
       const formattedMessage = {
         id: Date.now(),
         message: msg.content || "내용 없음",
-        timestamp: msg.timestamp
-          ? new Date(msg.timestamp).toLocaleTimeString("ko-KR", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            })
-          : "??:??",
+        timestamp: msg.timestamp,
         isArtist: msg.sender === room.artistId,
         nickname: msg.nickname || "익명", // nickname을 제대로 처리
       };
@@ -335,7 +330,7 @@ const ChatRoom = ({ room: propRoom }) => {
         const loadedMessages = res.data.map((msg) => ({
           id: msg.id,
           message: msg.content,
-          timestamp: msg.timestamp?.slice(11, 16) ?? "??:??",
+          timestamp: msg.timestamp ?? null,
           isArtist: msg.sender === room.artistId,
           nickname: msg.sender === room.artistId ? room.artistName : room.userName,
         }));
@@ -380,6 +375,7 @@ const ChatRoom = ({ room: propRoom }) => {
     if (newMessage.trim() === "") return;
 
     const isArtistSender = user?.username === room?.artistId;
+    const nickname = nicknameRef.current;
 
     if (!isConnected) {
       alert("서버와 연결 중입니다. 잠시 후 다시 시도해주세요.");
@@ -387,34 +383,38 @@ const ChatRoom = ({ room: propRoom }) => {
     }
 
     const payload = {
-      sender: user?.username, // sender의 아이디
+      sender: user?.username, 
       receiver: isArtistSender ? room?.userId : room?.artistId,
       content: newMessage,
-      senderNickname: user?.nickname, // sender의 nickname
+      senderNickname: nickname,
     };
 
     sendMessage(payload);
+
     setMessages((prev) => [
       ...prev,
       {
         id: Date.now(),
         message: newMessage,
-        timestamp: new Date().toLocaleTimeString("ko-KR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        }),
+        timestamp: new Date().toISOString(),
         isArtist: isArtistSender,
-        nickname: user?.nickname ?? "익명",
+        nickname: nickname
       },
     ]);
     setNewMessage("");
     setSelectedFile(null);
   };
 
-  
-  const lastDate = messages.length ? messages[messages.length - 1].timestamp.slice(0, 10) : null;
-  
+  console.log("user 객체 상태", user);
+
+
+  const lastDate = messages.length
+    ? new Date(messages[messages.length - 1].timestamp).toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : null;
 
   return (
     <>
