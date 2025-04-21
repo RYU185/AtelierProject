@@ -15,6 +15,7 @@
     "@stomp/stompjs": "^7.1.0",
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.7.3",
     "jwt-decode": "^4.0.0",
     "keen-slider": "^6.8.6",

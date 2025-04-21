@@ -147,7 +147,7 @@ const SizeControlContainer = styled.div`
   background: #2c2c2c;
   padding: 10px;
   border-radius: 8px;
-  display: ${(props) => (props.show ? "flex" : "none")};
+  display: ${(props) => (props.$show ? "flex" : "none")};
   flex-direction: column;
   align-items: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -309,8 +309,53 @@ const DrawingCanvas = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [drawingTitle, setDrawingTitle] = useState("");
+  const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
   const [isTemporarySave, setIsTemporarySave] = useState(false); // 임시 저장 여부 상태
+  const [showDownloadNotice, setShowDownloadNotice] = useState(false);
 
+  const handleConfirmDownload = () => {
+    downloadImageAsJPEG();
+    // 안내 문구 1.5초간 보여주고 → 제목 입력 모달 열기
+    setShowDownloadNotice(true);
+
+    setTimeout(() => {
+      setShowDownloadNotice(false);
+      setShowTitleModal(true);
+    }, 3000);
+
+    setShowSaveConfirmModal(false);
+    // 다운로드 직후 잠깐 delay → 제목 모달 띄움
+    setTimeout(() => {
+      setShowTitleModal(true);
+    }, 300); // 0.3초 후 실행
+  };
+  const downloadImageAsJPEG = () => {
+    const canvas = canvasRef.current;
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+
+    const ctx = tempCanvas.getContext("2d");
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+    ctx.drawImage(canvas, 0, 0);
+
+    const link = document.createElement("a");
+    link.href = tempCanvas.toDataURL("image/jpeg", 1.0);
+    link.download = "drawing.jpg";
+    link.click();
+  };
+
+  const fillCanvasWithWhiteBackground = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    fillCanvasWithWhiteBackground;
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.putImageData(imageData, 0, 0);
+  };
   // Initialize canvas context and center canvas on mount
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -482,15 +527,6 @@ const DrawingCanvas = () => {
 
   // Undo the last drawing action
 
-  // Download the drawing as a PNG image
-  const handleDownload = () => {
-    const image = canvasRef.current.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = "drawing.png";
-    link.click();
-  };
-
   // Clear the entire canvas
   const handleClear = () => {
     contextRef.current.clearRect(
@@ -515,7 +551,7 @@ const DrawingCanvas = () => {
   };
 
   const handleSaveClick = (isTemporary) => {
-    setShowTitleModal(true);
+    setShowSaveConfirmModal(true);
     setIsTemporarySave(isTemporary); // 임시 저장 여부 상태 업데이트
   };
 
@@ -523,15 +559,16 @@ const DrawingCanvas = () => {
     setDrawingTitle(e.target.value);
   };
 
-  const handleConfirmSave = () => {
+  const handleConfirmSave = async () => {
     if (drawingTitle.trim() === "") {
       alert("제목을 입력해주세요!");
       return;
     }
-    sendDrawingToServer(isTemporarySave, drawingTitle); // 제목을 서버로 전달
+
+    await sendDrawingToServer(false, drawingTitle); // 서버 저장
     setShowTitleModal(false);
     setDrawingTitle("");
-    setIsTemporarySave(false); // 상태 초기화
+    navigate("/mypage", { state: { activeTab: "drawing" } });
   };
 
   const handleCancelSave = () => {
@@ -541,6 +578,7 @@ const DrawingCanvas = () => {
   };
 
   const sendDrawingToServer = async (isTemporary, title) => {
+    fillCanvasWithWhiteBackground();
     const imageData = canvasRef.current.toDataURL("image/png");
 
     if (!title || title.trim() === "") {
@@ -594,9 +632,6 @@ const DrawingCanvas = () => {
         break;
       case "tempSave":
         handleSaveClick(true); // 임시 저장 클릭 시 모달 표시
-        break;
-      case "download":
-        handleDownload();
         break;
       default:
         break;
@@ -781,9 +816,6 @@ const DrawingCanvas = () => {
               <MenuItem onClick={() => handleMenuItemClick("save")}>
                 💾 저장하기
               </MenuItem>
-              <MenuItem onClick={() => handleMenuItemClick("download")}>
-                📥 다운로드
-              </MenuItem>
               <MenuItem onClick={() => handleMenuItemClick("tempSave")}>
                 📝 임시 저장
               </MenuItem>
@@ -863,7 +895,38 @@ const DrawingCanvas = () => {
             </ModalContent>
           </ModalOverlay>
         )}
+        {showDownloadNotice && (
+          <ModalOverlay>
+            <ModalContent>
+              <ModalTitle>📁 다운로드 안내</ModalTitle>
+              <p style={{ fontSize: "15px", marginBottom: "10px" }}>
+                <strong>💡 파일 탐색기가 안 뜨나요?</strong>
+                <br />
+                브라우저 설정에서 <br />
+                <code>"다운로드 전에 저장 위치 확인"</code>을 켜주세요.
+              </p>
+            </ModalContent>
+          </ModalOverlay>
+        )}
       </Container>
+      {showSaveConfirmModal && (
+        <ModalOverlay>
+          <ModalContent>
+            <ModalTitle>정말 저장하시겠습니까?</ModalTitle>
+            <ButtonGroup>
+              <ModalButton className="confirm" onClick={handleConfirmDownload}>
+                확인
+              </ModalButton>
+              <ModalButton
+                className="cancel"
+                onClick={() => setShowSaveConfirmModal(false)}
+              >
+                취소
+              </ModalButton>
+            </ButtonGroup>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </>
   );
 };
