@@ -1,56 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 import styled from "styled-components";
 import Header from "../../Header";
 import Footer from "../../Footer";
 
 const Container = styled.div`
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 24px 40px 40px;
 `;
 
 const Title = styled.h2`
-  text-align: center;
-  font-size: 28px;
-  color: #000;
-  margin-bottom: 30px;
-  font-weight: 500;
+  font-size: 32px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 32px;
 `;
 
 const Divider = styled.div`
   height: 2px;
   background-color: #000;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  max-width: 600px;
-  margin: 0 auto;
+  gap: 24px;
 `;
 
 const FormGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 40px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const Label = styled.label`
-  width: 80px;
+  width: 160px;
   font-size: 16px;
-  color: #000;
-  flex-shrink: 0;
+  font-weight: 500;
+  color: #333;
 `;
 
 const Input = styled.input`
   flex: 1;
   padding: 12px 16px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
   color: #333;
 
   &:disabled {
@@ -59,26 +62,25 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: #999;
+    color: #aaa;
   }
 `;
 
-const BirthGroup = styled.div`
+const EmailGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   flex: 1;
 
   input {
     flex: 1;
-    text-align: center;
-    padding: 12px 0;
   }
 `;
 
-const Separator = styled.span`
-  color: #999;
+const EmailSeparator = styled.span`
+  color: #333;
   font-size: 16px;
+  padding: 0 4px;
 `;
 
 const GenderGroup = styled.div`
@@ -105,60 +107,115 @@ const RadioInput = styled.input`
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 60px;
+  margin-top: 40px;
 `;
 
 const SubmitButton = styled.button`
   padding: 12px 48px;
-  background-color: #007aff;
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #4199ff;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 16px;
   cursor: pointer;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #1a7de3;
   }
 `;
 
-const EmailGroup = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex: 1;
-
-  input {
-    flex: 1;
-  }
+const PasswordError = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 4px;
 `;
 
-const EmailSeparator = styled.span`
-  color: #333;
-  font-size: 16px;
-  padding: 0 4px;
+const PasswordMatch = styled.p`
+  color: green;
+  font-size: 14px;
+  margin-top: 4px;
 `;
 
-const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
+const EditProfile = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    id: userInfo?.id || "",
-    password: "",
-    phone: userInfo?.phone || "",
-    name: userInfo?.name || "",
-    birth: userInfo?.birth || "",
-    emailId: userInfo?.email ? userInfo.email.split("@")[0] : "",
-    emailDomain: userInfo?.email ? userInfo.email.split("@")[1] : "",
-    address: userInfo?.address || "",
+    id: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+    phone: "",
+    name: "",
+    birth: "",
+    emailId: "",
+    emailDomain: "",
+    address: "",
+    gender: "male",
+    nickName: "",
   });
+
+  const [passwordMatchError, setPasswordMatchError] = useState("");
+  const [passwordMatchSuccess, setPasswordMatchSuccess] = useState("");
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+
+        // axiosInstance에 Authorization 헤더 명시적으로 설정
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        const res = await axios.get("/api/user/me");
+        const user = res.data;
+
+        setFormData((prev) => ({
+          ...prev,
+          id: user.id,
+          phone: user.phone,
+          name: user.realName,
+          birth: user.birth,
+          emailId: user.email?.split("@")[0],
+          emailDomain: user.email?.split("@")[1],
+          address: user.address,
+          gender: user.gender?.toLowerCase() || "male",
+          nickName: user.nickName,
+        }));
+      } catch (err) {
+        console.error("회원 정보 불러오기 실패:", err);
+        navigate("/login"); // 인증 실패 시 로그인 이동
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (formData.newPassword && formData.confirmNewPassword) {
+      if (formData.newPassword === formData.confirmNewPassword) {
+        setPasswordMatchError("");
+        setPasswordMatchSuccess("새 비밀번호가 일치합니다.");
+      } else {
+        setPasswordMatchSuccess("");
+        setPasswordMatchError("새 비밀번호가 일치하지 않습니다.");
+      }
+    } else {
+      setPasswordMatchError("");
+      setPasswordMatchSuccess("");
+    }
+  }, [formData.newPassword, formData.confirmNewPassword]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     if (name === "phone") {
-      // 숫자만 추출
       const numbers = value.replace(/[^0-9]/g, "");
-
-      // 하이픈 추가
       let formattedNumber = "";
       if (numbers.length <= 3) {
         formattedNumber = numbers;
@@ -175,29 +232,6 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
         ...prev,
         [name]: formattedNumber,
       }));
-    } else if (name === "email") {
-      // @ 기호가 없는 경우에만 처리
-      if (!value.includes("@")) {
-        const emailParts = value.split(/\s+/); // 공백으로 분리
-        if (emailParts.length >= 2) {
-          // 두 부분으로 나뉘어 있으면 @ 추가
-          const formattedEmail = `${emailParts[0]}@${emailParts[1]}`;
-          setFormData((prev) => ({
-            ...prev,
-            [name]: formattedEmail,
-          }));
-        } else {
-          setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-          }));
-        }
-      } else {
-        setFormData((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
-      }
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -209,19 +243,28 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (
+      formData.newPassword &&
+      formData.newPassword !== formData.confirmNewPassword
+    ) {
+      return;
+    }
+
     const payload = {
-      password: formData.password || undefined, // 비워도 괜찮게 처리
+      currentPassword: formData.currentPassword || undefined,
+      password: formData.newPassword || undefined,
       realName: formData.name,
-      phone: formData.phone.replace(/-/g, ""), // 하이픈 제거
+      phone: formData.phone.replace(/-/g, ""),
       email: `${formData.emailId}@${formData.emailDomain}`,
       address: formData.address,
-      gender: formData.gender?.toUpperCase() || "MALE", // 성별 선택이 있다면 대문자 변환
+      gender: formData.gender?.toUpperCase() || "MALE",
+      nickName: formData.nickName,
     };
 
     try {
       await axios.put("/user/me", payload);
       alert("회원 정보가 수정되었습니다.");
-      onSubmit(payload); // 부모 컴포넌트에 반영
+      navigate("/mypage");
     } catch (error) {
       console.error("❌ 회원정보 수정 실패:", error);
       alert(
@@ -232,6 +275,21 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
       );
     }
   };
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <Container>
+          <Title>회원정보 수정</Title>
+          <Divider />
+          <p>정보를 불러오는 중입니다...</p>
+        </Container>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -241,26 +299,53 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
         <Form onSubmit={handleSubmit}>
           <FormGroup>
             <Label>아이디</Label>
-            <Input
-              type="text"
-              name="id"
-              value={formData.id}
-              onChange={handleChange}
-              disabled
-            />
+            <Input type="text" name="id" value={formData.id} disabled />
           </FormGroup>
-
           <FormGroup>
-            <Label>비밀번호</Label>
+            <Label>현재 비밀번호</Label>
             <Input
               type="password"
-              name="password"
-              value={formData.password}
+              name="currentPassword"
+              value={formData.currentPassword}
               onChange={handleChange}
-              placeholder="비밀번호 변경"
+              placeholder="현재 비밀번호"
             />
           </FormGroup>
-
+          <FormGroup>
+            <Label>새 비밀번호</Label>
+            <Input
+              type="password"
+              name="newPassword"
+              value={formData.newPassword}
+              onChange={handleChange}
+              placeholder="새 비밀번호"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>비밀번호 확인</Label>
+            <Input
+              type="password"
+              name="confirmNewPassword"
+              value={formData.confirmNewPassword}
+              onChange={handleChange}
+              placeholder="비밀번호 확인"
+            />
+          </FormGroup>
+          {passwordMatchError && (
+            <PasswordError>{passwordMatchError}</PasswordError>
+          )}
+          {passwordMatchSuccess && (
+            <PasswordMatch>{passwordMatchSuccess}</PasswordMatch>
+          )}
+          <FormGroup>
+            <Label>이름</Label>
+            <Input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </FormGroup>
           <FormGroup>
             <Label>연락처</Label>
             <Input
@@ -271,17 +356,15 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
               placeholder="010-0000-0000"
             />
           </FormGroup>
-
           <FormGroup>
-            <Label>이름</Label>
+            <Label>닉네임</Label>
             <Input
               type="text"
-              name="name"
-              value={formData.name}
+              name="nickName"
+              value={formData.nickName}
               onChange={handleChange}
             />
           </FormGroup>
-
           <FormGroup>
             <Label>이메일</Label>
             <EmailGroup>
@@ -290,7 +373,6 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
                 name="emailId"
                 value={formData.emailId}
                 onChange={handleChange}
-                placeholder="이메일"
               />
               <EmailSeparator>@</EmailSeparator>
               <Input
@@ -298,11 +380,9 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
                 name="emailDomain"
                 value={formData.emailDomain}
                 onChange={handleChange}
-                placeholder="도메인"
               />
             </EmailGroup>
           </FormGroup>
-
           <FormGroup>
             <Label>주소</Label>
             <Input
@@ -313,16 +393,27 @@ const EditProfile = ({ userInfo, onSubmit, onCancel }) => {
               placeholder="시/군/구"
             />
           </FormGroup>
-
           <FormGroup>
             <Label>성별</Label>
             <GenderGroup>
               <RadioLabel>
-                <RadioInput type="radio" name="gender" value="male" />
+                <RadioInput
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  checked={formData.gender === "male"}
+                  onChange={handleChange}
+                />
                 남자
               </RadioLabel>
               <RadioLabel>
-                <RadioInput type="radio" name="gender" value="female" />
+                <RadioInput
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  checked={formData.gender === "female"}
+                  onChange={handleChange}
+                />
                 여자
               </RadioLabel>
             </GenderGroup>
