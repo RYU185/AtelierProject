@@ -131,36 +131,6 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
     fetchMyreserve();
   }, []);
 
-  const fakeTomorrow = new Date();
-  fakeTomorrow.setDate(fakeTomorrow.getDate() + 1);
-
-  const fakeReservation = {
-    reservationId: "test-d1",
-    galleryTitle: "테스트 전시",
-    posterImg: "test.jpg",
-    date: fakeTomorrow.toISOString().split("T")[0], // "2025-04-22"
-    time: "14:00:00",
-    headcount: 2,
-  };
-
-  useEffect(() => {
-    const fetchMyreserve = async () => {
-      try {
-        const res = await axiosInstance.get("/reservation/my");
-        const realData = res.data;
-
-        // 🧪 D-1 테스트용 가짜 예약 추가
-        setReserve([...realData, fakeReservation]);
-      } catch (error) {
-        console.error("예약 내역 조회 실패:", error);
-        setError("예약 정보를 불러올 수 없습니다");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMyreserve();
-  }, []);
-
   return (
     <Container>
       <TicketCount>총 {reserve.length}개의 전시가 예약되어 있습니다.</TicketCount>

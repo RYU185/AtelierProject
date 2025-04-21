@@ -169,7 +169,7 @@ const Header = () => {
   const { user, logout } = useAuth();
   const username = user?.username;
   const role = user?.roles?.[0];
-  const { reservationAlarms, clearNotification } = useNotification();
+  const { reservationAlarms, clearNotification, addNotification  } = useNotification();
 
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -202,6 +202,7 @@ const Header = () => {
       navigate("/login");
     }
   };
+  
 
   const dropdownItems = {
     Gallery: [
@@ -234,6 +235,7 @@ const Header = () => {
   };
 
   console.log("🔔 예약 알림 수:", reservationAlarms.length);
+  
 
   return (
     <>
