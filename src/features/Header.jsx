@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
 import LogoIconFinal from "./LogoIconFinal";
 import { useAuth } from "../components/AuthContext";
+import { useNotification } from "../features/Notification/NotificationContext";
 
 const HeaderWrapper = styled.header`
   position: fixed;
@@ -95,9 +96,7 @@ const DropdownMenu = styled.ul`
   top: 100%;
   left: 50%;
   transform: ${(props) =>
-    props.$show
-      ? "translateX(-50%) translateY(0px)"
-      : "translateX(-50%) translateY(-10px)"};
+    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
   background-color: rgba(47, 47, 47, 1);
   border-radius: 23px;
   list-style: none;
@@ -155,15 +154,31 @@ const MenuIcon = styled.div`
   }
 `;
 
+const AlertBadge = styled.span`
+  position: absolute;
+  top: -4px;
+  right: -10px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+`;
+
 const Header = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // ✅ AuthContext 사용
+  const { user, logout } = useAuth();
   const username = user?.username;
-  const role = user?.roles?.[0]; // ✅ roles 배열에서 첫 번째 값
+  const role = user?.roles?.[0];
+  const { reservationAlarms, clearNotification } = useNotification();
 
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = useRef(null);
+  
+
+  useEffect(() => {
+    console.log("Header에서 reservationAlarms 값:", reservationAlarms);
+  }, [reservationAlarms]);
 
   const handleMouseEnter = (menu) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -218,6 +233,8 @@ const Header = () => {
     Notice: "/support/notice",
   };
 
+  console.log("🔔 예약 알림 수:", reservationAlarms.length);
+
   return (
     <>
       <HeaderSpacer />
@@ -249,22 +266,22 @@ const Header = () => {
                     onMouseLeave={handleMouseLeave}
                   >
                     {dropdownItems[menu]
-                    .filter((item) =>{
-                      if(item.label === "채팅 문의함" && !user?.isArtist) return false;
-                      return true;
-                    })
-                    
-                    .map((item) => (
-                      <DropdownItem
-                        key={item.path}
-                        onClick={() => {
-                          navigate(item.path);
-                          setShowDropdown(null);
-                        }}
-                      >
-                        {item.label}
-                      </DropdownItem>
-                    ))}
+                      .filter((item) => {
+                        if (item.label === "채팅 문의함" && !user?.isArtist) return false;
+                        return true;
+                      })
+
+                      .map((item) => (
+                        <DropdownItem
+                          key={item.path}
+                          onClick={() => {
+                            navigate(item.path);
+                            setShowDropdown(null);
+                          }}
+                        >
+                          {item.label}
+                        </DropdownItem>
+                      ))}
                   </DropdownMenu>
                 </NavItemContainer>
               ))}
@@ -275,38 +292,35 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem>
-                {role === "ADMIN" ? "관리자 님" : `${username}님`}
-              </RightNavItem>
+              <RightNavItem>{role === "ADMIN" ? "관리자 님" : `${username}님`}</RightNavItem>
               <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>
 
-              {/* 👤 일반 유저 메뉴 */}
+              {/* 일반 유저 메뉴 */}
               {role === "USER" && (
                 <>
-                  <RightNavItem onClick={() => navigate("/mypage")}>
+                  <RightNavItem
+                    onClick={() => {
+                      clearNotification();
+                      navigate("/mypage");
+                    }}
+                    style={{ position: "relative" }}
+                  >
                     MYPAGE
+                    {reservationAlarms.length > 0 && <AlertBadge />}
                   </RightNavItem>
-                  <RightNavItem onClick={() => navigate("/cart")}>
-                    CART
-                  </RightNavItem>
+                  <RightNavItem onClick={() => navigate("/cart")}>CART</RightNavItem>
                 </>
               )}
 
-              {/* 🛡 관리자 메뉴 */}
+              {/* 관리자 메뉴 */}
               {role === "ADMIN" && (
-                <RightNavItem onClick={() => navigate("/adminpage")}>
-                  ADMINPAGE
-                </RightNavItem>
+                <RightNavItem onClick={() => navigate("/adminpage")}>ADMINPAGE</RightNavItem>
               )}
             </>
           ) : (
             <>
-              <RightNavItem onClick={() => navigate("/join")}>
-                REGISTER
-              </RightNavItem>
-              <RightNavItem onClick={() => navigate("/login")}>
-                LOGIN
-              </RightNavItem>
+              <RightNavItem onClick={() => navigate("/join")}>REGISTER</RightNavItem>
+              <RightNavItem onClick={() => navigate("/login")}>LOGIN</RightNavItem>
             </>
           )}
 

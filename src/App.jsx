@@ -7,18 +7,23 @@ import InquiryNotifications from "./features/adminpage/components/InquiryNotific
 import { InquiryProvider } from "./features/adminpage/components/InquiryContext";
 import { AuthProvider } from "./components/AuthContext.jsx";
 import NotificationComponent from "./NotificationComponent";
+import { NotificationProvider } from "./features/Notification/NotificationContext.jsx";
+import ReservationNotificationComponent from "./features/Notification/ReservationNotificationComponent.jsx";
 
 const App = () => {
   return (
     <AuthProvider> {/* ← 여기에 무조건 있어야 useAuth()가 작동함 */}
       <InquiryProvider>
+        <NotificationProvider>
         <Router>
           <InquiryNotifications />
+          <NotificationComponent />
+          <ReservationNotificationComponent />
           <CustomCursor />
           <GlobalStyle />
           <AppRoutes />
-          <NotificationComponent />
         </Router>
+        </NotificationProvider>
       </InquiryProvider>
     </AuthProvider>
   );

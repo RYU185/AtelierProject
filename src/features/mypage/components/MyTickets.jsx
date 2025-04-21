@@ -13,10 +13,10 @@ const TicketCount = styled.div`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   font-size: 14px;
-  color: #666;
+  color: #0077ff;
   width: 730px;
   margin-left: auto;
-  font-weight: 100;
+  font-weight: 400;
 `;
 
 const TicketList = styled.div`
@@ -103,6 +103,18 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const isTomorrow = (dateStr) => {
+    const targetDate = new Date(dateStr);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return (
+      targetDate.getFullYear() === tomorrow.getFullYear() &&
+      targetDate.getMonth() === tomorrow.getMonth() &&
+      targetDate.getDate() === tomorrow.getDate()
+    );
+  };
+
   useEffect(() => {
     const fetchMyreserve = async () => {
       try {
@@ -119,11 +131,39 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
     fetchMyreserve();
   }, []);
 
+  const fakeTomorrow = new Date();
+  fakeTomorrow.setDate(fakeTomorrow.getDate() + 1);
+
+  const fakeReservation = {
+    reservationId: "test-d1",
+    galleryTitle: "테스트 전시",
+    posterImg: "test.jpg",
+    date: fakeTomorrow.toISOString().split("T")[0], // "2025-04-22"
+    time: "14:00:00",
+    headcount: 2,
+  };
+
+  useEffect(() => {
+    const fetchMyreserve = async () => {
+      try {
+        const res = await axiosInstance.get("/reservation/my");
+        const realData = res.data;
+
+        // 🧪 D-1 테스트용 가짜 예약 추가
+        setReserve([...realData, fakeReservation]);
+      } catch (error) {
+        console.error("예약 내역 조회 실패:", error);
+        setError("예약 정보를 불러올 수 없습니다");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMyreserve();
+  }, []);
+
   return (
     <Container>
-      <TicketCount>
-        총 {reserve.length}개의 전시가 예약되어 있습니다.
-      </TicketCount>
+      <TicketCount>총 {reserve.length}개의 전시가 예약되어 있습니다.</TicketCount>
 
       <TicketList>
         {loading ? (
@@ -140,19 +180,29 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
                   alt={rv.galleryTitle}
                 />
                 <TicketDetails>
-                  <h3>{rv.galleryTitle}</h3>
+                  <h3>
+                    {rv.galleryTitle}
+                    {isTomorrow(rv.date) && (
+                      <span
+                        style={{
+                          color: "#9e0008",
+                          marginLeft: "12px",
+                          fontSize: "0.9rem",
+                          fontWeight: "400",
+                        }}
+                      >
+                        내일 예정된 전시입니다!
+                      </span>
+                    )}
+                  </h3>
                   <p>예약 날짜: {rv.date}</p>
                   <p>예약 시간: {rv.time?.slice(0, 5)}</p>
                   <p>성인 {rv.headcount}명</p>
                 </TicketDetails>
               </TicketInfo>
               <TicketActions>
-                <ActionButton onClick={() => onTicketClick(rv)}>
-                  티켓 확인하기
-                </ActionButton>
-                <ActionButton onClick={() => onRefundClick(rv)}>
-                  환불 신청
-                </ActionButton>
+                <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>환불 신청</ActionButton>
               </TicketActions>
             </TicketCard>
           ))
