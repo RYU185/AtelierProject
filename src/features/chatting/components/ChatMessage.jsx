@@ -81,11 +81,11 @@ const FileInfo = styled.div`
   color: ${(props) => (props.$isArtist ? "#333" : "#fff")};
 `;
 
-const ChatMessage = ({ message, timestamp, isArtist, file }) => {
+const ChatMessage = ({ message, timestamp, isArtist, file, nickname }) => {
   const renderFilePreview = () => {
     if (!file) return null;
 
-    if (file.type.startsWith("image/")) {
+    if (file.type?.startsWith("image/")) {
       return (
         <FilePreview>
           <ImagePreview src={URL.createObjectURL(file)} alt="이미지" />
@@ -96,28 +96,27 @@ const ChatMessage = ({ message, timestamp, isArtist, file }) => {
     return <FileInfo $isArtist={isArtist}>📎 {file.name}</FileInfo>;
   };
 
+  const displayNickname =
+    nickname && nickname.trim() !== "" ? nickname : "익명";
+
   return (
     <MessageContainer $isArtist={isArtist}>
-      {isArtist && <ProfileCircle $isArtist={isArtist}>A</ProfileCircle>}
+      {isArtist && (
+        <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>
+      )}
       <MessageContent $isArtist={isArtist}>
-        {isArtist && (
-          <MessageInfo>
-            <ProfileName>ARTIST</ProfileName>
-            <TimeStamp>{timestamp}</TimeStamp>
-          </MessageInfo>
-        )}
-        {!isArtist && (
-          <MessageInfo>
-            <ProfileName>NICKNAME</ProfileName>
-            <TimeStamp>{timestamp}</TimeStamp>
-          </MessageInfo>
-        )}
+        <MessageInfo>
+          <ProfileName>{displayNickname}</ProfileName>
+          <TimeStamp>{timestamp ?? "??:??"}</TimeStamp>
+        </MessageInfo>
         <MessageBubble $isArtist={isArtist}>
           {message}
           {renderFilePreview()}
         </MessageBubble>
       </MessageContent>
-      {!isArtist && <ProfileCircle $isArtist={isArtist}>N</ProfileCircle>}
+      {!isArtist && (
+        <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>
+      )}
     </MessageContainer>
   );
 };
