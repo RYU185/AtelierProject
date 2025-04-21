@@ -12,20 +12,20 @@ import ReservationNotificationComponent from "./features/Notification/Reservatio
 
 const App = () => {
   return (
-    <AuthProvider> {/* ← 여기에 무조건 있어야 useAuth()가 작동함 */}
-      <InquiryProvider>
-        <NotificationProvider>
-        <Router>
-          <InquiryNotifications />
-          <NotificationComponent />
-          <ReservationNotificationComponent />
-          <CustomCursor />
-          <GlobalStyle />
-          <AppRoutes />
-        </Router>
-        </NotificationProvider>
-      </InquiryProvider>
-    </AuthProvider>
+    <NotificationProvider>
+      <AuthProvider>
+        <InquiryProvider>
+          <Router>
+            <InquiryNotifications />
+            <NotificationComponent />
+            <ReservationNotificationComponent />
+            <CustomCursor />
+            <GlobalStyle />
+            <AppRoutes />
+          </Router>
+        </InquiryProvider>
+      </AuthProvider>
+    </NotificationProvider>
   );
 };
 

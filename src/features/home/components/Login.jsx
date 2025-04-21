@@ -167,7 +167,8 @@ const Login = () => {
         username: userId,
         role,
         isArtist,
-        nickname
+        nickname,
+        authToken: token
       };
 
       if (typeof isArtist !== "undefined") {

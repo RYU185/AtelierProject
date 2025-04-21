@@ -96,7 +96,9 @@ const DropdownMenu = styled.ul`
   top: 100%;
   left: 50%;
   transform: ${(props) =>
-    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
+    props.$show
+      ? "translateX(-50%) translateY(0px)"
+      : "translateX(-50%) translateY(-10px)"};
   background-color: rgba(47, 47, 47, 1);
   border-radius: 23px;
   list-style: none;
@@ -156,12 +158,14 @@ const MenuIcon = styled.div`
 
 const AlertBadge = styled.span`
   position: absolute;
-  top: -4px;
-  right: -10px;
-  width: 8px;
-  height: 8px;
+  top: -2px;
+  right: -6px;
+  width: 10px;
+  height: 10px;
   background-color: red;
   border-radius: 50%;
+  border: 2px solid #fff;
+  z-index: 2;
 `;
 
 const Header = () => {
@@ -169,15 +173,15 @@ const Header = () => {
   const { user, logout } = useAuth();
   const username = user?.username;
   const role = user?.roles?.[0];
-  const { reservationAlarms, clearNotification, addNotification  } = useNotification();
+  const { reservationAlarms, clearNotification, addNotification } =
+    useNotification();
 
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = useRef(null);
-  
 
   useEffect(() => {
-    console.log("Header에서 reservationAlarms 값:", reservationAlarms);
+    console.log("[Header] 알림 수신 상태:", reservationAlarms);
   }, [reservationAlarms]);
 
   const handleMouseEnter = (menu) => {
@@ -202,7 +206,6 @@ const Header = () => {
       navigate("/login");
     }
   };
-  
 
   const dropdownItems = {
     Gallery: [
@@ -233,9 +236,6 @@ const Header = () => {
     Goods: "/goods",
     Notice: "/support/notice",
   };
-
-  console.log("🔔 예약 알림 수:", reservationAlarms.length);
-  
 
   return (
     <>
@@ -269,7 +269,8 @@ const Header = () => {
                   >
                     {dropdownItems[menu]
                       .filter((item) => {
-                        if (item.label === "채팅 문의함" && !user?.isArtist) return false;
+                        if (item.label === "채팅 문의함" && !user?.isArtist)
+                          return false;
                         return true;
                       })
 
@@ -294,7 +295,9 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem>{role === "ADMIN" ? "관리자 님" : `${username}님`}</RightNavItem>
+              <RightNavItem>
+                {role === "ADMIN" ? "관리자 님" : `${username}님`}
+              </RightNavItem>
               <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>
 
               {/* 일반 유저 메뉴 */}
@@ -310,19 +313,27 @@ const Header = () => {
                     MYPAGE
                     {reservationAlarms.length > 0 && <AlertBadge />}
                   </RightNavItem>
-                  <RightNavItem onClick={() => navigate("/cart")}>CART</RightNavItem>
+                  <RightNavItem onClick={() => navigate("/cart")}>
+                    CART
+                  </RightNavItem>
                 </>
               )}
 
               {/* 관리자 메뉴 */}
               {role === "ADMIN" && (
-                <RightNavItem onClick={() => navigate("/adminpage")}>ADMINPAGE</RightNavItem>
+                <RightNavItem onClick={() => navigate("/adminpage")}>
+                  ADMINPAGE
+                </RightNavItem>
               )}
             </>
           ) : (
             <>
-              <RightNavItem onClick={() => navigate("/join")}>REGISTER</RightNavItem>
-              <RightNavItem onClick={() => navigate("/login")}>LOGIN</RightNavItem>
+              <RightNavItem onClick={() => navigate("/join")}>
+                REGISTER
+              </RightNavItem>
+              <RightNavItem onClick={() => navigate("/login")}>
+                LOGIN
+              </RightNavItem>
             </>
           )}
 

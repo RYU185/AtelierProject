@@ -10,25 +10,30 @@ export const AuthProvider = ({ children }) => {
     const nickname = localStorage.getItem("nickname");
 
     return username && role
-    ? { username, roles: [role], isArtist , nickname}
-    : null;
+      ? { username, roles: [role], isArtist, nickname }
+      : null;
   });
 
-  const login = ({ username, role, isArtist =false, nickname }) => {
+  const [token, setToken] = useState(() => localStorage.getItem("authToken"));
+
+  const login = ({ username, role, isArtist = false, nickname, authToken }) => {
     localStorage.setItem("username", username);
     localStorage.setItem("role", role);
     localStorage.setItem("isArtist", isArtist);
     localStorage.setItem("nickname", nickname);
-  setUser({ username, roles: [role], isArtist, nickname });
+    localStorage.setItem("authToken", authToken);
+    setUser({ username, roles: [role], isArtist, nickname });
+    setToken(authToken);
   };
 
   const logout = () => {
     localStorage.clear();
     setUser(null);
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

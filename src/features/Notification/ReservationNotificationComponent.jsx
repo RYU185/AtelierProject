@@ -1,10 +1,20 @@
 import { useNotification } from "./NotificationContext";
-import useNotificationWebSocket from "./useNotificationWebSocket"; // D-1 알림용 WebSocket 훅
+import useNotificationWebSocket from "./useNotificationWebSocket";
+import { useAuth } from "../../components/AuthContext";
+import { useEffect } from "react";
 
 const ReservationNotificationComponent = () => {
   const { addNotification, reservationAlarms } = useNotification();
+  const { token } = useAuth();
 
-  console.log("[ReservationComponent] 현재 알림 목록:", reservationAlarms);
+  if (!token) {
+    console.log("Reservation 알림 대기 중: token 없음");
+    return null;
+  }
+
+  useEffect(() => {
+    console.log("[ReservationComponent] 현재 알림 목록:", reservationAlarms);
+  }, [reservationAlarms]);
 
   useNotificationWebSocket({
     onNotification: (noti) => {

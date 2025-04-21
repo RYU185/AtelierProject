@@ -34,7 +34,7 @@ const ExhibitionCard = styled.div`
   border: 1px solid #e0e0e0;
   border-radius: 12px;
   overflow: hidden;
-  
+
   padding: 20px;
 `;
 
@@ -62,7 +62,10 @@ const ExhibitionCapacity = styled.p`
   margin-left: 20px;
 `;
 
-const formatDateForServer = (date) => date.toISOString().slice(0, 10);
+const formatDateForServer = (date) => {
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 10);
+};
 
 function TicketPage() {
   const { galleryId } = useParams();
@@ -102,7 +105,9 @@ function TicketPage() {
 
     const fetchReserveDates = async () => {
       try {
-        const res = await axiosInstance.get(`/reservation/reserve-date?galleryId=${galleryId}`);
+        const res = await axiosInstance.get(
+          `/reservation/reserve-date?galleryId=${galleryId}`
+        );
         setReserveDateList(res.data);
       } catch (error) {
         console.error("예약 가능 날짜 조회 실패:", error);
@@ -123,8 +128,11 @@ function TicketPage() {
 
       try {
         const res = await axiosInstance.get(
-          `/reservation/available-times?date=${selectedDate.toISOString().slice(0, 10)}`
+          `/reservation/available-times?date=${formatDateForServer(
+            selectedDate
+          )}`
         );
+
         setAvailableTimes(res.data);
       } catch (error) {
         console.error("예약 가능 시간 조회 실패:", error);
@@ -139,7 +147,7 @@ function TicketPage() {
   };
 
   const remainingCount = reserveDateList.find(
-    (d) => d.date === selectedDate?.toISOString().slice(0, 10)
+    (d) => d.date === (selectedDate && formatDateForServer(selectedDate))
   )?.remaining;
 
   const handleCountChange = (newCount) => {
@@ -209,7 +217,9 @@ function TicketPage() {
                 {galleryInfo.artistList.join(", ")}
               </ExhibitionDate>
             )}
-            <ExhibitionCapacity style={{ color: "#666", whiteSpace: "pre-line", lineHeight: 1.6 }}>
+            <ExhibitionCapacity
+              style={{ color: "#666", whiteSpace: "pre-line", lineHeight: 1.6 }}
+            >
               {galleryInfo?.startDate}
               <span style={{ margin: "0 12px" }}>-</span>
               {galleryInfo?.endDate}
@@ -257,7 +267,6 @@ function TicketPage() {
                     fontSize: "20px",
                     color: "#888",
                     cursor: "pointer",
-
                   }}
                 >
                   &times;
@@ -274,7 +283,7 @@ function TicketPage() {
                   style={{
                     display: "grid",
                     gridTemplateColumns: "1fr 1fr",
-                    gap: "20px"
+                    gap: "20px",
                   }}
                 >
                   {availableTimes.map((time) => (
@@ -287,10 +296,15 @@ function TicketPage() {
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         width: "100%",
-                        backgroundColor: selectedTime?.id === time.id ? "#0066ff" : "#ffffff",
+                        backgroundColor:
+                          selectedTime?.id === time.id ? "#0066ff" : "#ffffff",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
-                        transition: "background-color 0.3s ease, color 0.3s ease",
-                        border: selectedTime?.id === time.id ? "#0066ff" : "1px solid #b9b9b9",
+                        transition:
+                          "background-color 0.3s ease, color 0.3s ease",
+                        border:
+                          selectedTime?.id === time.id
+                            ? "#0066ff"
+                            : "1px solid #b9b9b9",
                         cursor: "pointer",
                       }}
                     >

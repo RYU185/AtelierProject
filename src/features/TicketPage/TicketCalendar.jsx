@@ -50,7 +50,6 @@ const WeekdayCell = styled.div`
 const DaysGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  
 `;
 
 const DayCell = styled.div`
@@ -69,7 +68,12 @@ const DayCell = styled.div`
     return "transparent";
   }};
 
-  color: ${({ $isSelected, $isCurrentMonth, $isActive, $inExhibitionRange }) => {
+  color: ${({
+    $isSelected,
+    $isCurrentMonth,
+    $isActive,
+    $inExhibitionRange,
+  }) => {
     if ($isSelected) return "#fff";
     if ($isCurrentMonth && ($isActive || $inExhibitionRange)) return "#333";
     if ($inExhibitionRange) return "#aaaaaa";
@@ -87,8 +91,6 @@ const DayCell = styled.div`
       $isCurrentMonth && $isActive && !$isSelected ? "#64b5f6" : ""};
   }
 `;
-
-
 
 const isSameDate = (a, b) =>
   a.getFullYear() === b.getFullYear() &&
@@ -139,26 +141,35 @@ const TicketCalendar = ({
   };
 
   const handlePrevMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
+    );
   };
 
   const handleNextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
+    );
   };
 
   const isSelected = (date) => selectedDate && isSameDate(date, selectedDate);
 
+  const formatDate = (date) => {
+    const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+    return local.toISOString().slice(0, 10);
+  };
+
   const isActive = (date) => {
-    const target = date.toISOString().slice(0, 10);
+    const target = formatDate(date);
     return activeDates.includes(target);
   };
 
   const isInExhibitionPeriod = (date) => {
     if (!exhibitionStartDate || !exhibitionEndDate) return false;
 
-    const dateStr = date.toISOString().slice(0, 10);
-    const startStr = exhibitionStartDate.slice(0, 10);
-    const endStr = exhibitionEndDate.slice(0, 10);
+    const dateStr = formatDate(date);
+    const startStr = formatDate(new Date(exhibitionStartDate));
+    const endStr = formatDate(new Date(exhibitionEndDate));
 
     return dateStr >= startStr && dateStr <= endStr;
   };
@@ -182,7 +193,7 @@ const TicketCalendar = ({
           const inRange = isInExhibitionPeriod(date);
           console.log(
             "날짜:",
-            date.toISOString().slice(0, 10),
+            formatDate(date),
             "전시:",
             exhibitionStartDate,
             "~",
@@ -198,7 +209,9 @@ const TicketCalendar = ({
               $isSelected={isSelected(date)}
               $isActive={isActive(date)}
               $inExhibitionRange={inRange}
-              onClick={() => isCurrentMonth && isActive(date) && onDateSelect(date)}
+              onClick={() =>
+                isCurrentMonth && isActive(date) && onDateSelect(date)
+              }
             >
               {date.getDate()}
             </DayCell>
