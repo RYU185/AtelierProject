@@ -8,17 +8,14 @@ const ReservationNotificationComponent = () => {
   const { token } = useAuth();
 
   if (!token) {
-    console.log("Reservation 알림 대기 중: token 없음");
     return null;
   }
 
   useEffect(() => {
-    console.log("[ReservationComponent] 현재 알림 목록:", reservationAlarms);
   }, [reservationAlarms]);
 
   useNotificationWebSocket({
     onNotification: (noti) => {
-      console.log("✅ WebSocket 수신 알림 도착:", noti); // ✅ [1-1] 여기 찍혀야 정상
       addNotification(noti);
     },
   });

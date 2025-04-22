@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { useAuth } from "../../components/AuthContext";
 
 const useNotificationWebSocket = ({ onNotification }) => {
   const { token } = useAuth();
+  const clientRef = useRef(null);
 
   useEffect(() => {
     console.log("알람용 WebSocket effect 실행됨");
@@ -14,31 +15,37 @@ const useNotificationWebSocket = ({ onNotification }) => {
       return;
     }
 
-    console.log("🔑 WebSocket용 JWT 토큰:", token);
+    console.log("📦 사용 중인 token:", token);
 
     const client = new Client({
-      webSocketFactory: () =>
-        new SockJS(
-          `http://localhost:8081/ws?token=${localStorage.getItem("authToken")}`
-        ),
+      webSocketFactory: () => new SockJS(`http://localhost:8081/ws?token=${token}`),
       connectHeaders: {
-        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        Authorization: `Bearer ${token}`,
       },
+      reconnectDelay: 5000, // 자동 재연결
+      debug: (str) => console.log("📡 STOMP DEBUG:", str),
       onConnect: () => {
-        console.log("[User] WebSocket 연결 성공");
-
+        console.log("WebSocket 연결 성asdfasdfasdfasdfasf");
+      
         client.subscribe("/user/queue/notifications", (message) => {
-          console.log("수신된 원본 메시지:", message);
+          console.log("✅ 메시지 도착:", message.body); // ← 지금 이게 안 뜸
         });
-
-        client.subscribe("/queue/notifications", (message) => {
-          console.log("[백업경로] 수신된 메시지:", message);
-        });
+      
+        console.log("✅ 구독 완료"); // ← 이게 찍히는지 체크
+      },
+      
+      onStompError: (frame) => {
+        console.error("STOMP 오류 발생:", frame);
       },
     });
 
     client.activate();
-    return () => client.deactivate();
+    clientRef.current = client;
+
+    return () => {
+      console.log("WebSocket 연결 해제됨");
+      client.deactivate();
+    };
   }, [token, onNotification]);
 };
 
