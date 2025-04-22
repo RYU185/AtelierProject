@@ -58,7 +58,7 @@ const FileInput = styled.input`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  bottom: 300px;
+  bottom: 250px;
   right: 490px;
   display: flex;
   gap: 10px;
@@ -72,7 +72,7 @@ const UploadButton = styled.label`
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
-
+ 
   &:hover {
     background-color: #2a7fbc;
   }
