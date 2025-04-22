@@ -1,3 +1,5 @@
+// AdminTicketChart.jsx
+
 import React, { useState, useEffect } from 'react';
 import Header from '../../Header';
 import Footer from '../../Footer';
@@ -9,17 +11,27 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend
 } from 'chart.js';
 import styled from 'styled-components';
 import axios from 'axios';
-import { format, subDays } from 'date-fns';
+import { addDays, subDays, startOfMonth, addWeeks } from 'date-fns';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-// Styled Components
 const Container = styled.div`
   display: flex;
   padding: 10px;
@@ -28,11 +40,14 @@ const Container = styled.div`
 `;
 
 const ChartWrapper = styled.div`
-  width: 60%;
-  margin-left: 30px;
+  width: 100%;
+  margin-left: 10px;
   padding: 40px;
   margin-top: 30px;
-  position: relative;
+`;
+
+const InnerChart = styled.div`
+  width: 100%;
 `;
 
 const TitleWrapper = styled.div`
@@ -40,7 +55,6 @@ const TitleWrapper = styled.div`
   font-size: 25px;
   font-weight: bold;
   margin-top: 30px;
-  margin-right: 800px;
   margin-bottom: 10px;
 `;
 
@@ -73,152 +87,173 @@ const FilterSelect = styled.select`
   }
 `;
 
+const NavButton = styled.button`
+  padding: 5px 10px;
+  margin: 0 10px;
+  font-size: 18px;
+  cursor: pointer;
+  background: #eee;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  &:hover {
+    background: #ddd;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+`;
+
 function AdminTicketChart() {
   const [filterType, setFilterType] = useState('daily');
-  const [chartData, setChartData] = useState({
-    labels: [],
-    datasets: []
-  });
+  const [fullData, setFullData] = useState([]);
+  const [startIndex, setStartIndex] = useState(0);
+  const visibleRange = 7;
+
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let countResponse;
-        let trendResponse = null;
-
         if (filterType === 'daily') {
-          countResponse = await axios.get('api/reservation/admin/statistics/count/by-date');
-        } else if (filterType === 'weekday') {
-          countResponse = await axios.get('api/reservation/admin/statistics/count/by-weekday');
-        } else {
-          countResponse = await axios.get('api/reservation/admin/statistics/count/by-month');
-          trendResponse = await axios.get('api/reservation/admin/statistics/trend/by-month');
-        }
+          const countRes = await axios.get('api/reservation/admin/statistics/count/by-date');
+          const trendRes = await axios.get('api/reservation/admin/statistics/trend/by-date');
 
-        const countDataRaw = Array.isArray(countResponse.data)
-          ? countResponse.data
-          : Array.isArray(countResponse.data?.data)
-            ? countResponse.data.data
-            : [];
+          const countRaw = Array.isArray(countRes.data) ? countRes.data : countRes.data?.data || [];
+          const trendRaw = Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.data || [];
 
-        const trendDataRaw = trendResponse
-          ? (Array.isArray(trendResponse.data)
-              ? trendResponse.data
-              : Array.isArray(trendResponse.data?.data)
-                ? trendResponse.data.data
-                : [] )
-          : [];
-
-        let labels = [];
-        let countData = [];
-        let trendData = [];
-
-        if (filterType === 'daily') {
-          const dataMap = countDataRaw.reduce((map, item) => {
-            map[item.label] = item.totalHeadcount;
-            return map;
+          const countMap = countRaw.reduce((acc, item) => {
+            acc[item.label] = item.totalHeadcount;
+            return acc;
+          }, {});
+          const trendMap = trendRaw.reduce((acc, item) => {
+            acc[item.label] = item.cumulativeHeadcount;
+            return acc;
           }, {});
 
           const today = new Date();
-          const start = subDays(today, 6);  // 오늘로부터 7일 전
-          const end = today;  // 오늘 날짜
+          const start = subDays(today, 6);
+          const end = addDays(today, 7);
+          const range = [];
 
-          let currentStart = new Date(start);
-          const days = [];
-
-          while (currentStart <= end) {
-            const dateStr = currentStart.toISOString().split('T')[0]; // yyyy-mm-dd 형식
-            days.push(dateStr);
-
-            // 해당 날짜의 예약 데이터
-            const totalHeadcount = dataMap[dateStr] || 0;
-
-            labels.push(dateStr);
-            countData.push(totalHeadcount);
-
-            currentStart.setDate(currentStart.getDate() + 1);
+          let current = new Date(start);
+          while (current <= end) {
+            const label = current.toISOString().split('T')[0];
+            range.push({
+              label,
+              totalHeadcount: countMap[label] || 0,
+              trend: trendMap[label] || 0
+            });
+            current.setDate(current.getDate() + 1);
           }
-        } else if (filterType === 'weekday') {
-          const weekdayKoreanMap = {
-            Monday: '월요일',
-            Tuesday: '화요일',
-            Wednesday: '수요일',
-            Thursday: '목요일',
-            Friday: '금요일',
-            Saturday: '토요일',
-            Sunday: '일요일',
-          };
-          labels = countDataRaw.map(item => weekdayKoreanMap[item.label] || item.label);
-          countData = countDataRaw.map(item => item.totalHeadcount);
-        } else {
-          labels = countDataRaw.map(item => item.label);
-          countData = countDataRaw.map(item => item.totalHeadcount);
-          trendData = trendDataRaw.map(item => item.cumulativeHeadcount);
-        }
 
-        const datasets = [
-          {
-            type: 'bar',
-            label: '티켓 판매량',
-            data: countData,
-            backgroundColor: 'rgba(128, 128, 255, 0.5)',
+          setFullData(range);
+          setStartIndex(0);
+        } else if (filterType === 'weekly') {
+          const res = await axios.get('api/reservation/admin/statistics/count/by-week');
+          const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
+
+          const labels = [];
+          const countData = [];
+
+          const now = new Date();
+          const base = startOfMonth(now); // ex) 2025-04-01
+
+          for (let i = 0; i < 4; i++) {
+            const weekLabel = `${base.getMonth() + 1}월/${i + 1}주차`;
+
+            const match = data.find(d => d.label === weekLabel); // ✅ 프론트와 백엔드 라벨 싱크 맞춤!
+            labels.push(weekLabel);
+            countData.push(match ? match.totalHeadcount : 0);
           }
-        ];
 
-        if (trendData.length > 0) {
-          datasets.push({
-            type: 'line',
-            label: '판매 추세',
-            data: trendData,
-            borderColor: '#E24A4A',
-            backgroundColor: '#E24A4A',
-            tension: 0.3,
+          setChartData({
+            labels,
+            datasets: [{
+              type: 'bar',
+              label: '주별 티켓 판매량',
+              data: countData,
+              backgroundColor: 'rgba(128, 128, 255, 0.5)',
+            }]
+          });
+        } else if (filterType === 'monthly') {
+          setChartData({
+            labels: ['1월', '2월', '3월', '4월'],
+            datasets: [{
+              type: 'bar',
+              label: '월별 티켓 판매량 (임시)',
+              data: [100, 150, 130, 180],
+              backgroundColor: 'rgba(128, 128, 255, 0.5)',
+            }]
           });
         }
-
-        setChartData({ labels, datasets });
-      } catch (error) {
-        console.error('데이터를 불러오는 중 오류 발생:', error);
+      } catch (err) {
+        console.error('데이터 오류:', err);
       }
     };
 
     fetchData();
   }, [filterType]);
 
+  useEffect(() => {
+    if (filterType === 'daily') {
+      const slice = fullData.slice(startIndex, startIndex + visibleRange);
+      const labels = slice.map(i => i.label);
+      const count = slice.map(i => i.totalHeadcount);
+      const trend = slice.map(i => i.trend);
+
+      setChartData({
+        labels,
+        datasets: [
+          {
+            type: 'bar',
+            label: '티켓 판매량',
+            data: count,
+            backgroundColor: 'rgba(128, 128, 255, 0.5)'
+          },
+          {
+            type: 'line',
+            label: '판매 추세',
+            data: trend,
+            borderColor: '#E24A4A',
+            backgroundColor: '#E24A4A',
+            tension: 0.3,
+            fill: false
+          }
+        ]
+      });
+    }
+  }, [fullData, startIndex]);
+
   const options = {
     responsive: true,
     plugins: {
-      legend: {
-        position: 'top',
-      },
-      tooltip: {
-        mode: 'index',
-        intersect: false,
-      },
+      legend: { position: 'top' },
+      tooltip: { mode: 'index', intersect: false },
     },
     scales: {
-      x: {
-        grid: { display: false },
-      },
-      y: {
-        beginAtZero: true,
-      },
-    },
+      x: { grid: { display: false } },
+      y: { beginAtZero: true }
+    }
   };
 
   return (
     <>
       <Header />
-      <TitleWrapper>최근 7일간의 티켓 판매량</TitleWrapper>
+      <TitleWrapper>
+        {filterType === 'daily' ? '날짜별' : filterType === 'weekly' ? '주별' : '월별'} 티켓 판매량
+      </TitleWrapper>
 
       <FilterSelect value={filterType} onChange={(e) => setFilterType(e.target.value)}>
         <option value="daily">날짜별</option>
-        <option value="weekday">요일별</option>
+        <option value="weekly">주별</option>
         <option value="monthly">월별</option>
       </FilterSelect>
 
       <MenubarWrapper>
-        <AdminTicketMenubar className="chart-menubar" />
+        <AdminTicketMenubar />
       </MenubarWrapper>
 
       <Container>
@@ -227,7 +262,26 @@ function AdminTicketChart() {
         </AdminMenuWrapper>
 
         <ChartWrapper>
-          <Bar data={chartData} options={options} />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {filterType === 'daily' && (
+              <NavButton onClick={() => setStartIndex(prev => Math.max(prev - 1, 0))} disabled={startIndex === 0}>
+                ←
+              </NavButton>
+            )}
+
+            <InnerChart>
+              <Bar data={chartData} options={options} />
+            </InnerChart>
+
+            {filterType === 'daily' && (
+              <NavButton
+                onClick={() => setStartIndex(prev => Math.min(prev + 1, fullData.length - visibleRange))}
+                disabled={startIndex + visibleRange >= fullData.length}
+              >
+                →
+              </NavButton>
+            )}
+          </div>
         </ChartWrapper>
       </Container>
 
