@@ -164,7 +164,6 @@ const AlertBadge = styled.span`
   height: 10px;
   background-color: red;
   border-radius: 50%;
-  border: 2px solid #fff;
   z-index: 2;
 `;
 

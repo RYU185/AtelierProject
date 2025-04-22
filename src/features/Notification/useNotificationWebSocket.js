@@ -21,7 +21,6 @@ const useNotificationWebSocket = ({ onNotification }) => {
         Authorization: `Bearer ${token}`,
       },
       debug: (msg) => console.log("📡 STOMP DEBUG:", msg),
-      reconnectDelay: 5000,
       onConnect: () => {
         console.log("WebSocket 연결 성공");
         console.log("알림 구독 시작");

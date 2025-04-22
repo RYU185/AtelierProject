@@ -156,13 +156,11 @@ const Login = () => {
 
       console.log("nickname 응답값:", response.data.nickname);
 
-
       localStorage.setItem("accessToken", token);
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
       localStorage.setItem("nickname", nickname);
       
-
       const loginPayload = {
         username: userId,
         role,
