@@ -295,7 +295,7 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem>
+              <RightNavItem onClick={() => navigate("/mypage")}>
                 {role === "ADMIN" ? "관리자 님" : `${username}님`}
               </RightNavItem>
               <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>

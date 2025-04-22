@@ -170,7 +170,7 @@ const EditProfile = () => {
         // axiosInstance에 Authorization 헤더 명시적으로 설정
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-        const res = await axios.get("/api/user/me");
+        const res = await axios.get("/user/me");
         const user = res.data;
 
         setFormData((prev) => ({
@@ -187,7 +187,8 @@ const EditProfile = () => {
         }));
       } catch (err) {
         console.error("회원 정보 불러오기 실패:", err);
-        navigate("/login"); // 인증 실패 시 로그인 이동
+        // API 호출 실패 시에도 로그인 페이지로 이동하지 않도록 주석 처리 또는 제거
+        // navigate("/login");
       } finally {
         setLoading(false);
       }
@@ -268,11 +269,9 @@ const EditProfile = () => {
     } catch (error) {
       console.error("❌ 회원정보 수정 실패:", error);
       alert(
-        "수정 실패: " +
-          (error.response?.data?.message ||
-            error.response?.statusText ||
-            error.message)
+        "회원 정보 수정에 실패했습니다. 입력하신 정보를 다시 확인해주세요."
       );
+      return;
     }
   };
 

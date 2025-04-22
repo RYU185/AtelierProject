@@ -190,7 +190,8 @@ const MyPage = () => {
         const response = await axios.get("/api/user/me");
         setUserInfo(response.data);
       } catch (error) {
-        navigate("/login");
+        console.error("마이페이지 사용자 정보 불러오기 실패:", error);
+        setFetchError("사용자 정보를 불러오는 데 실패했습니다.");
       } finally {
         setLoading(false);
       }
@@ -219,7 +220,7 @@ const MyPage = () => {
   };
 
   const handleEditClick = () => {
-    setIsEditing(true);
+    navigate("/updateprofile");
   };
 
   const handleEditSubmit = (updatedInfo) => {

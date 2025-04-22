@@ -43,6 +43,7 @@ import CartPage from "../features/cart/CartPage";
 import AddPostModal from "../features/community/components/AddPostModal";
 import EditPostModal from "../features/community/components/EditPostModal";
 import AdminTicketManagement from "../features/adminpage/components/AdminTicketManagement";
+import EditProfile from "../features/mypage/components/EditProfile";
 
 function AppRoutes() {
   return (
@@ -53,6 +54,7 @@ function AppRoutes() {
       <Route path="/find-id" element={<FindId />} />
       <Route path="/find-password" element={<FindPassword />} />
       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/updateprofile" element={<EditProfile />} />
       <Route path="/adminpage" element={<AdminPage />} />
       <Route path="/AdminArtAdd" element={<AdminArtAdd />} />
       <Route path="/AdminGoods" element={<AdminGoods />} />
