@@ -98,10 +98,11 @@ const ActionButton = styled.button`
   }
 `;
 
-const MyTickets = ({ onTicketClick, onRefundClick }) => {
+const MyTickets = ({ onTicketClick }) => {
   const [reserve, setReserve] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const activeReservations = reserve.filter((rv) => rv.status !== "CANCELED");
 
   const isTomorrow = (dateStr) => {
     const targetDate = new Date(dateStr);
@@ -115,25 +116,40 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
     );
   };
 
-  useEffect(() => {
-    const fetchMyreserve = async () => {
-      try {
-        const res = await axiosInstance.get("/reservation/my");
-        setReserve(res.data);
-      } catch (error) {
-        console.error("예약 내역 조회 실패:", error);
-        setError("예약 정보를 불러올 수 없습니다");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchMyReservations = async () => {
+    try {
+      const res = await axiosInstance.get("/reservation/my");
+      setReserve(res.data);
+    } catch (error) {
+      console.error("예약 내역 조회 실패:", error);
+      setError("예약 정보를 불러올 수 없습니다");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchMyreserve();
+  useEffect(() => {
+    fetchMyReservations();
   }, []);
+
+  const onRefundClick = async (reservation) => {
+    const confirmed = window.confirm("정말 이 티켓을 취소하시겠습니까?");
+    if (!confirmed) return;
+
+    try {
+      const res = await axiosInstance.delete(`/reservation/${reservation.reservationId}`);
+      alert("예약이 성공적으로 취소되었습니다.");
+
+      fetchMyReservations();
+    } catch (err) {
+      console.error("예약 취소 실패:", err);
+      alert("예약 취소에 실패했습니다.");
+    }
+  };
 
   return (
     <Container>
-      <TicketCount>총 {reserve.length}개의 전시가 예약되어 있습니다.</TicketCount>
+      <TicketCount>총 {activeReservations.length}개의 전시가 예약되어 있습니다.</TicketCount>
 
       <TicketList>
         {loading ? (
@@ -141,7 +157,7 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
         ) : reserve.length === 0 ? (
           <p>예약된 전시가 없습니다.</p>
         ) : (
-          reserve.map((rv) => (
+          activeReservations.map((rv) => (
             <TicketCard key={rv.reservationId}>
               <MoreButton>⋮</MoreButton>
               <TicketInfo>
@@ -172,7 +188,7 @@ const MyTickets = ({ onTicketClick, onRefundClick }) => {
               </TicketInfo>
               <TicketActions>
                 <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
-                <ActionButton onClick={() => onRefundClick(rv)}>환불 신청</ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>티켓 취소하기</ActionButton>
               </TicketActions>
             </TicketCard>
           ))
