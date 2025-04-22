@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Menu from "./home/components/Menu";
@@ -173,8 +173,7 @@ const Header = () => {
   const { user, logout } = useAuth();
   const username = user?.username;
   const role = user?.roles?.[0];
-  const { reservationAlarms, clearNotification, addNotification } =
-    useNotification();
+  const { reservationAlarms, clearNotification, addNotification } = useNotification();
 
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -182,6 +181,13 @@ const Header = () => {
 
   useEffect(() => {
     console.log("[Header] 알림 수신 상태:", reservationAlarms);
+  }, [reservationAlarms]);
+
+  useEffect(() => {
+    console.log("reservationAlarms 변경 감지됨:", reservationAlarms);
+    if (reservationAlarms.length > 0) {
+      console.log("알림이 정상적으로 도착했습니다!");
+    }
   }, [reservationAlarms]);
 
   const handleMouseEnter = (menu) => {

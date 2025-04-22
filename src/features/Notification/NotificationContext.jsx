@@ -6,7 +6,7 @@ export const NotificationProvider = ({ children }) => {
   const [reservationAlarms, setReservationAlarms] = useState([]);
 
   const addNotification = (notification) => {
-    console.log("addNotification 호출됨:", notification);
+    console.log("알림 추가됨:", notification);
     setReservationAlarms((prev) => [...prev, notification]);
   };
 
