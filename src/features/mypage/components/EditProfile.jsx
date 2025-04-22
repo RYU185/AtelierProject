@@ -158,6 +158,8 @@ const EditProfile = () => {
   const [passwordMatchError, setPasswordMatchError] = useState("");
   const [passwordMatchSuccess, setPasswordMatchSuccess] = useState("");
 
+  const [error, setError] = useState(null); // 에러 메시지 상태 추가
+
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
@@ -167,7 +169,6 @@ const EditProfile = () => {
           return;
         }
 
-        // axiosInstance에 Authorization 헤더 명시적으로 설정
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         const res = await axios.get("/user/me");
@@ -187,8 +188,7 @@ const EditProfile = () => {
         }));
       } catch (err) {
         console.error("회원 정보 불러오기 실패:", err);
-        // API 호출 실패 시에도 로그인 페이지로 이동하지 않도록 주석 처리 또는 제거
-        // navigate("/login");
+        setError("회원 정보를 불러오는 데 실패했습니다. 다시 시도해주세요.");
       } finally {
         setLoading(false);
       }

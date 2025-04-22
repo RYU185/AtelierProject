@@ -2,7 +2,13 @@
 import axios from "axios";
 
 // 🔹 인증 제외할 공용 API 경로 (정렬 기준으로 분리)
-const PUBLIC_PATHS = ["/user/login", "/user/register", "/user/findid", "/user/check-email", "/user/check-id"];
+const PUBLIC_PATHS = [
+  "/user/login",
+  "/user/register",
+  "/user/findid",
+  "/user/check-email",
+  "/user/check-id",
+];
 
 // 🔹 Axios 인스턴스 생성
 const axiosInstance = axios.create({
@@ -49,7 +55,12 @@ axiosInstance.interceptors.response.use(
     console.error("❌ 응답 에러:", error);
 
     // 🔸 401 Unauthorized → 로그인 만료 시 자동 로그아웃
-    if (error.response?.status === 401) {
+    const NON_REDIRECT_401_PATHS = ["/updateprofile", "/edit-profile"];
+
+    if (
+      error.response?.status === 401 &&
+      !NON_REDIRECT_401_PATHS.includes(window.location.pathname)
+    ) {
       localStorage.removeItem("accessToken");
       window.location.href = "/login";
     }
