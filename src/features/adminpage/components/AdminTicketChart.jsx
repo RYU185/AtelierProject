@@ -19,7 +19,7 @@ import {
 } from 'chart.js';
 import styled from 'styled-components';
 import axios from 'axios';
-import { addDays, subDays, startOfMonth, addWeeks } from 'date-fns';
+import { addDays, subDays, startOfMonth } from 'date-fns';
 
 ChartJS.register(
   CategoryScale,
@@ -152,41 +152,102 @@ function AdminTicketChart() {
           setFullData(range);
           setStartIndex(0);
         } else if (filterType === 'weekly') {
-          const res = await axios.get('api/reservation/admin/statistics/count/by-week');
-          const data = Array.isArray(res.data) ? res.data : res.data?.data || [];
+          const countRes = await axios.get('api/reservation/admin/statistics/count/by-week');
+          const trendRes = await axios.get('api/reservation/admin/statistics/trend/by-week');
+
+          const countRaw = Array.isArray(countRes.data) ? countRes.data : countRes.data?.data || [];
+          const trendRaw = Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.data || [];
+
+          const countMap = countRaw.reduce((acc, item) => {
+            acc[item.label] = item.totalHeadcount;
+            return acc;
+          }, {});
+          const trendMap = trendRaw.reduce((acc, item) => {
+            acc[item.label] = item.cumulativeHeadcount;
+            return acc;
+          }, {});
 
           const labels = [];
           const countData = [];
+          const trendData = [];
 
           const now = new Date();
-          const base = startOfMonth(now); // ex) 2025-04-01
+          const base = startOfMonth(now);
 
           for (let i = 0; i < 4; i++) {
             const weekLabel = `${base.getMonth() + 1}월/${i + 1}주차`;
 
-            const match = data.find(d => d.label === weekLabel); // ✅ 프론트와 백엔드 라벨 싱크 맞춤!
             labels.push(weekLabel);
-            countData.push(match ? match.totalHeadcount : 0);
+            countData.push(countMap[weekLabel] || 0);
+            trendData.push(trendMap[weekLabel] || 0);
           }
 
           setChartData({
             labels,
-            datasets: [{
-              type: 'bar',
-              label: '주별 티켓 판매량',
-              data: countData,
-              backgroundColor: 'rgba(128, 128, 255, 0.5)',
-            }]
+            datasets: [
+              {
+                type: 'bar',
+                label: '주별 티켓 판매량',
+                data: countData,
+                backgroundColor: 'rgba(128, 128, 255, 0.5)',
+              },
+              {
+                type: 'line',
+                label: '판매 추세',
+                data: trendData,
+                borderColor: '#E24A4A',
+                backgroundColor: '#E24A4A',
+                tension: 0.3,
+                fill: false
+              }
+            ]
           });
         } else if (filterType === 'monthly') {
+          const countRes = await axios.get('api/reservation/admin/statistics/count/by-month');
+          const trendRes = await axios.get('api/reservation/admin/statistics/trend/by-month');
+
+          const countRaw = Array.isArray(countRes.data) ? countRes.data : countRes.data?.data || [];
+          const trendRaw = Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.data || [];
+
+          const countMap = countRaw.reduce((acc, item) => {
+            acc[item.label] = item.totalHeadcount;
+            return acc;
+          }, {});
+          const trendMap = trendRaw.reduce((acc, item) => {
+            acc[item.label] = item.cumulativeHeadcount;
+            return acc;
+          }, {});
+
+          const labels = [];
+          const countData = [];
+          const trendData = [];
+
+          for (let i = 1; i <= 12; i++) {
+            const monthLabel = `${i}월`;
+            labels.push(monthLabel);
+            countData.push(countMap[monthLabel] || 0);
+            trendData.push(trendMap[monthLabel] || 0);
+          }
+
           setChartData({
-            labels: ['1월', '2월', '3월', '4월'],
-            datasets: [{
-              type: 'bar',
-              label: '월별 티켓 판매량 (임시)',
-              data: [100, 150, 130, 180],
-              backgroundColor: 'rgba(128, 128, 255, 0.5)',
-            }]
+            labels,
+            datasets: [
+              {
+                type: 'bar',
+                label: '월별 티켓 판매량',
+                data: countData,
+                backgroundColor: 'rgba(128, 128, 255, 0.5)',
+              },
+              {
+                type: 'line',
+                label: '판매 추세',
+                data: trendData,
+                borderColor: '#E24A4A',
+                backgroundColor: '#E24A4A',
+                tension: 0.3,
+                fill: false
+              }
+            ]
           });
         }
       } catch (err) {
@@ -238,6 +299,8 @@ function AdminTicketChart() {
       y: { beginAtZero: true }
     }
   };
+
+
 
   return (
     <>
