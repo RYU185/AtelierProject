@@ -285,13 +285,12 @@ const DrawingCanvas = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [editId, setEditId] = useState(null);
+  const titleInputRef = useRef(null);
 
   // State variables
   const [isDrawing, setIsDrawing] = useState(false);
   const [brushColor, setBrushColor] = useState("#000000");
   const [tool, setTool] = useState("pencil");
-  const [history, setHistory] = useState([]);
-  const [futureHistory, setFutureHistory] = useState([]);
   const [toolSizes, setToolSizes] = useState({
     pencil: 2,
     brush: 6,
@@ -314,20 +313,17 @@ const DrawingCanvas = () => {
   const [showDownloadNotice, setShowDownloadNotice] = useState(false);
 
   const handleConfirmDownload = () => {
-    downloadImageAsJPEG();
-    // 안내 문구 1.5초간 보여주고 → 제목 입력 모달 열기
-    setShowDownloadNotice(true);
-
-    setTimeout(() => {
-      setShowDownloadNotice(false);
-      setShowTitleModal(true);
-    }, 3000);
-
+    if (!isTemporarySave) {
+      downloadImageAsJPEG(); // 💾 저장일 때만 로컬 저장
+      setShowDownloadNotice(true);
+      setTimeout(() => {
+        setShowDownloadNotice(false);
+        setShowTitleModal(true); // 제목 입력 모달 열기
+      }, 1500);
+    } else {
+      setShowTitleModal(true); // 📝 임시저장일 땐 바로 제목 모달만 띄움
+    }
     setShowSaveConfirmModal(false);
-    // 다운로드 직후 잠깐 delay → 제목 모달 띄움
-    setTimeout(() => {
-      setShowTitleModal(true);
-    }, 300); // 0.3초 후 실행
   };
   const downloadImageAsJPEG = () => {
     const canvas = canvasRef.current;
@@ -349,37 +345,28 @@ const DrawingCanvas = () => {
   const fillCanvasWithWhiteBackground = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    fillCanvasWithWhiteBackground;
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.putImageData(imageData, 0, 0);
   };
-  // Initialize canvas context and center canvas on mount
+
   useEffect(() => {
     const canvas = canvasRef.current;
-
     canvas.width = 1920;
     canvas.height = 1080;
-
     const ctx = canvas.getContext("2d");
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.strokeStyle = brushColor;
     contextRef.current = ctx;
-
     centerCanvas();
   }, []);
 
-  // Update stroke style when brush color changes (except for eraser)
   useEffect(() => {
     if (tool !== "eraser" && contextRef.current) {
       contextRef.current.strokeStyle = brushColor;
     }
   }, [brushColor, tool]);
 
-  // Apply tool-specific styles
   const applyToolStyle = (toolName) => {
     const ctx = contextRef.current;
     if (!ctx) return;
@@ -416,20 +403,17 @@ const DrawingCanvas = () => {
     }
   };
 
-  // Handle tool size changes
   const handleSizeChange = (toolName, value) => {
     setToolSizes((prev) => ({ ...prev, [toolName]: parseInt(value) }));
     applyToolStyle(toolName);
   };
 
-  // Select a drawing tool
   const selectTool = (toolName) => {
     setTool(toolName);
     setSelectedTool((prev) => (prev === toolName ? null : toolName));
     applyToolStyle(toolName);
   };
 
-  // Get mouse position relative to the canvas, considering zoom and offset
   const getMousePos = (e) => {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
@@ -438,7 +422,6 @@ const DrawingCanvas = () => {
     return { x, y };
   };
 
-  // Handle mouse down event
   const handleMouseDown = (e) => {
     if (e.button === 1) {
       e.preventDefault();
@@ -453,7 +436,6 @@ const DrawingCanvas = () => {
     }
   };
 
-  // Handle mouse move event
   const handleMouseMove = (e) => {
     if (isPanning) {
       setOffset({
@@ -467,7 +449,6 @@ const DrawingCanvas = () => {
     }
   };
 
-  // Handle mouse up and leave events to stop drawing/panning
   const handleMouseUp = () => {
     if (isPanning) {
       setIsPanning(false);
@@ -485,17 +466,12 @@ const DrawingCanvas = () => {
     }
   };
 
-  // Stop drawing and save the drawing to history
   const stopDrawing = () => {
     if (!isDrawing) return;
     contextRef.current.closePath();
     setIsDrawing(false);
-    const snapshot = canvasRef.current.toDataURL();
-    setHistory((prev) => [...prev, snapshot]);
-    setFutureHistory([]); // Clear redo history on new drawing
   };
 
-  // Handle canvas zooming
   const handleWheel = (e) => {
     if (e.ctrlKey) {
       e.preventDefault();
@@ -514,7 +490,6 @@ const DrawingCanvas = () => {
     }
   };
 
-  // Center the canvas initially
   const centerCanvas = () => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -525,9 +500,6 @@ const DrawingCanvas = () => {
     });
   };
 
-  // Undo the last drawing action
-
-  // Clear the entire canvas
   const handleClear = () => {
     contextRef.current.clearRect(
       0,
@@ -535,24 +507,20 @@ const DrawingCanvas = () => {
       canvasRef.current.width,
       canvasRef.current.height
     );
-    setHistory([]);
-    setFutureHistory([]);
   };
 
-  // Handle color selection from the palette
   const handleColorSelect = (color) => {
     setBrushColor(color);
     setSelectedColor(color);
   };
 
-  // Toggle the dropdown menu for additional actions
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
 
   const handleSaveClick = (isTemporary) => {
     setShowSaveConfirmModal(true);
-    setIsTemporarySave(isTemporary); // 임시 저장 여부 상태 업데이트
+    setIsTemporarySave(isTemporary);
   };
 
   const handleTitleChange = (e) => {
@@ -565,16 +533,17 @@ const DrawingCanvas = () => {
       return;
     }
 
-    await sendDrawingToServer(false, drawingTitle); // 서버 저장
+    await sendDrawingToServer(isTemporarySave, drawingTitle);
     setShowTitleModal(false);
     setDrawingTitle("");
+    setIsTemporarySave(false);
     navigate("/mypage", { state: { activeTab: "drawing" } });
   };
 
   const handleCancelSave = () => {
     setShowTitleModal(false);
     setDrawingTitle("");
-    setIsTemporarySave(false); // 상태 초기화
+    setIsTemporarySave(false);
   };
 
   const sendDrawingToServer = async (isTemporary, title) => {
@@ -599,7 +568,7 @@ const DrawingCanvas = () => {
           id: editId,
           imageData,
           isTemporary,
-          title, // 제목 포함
+          title,
         },
         {
           headers: {
@@ -621,17 +590,17 @@ const DrawingCanvas = () => {
       alert("저장에 실패했습니다.");
     }
   };
-  // Handle clicks on menu items
+
   const handleMenuItemClick = (action) => {
     switch (action) {
       case "new":
         handleClear();
         break;
       case "save":
-        handleSaveClick(false); // 저장 클릭 시 모달 표시 (임시 저장 아님)
+        handleSaveClick(false);
         break;
       case "tempSave":
-        handleSaveClick(true); // 임시 저장 클릭 시 모달 표시
+        handleSaveClick(true);
         break;
       default:
         break;
@@ -649,7 +618,6 @@ const DrawingCanvas = () => {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     };
 
-    // base64 prefix 중복 방지
     if (imageData.startsWith("data:image")) {
       img.src = imageData;
     } else {
@@ -682,6 +650,12 @@ const DrawingCanvas = () => {
         alert("그림을 불러오는 데 실패했습니다.");
       });
   }, [location.search, navigate]);
+
+  useEffect(() => {
+    if (showTitleModal && titleInputRef.current) {
+      titleInputRef.current.focus();
+    }
+  }, [showTitleModal]);
 
   return (
     <>
@@ -873,7 +847,6 @@ const DrawingCanvas = () => {
           </CanvasWrapper>
         </CanvasContainer>
 
-        {/* 제목 입력 모달 */}
         {showTitleModal && (
           <ModalOverlay>
             <ModalContent>
@@ -883,6 +856,7 @@ const DrawingCanvas = () => {
                 value={drawingTitle}
                 onChange={handleTitleChange}
                 placeholder="제목을 입력해주세요."
+                ref={titleInputRef}
               />
               <ButtonGroup>
                 <ModalButton className="confirm" onClick={handleConfirmSave}>
