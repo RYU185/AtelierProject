@@ -35,13 +35,12 @@ import NoticeCreate from "../features/support/components/NoticeCreate";
 import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
 
-import CommunityMain from "../features/community/CommunityMain";
+
 import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
 import AdminContact from "../features/adminpage/components/AdminContact";
 import ChattingPage from "../features/chatting/pages/ChattingPage";
 import CartPage from "../features/cart/CartPage";
-import AddPostModal from "../features/community/components/AddPostModal";
-import EditPostModal from "../features/community/components/EditPostModal";
+
 import AdminTicketManagement from "../features/adminpage/components/AdminTicketManagement";
 import EditProfile from "../features/mypage/components/EditProfile";
 
@@ -76,11 +75,7 @@ function AppRoutes() {
       </Route>
       <Route path="/artist" element={<Artist />} />
       <Route path="/artist/:id" element={<ArtistDetail />} />
-      <Route path="/community" element={<CommunityMain />}>
-        <Route path="modify/:id" element={<EditPostModal />} />
-      </Route>
-      <Route path="/add" element={<AddPostModal />} />
-      <Route path="/community/:id" element={<CommunityMain />} />
+     
       <Route path="/support" element={<SupportPage />}>
         <Route path="/support/notice" element={<NoticePage />} />
         <Route path="/support/notice/create" element={<NoticeCreate />} />
