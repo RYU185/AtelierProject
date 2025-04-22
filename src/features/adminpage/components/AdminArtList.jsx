@@ -5,14 +5,11 @@ import { Link } from 'react-router-dom';
 import api from "../../../api/axiosInstance";
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리
-const artImages = import.meta.glob("/public/images/ArtListIMG/*", {
-  eager: true,
-});
+const artImages = import.meta.glob("/public/images/ArtListIMG/*", { eager: true });
 
 const getImageUrl = (filename) => {
   if (!filename) return '/path/to/default-image.png';
 
-  // ✅ 정적 이미지 매칭 (ArtListIMG)
   const matched = Object.entries(artImages).find(([path]) =>
     path.endsWith(filename)
   );
@@ -20,11 +17,9 @@ const getImageUrl = (filename) => {
     return matched[1].default;
   }
 
-  // ✅ 업로드 이미지 처리
   return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
 };
 
-// ✅ 이하 동일 코드
 const PageContainer = styled.div`padding: 20px; margin-top: 10px; min-height: 100vh;`;
 const ArtListTitle = styled.h2`font-size: 25px; font-weight: bold; color: #222; text-align: center; padding: 12px; border-radius: 6px; width: 200px; margin-top: -50px; margin-left: 15px;`;
 const ArtListContainer = styled.div`width: 1200px; margin: 0 auto; padding: 10px; border-radius: 8px; margin-top: 20px;`;
@@ -32,17 +27,145 @@ const ArtListHeader = styled.div`display: flex; justify-content: space-between; 
 const SearchContainer = styled.div`display: flex; gap: 10px;`;
 const SearchInput = styled.input`width: 300px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;`;
 const SearchButton = styled.button`padding: 8px 16px; background: #3da9fc; color: white; border: none; border-radius: 4px; cursor: pointer; &:hover { background: #3da0e5; }`;
-const AddButton = styled.button`padding: 8px 16px; background: #3da9fc; color: white; border: none; position: absolute; margin-left: -3px; border-radius: 4px; cursor: pointer; &:hover { background: #3da0e5; }`;
+const AddButton = styled.button`padding: 8px 16px; background: #3da9fc; color: white; border: none; position: absolute; margin-left: -94px; border-radius: 4px; cursor: pointer; &:hover { background: #3da0e5; }`;
+
 const ArtGrid = styled.div`display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;`;
-const ArtItem = styled.div`border: 1px solid #ddd; border-radius: 8px; padding: 10px; text-align: center; position: relative; cursor: pointer;`;
-const MoreOptions = styled.div`cursor: pointer; font-size: 30px; position: absolute; bottom: 10px; right: 10px; z-index: 100; color: #4e5b69; padding: 2px 5px; transition: all 0.3s ease; pointer-events: auto;`;
-const OptionsMenu = styled.div`display: ${({ visible }) => (visible ? 'block' : 'none')}; position: absolute; top: 100%; margin-top: -20px; margin-left: 180px; background: rgba(255, 255, 255, 0.9); border: 1px solid #ccc; border-radius: 4px; width: 100px; z-index: 10; box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);`;
-const OptionButton = styled.button`width: 100%; left: 30px; padding: 8px; border: none; background: white; cursor: pointer; font-size: 14px; color: ${({ danger }) => (danger ? "#e16060" : "#018ec8")}; &:hover { background: #f0f0f0; }`;
-const ModalOverlay = styled.div`position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')}; justify-content: center; align-items: center; z-index: 1000;`;
-const Modal = styled.div`display: grid; grid-template-columns: 3fr 2fr; gap: 20px; background-color: white; max-width: 900px; width: 100%; height: 60%; position: relative; border-radius: 8px; padding: 20px;`;
-const CloseButton = styled.button`position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 50px; cursor: pointer; color: #333; &:hover { color: #303030; }`;
-const ModalImageContainer = styled.div`width: 100%; height: 100%; overflow: hidden; & > img { width: 100%; height: 100%; object-fit: cover; }`;
-const ModalDescriptionContainer = styled.div`width: 100%; height: 100%; padding-top: 30px; padding-left: 10px; padding-right: 30px; & > h2 { font-size: 24px; color: #333; } & > p { font-size: 16px; color: #444; padding-top: 10px; }`;
+
+const ArtItem = styled.div`
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  background: white;
+
+`;
+
+const ArtCardImageContainer = styled.div`
+  width: 100%;
+  height: 200px; // 정사각형 고정
+  overflow: hidden;
+  cursor: pointer;
+`;
+
+const ArtCardImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const ArtInfo = styled.div`
+  padding: 10px;
+`;
+
+const ArtTitle = styled.h3`
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+`;
+
+const ArtDetails = styled.p`
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+`;
+
+const MoreOptions = styled.div`
+  cursor: pointer;
+  font-size: 24px;
+  position: absolute;
+  top: 200px;
+  right: 8px;
+  z-index: 10;
+  color: #4e5b69;
+`;
+
+const OptionsMenu = styled.div`
+  display: ${({ visible }) => (visible ? 'block' : 'none')};
+  position: absolute;
+  top: 230px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100px;
+  z-index: 10;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+`;
+
+const OptionButton = styled.button`
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+  color: ${({ danger }) => (danger ? "#e16060" : "#018ec8")};
+  &:hover { background: #f0f0f0; }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const Modal = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 20px;
+  background-color: white;
+  max-width: 900px;
+  width: 100%;
+  height: 60%;
+  position: relative;
+  border-radius: 8px;
+  padding: 20px;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none;
+  border: none;
+  font-size: 50px;
+  cursor: pointer;
+  color: #333;
+  &:hover { color: #303030; }
+`;
+
+const ModalImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const ModalDescriptionContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding-top: 30px;
+  padding-left: 10px;
+  padding-right: 30px;
+  & > h2 {
+    font-size: 24px;
+    color: #333;
+  }
+  & > p {
+    font-size: 16px;
+    color: #444;
+    padding-top: 10px;
+  }
+`;
 
 const AdminArtList = () => {
   const [artList, setArtList] = useState([]);
@@ -50,10 +173,7 @@ const AdminArtList = () => {
   const [selectedArt, setSelectedArt] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    fetchArtList();
-  }, []);
-
+  useEffect(() => { fetchArtList(); }, []);
   useEffect(() => {
     const handleClickOutside = () => setMenuOpen({});
     window.addEventListener("click", handleClickOutside);
@@ -100,31 +220,36 @@ const AdminArtList = () => {
               value={searchTerm}
               onChange={handleSearchChange}
             />
-            <SearchButton onClick={() => {}}>검색</SearchButton>
+            <SearchButton>검색</SearchButton>
           </SearchContainer>
           <Link to="/AdminArtAdd"><AddButton>작품 추가</AddButton></Link>
         </ArtListHeader>
 
         <ArtGrid>
           {filteredArtList.map((art) => (
-            <ArtItem key={art.id}>
-              <MoreOptions onClick={(e) => {
-                e.stopPropagation();
-                toggleMenu(art.id);
-              }}>⋮</MoreOptions>
-
-              <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
-                <OptionButton danger onClick={() => handleDelete(art.id)}>삭제</OptionButton>
-              </OptionsMenu>
-
-              <ArtCard
-                title={art.title}
-                artist={art.artistName}
-                date={art.completionDate}
-                imageUrl={getImageUrl(art.imgUrl)}
-                onImageClick={() => openModal(art)}
-              />
-            </ArtItem>
+           <ArtItem key={art.id}>
+           {/* 옵션 버튼 */}
+           <MoreOptions onClick={(e) => {
+             e.stopPropagation();
+             toggleMenu(art.id);
+           }}>⋮</MoreOptions>
+         
+           {/* 메뉴 */}
+           <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
+             <OptionButton danger onClick={() => handleDelete(art.id)}>삭제</OptionButton>
+           </OptionsMenu>
+         
+           {/* ✅ 이미지에만 클릭 이벤트 적용 */}
+           <ArtCardImageContainer onClick={() => openModal(art)}>
+             <ArtCardImage src={getImageUrl(art.imgUrl)} alt={art.title} />
+           </ArtCardImageContainer>
+         
+           {/* 텍스트는 클릭 X */}
+           <ArtInfo>
+             <ArtTitle>{art.title}</ArtTitle>
+             <ArtDetails>{art.artistName} · {art.completionDate}</ArtDetails>
+           </ArtInfo>
+         </ArtItem>
           ))}
         </ArtGrid>
       </ArtListContainer>
