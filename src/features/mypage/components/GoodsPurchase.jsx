@@ -249,9 +249,9 @@ const GoodsPurchase = () => {
                   <ActionButton
                     onClick={() => handleWriteReview(purchase.goodsId)}
                   >
-                    리뷰 작성하기
+                    리뷰 작성/ 상품 구경하기
                   </ActionButton>
-                  <ActionButton>장바구니 담기</ActionButton>
+
                   <ActionButton onClick={() => handleRefund(purchase)}>
                     교환/환불 신청
                   </ActionButton>

@@ -37,11 +37,13 @@ const Nickname = styled.span`
   font-size: 20px;
   font-weight: bold;
   color: #777;
+  cursor: pointer;
 `;
 
 const DateText = styled.span`
   font-size: 13px;
   color: #a0a0a0;
+  cursor: pointer;
 `;
 
 const Divider = styled.hr`
@@ -55,6 +57,7 @@ const Content = styled.p`
   font-size: 14px;
   color: #666;
   line-height: 1.6;
+  cursor: pointer;
 `;
 
 const PostImageWrapper = styled.div`
@@ -69,6 +72,7 @@ const PostImage = styled.img`
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
+  cursor: pointer;
 `;
 
 const ExpandButton = styled(BsArrowsFullscreen)`
@@ -186,7 +190,6 @@ function Community({
   drawingImage,
   onOpenModal,
   onDelete,
-  onEdit,
 }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(0);

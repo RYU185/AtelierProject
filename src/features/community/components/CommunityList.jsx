@@ -73,10 +73,8 @@ const Grid = styled.div`
 function CommunityList() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [editingPost, setEditingPost] = useState(null);
 
   const [selectedPost, setSelectedPost] = useState(null);
-
   const [communityItems, setCommunityItems] = useState([
     {
       id: 1,
@@ -147,9 +145,7 @@ function CommunityList() {
     const confirmed = window.confirm("정말 삭제하시겠습니까?");
     if (confirmed) {
       setCommunityItems((prev) => prev.filter((post) => post.id !== id));
-
       alert("삭제가 완료되었습니다.");
-
       if (selectedPost && selectedPost.id === id) {
         setSelectedPost(null);
         navigate("/community");
@@ -196,14 +192,6 @@ function CommunityList() {
 
       {isAddModalOpen && (
         <AddPostModal onClose={handleCloseAddModal} onSubmit={handleAddPost} />
-      )}
-
-      {editingPost && (
-        <EditPostModal
-          post={editingPost}
-          onClose={() => setEditingPost(null)}
-          onEdit={handleEditSubmit}
-        />
       )}
     </div>
   );

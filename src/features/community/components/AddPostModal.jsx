@@ -117,7 +117,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-function AddPostModal({ onClose, onSubmit, nickname }) {
+function AddPostModal({ onClose, onSubmit }) {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -136,6 +136,7 @@ function AddPostModal({ onClose, onSubmit, nickname }) {
   const handleSubmit = () => {
     const now = new Date();
     const datetext = now.toISOString().slice(0, 16).replace("T", " ");
+    const nickname = "익명"; // 임시 닉네임 처리 (실제 구현에서는 사용자 정보 활용)
 
     const newPost = {
       id: Date.now(),
@@ -153,7 +154,7 @@ function AddPostModal({ onClose, onSubmit, nickname }) {
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
         <CloseBtn onClick={onClose}>×</CloseBtn>
-        <NicknameDisplay>작성자: {nickname}</NicknameDisplay>
+        <NicknameDisplay>작성자: 익명</NicknameDisplay> {/* 임시 닉네임 표시 */}
         <TextArea
           placeholder="내용 입력"
           value={content}
