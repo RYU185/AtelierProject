@@ -30,7 +30,7 @@ const useNotificationWebSocket = ({ onNotification }) => {
           try {
             const parsed = JSON.parse(message.body);
             console.log("파싱된 메시지:", parsed);
-            if (onNotification) onNotification(parsed);
+            onNotification(parsed);
           } catch (e) {
             console.error("메시지 파싱 실패:", e);
           }
