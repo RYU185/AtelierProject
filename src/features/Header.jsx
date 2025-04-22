@@ -184,9 +184,9 @@ const Header = () => {
   }, [reservationAlarms]);
 
   useEffect(() => {
-    console.log("🟡 reservationAlarms 변경 감지됨:", reservationAlarms);
+    console.log("reservationAlarms 변경 감지됨:", reservationAlarms);
     if (reservationAlarms.length > 0) {
-      console.log("🟢 알림이 정상적으로 도착했습니다!");
+      console.log("알림이 정상적으로 도착했습니다!");
     }
   }, [reservationAlarms]);
 
