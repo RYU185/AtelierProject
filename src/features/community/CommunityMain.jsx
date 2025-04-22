@@ -1,5 +1,5 @@
 import React from "react";
-import CommunityList from "./components/CommunityList";
+import CommunityList from "./components/CommunityList.jsx";
 import Footer from "../Footer";
 import Header from "../Header";
 import styled from "styled-components";

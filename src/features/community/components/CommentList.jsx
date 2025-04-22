@@ -4,101 +4,109 @@ import styled from "styled-components";
 import { BsThreeDotsVertical } from "react-icons/bs";
 
 const CommentContainer = styled.div`
-  width: 80%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin: 0 auto;
-  background: #fff;
-  margin-top: -30px;
+  width: 90%; /* 너비 조정 */
+  padding: 15px; /* 패딩 증가 */
+  border-radius: 8px; /* 둥근 모서리 유지 */
+  margin: 20px auto; /* 상하 마진 추가 및 중앙 정렬 */
+  background: #f9f9f9; /* 밝은 회색 배경 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
 `;
 
 const CommentItem = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #666;
-  padding: 15px;
-  border-radius: 2px;
-  margin: 8px 0;
-  position: relative;
+  align-items: flex-start; /* 댓글 내용이 여러 줄일 때 정렬 */
+  padding: 15px 0; /* 상하 패딩 조정 */
+  border-bottom: 1px solid #eee; /* 옅은 구분선 */
+
+  &:last-child {
+    border-bottom: none; /* 마지막 댓글 구분선 제거 */
+  }
+`;
+
+const CommentContent = styled.div`
+  flex-grow: 1; /* 댓글 내용이 남은 공간 차지 */
+  margin-right: 15px; /* 더보기 버튼과의 간격 */
 `;
 
 const MoreButton = styled(BsThreeDotsVertical)`
   cursor: pointer;
-  font-size: 18px;
-  color: #666;
+  font-size: 20px; /* 크기 약간 증가 */
+  color: #aaa; /* 색상 변경 */
   position: relative;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 const DropdownMenu = styled.div`
   position: absolute;
   top: 50%;
-  left: -90px;
+  left: -95px; /* 위치 조정 */
   transform: translateY(-50%);
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px; /* 둥근 모서리 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   z-index: 10;
-  width: 80px;
+  width: 90px; /* 너비 조정 */
   display: flex;
   flex-direction: column;
 `;
 
-const DropdownItemM = styled.button`
+const DropdownItemButton = styled.button`
   background: none;
   border: none;
-  padding: 8px;
+  padding: 10px; /* 패딩 증가 */
   text-align: center;
   cursor: pointer;
   width: 100%;
   font-size: 14px;
-  color: #018ec8;
+  color: ${(props) => props.color || "#333"}; /* 기본 색상 설정 */
+  transition: background-color 0.15s ease-in-out;
 
   &:hover {
     background: #f0f0f0;
   }
 `;
 
-const DropdownItemD = styled.button`
-  background: none;
-  border: none;
-  padding: 8px;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-  font-size: 14px;
-  color: #e16060;
+const DropdownItemM = styled(DropdownItemButton)`
+  color: #018ec8;
+`;
 
-  &:hover {
-    background: #f0f0f0;
-  }
+const DropdownItemD = styled(DropdownItemButton)`
+  color: #e16060;
 `;
 
 const CommentInputContainer = styled.div`
   display: flex;
-  margin-top: 10px;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+  margin-top: 20px; /* 마진 증가 */
+  padding-top: 15px; /* 패딩 증가 */
+  border-top: 1px solid #eee; /* 옅은 구분선 */
 `;
 
 const Input = styled.input`
   flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 10px; /* 패딩 증가 */
+  border: 1px solid #ddd;
+  border-radius: 4px; /* 둥근 모서리 */
   outline: none;
+  font-size: 14px;
 `;
 
 const SubmitButton = styled.button`
   background: #007bff;
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 10px 18px; /* 패딩 조정 */
   margin-left: 10px;
-  border-radius: 5px;
+  border-radius: 4px; /* 둥근 모서리 */
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.15s ease-in-out;
 
   &:hover {
     background: #0056b3;
@@ -156,14 +164,10 @@ function CommentList() {
     <CommentContainer>
       {comments.map((comment, index) => (
         <CommentItem key={index}>
-          <Comment {...comment} />
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+          <CommentContent>
+            <Comment {...comment} />
+          </CommentContent>
+          <div style={{ position: "relative" }}>
             {activeIndex === index && (
               <DropdownMenu>
                 <DropdownItemM onClick={() => handleEdit(index)}>

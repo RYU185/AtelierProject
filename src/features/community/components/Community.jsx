@@ -11,14 +11,15 @@ import FullImageModal from "./FullImageModal";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
-  width: 800px;
+  width: 100%;
   padding: 15px;
   border-radius: 8px;
   background: white;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  margin: 0 auto;
   position: relative;
-  margin-bottom: 40px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Header = styled.div`
@@ -34,14 +35,14 @@ const UserInfo = styled.div`
 `;
 
 const Nickname = styled.span`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   color: #777;
   cursor: pointer;
 `;
 
 const DateText = styled.span`
-  font-size: 13px;
+  font-size: 11px;
   color: #a0a0a0;
   cursor: pointer;
 `;
@@ -50,42 +51,56 @@ const Divider = styled.hr`
   border: none;
   height: 1px;
   background-color: #018ec8;
-  margin: 10px 0;
+  margin: 8px 0;
 `;
 
 const Content = styled.p`
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
-  line-height: 1.6;
+  line-height: 1.4;
   cursor: pointer;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: ${(props) => (props.$hasImage ? 2 : 5)};
+  flex-grow: 1;
 `;
 
 const PostImageWrapper = styled.div`
   position: relative;
-  display: inline-block;
+  display: block;
   width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-top: 8px;
+  height: ${(props) => (props.$hasImage ? "auto" : "0px")};
 `;
 
 const PostImage = styled.img`
   width: 100%;
-  max-height: 380px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  margin-top: 10px;
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+  display: ${(props) => (props.$hasImage ? "block" : "none")};
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const ExpandButton = styled(BsArrowsFullscreen)`
   position: absolute;
-  width: 30px;
-  height: 30px;
-  top: 17px;
-  right: 8px;
-  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  top: 5px;
+  right: 5px;
+  font-size: 18px;
   color: white;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 25%;
-  padding: 5px;
+  padding: 3px;
   cursor: pointer;
   z-index: 5;
 
@@ -100,7 +115,7 @@ const MenuIconWrapper = styled.div`
 `;
 
 const MenuIcon = styled(BsThreeDots)`
-  font-size: 18px;
+  font-size: 16px;
   color: #888;
 `;
 
@@ -117,10 +132,10 @@ const MenuDropdown = styled.div`
 `;
 
 const MenuItemM = styled.div`
-  width: 100px;
-  padding: 10px;
+  width: 80px;
+  padding: 8px;
   background: white;
-  font-size: 14px;
+  font-size: 12px;
   color: #018ec8;
   cursor: pointer;
   text-align: center;
@@ -131,10 +146,10 @@ const MenuItemM = styled.div`
 `;
 
 const MenuItemD = styled.div`
-  width: 100px;
-  padding: 10px;
+  width: 80px;
+  padding: 8px;
   background: white;
-  font-size: 14px;
+  font-size: 12px;
   color: #e16060;
   cursor: pointer;
   text-align: center;
@@ -147,15 +162,15 @@ const MenuItemD = styled.div`
 const Actions = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 15px;
+  margin-top: 10px;
   align-items: center;
 `;
 
 const ActionIcon = styled.div`
   display: flex;
   align-items: center;
-  font-size: 24px;
-  margin-right: 25px;
+  font-size: 18px;
+  margin-right: 15px;
   color: #ff6347;
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
@@ -165,14 +180,14 @@ const ActionIcon = styled.div`
   }
 
   span {
-    font-size: 16px;
-    margin-left: 6px;
+    font-size: 12px;
+    margin-left: 4px;
     color: #444;
   }
 `;
 
 const ChatIcon = styled(BsChat)`
-  font-size: 24px;
+  font-size: 18px;
   color: #888;
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -196,6 +211,7 @@ function Community({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const hasImage = !!drawingImage;
 
   const toggleHeart = () => {
     setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
@@ -248,6 +264,7 @@ function Community({
       <Divider />
 
       <Content
+        $hasImage={hasImage}
         onClick={(e) =>
           onOpenModal(e, { id, nickname, datetext, content, drawingImage })
         }
@@ -255,18 +272,17 @@ function Community({
         {content}
       </Content>
 
-      {drawingImage && (
-        <PostImageWrapper>
-          <PostImage
-            src={drawingImage}
-            alt="Attached Content"
-            onClick={(e) =>
-              onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-            }
-          />
-          <ExpandButton onClick={openModal} />
-        </PostImageWrapper>
-      )}
+      <PostImageWrapper $hasImage={hasImage}>
+        <PostImage
+          src={drawingImage}
+          alt="Attached Content"
+          onClick={(e) =>
+            onOpenModal(e, { id, nickname, datetext, content, drawingImage })
+          }
+          $hasImage={hasImage}
+        />
+        {hasImage && <ExpandButton onClick={openModal} />}
+      </PostImageWrapper>
 
       <Actions>
         <ActionIcon onClick={toggleHeart}>
