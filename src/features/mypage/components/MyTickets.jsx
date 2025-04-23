@@ -133,13 +133,12 @@ const MyTickets = ({ onTicketClick }) => {
   }, []);
 
   const onRefundClick = async (reservation) => {
-    const confirmed = window.confirm("정말 이 티켓을 취소하시겠습니까?");
+    const confirmed = window.confirm("해당 예약을 취소하시겠습니까? ");
     if (!confirmed) return;
 
     try {
       const res = await axiosInstance.delete(`/reservation/${reservation.reservationId}`);
       alert("예약이 성공적으로 취소되었습니다.");
-
       fetchMyReservations();
     } catch (err) {
       console.error("예약 취소 실패:", err);
