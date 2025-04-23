@@ -8,7 +8,7 @@ const IMAGE_BASE_URL = "/images/ArtistGalleryIMG/";
 
 const WhatsOnSection = styled.section`
   position: relative;
-  min-height: 95vh;
+  min-height: 100vh;
   background: #1f1f1f;
   display: flex;
   flex-direction: column;

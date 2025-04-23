@@ -28,19 +28,19 @@ const InquiryNotifications = () => {
     }
   };
 
-useEffect(() => {
-  checkLoginStatus(); // 🔥 최초 렌더 직후 즉시 실행
+  useEffect(() => {
+    checkLoginStatus(); // 🔥 최초 렌더 직후 즉시 실행
 
-  const handleStorageChange = () => {
-    checkLoginStatus(); // 스토리지 변경 감지
-  };
+    const handleStorageChange = () => {
+      checkLoginStatus(); // 스토리지 변경 감지
+    };
 
-  window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
-  return () => {
-    window.removeEventListener("storage", handleStorageChange);
-  };
-}, []);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
   useEffect(() => {
     const interval = setInterval(() => {
       checkLoginStatus();
@@ -60,18 +60,15 @@ useEffect(() => {
   if (!isLoggedIn) return null; // 로그인 안 했으면 렌더링 안함
 
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
+    <div style={{ position: "fixed", bottom: "90px", right: "50px", zIndex: 1000 }}>
       <button
         onClick={() => setShowList(!showList)}
         style={{
           background: "none",
-          top: "100px",
-          marginLeft: "1600px",
           border: "none",
           fontSize: "40px",
           cursor: "pointer",
           position: "relative",
-          zIndex: "10",
         }}
       >
         🔔
@@ -79,8 +76,8 @@ useEffect(() => {
           <span
             style={{
               position: "absolute",
-              top: "5px",
-              right: "5px",
+              top: "0px",
+              right: "0px",
               background: "red",
               color: "white",
               fontSize: "12px",
@@ -97,18 +94,18 @@ useEffect(() => {
         <div
           style={{
             position: "absolute",
-            top: "90px",
-            marginLeft: "1390px",
+            bottom: "60px", // 알람 아이콘 위에 뜨게
+            right: "0",
             background: "white",
             boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
             borderRadius: "5px",
             padding: "10px",
             width: "200px",
-            zIndex: "10",
+            zIndex: 1001,
           }}
         >
           <h4>📩 새로운 문의</h4>
-          <ul style={{ listStyle: "none", padding: 0 }}>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {inquiries.map((inquiry, index) => (
               <li
                 key={index}
@@ -123,6 +120,6 @@ useEffect(() => {
       )}
     </div>
   );
-};
+}
 
 export default InquiryNotifications;
