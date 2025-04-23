@@ -4,6 +4,7 @@ import Footer from "../Footer";
 import Header from "../Header";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
+import TopButton from "../TopButton.jsx";
 
 const Container = styled.div`
   width: 100%;
@@ -18,6 +19,7 @@ function CommunityMain() {
         <CommunityList />
         <Outlet />
       </Container>
+      <TopButton />
       <Footer />
     </div>
   );

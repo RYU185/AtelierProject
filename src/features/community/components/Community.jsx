@@ -213,62 +213,83 @@ const ImageCount = styled.span`
 
 function Community({
   id,
-  nickname,
-  datetext,
-  content,
-  drawingImages, // 여러 이미지를 받기 위해 변경
+  user,
+  uploadDate,
+  text,
+  img,
+  likes,
   onOpenModal,
   onDelete,
 }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(likes || 0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
-  const hasImage = drawingImages && drawingImages.length > 0;
+  const hasImage = img && img.length > 0;
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}.${month}.${day} ${hours}:${minutes}`;
+  };
 
   const toggleHeart = () => {
     setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
     setIsHeartFilled(!isHeartFilled);
+    // TODO: 백엔드에 좋아요 토글 요청 보내기
   };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const handlePostClick = (e) => {
-    onOpenModal(e, { id, nickname, datetext, content, drawingImages });
+    onOpenModal(e, {
+      id,
+      nickname: user,
+      datetext: formatDate(uploadDate),
+      content: text,
+      drawingImages: img,
+    });
   };
 
   const goToPreviousImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : drawingImages.length - 1
+      prevIndex > 0 ? prevIndex - 1 : img.length - 1
     );
   };
 
   const goToNextImage = (e) => {
     e.stopPropagation();
     setCurrentImageIndex((prevIndex) =>
-      prevIndex < drawingImages.length - 1 ? prevIndex + 1 : 0
+      prevIndex < img.length - 1 ? prevIndex + 1 : 0
     );
   };
 
   const handleEdit = () => {
     // 수정 기능 구현 (예: 수정 모달 열기)
-    console.log("수정 기능");
-    setIsMenuOpen(false); // 메뉴 닫기
+    console.log("수정 기능 (ID:", id, ")");
+    setIsMenuOpen(false);
+    // TODO: 수정 페이지 또는 모달로 이동하는 로직 구현
   };
 
   return (
     <Container>
       <Header>
         <UserInfo>
-          <Nickname onClick={handlePostClick}>{nickname}</Nickname>
-          <DateText onClick={handlePostClick}>{datetext}</DateText>
+          <Nickname onClick={handlePostClick}>{user}</Nickname>
+          <DateText onClick={handlePostClick}>
+            {formatDate(uploadDate)}
+          </DateText>
         </UserInfo>
         <MenuIconWrapper onClick={toggleMenu}>
           <MenuIcon />
           {isMenuOpen && (
-            <MenuDropdown>
+            <MenuDropdown onClick={(e) => e.stopPropagation()}>
               <MenuItemM onClick={handleEdit}>수정</MenuItemM>
               <MenuItemD onClick={() => onDelete(id)}>삭제</MenuItemD>
             </MenuDropdown>
@@ -278,17 +299,17 @@ function Community({
       <Divider />
 
       <Content $hasImage={hasImage} onClick={handlePostClick}>
-        {content}
+        {text}
       </Content>
 
       {hasImage && (
         <>
           <PostImageWrapper $hasImage={hasImage} onClick={handlePostClick}>
             <PostImage
-              src={drawingImages[currentImageIndex]}
+              src={`/public/images/DrawingIMG/${img[currentImageIndex]}`}
               alt={`첨부된 이미지 ${currentImageIndex + 1}`}
             />
-            {drawingImages.length > 1 && (
+            {img.length > 1 && (
               <>
                 <ImageNavigationButton
                   className="left"
@@ -307,10 +328,10 @@ function Community({
               </>
             )}
           </PostImageWrapper>
-          {drawingImages.length > 1 && (
+          {img.length > 1 && (
             <ImageControl>
               <ImageCount>
-                {currentImageIndex + 1} / {drawingImages.length}
+                {currentImageIndex + 1} / {img.length}
               </ImageCount>
             </ImageControl>
           )}
