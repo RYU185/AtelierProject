@@ -11,7 +11,7 @@ const Section = styled.section`
 
 const LeftBox = styled.div`
   width: 25%;
-  background: linear-gradient(to right, #0080ff, #00c0ff);
+  background: linear-gradient(to right,rgb(0, 33, 66),rgb(0, 58, 144));
   color: white;
   display: flex;
   flex-direction: column;
