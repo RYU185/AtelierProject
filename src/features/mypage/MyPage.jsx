@@ -11,11 +11,20 @@ import TicketCheckModal from "./components/TicketCheckModal";
 import EditProfile from "./components/EditProfile";
 import { useNavigate, useLocation } from "react-router-dom";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
+`;
+
 const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fff;
 `;
 
 const PageContainer = styled.div`
@@ -28,29 +37,30 @@ const PageContainer = styled.div`
 const PageTitle = styled.h1`
   font-size: 35px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 32px;
+  color: #e1e1e1;
+  padding-left: 50px;
 `;
 
 const TabContainer = styled.div`
   display: flex;
   margin-bottom: 32px;
   justify-content: flex-end;
-  gap: 1px;
 `;
 
 const TabButton = styled.button`
   padding: 16px 40px;
   font-size: 15px;
   border: none;
-  background-color: ${(props) => (props.$active ? "#4199FF" : "#F1F1F1")};
-  color: ${(props) => (props.$active ? "#fff" : "#666")};
+  background-color: ${(props) => (props.$active ? "#4199FF" : "rgba(255, 255, 255, 0.07)")};
+  color: ${(props) => (props.$active ? "#fff" : "#e1e1e1")};
   cursor: pointer;
   font-weight: 500;
   min-width: 240px;
   text-align: center;
+  transition: 0.3s ease-in-out;
 
   &:hover {
+    color: #4199FF;
     background-color: ${(props) => (props.$active ? "#4199FF" : "#E5E5E5")};
   }
 `;
@@ -62,9 +72,9 @@ const ContentContainer = styled.div`
 `;
 
 const ProfileSection = styled.div`
-  width: 320px;
+  width: 380px;
   height: 500px;
-  background-color: #01acf033;
+  background-color:rgba(255, 255, 255, 0.22);
   padding: 32px;
   border-radius: 4px;
 `;
@@ -87,7 +97,7 @@ const ProfileCircle = styled.div`
 const AccountEmail = styled.div`
   text-align: center;
   font-size: 13px;
-  color: #666;
+  color: #e1e1e1;
   margin: 12px 0 32px;
 `;
 
@@ -116,7 +126,7 @@ const AccountTitle = styled.div`
 const Title = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #e1e1e1;
 `;
 
 const EditButton = styled.button`
@@ -141,12 +151,12 @@ const ProfileField = styled.div`
 `;
 
 const Label = styled.span`
-  color: #666;
+  color: #e1e1e1;
   flex-shrink: 0;
 `;
 
 const Value = styled.span`
-  color: #333;
+  color:#e1e1e1;
   text-align: right;
   margin-left: 40px;
 `;
@@ -196,7 +206,6 @@ const MyPage = () => {
         setLoading(false);
       }
     };
-
     fetchUserData();
   }, [navigate]);
 
@@ -251,108 +260,110 @@ const MyPage = () => {
   }
 
   return (
-    <Wrapper>
-      <Header />
-      <PageContainer>
-        <PageTitle>MY PAGE</PageTitle>
-        <TabContainer>
-          <TabButton
-            $active={activeTab === "ticket"}
-            onClick={() => handleTabChange("ticket")}
-          >
-            나의 예약 현황
-          </TabButton>
-          <TabButton
-            $active={activeTab === "purchase"}
-            onClick={() => handleTabChange("purchase")}
-          >
-            굿즈 구매내역
-          </TabButton>
-          <TabButton
-            $active={activeTab === "drawing"}
-            onClick={() => handleTabChange("drawing")}
-          >
-            나의 드로잉
-          </TabButton>
-        </TabContainer>
+    <GradientBackground>
+      <Wrapper>
+        <Header />
+        <PageContainer>
+          <PageTitle>마이 페이지</PageTitle>
+          <TabContainer>
+            <TabButton
+              $active={activeTab === "ticket"}
+              onClick={() => handleTabChange("ticket")}
+            >
+              나의 예약 현황
+            </TabButton>
+            <TabButton
+              $active={activeTab === "purchase"}
+              onClick={() => handleTabChange("purchase")}
+            >
+              굿즈 구매내역
+            </TabButton>
+            <TabButton
+              $active={activeTab === "drawing"}
+              onClick={() => handleTabChange("drawing")}
+            >
+              나의 드로잉
+            </TabButton>
+          </TabContainer>
 
-        <ContentContainer>
-          <ProfileSection>
-            <ProfileCircle>{userInfo.nickName[0]}</ProfileCircle>
-            <AccountEmail>{userInfo.email}</AccountEmail>
-            <AccountInfo>
-              <AccountTitle>
-                <Title>ACCOUNT</Title>
-                <EditButton onClick={handleEditClick}>✎</EditButton>
-              </AccountTitle>
-              <ProfileInfo>
-                <ProfileField>
-                  <Label>이름</Label>
-                  <Value>{userInfo.realName}</Value>
-                </ProfileField>
-                <ProfileField>
-                  <Label>연락처</Label>
-                  <Value>{formatPhoneNumber(userInfo.phone)}</Value>
-                </ProfileField>
-                <ProfileField>
-                  <Label>생년월일</Label>
-                  <Value>{userInfo.birthday}</Value>
-                </ProfileField>
-                <ProfileField>
-                  <Label>이메일</Label>
-                  <Value>{userInfo.email}</Value>
-                </ProfileField>
-                <ProfileField>
-                  <Label>주소</Label>
-                  <Value>{userInfo.address}</Value>
-                </ProfileField>
-                <ProfileField>
-                  <Label>성별</Label>
-                  <Value>
-                    {userInfo.gender === "MALE"
-                      ? "남성"
-                      : userInfo.gender === "FEMALE"
-                      ? "여성"
-                      : "기타"}
-                  </Value>
-                </ProfileField>
-                <ProfileField>
-                  <Label>가입일</Label>
-                  <Value>
-                    {new Date(userInfo.enrolmentDate).toLocaleDateString()}
-                  </Value>
-                </ProfileField>
-              </ProfileInfo>
-            </AccountInfo>
-          </ProfileSection>
+          <ContentContainer>
+            <ProfileSection>
+              <ProfileCircle>{userInfo.nickName[0]}</ProfileCircle>
+              <AccountEmail>{userInfo.email}</AccountEmail>
+              <AccountInfo>
+                <AccountTitle>
+                  <Title>ACCOUNT</Title>
+                  <EditButton onClick={handleEditClick}>✎</EditButton>
+                </AccountTitle>
+                <ProfileInfo>
+                  <ProfileField>
+                    <Label>이름</Label>
+                    <Value>{userInfo.realName}</Value>
+                  </ProfileField>
+                  <ProfileField>
+                    <Label>연락처</Label>
+                    <Value>{formatPhoneNumber(userInfo.phone)}</Value>
+                  </ProfileField>
+                  <ProfileField>
+                    <Label>생년월일</Label>
+                    <Value>{userInfo.birthday}</Value>
+                  </ProfileField>
+                  <ProfileField>
+                    <Label>이메일</Label>
+                    <Value>{userInfo.email}</Value>
+                  </ProfileField>
+                  <ProfileField>
+                    <Label>주소</Label>
+                    <Value>{userInfo.address}</Value>
+                  </ProfileField>
+                  <ProfileField>
+                    <Label>성별</Label>
+                    <Value>
+                      {userInfo.gender === "MALE"
+                        ? "남성"
+                        : userInfo.gender === "FEMALE"
+                        ? "여성"
+                        : "기타"}
+                    </Value>
+                  </ProfileField>
+                  <ProfileField>
+                    <Label>가입일</Label>
+                    <Value>
+                      {new Date(userInfo.enrolmentDate).toLocaleDateString()}
+                    </Value>
+                  </ProfileField>
+                </ProfileInfo>
+              </AccountInfo>
+            </ProfileSection>
 
-          <MainContent>
-            {activeTab === "ticket" && (
-              <MyTickets
-                onTicketClick={handleTicketClick}
-                onRefundClick={handleRefundClick}
-              />
-            )}
-            {activeTab === "purchase" && <GoodsPurchase />}
-            {activeTab === "drawing" && <MyDrawing />}
-          </MainContent>
-        </ContentContainer>
-      </PageContainer>
-      <Footer />
+            <MainContent>
+              {activeTab === "ticket" && (
+                <MyTickets
+                  onTicketClick={handleTicketClick}
+                  onRefundClick={handleRefundClick}
+                />
+              )}
+              {activeTab === "purchase" && <GoodsPurchase />}
+              {activeTab === "drawing" && <MyDrawing />}
+            </MainContent>
+          </ContentContainer>
+        </PageContainer>
+        <Footer />
 
-      {showRefundModal && (
-        <RefundModal
-          ticket={selectedTicket}
-          onClose={() => setShowRefundModal(false)}
+        {showRefundModal && (
+          <RefundModal
+            ticket={selectedTicket}
+            onClose={() => setShowRefundModal(false)}
+          />
+        )}
+
+        <TicketCheckModal
+          isOpen={showTicketModal}
+          onClose={handleCloseTicketModal}
+          ticketInfo={selectedTicket}
         />
-      )}
-
-      <TicketCheckModal
-        isOpen={showTicketModal}
-        onClose={handleCloseTicketModal}
-        ticketInfo={selectedTicket}
-      />
-    </Wrapper>
+      </Wrapper>
+    </GradientBackground>
   );
 };
 

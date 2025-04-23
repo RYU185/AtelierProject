@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Container = styled.div`
-  padding: 15px;
-  width: 730px;
+  width: 722px;
   align-self: stretch;
 `;
 
@@ -15,6 +14,7 @@ const SearchContainer = styled.div`
   position: relative;
   margin-bottom: 20px;
   max-width: 1000px;
+  
 `;
 
 const SearchInput = styled.input`

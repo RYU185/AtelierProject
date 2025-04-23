@@ -7,15 +7,15 @@ const Container = styled.div`
 `;
 
 const TicketCount = styled.div`
-  background-color: white;
+  background-color:rgba(255, 255, 255, 0.22);
   padding: 14px 20px;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
   margin-bottom: 20px;
   font-size: 14px;
   color: #0077ff;
-  width: 730px;
-  margin-left: auto;
+  width: 100%;
   font-weight: 400;
 `;
 
