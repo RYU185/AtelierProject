@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.section`
   padding: 80px 40px;
-  background: white;
   width: 65%;
   margin: 0 auto;
 `;
@@ -13,22 +12,40 @@ const Title = styled.h2`
   font-weight: bold;
   margin-bottom: 40px;
   padding-left: 20px;
+  color: #e0e0e0;
 `;
 const CardWrapper = styled.div`
   display: flex;
   gap: 20px;
 `;
+
+const Eng = styled.div`
+  font-size: 1.1rem;
+  color: #ffffff;
+  margin-bottom: 4px;
+`;
+const Kor = styled.div`
+  font-size: 1.42rem;
+  font-weight: bold;
+  color: #ffffff;
+`;
+
 const Card = styled.div`
   flex: 1;
   padding: 32px 16px;
   border-radius: 12px;
-  background: #f2f6ff;
+  background: #22222237;
   text-align: center;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   transition: 0.2s;
   cursor: pointer;
   &:hover {
-    border-color: #007aff55;
+    background-color: #0035c5;
+    border-color: #f7f7f7;
+
+    ${Eng},${Kor} {
+      color: #f7f7f7;
+    }
   }
 `;
 const Icon = styled.div`
@@ -36,16 +53,8 @@ const Icon = styled.div`
   margin-bottom: 20px;
   opacity: 0.6;
 `;
-const Eng = styled.div`
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 4px;
-`;
-const Kor = styled.div`
-  font-size: 1.42rem;
-  font-weight: bold;
-  color: #333;
-`;
+
+
 
 const services = [
   { title: "공지사항", eng: "NOTICE", icon: "📢", path: "/support/notice" },

@@ -9,13 +9,14 @@ const IMAGE_BASE_URL = "/images/ArtistGalleryIMG/";
 const WhatsOnSection = styled.section`
   position: relative;
   min-height: 100vh;
-  background: #1f1f1f;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; 
+  padding-top: 80px;            
   perspective: 2500px;
   overflow-x: hidden;
+  overflow-y: hidden;
 `;
 
 const Title = styled.h1`
@@ -37,12 +38,13 @@ const SliderContainer = styled.div`
   position: relative;
   overflow: visible;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  height: 500px;
+  height: 500px;  
   perspective: 2000px;
   perspective-origin: center 100%;
-  transform: translateY(-350px);
+  margin-top: -220px;
+
 `;
 
 const SlideWrapper = styled.div`
@@ -73,25 +75,24 @@ const Slide = styled.div`
 `;
 
 const EventInfo = styled.div`
-  position: absolute;
-  bottom: -90px; /* 이미지와 간격 조절 */
+  position: absolute;/* 이미지와 간격 조절 */
   width: 100%;
   text-align: center;
   opacity: 0.8;
+  color: aliceblue;
   cursor: pointer;
 `;
 
 const EventTitle = styled.div`
-  font-size: 28px; /* 글씨 크기 더 키움 */
+  font-size: 50px; 
   font-weight: 600;
-  color: #333;
+  margin-top: 50px;
   margin-bottom: 12px; /* 제목과 날짜 간 간격 조절 */
 `;
 
 const EventDate = styled.div`
   font-size: 20px; /* 글씨 크기 더 키움 */
   opacity: 0.7;
-  color: #555;
 `;
 
 const getSlideStyle = (offset) => {

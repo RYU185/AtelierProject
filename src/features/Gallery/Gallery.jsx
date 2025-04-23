@@ -7,9 +7,7 @@ const Gallery = () => {
   return (
     <>
       <Header />
-      <div style={{ marginTop: "80px" }}>
         <Outlet />
-      </div>
       <Footer />
     </>
   );

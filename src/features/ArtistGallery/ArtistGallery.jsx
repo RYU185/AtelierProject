@@ -4,6 +4,11 @@ import ArtistGalleryLsit from "./components/ArtistGalleryLsit";
 import styled from "styled-components";
 import TopButton from "../TopButton";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;   
+
 const TitleContainer = styled.div`
   width: 100%;
   position: relative;
@@ -11,12 +16,14 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 30px;
+  padding-top: 6.25rem ;
+  padding-bottom: 6.25rem;
 `;
 
 const BackTitle = styled.h1`
-  font-size: 80px;
+  font-size: 200px;
   text-align: center;
-  color: #deeaff;
+  color: #3333332c;
   padding: 0;
   margin: 0;
   position: absolute;
@@ -29,6 +36,7 @@ const Title = styled.h1`
   margin: 0;
   position: relative;
   z-index: 2;
+  color: #f0f0f0;
 `;
 
 function ArtistGallery() {
@@ -39,15 +47,17 @@ function ArtistGallery() {
   };
 
   return (
-    <div>
-      <TitleContainer>
-        <BackTitle>ARTIST GALLERY</BackTitle>
-        <Title>ARTIST GALLERY</Title>
-      </TitleContainer>
-      <Datacontrol onFilterChange={handleFilterChange} />
-      <ArtistGalleryLsit filteredItems={filteredGalleryItems} />
-      <TopButton />
-    </div>
+
+      <GradientBackground>
+        <TitleContainer>
+          <BackTitle>ARTIST GALLERY</BackTitle>
+          <Title>ARTIST GALLERY</Title>
+        </TitleContainer>
+        <Datacontrol onFilterChange={handleFilterChange} />
+        <ArtistGalleryLsit filteredItems={filteredGalleryItems} />
+        <TopButton />
+      </GradientBackground>
+
   );
 }
 

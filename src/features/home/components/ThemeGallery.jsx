@@ -59,11 +59,12 @@ const LabelBox = styled.div`
 const MainText = styled.div`
   font-weight: bold;
   font-size: 30px;
+  color: aliceblue;
 `;
 
 const Reflection = styled.div`
   font-size: 30px;
-  color: #60d2ff;
+  color: #8b8b8b;
   transform: scaleY(-1);
   opacity: 0.3;
 `;

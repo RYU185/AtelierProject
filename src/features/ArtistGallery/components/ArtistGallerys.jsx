@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   align-items: center; /* 변경: 세로 방향 중앙 정렬 */
   cursor: pointer;
-  border: 1px solid #a2a2a2;
+  border: 1px solid #53535334;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -28,10 +28,6 @@ const Img = styled.img`
   margin-left: 40px;
   flex-shrink: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  &:hover {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
 `;
 
 const ArtistGalleryIntro = styled.div`
@@ -39,30 +35,26 @@ const ArtistGalleryIntro = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  height: 250px;
 
   & h1 {
     font-size: 26px;
-    color: #1e1e1e;
+    color: #cfcfcf;
     margin: 0;
   }
 
   & h2 {
     font-size: 18px;
-    color: #606060;
-    margin: 10px 0 0;
+    color: #cfcfcf;
   }
 
   & h3 {
     font-size: 16px;
-    color: #606060;
-    margin: 8px 0 0;
+    color: #cfcfcf;
   }
 
   & p {
     font-size: 14px;
     color: #606060;
-    margin-top: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
