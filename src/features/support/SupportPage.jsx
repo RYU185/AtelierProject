@@ -5,6 +5,11 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
@@ -13,17 +18,20 @@ const PageWrapper = styled.div`
 const ContentWrapper = styled.div`
   flex: 1;
   padding: 40px 20px;
-  background-color: #f9fafc;
-`;
+  `;
+
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
 `;
+
 const Title = styled.h1`
   font-size: 2.4rem;
+  font-weight: 700;
   text-align: center;
   margin-bottom: 3rem;
-  font-weight: bold;
+  margin-top: 5rem;
+  color: #e0e0e0;
 `;
 
 const GridContainer = styled.div`
@@ -34,7 +42,7 @@ const GridContainer = styled.div`
 `;
 
 const Card = styled.div`
-  background: white;
+  background: #1d1d1d7a;
   padding: 2rem;
   border-radius: 12px;
   width: 230px;
@@ -75,13 +83,13 @@ const IconContainer = styled.div`
 
 const CardTitle = styled.h3`
   font-size: 1.1rem;
-  color: #333;
+  color: #e0e0e0;
   margin: 0;
 `;
 
 const CardDescription = styled.p`
   font-size: 0.85rem;
-  color: #666;
+  color: #818181;
   margin-top: 6px;
   line-height: 1.4;
 `;
@@ -96,10 +104,10 @@ const AccentBar = styled.div`
 
 const ContentContainer = styled.div`
   margin-top: 40px;
-  background: white;
+  background: #1d1d1d79;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  padding: 20px;
+  padding: 40px;
 `;
 
 const shake = keyframes`
@@ -154,36 +162,38 @@ const SupportPage = () => {
   };
 
   return (
-    <PageWrapper>
-      <Header />
-      <ContentWrapper>
-        <Container>
-          <Title>고객지원</Title>
-          <GridContainer>
-            {supportItems.map((item) => (
-              <Card
-                key={item.id}
-                aria-label={`${item.title} - ${item.description}`}
-                $active={location.pathname === item.path}
-                onClick={() => handleCardClick(item.path)}
-              >
-                <IconContainer $type={item.id}>{item.icon}</IconContainer>
-                <CardTitle>{item.title}</CardTitle>
-                <CardDescription>{item.description}</CardDescription>
-                <AccentBar color={item.color} />
-              </Card>
-            ))}
-          </GridContainer>
+    <GradientBackground>
+      <PageWrapper>
+        <Header />
+        <ContentWrapper>
+          <Container>
+            <Title>고객지원</Title>
+            <GridContainer>
+              {supportItems.map((item) => (
+                <Card
+                  key={item.id}
+                  aria-label={`${item.title} - ${item.description}`}
+                  $active={location.pathname === item.path}
+                  onClick={() => handleCardClick(item.path)}
+                >
+                  <IconContainer $type={item.id}>{item.icon}</IconContainer>
+                  <CardTitle>{item.title}</CardTitle>
+                  <CardDescription>{item.description}</CardDescription>
+                  <AccentBar color={item.color} />
+                </Card>
+              ))}
+            </GridContainer>
 
-          {location.pathname !== "/support" && (
-            <ContentContainer>
-              <Outlet />
-            </ContentContainer>
-          )}
-        </Container>
-      </ContentWrapper>
-      <Footer />
-    </PageWrapper>
+            {location.pathname !== "/support" && (
+              <ContentContainer>
+                <Outlet />
+              </ContentContainer>
+            )}
+          </Container>
+        </ContentWrapper>
+        <Footer />
+      </PageWrapper>
+    </GradientBackground>
   );
 };
 

@@ -4,12 +4,12 @@ import styled from "styled-components";
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 40px 20px;
 `;
 
 const Title = styled.h1`
   font-size: 48px;
-  color: #333;
+  font-weight: 600;
+  color: #e1e1e1;
   margin-bottom: 40px;
   text-align: center;
   position: relative;
@@ -66,7 +66,7 @@ const Label = styled.span`
 `;
 
 const Value = styled.span`
-  color: #666;
+  color: #333333;
 `;
 
 const TransportSection = styled.div`
@@ -79,7 +79,7 @@ const TransportSection = styled.div`
 
 const TransportTitle = styled.h4`
   font-size: 16px;
-  color: #333;
+  color: #e1e1e1;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -98,6 +98,7 @@ const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  color: #e1e1e1;
 
   li {
     position: relative;

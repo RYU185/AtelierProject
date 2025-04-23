@@ -14,8 +14,7 @@ const DetailWrapper = styled.div`
   width: 50%;
   max-width: 1500px;
   margin: 0 auto;
-  margin-top: 100px;
-  padding: 20px 0;
+  padding: 160px 0;
 `;
 
 const DetailContainer = styled.div`

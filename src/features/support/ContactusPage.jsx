@@ -3,20 +3,18 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-
-
-
-// 스타일 정의
 const Container = styled.div`
-  padding: 20px;
   max-width: 600px;
   margin: auto;
-  background: white;
   border-radius: 8px;
 `;
 
 const Title = styled.h1`
+  font-size: 48px;
+  font-weight: 600;
   text-align: center;
+  margin-bottom: 17px;
+  color: #e1e1e1;
 `;
 
 const Form = styled.form`
@@ -40,11 +38,12 @@ const TextArea = styled.textarea`
 
 const SubmitButton = styled.button`
   padding: 12px;
-  background-color: #007bff;
+  background-color: #004a99;
   color: white;
   border: none;
   border-radius: 4px;
   font-weight: bold;
+  cursor: pointer;
 `;
 
 // 컴포넌트 정의

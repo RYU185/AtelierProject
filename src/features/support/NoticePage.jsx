@@ -5,10 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 // === 스타일 === (생략 없이 전체 유지)
 const Title = styled.h2`
-  font-size: 4rem;
+  font-size: 48px;
+  font-weight: 600;
   text-align: center;
   margin-bottom: 3rem;
-  color: #333;
+  color: #e0e0e0;
   position: relative;
 
   &:before {
@@ -26,14 +27,14 @@ const Title = styled.h2`
 const TabContainer = styled.div`
   display: flex;
   margin-bottom: 2rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ffffff;
 `;
 
 const Tab = styled.div`
   padding: 1rem 2rem;
   cursor: pointer;
   position: relative;
-  color: ${(props) => (props.active ? "#000" : "#666")};
+  color: ${(props) => (props.active ? "#000000" : "#666")};
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
 
   &:after {
@@ -69,32 +70,29 @@ const FilterContainer = styled.div`
 `;
 
 const FilterButton = styled.button`
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background-color: #fff;
-  color: #333;
+  background-color: #0f0f0f2d;
+  color: #e0e0e0;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
-  &:hover {
-    background-color: #f8f9fa;
-  }
 `;
 
 const FilterDropdown = styled.div`
   position: absolute;
   top: 100%;
-  left: 0;
-  background-color: #fff;
+  right: 0px;
+  background-color: #141414;
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-top: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   display: ${(props) => (props.$show ? "block" : "none")};
+  color: #e0e0e0;
 `;
 
 const FilterOption = styled.div`
@@ -104,16 +102,17 @@ const FilterOption = styled.div`
 
   &:hover {
     background-color: #f8f9fa;
+    color: #141414;
   }
 `;
 
 const SearchTypeSelect = styled.select`
-  padding: 0.5rem;
+  padding: 0.8rem;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 0.9rem;
-  color: #333;
-  background-color: white;
+  color: #ffffff;
+  background-color: #0f0f0f2d;
   cursor: pointer;
 
   &:focus {
@@ -125,10 +124,10 @@ const SearchTypeSelect = styled.select`
 const SearchBox = styled.div`
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1rem;
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: #0f0f0f2d;
   width: 300px;
 `;
 
@@ -137,6 +136,7 @@ const SearchInput = styled.input`
   outline: none;
   width: 100%;
   padding: 0.25rem 0;
+  background-color: #0f0f0f2d;
 
   &::placeholder {
     color: #999;
@@ -144,9 +144,19 @@ const SearchInput = styled.input`
 `;
 
 const NoticeList = styled.div`
-  background: white;
+  background: #0f0f0f2d;
   border-radius: 4px;
   overflow: hidden;
+`;
+
+const NoticeDate = styled.div`
+  width: 120px;
+  color: #c4c4c4;
+`;
+
+const NoticeTitle = styled.div`
+  flex: 1;
+  color: #dfdfdf;
 `;
 
 const NoticeItem = styled.div`
@@ -155,25 +165,22 @@ const NoticeItem = styled.div`
   padding: 1.5rem 1rem;
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
+  transition: 0.3s ease-in-out;
 
-  &:last-child {
-    border-bottom: none;
+  &:first-child{
+    border-top: 1px solid #f0f0f0;
   }
 
   &:hover {
-    background: #f8f9fa;
+    background: #0056b3;
+
+    /* ${NoticeDate}, ${NoticeTitle} {
+      color: #000000; // 원하는 hover 색상으로 변경
+    } */
   }
 `;
 
-const NoticeDate = styled.div`
-  width: 120px;
-  color: #666;
-`;
 
-const NoticeTitle = styled.div`
-  flex: 1;
-  color: #333;
-`;
 
 const Arrow = styled.div`
   margin-left: 1rem;
@@ -226,7 +233,7 @@ const SubmitButton = styled.button`
   }
 `;
 
-// === 컴포넌트 ===
+
 const NoticePage = () => {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
@@ -240,7 +247,6 @@ const NoticePage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 10;
 
-  // ✅ axios API 연동
   useEffect(() => {
     const fetchNotices = async () => {
       const role = localStorage.getItem("role");
@@ -256,8 +262,8 @@ const NoticePage = () => {
           },
         });
 
-        setNotices(res.data.content); // Page<NoticeDTO> 구조에서 content만
-        setTotalPages(res.data.totalPages); // 페이지 수도 세팅
+        setNotices(res.data.content); 
+        setTotalPages(res.data.totalPages); 
       } catch (err) {
         console.error("❌ 공지사항 불러오기 실패", err);
       }
@@ -266,7 +272,6 @@ const NoticePage = () => {
     fetchNotices();
   }, [currentPage, sortOrder]);
 
-  // 🔍 검색 필터
   const filteredNotices = notices.filter((notice) => {
     if (!searchTerm) return true;
     if (searchType === "date") {
@@ -275,25 +280,23 @@ const NoticePage = () => {
     return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  // ⬆️ 정렬 처리
+
   const sortedNotices = [...filteredNotices].sort((a, b) => {
     const dateA = new Date(a.createdDate); // ← 여기로
     const dateB = new Date(b.createdDate);
     return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
   });
 
-  // ✅ 페이지네이션 처리
+
   const paginatedNotices = sortedNotices.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // 페이지, 검색 초기화 처리
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, searchType]);
 
-  // ====================== 핸들러 ======================
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
     setSearchTerm("");
@@ -322,10 +325,9 @@ const NoticePage = () => {
     navigate("create");
   };
 
-  // ====================== 렌더링 ======================
   return (
     <>
-      <Title>NOTICE</Title>
+      <Title>공지사항</Title>
       <TabContainer />
       <SearchContainer>
         <SearchGroup>

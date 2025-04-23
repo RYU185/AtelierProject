@@ -15,9 +15,8 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30px;
-  padding-top: 10.25rem ;
-  padding-bottom: 10.25rem;
+  padding-top: 7.25rem ;
+  padding-bottom: 4.25rem;
 `;
 
 const BackTitle = styled.h1`

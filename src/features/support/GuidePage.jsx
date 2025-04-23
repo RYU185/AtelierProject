@@ -5,14 +5,16 @@ import Header from "../Header";
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0px 60px;
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
+  font-size: 48px;
+  font-weight: 600;
   text-align: center;
   margin-bottom: 2rem;
   position: relative;
+  color: #e0e0e0;
 
   &:before {
     content: "GUIDE";
@@ -47,7 +49,7 @@ const FacilityImage = styled.div`
   img {
     width: 100%;
     height: 100%;
-    object-fit: fill; /* 딱 맞게 */
+    object-fit: cover; /* 딱 맞게 */
   }
 `;
 

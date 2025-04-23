@@ -7,7 +7,7 @@ import { useAuth } from "../components/AuthContext";
 import { useNotification } from "../features/Notification/NotificationContext";
 
 const HeaderWrapper = styled.header`
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
@@ -22,7 +22,6 @@ const HeaderWrapper = styled.header`
 `;
 
 const HeaderSpacer = styled.div`
-  height: 70px;
   width: 100%;
 `;
 
