@@ -5,9 +5,9 @@ import {
   BsHeart,
   BsHeartFill,
   BsChat,
-  BsArrowsFullscreen,
+  BsChevronLeft,
+  BsChevronRight,
 } from "react-icons/bs";
-import FullImageModal from "./FullImageModal";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -62,51 +62,29 @@ const Content = styled.p`
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: ${(props) => (props.$hasImage ? 2 : 5)};
+  -webkit-line-clamp: 5; /* 이미지가 없을 때 최대 5줄 표시 */
   flex-grow: 1;
 `;
 
 const PostImageWrapper = styled.div`
   position: relative;
-  display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 8px;
   margin-top: 8px;
-  height: ${(props) => (props.$hasImage ? "auto" : "0px")};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 30px; /* 화살표가 위치할 공간 확보 */
 `;
 
 const PostImage = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
-  display: ${(props) => (props.$hasImage ? "block" : "none")};
-
-  &:hover {
-    transform: scale(1.05);
-  }
-`;
-
-const ExpandButton = styled(BsArrowsFullscreen)`
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  top: 5px;
-  right: 5px;
-  font-size: 18px;
-  color: white;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 25%;
-  padding: 3px;
-  cursor: pointer;
-  z-index: 5;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
 `;
 
 const MenuIconWrapper = styled.div`
@@ -197,21 +175,57 @@ const ChatIcon = styled(BsChat)`
   }
 `;
 
+const ImageNavigationButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #99cedf; /* 옅은 하늘색 */
+
+  cursor: pointer;
+  z-index: 10;
+  padding: 10px;
+
+  &.left {
+    left: 10px;
+  }
+
+  &.right {
+    right: 10px;
+  }
+`;
+
+const ImageControl = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+`;
+
+const ImageCount = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+`;
+
 function Community({
   id,
   nickname,
   datetext,
   content,
-  drawingImage,
+  drawingImages, // 여러 이미지를 받기 위해 변경
   onOpenModal,
   onDelete,
 }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const navigate = useNavigate();
-  const hasImage = !!drawingImage;
+  const hasImage = drawingImages && drawingImages.length > 0;
 
   const toggleHeart = () => {
     setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
@@ -219,86 +233,97 @@ function Community({
   };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
-  const handleEdit = () => {
-    navigate(`/community/modify/${id}`);
+  const handlePostClick = (e) => {
+    onOpenModal(e, { id, nickname, datetext, content, drawingImages });
   };
 
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete(id);
-    }
+  const goToPreviousImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex > 0 ? prevIndex - 1 : drawingImages.length - 1
+    );
+  };
+
+  const goToNextImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex < drawingImages.length - 1 ? prevIndex + 1 : 0
+    );
+  };
+
+  const handleEdit = () => {
+    // 수정 기능 구현 (예: 수정 모달 열기)
+    console.log("수정 기능");
+    setIsMenuOpen(false); // 메뉴 닫기
   };
 
   return (
     <Container>
       <Header>
         <UserInfo>
-          <Nickname
-            onClick={(e) =>
-              onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-            }
-          >
-            {nickname}
-          </Nickname>
-          <DateText
-            onClick={(e) =>
-              onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-            }
-          >
-            {datetext}
-          </DateText>
+          <Nickname onClick={handlePostClick}>{nickname}</Nickname>
+          <DateText onClick={handlePostClick}>{datetext}</DateText>
         </UserInfo>
         <MenuIconWrapper onClick={toggleMenu}>
           <MenuIcon />
           {isMenuOpen && (
             <MenuDropdown>
               <MenuItemM onClick={handleEdit}>수정</MenuItemM>
-              <MenuItemD onClick={handleDelete}>삭제</MenuItemD>
+              <MenuItemD onClick={() => onDelete(id)}>삭제</MenuItemD>
             </MenuDropdown>
           )}
         </MenuIconWrapper>
       </Header>
       <Divider />
 
-      <Content
-        $hasImage={hasImage}
-        onClick={(e) =>
-          onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-        }
-      >
+      <Content $hasImage={hasImage} onClick={handlePostClick}>
         {content}
       </Content>
 
-      <PostImageWrapper $hasImage={hasImage}>
-        <PostImage
-          src={drawingImage}
-          alt="Attached Content"
-          onClick={(e) =>
-            onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-          }
-          $hasImage={hasImage}
-        />
-        {hasImage && <ExpandButton onClick={openModal} />}
-      </PostImageWrapper>
+      {hasImage && (
+        <>
+          <PostImageWrapper $hasImage={hasImage} onClick={handlePostClick}>
+            <PostImage
+              src={drawingImages[currentImageIndex]}
+              alt={`첨부된 이미지 ${currentImageIndex + 1}`}
+            />
+            {drawingImages.length > 1 && (
+              <>
+                <ImageNavigationButton
+                  className="left"
+                  onClick={goToPreviousImage}
+                  style={{ left: 0 }}
+                >
+                  <BsChevronLeft />
+                </ImageNavigationButton>
+                <ImageNavigationButton
+                  className="right"
+                  onClick={goToNextImage}
+                  style={{ right: 0 }}
+                >
+                  <BsChevronRight />
+                </ImageNavigationButton>
+              </>
+            )}
+          </PostImageWrapper>
+          {drawingImages.length > 1 && (
+            <ImageControl>
+              <ImageCount>
+                {currentImageIndex + 1} / {drawingImages.length}
+              </ImageCount>
+            </ImageControl>
+          )}
+        </>
+      )}
 
       <Actions>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}
           <span>{likeCount}</span>
         </ActionIcon>
-        <ChatIcon
-          onClick={(e) =>
-            onOpenModal(e, { id, nickname, datetext, content, drawingImage })
-          }
-        />
+        <ChatIcon onClick={handlePostClick} />
       </Actions>
-
-      {isModalOpen && (
-        <FullImageModal image={drawingImage} onClose={closeModal} />
-      )}
     </Container>
   );
 }

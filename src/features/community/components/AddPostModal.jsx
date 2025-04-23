@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { AiOutlineClose } from "react-icons/ai";
 
 const Overlay = styled.div`
   position: fixed;
@@ -12,88 +13,121 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 100px;
+  padding-top: 50px;
 `;
 
 const Modal = styled.div`
-  width: 700px;
+  width: 80%;
+  max-width: 700px;
   background-color: #fff;
   border-radius: 20px;
-  padding: 50px;
+  padding: 30px;
   position: relative;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  overflow: auto;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const CloseBtn = styled.button`
   position: absolute;
-  top: 20px;
-  right: 25px;
+  top: 10px;
+  right: 15px;
   border: none;
   background: transparent;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
   color: #888;
   cursor: pointer;
   &:hover {
     color: #000;
   }
+  align-self: flex-end;
 `;
 
 const NicknameDisplay = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   color: #018ec8;
   border-left: 5px solid #018ec8;
-  padding-left: 12px;
+  padding-left: 8px;
+  align-self: flex-start;
+  width: 100%;
 `;
 
 const TextArea = styled.textarea`
   width: 100%;
-  font-size: 17px;
-  padding: 16px;
+  font-size: 15px;
+  padding: 10px;
   border: 2px solid #ccc;
   border-radius: 12px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   resize: none;
-  &:focus {
-    border-color: #018ec8;
-    outline: none;
-  }
+`;
+
+const ImagePreviewWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin-top: 20px;
+  padding-top: 30px;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
+  width: 100%;
+  justify-content: flex-start;
+`;
+
+const ImagePreviewContainer = styled.div`
+  position: relative;
 `;
 
 const ImagePreview = styled.div`
-  width: 250px;
-  height: 250px;
+  width: 140px;
+  height: 140px;
   background: #f0f0f0;
-  margin: 30px auto;
-  border-radius: 12px;
+  border-radius: 8px;
   background-image: ${({ src }) => (src ? `url(${src})` : "none")};
   background-size: cover;
   background-position: center;
   border: 2px dashed #018ec8;
+  flex-shrink: 0;
+`;
+
+const CancelButton = styled.button`
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border-radius: 50%;
+  border: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
 `;
 
 const FileLabel = styled.label`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  margin: 0 auto 35px auto;
-  font-size: 16px;
+  gap: 8px;
+  margin: 0 auto 10px auto;
+  font-size: 13px;
   color: #018ec8;
   font-weight: 500;
   cursor: pointer;
   border: 2px solid #018ec8;
   border-radius: 10px;
-  padding: 10px 20px;
+  padding: 6px 12px;
   transition: all 0.3s ease;
   width: fit-content;
-
-  &:hover {
-    background-color: #018ec8;
-    color: white;
-  }
 `;
 
 const HiddenFileInput = styled.input`
@@ -102,8 +136,8 @@ const HiddenFileInput = styled.input`
 
 const SubmitButton = styled.button`
   width: 100%;
-  padding: 18px;
-  font-size: 20px;
+  padding: 14px;
+  font-size: 16px;
   background-color: #018ec8;
   color: white;
   border: none;
@@ -111,39 +145,64 @@ const SubmitButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   transition: background 0.3s ease;
+`;
 
-  &:hover {
-    background-color: #0074a4;
-  }
+const WarningText = styled.p`
+  color: red;
+  font-size: 11px;
+  margin-top: 3px;
+  text-align: center;
 `;
 
 function AddPostModal({ onClose, onSubmit }) {
   const [content, setContent] = useState("");
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [uploadError, setUploadError] = useState("");
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result);
-      reader.readAsDataURL(file);
+    const files = Array.from(e.target.files);
+    if (images.length + files.length > 4) {
+      setUploadError("이미지는 최대 4장까지 업로드할 수 있습니다.");
+      return;
     }
+    setUploadError("");
+    setImages((prevImages) => [...prevImages, ...files]);
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreviews((prevPreviews) => [...prevPreviews, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleCancelImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+
+    const newPreviews = [...imagePreviews];
+    newPreviews.splice(index, 1);
+    setImagePreviews(newPreviews);
   };
 
   const handleSubmit = () => {
+    if (images.length > 4) {
+      setUploadError("이미지는 최대 4장까지 업로드할 수 있습니다.");
+      return;
+    }
     const now = new Date();
     const datetext = now.toISOString().slice(0, 16).replace("T", " ");
-    const nickname = "익명"; // 임시 닉네임 처리 (실제 구현에서는 사용자 정보 활용)
+    const nickname = "익명";
 
     const newPost = {
       id: Date.now(),
       nickname,
       content,
       datetext,
-      drawingImage: imagePreview,
+      drawingImages: imagePreviews,
     };
 
     onSubmit(newPost);
@@ -154,18 +213,28 @@ function AddPostModal({ onClose, onSubmit }) {
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
         <CloseBtn onClick={onClose}>×</CloseBtn>
-        <NicknameDisplay>작성자: 익명</NicknameDisplay> {/* 임시 닉네임 표시 */}
+        <NicknameDisplay>작성자: 익명</NicknameDisplay>
         <TextArea
           placeholder="내용 입력"
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          rows="8"
+          rows="5"
         />
-        <ImagePreview src={imagePreview} />
+        <ImagePreviewWrapper>
+          {imagePreviews.map((preview, index) => (
+            <ImagePreviewContainer key={index}>
+              <ImagePreview src={preview} />
+              <CancelButton onClick={() => handleCancelImage(index)}>
+                <AiOutlineClose />
+              </CancelButton>
+            </ImagePreviewContainer>
+          ))}
+        </ImagePreviewWrapper>
         <FileLabel>
           이미지 업로드
-          <HiddenFileInput type="file" onChange={handleImageChange} />
+          <HiddenFileInput type="file" multiple onChange={handleImageChange} />
         </FileLabel>
+        {uploadError && <WarningText>{uploadError}</WarningText>}
         <SubmitButton onClick={handleSubmit}>등록</SubmitButton>
       </Modal>
     </Overlay>
