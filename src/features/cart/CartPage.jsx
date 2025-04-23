@@ -236,7 +236,7 @@ const CartPage = () => {
       });
     } catch (err) {
       console.error("구매 실패:", err);
-      alert("구매 처리 중 문제가 발생했습니다.");
+      alert("재고가.");
     } finally {
       setShowModal(false);
     }

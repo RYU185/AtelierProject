@@ -152,7 +152,6 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
         calculateTotal(updatedItems);
       }, 0);
 
-      // 전체 선택 시 즉시 총액 업데이트
       const selectedItems = updatedItems.filter((item) => item.checked);
       const newTotal = {
         quantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
@@ -168,10 +167,10 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
     deleteSelected: async () => {
       const selected = items.filter((item) => item.checked);
       const ids = selected.map((item) => item.id);
-    
+
       try {
         await axiosInstance.delete("/cart", { data: ids });
-    
+
         const newItems = items.filter((item) => !item.checked);
         setItems(newItems);
         calculateTotal(newItems);
@@ -210,13 +209,13 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
 
   const handleDelete = async (id) => {
     try {
-      await axiosInstance.delete(`/cart`,{data: [id]} )
+      await axiosInstance.delete(`/cart`, { data: [id] });
       const newItems = items.filter((item) => item.id !== id);
       setItems(newItems);
       calculateTotal(newItems);
-    } catch(err){
-      console.error(err)
-      alert("상품 삭제에 실패했습니다. 다시 시도해주세요.")
+    } catch (err) {
+      console.error(err);
+      alert("상품 삭제에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -235,7 +234,6 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
         price: 0,
         selectedItems: [],
         hasItems: false,
-        hasItems: currentItems.length > 0,
       });
       return;
     }
@@ -276,18 +274,20 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
             <QuantityControl>
               <QuantityButton
                 onClick={() =>
+                  item.checked &&
                   handleQuantityChange(
                     items.indexOf(item),
                     Math.max(1, item.quantity - 1)
                   )
                 }
-                disabled={item.quantity <= 1}
+                disabled={item.quantity <= 1 || !item.checked}
               >
                 -
               </QuantityButton>
               <QuantityInput type="text" value={item.quantity} readOnly />
               <QuantityButton
                 onClick={() =>
+                  item.checked &&
                   handleQuantityChange(items.indexOf(item), item.quantity + 1)
                 }
               >
