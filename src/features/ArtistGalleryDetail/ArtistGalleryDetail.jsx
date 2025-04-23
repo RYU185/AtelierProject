@@ -82,7 +82,7 @@ const InfoBox = styled.div`
 const Info = styled.h1`
   margin-top: 130px;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 150px;
   color: #e0e0e0;
 
 `;

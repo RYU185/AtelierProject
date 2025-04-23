@@ -3,14 +3,12 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
-import artist1 from "../../assets/ArtistIMG/artist1.jpg";
-import artist2 from "../../assets/ArtistIMG/artist2.png";
-import artist3 from "../../assets/ArtistIMG/artist3.jpg";
-import artist4 from "../../assets/ArtistIMG/artist4.jpg";
-import art1 from "../../assets/ArtIMG/1.jpg";
-import art2 from "../../assets/ArtIMG/2.jpg";
-import art3 from "../../assets/ArtIMG/3.jpg";
 import axiosInstance from "../../api/axiosInstance";
+
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 
 const DetailWrapper = styled.div`
   width: 50%;
@@ -37,6 +35,11 @@ const DescriptionContainer = styled.div`
   gap: 15px;
   padding: 20px;
   max-width: 50%;
+
+  & > p{
+    font-size: 15px;
+    color: #e0e0e0;
+  }
 `;
 
 const ArtistImage = styled.img`
@@ -53,15 +56,21 @@ const BioGraphyContainer = styled.div`
 const BioGraphyTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 10px;
-  color: #ffffff;
-  background-color: #005791;
+  color: #1f1f1f;
+  background-color: #e0e0e0;
   display: inline-block;
   padding: 5px 10px;
 `;
 
+const BiographyName = styled.h2`
+  font-size: 25px;
+  color: #e0e0e0;
+  padding-top: 15px;
+`;
+
 const BioGraphyText = styled.div`
   font-size: 16px;
-  color: #666;
+  color: #b1b1b1;
   line-height: 1.5;
   margin: 20px 0;
 `;
@@ -74,8 +83,8 @@ const WorksContainer = styled.div`
 const WorksTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
-  color: #ffffff;
-  background-color: #005791;
+  color: #1f1f1f;
+  background-color: #e0e0e0;
   display: inline-block;
   padding: 5px 10px;
 `;
@@ -231,7 +240,7 @@ const ArtistDetail = () => {
   }
 
   return (
-    <div>
+    <GradientBackground>
       <Header />
 
       <DetailWrapper>
@@ -246,14 +255,14 @@ const ArtistDetail = () => {
 
         <BioGraphyContainer>
           <BioGraphyTitle>BIOGRAPHY</BioGraphyTitle>
-          <h2>{artist.name}</h2>
+          <BiographyName>{artist.name}</BiographyName>
           <BioGraphyText>
             {artist.biographyList && artist.biographyList.length > 0 ? (
               [...artist.biographyList]
                 .sort((a, b) => new Date(a.year) - new Date(b.year))
                 .map((bio) => (
                   <div key={bio.id}>
-                    <strong>{bio.year}</strong> - {bio.award}
+                    <strong>{bio.year}</strong> {bio.award}
                     <br />
                   </div>
                 ))
@@ -300,7 +309,7 @@ const ArtistDetail = () => {
       )}
 
       <Footer />
-    </div>
+    </GradientBackground>
   );
 };
 
