@@ -165,10 +165,20 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
       };
       onUpdateTotal(newTotal);
     },
-    deleteSelected: () => {
-      const newItems = items.filter((item) => !item.checked);
-      setItems(newItems);
-      calculateTotal(newItems);
+    deleteSelected: async () => {
+      const selected = items.filter((item) => item.checked);
+      const ids = selected.map((item) => item.id);
+    
+      try {
+        await axiosInstance.delete("/cart", { data: ids });
+    
+        const newItems = items.filter((item) => !item.checked);
+        setItems(newItems);
+        calculateTotal(newItems);
+      } catch (err) {
+        console.error("선택 상품 삭제 실패:", err);
+        alert("선택한 상품 삭제에 실패했습니다.");
+      }
     },
     getSelectedItems: () => {
       return items.filter((item) => item.checked);
@@ -198,12 +208,15 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
     onUpdateTotal(newTotal);
   };
 
-  const handleDelete = (id) => {
-    const newItems = items.filter((item) => item.id !== id);
-    setItems(newItems);
-    calculateTotal(newItems);
-    if (newItems.length === 0) {
-      navigate("/cartpage");
+  const handleDelete = async (id) => {
+    try {
+      await axiosInstance.delete(`/cart`,{data: [id]} )
+      const newItems = items.filter((item) => item.id !== id);
+      setItems(newItems);
+      calculateTotal(newItems);
+    } catch(err){
+      console.error(err)
+      alert("상품 삭제에 실패했습니다. 다시 시도해주세요.")
     }
   };
 
