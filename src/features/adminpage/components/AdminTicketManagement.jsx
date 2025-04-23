@@ -77,11 +77,13 @@ const ActionButton = styled.button`
   background-color: ${props =>
     props.variant === 'edit' ? '#a4d4f3' :
     props.variant === 'delete' ? '#f7b6b6' : '#d6ccf7'};
+  
 
   &:hover {
     background-color: ${props =>
       props.variant === 'edit' ? '#7dc5f3' :
       props.variant === 'delete' ? '#f48c8c' : '#c4b8f0'};
+  }
 `;
 
 const AdminTicketManagement = () => {
