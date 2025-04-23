@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Gogh from "../../../assets/images/gogh.jpg";
 import { useNavigate } from "react-router-dom";
 
 const Section = styled.section`
@@ -43,6 +42,7 @@ const RightBox = styled.div`
   width: 75%;
   background-size: cover;
   background-position: center;
+  background-image: url("/images/sample.png");
 `;
 
 const HighlightExhibition = () => {
@@ -56,7 +56,7 @@ const HighlightExhibition = () => {
         <Line />
       </LeftBox>
 
-      <RightBox style={{ backgroundImage: `url(${Gogh})` }} />
+      <RightBox />
     </Section>
   );
 };
