@@ -9,8 +9,6 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
-  LineElement,
-  PointElement,
   Title,
   Tooltip,
   Legend
@@ -18,24 +16,29 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Container = styled.div`
   display: flex;
   padding: 10px;
   margin-left: 30px;
-  margin-top: -20px;
+  margin-top: -50px;
 `;
 
 const ChartWrapper = styled.div`
-  width: 60%;
-  margin-left: 80px;
+  width: 100%;
+  margin-left: 10px;
   padding: 40px;
+  margin-top: 30px;
+`;
+
+const InnerChart = styled.div`
+  width: 100%;
 `;
 
 const TitleWrapper = styled.div`
   text-align: center;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   margin-top: 30px;
   margin-bottom: 10px;
@@ -43,32 +46,23 @@ const TitleWrapper = styled.div`
 
 const MenubarWrapper = styled.div`
   position: relative;
-  margin-top: -27px;
-  margin-left: 30px;
+  top: -30px;
+  margin-left: -20px;
 `;
 
 const AdminMenuWrapper = styled.div`
   position: relative;
-  top: -30px;
+  top: -80px;
   margin-left: 16px;
 `;
 
 function AdminGoodsChart() {
-  const [chartData, setChartData] = useState({
-    labels: [],
-    datasets: [],
-  });
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token'); // ✔️ 토큰 가져오기
-
-        const res = await axios.get('/api/purchase/goods/admin/statistics/monthly', {
-          headers: {
-            Authorization: `Bearer ${token}` // ✔️ 토큰 포함
-          }
-        });
+        const res = await axios.get('/api/purchase/admin/statistics/goods-count/by-month');
 
         const raw = Array.isArray(res.data) ? res.data : res.data?.data || [];
 
@@ -91,11 +85,9 @@ function AdminGoodsChart() {
           datasets: [
             {
               type: 'bar',
-              label: '굿즈 판매량',
+              label: '월별 굿즈 판매량',
               data,
-              backgroundColor: 'rgba(128, 128, 128, 0.5)',
-              borderColor: 'rgba(128, 128, 128, 1)',
-              borderWidth: 1,
+              backgroundColor: 'rgba(128, 128, 255, 0.5)'
             }
           ]
         });
@@ -111,29 +103,35 @@ function AdminGoodsChart() {
     responsive: true,
     plugins: {
       legend: { position: 'top' },
-      tooltip: { mode: 'index', intersect: false },
+      tooltip: { mode: 'index', intersect: false }
     },
     scales: {
       x: { grid: { display: false } },
-      y: { beginAtZero: true },
-    },
+      y: { beginAtZero: true }
+    }
   };
 
   return (
     <>
       <Header />
-      <TitleWrapper>전체 굿즈 판매량 통계</TitleWrapper>
+      <TitleWrapper>월별 굿즈 판매량</TitleWrapper>
+
       <MenubarWrapper>
         <AdminGoodsMenubar />
       </MenubarWrapper>
+
       <Container>
         <AdminMenuWrapper>
           <AdminMenu />
         </AdminMenuWrapper>
+
         <ChartWrapper>
-          <Bar data={chartData} options={options} />
+          <InnerChart>
+            <Bar data={chartData} options={options} />
+          </InnerChart>
         </ChartWrapper>
       </Container>
+
       <Footer />
     </>
   );

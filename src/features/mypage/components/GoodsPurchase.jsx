@@ -157,7 +157,7 @@ const GoodsPurchase = () => {
 
     const fetchPurchases = async () => {
       try {
-        const response = await axiosInstance.get("/purchase"); // ✅ baseURL에 이미 /api 있음!
+        const response = await axiosInstance.get("/purchase/view"); // ✅ baseURL에 이미 /api 있음!
         setPurchases(response.data);
       } catch (error) {
         console.error("❌ 구매내역 불러오기 실패:", error);

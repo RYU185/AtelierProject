@@ -6,6 +6,7 @@ import Footer from "../Footer";
 import Review from "./components/Review";
 import TopButton from "../TopButton";
 import axiosInstance from "../../api/axiosInstance";
+import { useAuth } from "../../components/AuthContext";
 
 const TitleContainer = styled.div`
   width: 100%;
@@ -354,6 +355,7 @@ const ModalButton = styled.button`
 function GoodsDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { authTokens } = useAuth(); // AuthContext 사용
 
   const [quantity, setQuantity] = useState(1);
   const [stock, setStock] = useState(10);
@@ -453,22 +455,29 @@ function GoodsDetail() {
 
   const handlePurchase = () => setShowPurchaseModal(true);
 
-  const handleConfirmPurchase = () => {
-    setShowPurchaseModal(false);
-    const items = {
-      id: goods.id,
-      name: goods.name,
-      thumbnailUrl: currentProductImages[selectedImage],
-      quantity,
-      price: goods.price,
-    };
-    const totalPrice = goods.price * quantity;
-    navigate("/purchase-complete", {
-      state: {
-        items: [items],
-        totalPrice,
-      },
-    });
+  const handlePurchaseConfirm = async () => {
+    try {
+      const userId = localStorage.getItem("username");
+      if (!userId) {
+        alert("로그인이 필요합니다.");
+        navigate("/login");
+        return;
+      }
+  
+      const dto = {
+        amount: quantity,
+        sum: goods.price * quantity,
+        goodsId: goods.id,
+        userId: userId,
+      };
+  
+      await axiosInstance.post("/purchase/buy-now", dto);
+      setShowPurchaseModal(false); // 구매 후 모달 닫기
+          alert("구매성공") // 예: 구매 확인 페이지로 이동
+    } catch (err) {
+      console.error("바로 구매 실패:", err);
+      alert("바로 구매에 실패했습니다.");
+    }
   };
 
   const handleCancelPurchase = () => setShowPurchaseModal(false);
@@ -505,26 +514,37 @@ function GoodsDetail() {
     );
   }
 
- // 정적 이미지 불러오기
-const goodsImages = import.meta.glob("/public/images/goods-images/*", {
-  eager: true,
-});
+  // 정적 이미지 불러오기
+  const goodsImages = import.meta.glob("/public/images/goods-images/*", {
+    eager: true,
+  });
 
-// 공통 이미지 처리 함수
-const getGoodsImageUrl = (filename) => {
-  if (!filename) return '/default.jpg';
-  const matched = Object.entries(goodsImages).find(([path]) =>
+  // 공통 이미지 처리 함수
+  const getGoodsImageUrl = (filename) => {
+    if (!filename) return '/default.jpg';
+    const matched = Object.entries(goodsImages).find(([path]) =>
+      
+    
+
+
+
+
+
+
+
+
+
     path.endsWith(filename)
-  );
-  if (matched) {
-    return matched[1].default;
-  }
-  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
-};
+    );
+    if (matched) {
+      return matched[1].default;
+    }
+    return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
+  };
 
-// 기존 currentProductImages 생성 부분 수정
-const currentProductImages =
-  goods.imgUrlList?.map((url) => getGoodsImageUrl(url)) || [];
+  // 기존 currentProductImages 생성 부분 수정
+  const currentProductImages =
+    goods.imgUrlList?.map((url) => getGoodsImageUrl(url)) || [];
 
   return (
     <>
@@ -619,8 +639,8 @@ const currentProductImages =
             <ModalTitle>구매하시겠습니까?</ModalTitle>
             <p>총 금액: {(goods.price * quantity).toLocaleString()}원</p>
             <ModalButtonContainer>
-              <ModalButton onClick={handleConfirmPurchase}>확인</ModalButton>
-              <ModalButton onClick={handleCancelPurchase}>취소</ModalButton>
+            <ModalButton onClick={handlePurchaseConfirm}>확인</ModalButton>
+            <ModalButton onClick={handleCancelPurchase}>취소</ModalButton>
             </ModalButtonContainer>
           </ModalContent>
         </ModalOverlay>

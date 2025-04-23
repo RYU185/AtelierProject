@@ -223,7 +223,7 @@ const CartPage = () => {
     const cartIds = selectedItems.map((item) => item.id);
 
     try {
-      const response = await axiosInstance.post("/purchase", cartIds);
+      const response = await axiosInstance.post("/purchase/add", cartIds);
       const { data } = response;
 
       navigate("/purchase-complete", {
