@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Container = styled.div`
-  padding: 15px;
-  width: 730px;
+  width: 722px;
   align-self: stretch;
 `;
 
