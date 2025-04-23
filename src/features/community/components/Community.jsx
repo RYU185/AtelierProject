@@ -211,16 +211,7 @@ const ImageCount = styled.span`
   color: #555;
 `;
 
-function Community({
-  id,
-  user,
-  uploadDate,
-  text,
-  img,
-  likes,
-  onOpenModal,
-  onDelete,
-}) {
+function Community({ id, user, uploadDate, text, img, likes, onDelete }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(likes || 0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -246,14 +237,8 @@ function Community({
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-  const handlePostClick = (e) => {
-    onOpenModal(e, {
-      id,
-      nickname: user,
-      datetext: formatDate(uploadDate),
-      content: text,
-      drawingImages: img,
-    });
+  const handlePostClick = () => {
+    navigate(`/community/detail/${id}`); // 상세 페이지 경로로 이동
   };
 
   const goToPreviousImage = (e) => {
