@@ -57,10 +57,17 @@ const InquiryNotifications = () => {
     }
   };
 
-  if (!isLoggedIn) return null; // 로그인 안 했으면 렌더링 안함
+  if (!isLoggedIn || unreadCount === 0) return null;
 
   return (
-    <div style={{ position: "fixed", bottom: "90px", right: "50px", zIndex: 1000 }}>
+    <div
+      style={{
+        position: "fixed",
+        bottom: "100px",
+        right: "40px",
+        zIndex: 1000,
+      }}
+    >
       <button
         onClick={() => setShowList(!showList)}
         style={{
@@ -72,29 +79,27 @@ const InquiryNotifications = () => {
         }}
       >
         🔔
-        {unreadCount > 0 && (
-          <span
-            style={{
-              position: "absolute",
-              top: "0px",
-              right: "0px",
-              background: "red",
-              color: "white",
-              fontSize: "12px",
-              padding: "3px 6px",
-              borderRadius: "50%",
-            }}
-          >
-            {unreadCount}
-          </span>
-        )}
+        <span
+          style={{
+            position: "absolute",
+            top: "0px",
+            right: "0px",
+            background: "red",
+            color: "white",
+            fontSize: "12px",
+            padding: "3px 6px",
+            borderRadius: "50%",
+          }}
+        >
+          {unreadCount}
+        </span>
       </button>
 
-      {showList && unreadCount > 0 && (
+      {showList && (
         <div
           style={{
             position: "absolute",
-            bottom: "60px", // 알람 아이콘 위에 뜨게
+            bottom: "60px",
             right: "0",
             background: "white",
             boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
@@ -120,6 +125,6 @@ const InquiryNotifications = () => {
       )}
     </div>
   );
-}
+};
 
 export default InquiryNotifications;
