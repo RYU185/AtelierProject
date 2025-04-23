@@ -433,7 +433,7 @@ function GoodsDetail() {
       }
 
       const dto = {
-        amount: quantity,
+        amount: quantity, // ✅ 백엔드에서 기대하는 필드명!
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
@@ -465,18 +465,31 @@ function GoodsDetail() {
       }
   
       const dto = {
-        amount: quantity,
+        quantity: quantity, // ✅ 이거!
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
       };
   
       await axiosInstance.post("/purchase/buy-now", dto);
+      console.log("🟦 보내는 DTO:", dto);
       setShowPurchaseModal(false); // 구매 후 모달 닫기
-          alert("구매성공") // 예: 구매 확인 페이지로 이동
+      navigate("/purchase-complete", {
+        state: {
+          items: [
+            {
+              goodsName: goods.name,
+              price: goods.price,
+              quantity: quantity,
+              thumbnailUrl: currentProductImages[selectedImage], // 여기!
+            }, 
+          ],
+          totalPrice: goods.price * quantity,
+        },
+      });// 예: 구매 확인 페이지로 이동
     } catch (err) {
       console.error("바로 구매 실패:", err);
-      alert("바로 구매에 실패했습니다.");
+      alert("재가고 부족합니다.");
     }
   };
 

@@ -4,6 +4,15 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 
+// 이미지 glob import
+const images = import.meta.glob('/src/assets/ArtListIMG/*', { eager: true, as: 'url' });
+
+const getImageSrc = (url) => {
+  if (!url) return '';
+  if (url.startsWith('/uploads')) return `http://localhost:8081${url}`;
+  return images[`/src/assets/ArtListIMG/${url}`] || '';
+};
+
 const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
@@ -170,34 +179,20 @@ const PurchaseCompletePage = () => {
         <CompletedMessage>구매해 주셔서 감사합니다.</CompletedMessage>
         <PurchaseInfo>
           <ItemList>
-            {items.map((item, idx) => {
-              const imgUrl = item.thumbnailUrl || item.image || "";
-
-              return (
-                <ItemRow key={idx}>
-                  <ItemInfo>
-                    <ItemImage
-                      src={
-                        imgUrl.includes("/uploads")
-                          ? `http://localhost:8081${imgUrl}`
-                          : `/images/goods-images/${imgUrl.replace(
-                              /^.*[\\/]/,
-                              ""
-                            )}`
-                      }
-                      alt={item.goodsName}
-                    />
-                    <ItemDetails>
-                      <ItemName>{item.goodsName}</ItemName>
-                      <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
-                    </ItemDetails>
-                  </ItemInfo>
-                  <ItemPrice>
-                    {(item.price * item.quantity).toLocaleString()}원
-                  </ItemPrice>
-                </ItemRow>
-              );
-            })}
+            {items.map((item, idx) => (
+              <ItemRow key={idx}>
+                <ItemInfo>
+                  <ItemImage src={getImageSrc(item.thumbnailUrl)} alt={item.goodsName} />
+                  <ItemDetails>
+                    <ItemName>{item.goodsName}</ItemName>
+                    <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
+                  </ItemDetails>
+                </ItemInfo>
+                <ItemPrice>
+                  {(item.price * item.quantity).toLocaleString()}원
+                </ItemPrice>
+              </ItemRow>
+            ))}
           </ItemList>
           <TotalRow>
             <TotalLabel>총 결제 금액</TotalLabel>
