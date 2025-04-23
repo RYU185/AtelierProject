@@ -8,20 +8,25 @@ import TopButton from "../TopButton";
 import axiosInstance from "../../api/axiosInstance";
 import { useAuth } from "../../components/AuthContext";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const TitleContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 40px;
-  cursor: pointer;
+  padding-top: 7.25rem;
+  padding-bottom: 2.25rem;
 `;
 
 const BackTitle = styled.h1`
-  font-size: 80px;
+  font-size: 180px;
   text-align: center;
-  color: #deeaff;
+  color: #8d8d8d26;
   padding: 0;
   margin: 0;
   position: absolute;
@@ -34,6 +39,7 @@ const Title = styled.h1`
   margin: 0;
   position: relative;
   z-index: 2;
+  color: #f0f0f0;
 `;
 
 const Container = styled.div`
@@ -55,10 +61,6 @@ const ImageSection = styled.div`
   position: relative;
 `;
 
-const MainImageContainer = styled.div`
-  flex: 1;
-`;
-
 const MainImage = styled.img`
   width: 100%;
   height: auto;
@@ -77,7 +79,7 @@ const ZoomedImage = styled.div`
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  opacity: ${(props) => (props.isVisible ? 1 : 0)};
+  opacity: ${(props) => (props.$isVisible ? 1 : 0)};
   transition: opacity 0.3s ease;
   z-index: 100;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -104,7 +106,7 @@ const ThumbnailImage = styled.img`
   object-fit: cover;
   border-radius: 4px;
   cursor: pointer;
-  border: 2px solid ${(props) => (props.active ? "#0068ca" : "transparent")};
+  border: 2px solid ${(props) => (props.$active ? "#0068ca" : "transparent")};
 
   &:hover {
     opacity: 0.8;
@@ -120,22 +122,29 @@ const InfoSection = styled.div`
 
   top: 160px;
   height: fit-content;
-  background: white;
+  background: #1111111a;
   border-radius: 8px;
   border: 1px solid #c9c9c9;
   margin-left: 40px;
   margin-top: 10px;
 `;
 
+const CountText= styled.p`
+  font-size: 19px;
+  font-weight: 400;
+  color: #e1e1e1;
+`
+
 const ProductTitle = styled.h1`
   font-size: 24px;
   font-weight: bold;
+  color: #e1e1e1;
   margin-bottom: 20px;
 `;
 
 const ProductPrice = styled.div`
   font-size: 20px;
-  color: #333;
+  color: #e1e1e1;
   margin-top: 20px;
   margin-bottom: 20px;
 `;
@@ -143,7 +152,7 @@ const ProductPrice = styled.div`
 const ProductDescription = styled.div`
   font-size: 16px;
   line-height: 1.6;
-  color: #666;
+  color: #e1e1e1;
   margin: 20px 0 30px;
 `;
 
@@ -207,6 +216,9 @@ const CounterButton = styled.button`
   border: none;
   border-radius: 4px;
   font-size: 16px;
+  background-color: #00000018;
+  color: #ffffff;
+  
 `;
 
 const CounterInput = styled.input`
@@ -218,6 +230,8 @@ const CounterInput = styled.input`
   outline: none;
   margin-left: 10px;
   padding-left: 2px;
+  background-color: #00000022;
+  color: #ffffff;
 `;
 
 const Stock = styled.div`
@@ -244,6 +258,7 @@ const AmountCountContainer = styled.div`
 
 const AmountCount = styled.div`
   font-size: 24px;
+  color: #e1e1e1;
 `;
 
 const AmountCountText = styled.div`
@@ -433,7 +448,7 @@ function GoodsDetail() {
       }
 
       const dto = {
-        amount: quantity, // ✅ 백엔드에서 기대하는 필드명!
+        amount: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
@@ -463,14 +478,14 @@ function GoodsDetail() {
         navigate("/login");
         return;
       }
-  
+
       const dto = {
         quantity: quantity, // ✅ 이거!
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
       };
-  
+
       await axiosInstance.post("/purchase/buy-now", dto);
       console.log("🟦 보내는 DTO:", dto);
       setShowPurchaseModal(false); // 구매 후 모달 닫기
@@ -482,11 +497,11 @@ function GoodsDetail() {
               price: goods.price,
               quantity: quantity,
               thumbnailUrl: currentProductImages[selectedImage], // 여기!
-            }, 
+            },
           ],
           totalPrice: goods.price * quantity,
         },
-      });// 예: 구매 확인 페이지로 이동
+      }); // 예: 구매 확인 페이지로 이동
     } catch (err) {
       console.error("바로 구매 실패:", err);
       alert("재가고 부족합니다.");
@@ -497,7 +512,7 @@ function GoodsDetail() {
 
   if (loading) {
     return (
-      <>
+      <GradientBackground>
         <Header />
         <TitleContainer>
           <BackTitle>Gallery Goods</BackTitle>
@@ -507,13 +522,13 @@ function GoodsDetail() {
           <ProductTitle>로딩중...</ProductTitle>
         </Container>
         <Footer />
-      </>
+      </GradientBackground>
     );
   }
 
   if (!goods) {
     return (
-      <>
+      <GradientBackground>
         <Header />
         <TitleContainer>
           <BackTitle>Gallery Goods</BackTitle>
@@ -523,7 +538,7 @@ function GoodsDetail() {
           <ProductTitle>상품을 찾을 수 없습니다.</ProductTitle>
         </Container>
         <Footer />
-      </>
+      </GradientBackground>
     );
   }
 
@@ -534,33 +549,19 @@ function GoodsDetail() {
 
   // 공통 이미지 처리 함수
   const getGoodsImageUrl = (filename) => {
-    if (!filename) return '/default.jpg';
-    const matched = Object.entries(goodsImages).find(([path]) =>
-      
-    
-
-
-
-
-
-
-
-
-
-    path.endsWith(filename)
-    );
+    if (!filename) return "/default.jpg";
+    const matched = Object.entries(goodsImages).find(([path]) => path.endsWith(filename));
     if (matched) {
       return matched[1].default;
     }
-    return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
+    return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, "")}`;
   };
 
   // 기존 currentProductImages 생성 부분 수정
-  const currentProductImages =
-    goods.imgUrlList?.map((url) => getGoodsImageUrl(url)) || [];
+  const currentProductImages = goods.imgUrlList?.map((url) => getGoodsImageUrl(url)) || [];
 
   return (
-    <>
+    <GradientBackground>
       <Header />
       <TitleContainer onClick={handleTitleClick}>
         <BackTitle>Gallery Goods</BackTitle>
@@ -582,16 +583,18 @@ function GoodsDetail() {
                   key={index}
                   src={image}
                   alt={`썸네일 ${index + 1}`}
-                  active={selectedImage === index}
+                  $active={selectedImage === index}
                   onClick={() => setSelectedImage(index)}
                 />
               ))}
             </ThumbnailContainer>
-            <ZoomedImage isVisible={isZoomed}>
+            <ZoomedImage $isVisible={isZoomed}>
               <ZoomedImageContent
                 src={currentProductImages[selectedImage]}
                 style={{
-                  transform: `scale(2) translate(${-mousePosition.x * 4}px, ${-mousePosition.y * 4}px)`,
+                  transform: `scale(2) translate(${-mousePosition.x * 4}px, ${
+                    -mousePosition.y * 4
+                  }px)`,
                   transformOrigin: "center center",
                 }}
               />
@@ -606,7 +609,7 @@ function GoodsDetail() {
             </ProductDescription>
 
             <CounterWrapper>
-              수량
+              <CountText>수량</CountText>
               <CounterButtonContainer>
                 <CounterButton onClick={handleDecrease}>-</CounterButton>
                 <CounterInput type="number" value={quantity} readOnly />
@@ -614,7 +617,7 @@ function GoodsDetail() {
               </CounterButtonContainer>
             </CounterWrapper>
 
-            <Stock stockWarning={stockWarning}>
+            <Stock $stockWarning={stockWarning}>
               <StockText>남은 재고: {stock}개</StockText>
               {stockWarning && <StockWarning>재고가 부족합니다!</StockWarning>}
             </Stock>
@@ -622,9 +625,7 @@ function GoodsDetail() {
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCountText>
-                {(goods.price * quantity).toLocaleString()}원
-              </AmountCountText>
+              <AmountCountText>{(goods.price * quantity).toLocaleString()}원</AmountCountText>
             </AmountCountContainer>
 
             <ButtonContainer>
@@ -652,13 +653,13 @@ function GoodsDetail() {
             <ModalTitle>구매하시겠습니까?</ModalTitle>
             <p>총 금액: {(goods.price * quantity).toLocaleString()}원</p>
             <ModalButtonContainer>
-            <ModalButton onClick={handlePurchaseConfirm}>확인</ModalButton>
-            <ModalButton onClick={handleCancelPurchase}>취소</ModalButton>
+              <ModalButton onClick={handlePurchaseConfirm}>확인</ModalButton>
+              <ModalButton onClick={handleCancelPurchase}>취소</ModalButton>
             </ModalButtonContainer>
           </ModalContent>
         </ModalOverlay>
       )}
-    </>
+    </GradientBackground>
   );
 }
 
