@@ -7,7 +7,7 @@ const Container = styled.div`
 `;
 
 const TicketCount = styled.div`
-  background-color:rgba(255, 255, 255, 0.22);
+  background-color:rgba(255, 255, 255, 0.07);
   padding: 14px 20px;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -27,9 +27,8 @@ const TicketList = styled.div`
 `;
 
 const TicketCard = styled.div`
-  display: flex;
-  padding: 32px;
-  background-color: white;
+  display: flex; 
+  background-color:rgba(255, 255, 255, 0.07);
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -55,7 +54,7 @@ const TicketInfo = styled.div`
 `;
 
 const TicketImage = styled.img`
-  width: 110px;
+  width: 140px;
   object-fit: cover;
   border-radius: 4px;
 `;
@@ -65,15 +64,14 @@ const TicketDetails = styled.div`
 
   h3 {
     font-size: 23px;
-    color: #141414;
-    margin-bottom: 5px;
+    color:#e1e1e1;
+    margin: 25px 0 15px 0;
     font-weight: 500;
   }
 
   p {
-    font-size: 18px;
-    color: #141414;
-    line-height: 1.8;
+    font-size: 16px;
+    color:#e1e1e1;
     font-weight: 300;
   }
 `;
@@ -86,15 +84,18 @@ const TicketActions = styled.div`
 
 const ActionButton = styled.button`
   padding: 8px 16px;
-  border: 1px solid #e5e5e5;
+  border: none;
   border-radius: 4px;
   background-color: white;
   color: #666;
   cursor: pointer;
   font-size: 14px;
+  margin: 0 30px 20px 0;
+  transition: 0.3s ease-in-out;
 
   &:hover {
-    background-color: #f8f9fa;
+    background-color: #0077ff;
+    color: #e1e1e1
   }
 `;
 

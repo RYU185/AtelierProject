@@ -74,7 +74,7 @@ const ContentContainer = styled.div`
 const ProfileSection = styled.div`
   width: 380px;
   height: 500px;
-  background-color:rgba(255, 255, 255, 0.22);
+  background-color:rgba(255, 255, 255, 0.07);
   padding: 32px;
   border-radius: 4px;
 `;
