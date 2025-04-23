@@ -547,8 +547,29 @@ const DrawingCanvas = () => {
   };
 
   const sendDrawingToServer = async (isTemporary, title) => {
-    fillCanvasWithWhiteBackground();
-    const imageData = canvasRef.current.toDataURL("image/png");
+    if (!canvasRef.current) {
+      console.error("❌ canvasRef가 없습니다!");
+      return;
+    }
+
+    const originalCanvas = canvasRef.current;
+
+    // 🔧 임시 캔버스 생성
+    const tempCanvas = document.createElement("canvas");
+    tempCanvas.width = originalCanvas.width;
+    tempCanvas.height = originalCanvas.height;
+
+    const ctx = tempCanvas.getContext("2d");
+
+    // ✅ 흰 배경 그리기
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    // ✅ 기존 그림을 위에 그리기
+    ctx.drawImage(originalCanvas, 0, 0);
+
+    // ✅ 이미지 추출
+    const imageData = tempCanvas.toDataURL("image/png");
 
     if (!title || title.trim() === "") {
       alert("제목은 필수입니다!");
@@ -562,7 +583,7 @@ const DrawingCanvas = () => {
         return;
       }
 
-      const response = await axios.post(
+      await axios.post(
         "/api/realdrawing/save",
         {
           id: editId,
@@ -578,13 +599,8 @@ const DrawingCanvas = () => {
         }
       );
 
-      if (isTemporary) {
-        alert("📝 임시 저장 완료! 마이페이지로 이동합니다.");
-        navigate("/mypage", { state: { activeTab: "drawing" } });
-      } else {
-        alert("💾 저장 완료! 마이페이지로로 이동합니다.");
-        navigate("/mypage", { state: { activeTab: "drawing" } });
-      }
+      alert(isTemporary ? "📝 임시 저장 완료!" : "💾 저장 완료!");
+      navigate("/mypage", { state: { activeTab: "drawing" } });
     } catch (error) {
       console.error("❌ 저장 중 오류 발생:", error);
       alert("저장에 실패했습니다.");

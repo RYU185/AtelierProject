@@ -5,21 +5,22 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import AddPostModal from "./AddPostModal";
 
-const primaryColor = "#00aaff"; // 메인 강조색
-const secondaryColor = "#ff6f61"; // 보조 강조색
-const backgroundColor = "#f4f9ff"; // 밝은 배경색
-const textColor = "#333"; // 기본 글자색
-const borderColor = "#d9e3ee"; // 테두리 색상
-const hoverColor = "#e1f5fe"; // 호버 시 배경색
+const primaryColor = "#64b5f6"; // 소프트 블루
+const secondaryColor = "#4fc3f7"; // 보조 소프트톤
+const backgroundColor = "#f0f4f8"; // 밝고 깔끔한 배경
+const cardBackground = "#ffffff"; // 카드 배경
+const textColor = "#2e3a59";
+const borderColor = "#dce3eb";
+const hoverColor = "#e3f2fd";
+const shadow = "0 4px 20px rgba(0,0,0,0.06)";
 
 const Container = styled.div`
   width: 70%;
-  height: auto;
   background-color: ${backgroundColor};
-  border-radius: 12px;
-  margin: 0 auto;
-  margin-bottom: 80px;
-  box-shadow: 0 4px 12px rgba(0, 170, 255, 0.15); /* 메인 색상 그림자 */
+  border-radius: 16px;
+  margin: 0 auto 80px;
+  padding-top: 20px;
+  box-shadow: ${shadow};
 `;
 
 const ButtonBox = styled.div`
@@ -29,25 +30,25 @@ const ButtonBox = styled.div`
 `;
 
 const StyledButton = styled.button`
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  background-color: white;
+  border: 1.5px solid ${borderColor};
   color: ${textColor};
-  background-color: #fff;
-  font-weight: 500;
-  padding: 12px 20px;
-  border-radius: 8px;
-  border: 1px solid ${borderColor};
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
-    transform 0.1s ease-in-out, border-color 0.2s ease-in-out;
   cursor: pointer;
+  transition: all 0.25s ease;
 
   &:hover {
     background-color: ${hoverColor};
-    color: ${primaryColor};
     border-color: ${primaryColor};
-    transform: scale(1.02);
+    color: ${primaryColor};
+    transform: translateY(-2px);
   }
 
   &:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
   }
 `;
 
@@ -58,7 +59,6 @@ const StyledDrawwButton = styled(StyledButton)`
 
   &:hover {
     background-color: ${secondaryColor};
-    color: white;
   }
 `;
 
@@ -76,24 +76,21 @@ const SortButton = styled(StyledButton)`
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  padding: 15px;
-  overflow-y: auto;
-  max-height: 645px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px;
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
+  & > div {
+    background: ${cardBackground};
+    border-radius: 16px;
+    box-shadow: ${shadow};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 20px;
 
-  &::-webkit-scrollbar-track {
-    background-color: #f0f0f0;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${primaryColor};
-    border-radius: 4px;
-    max-height: 30px;
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
   }
 `;
 
@@ -170,7 +167,7 @@ function CommunityList() {
     },
   ]);
 
-  const [sortBy, setSortBy] = useState("latest"); // 기본 정렬 방식
+  const [sortBy, setSortBy] = useState("latest");
 
   const sortedCommunityItems = [...communityItems].sort((a, b) => {
     if (sortBy === "popular") {

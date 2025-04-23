@@ -70,10 +70,11 @@ const DrawingItem = styled.div`
   border: 0.1px solid #b5b4b4;
 `;
 
-const DrawingImage = styled.div`
+const DrawingImage = styled.img`
   width: 100%;
   aspect-ratio: 1;
-  background: #ffffff;
+  object-fit: cover;
+  background-color: #ffffff;
 `;
 
 const DrawingInfo = styled.div`
@@ -223,13 +224,7 @@ const MyDrawings = () => {
       <DrawingGrid>
         {filteredDrawings.map((drawing) => (
           <DrawingItem key={drawing.id}>
-            <DrawingImage
-              style={{
-                backgroundImage: `url(${drawing.imageData})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
+            <DrawingImage src={drawing.imageData} alt={drawing.title} />
             <DrawingInfo>
               <DrawingTitle status={drawing.status}>
                 {drawing.title}
