@@ -37,12 +37,12 @@ const ArtistGalleryIntro = styled.div`
 
   & h1 {
     font-size: 26px;
-    color: #cfcfcf;
+    color: #e6e6e6;
   }
 
   & h2 {
     font-size: 18px;
-    color: #cfcfcf;
+    color: #e6e6e6;
     margin-top: 10px;
   }
 
@@ -54,7 +54,7 @@ const ArtistGalleryIntro = styled.div`
 
   & p {
     font-size: 14px;
-    color: #606060;
+    color: #dadada;
     overflow: hidden;
     text-overflow: ellipsis;
     

@@ -6,7 +6,7 @@ const InformationContainer = styled.div`
   height: auto;
   border-radius: 10px;
   padding: 20px;
-  background-color: #f4f4f4;
+  color: #d8d8d8;
 `;
 
 const InformationTitle = styled.h2`

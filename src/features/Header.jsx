@@ -213,20 +213,20 @@ const Header = () => {
   };
 
   const dropdownItems = {
-    Gallery: [
-      { label: "Artist Gallery", path: "/gallery/artistgallery" },
-      { label: "User Gallery", path: "/gallery/usergallery" },
+    GALLERY: [
+      { label: "ARTIST GALLERY", path: "/gallery/artistgallery" },
+      { label: "USER GALLERY", path: "/gallery/usergallery" },
     ],
-    Artist: [
+    ARTIST: [
       { label: "작가 소개", path: "/artist" },
       { label: "채팅 문의함", path: "/chatting" },
     ],
-    Community: [
+    COMMUNITY: [
       { label: "커뮤니티", path: "/community" },
       { label: "나만의 작품 그리기", path: "/drawingcanvas" },
     ],
-    Goods: [{ label: "굿즈샵", path: "/goods" }],
-    Notice: [
+    GOODS: [{ label: "굿즈샵", path: "/goods" }],
+    NOTICE: [
       { label: "공지사항", path: "/support/notice" },
       { label: "이용 안내", path: "/support/guide" },
       { label: "오시는 길", path: "/support/location" },
@@ -235,11 +235,11 @@ const Header = () => {
   };
 
   const mainRoutes = {
-    Gallery: "/gallery/artistgallery",
-    Artist: "/artist",
-    Community: "/community",
-    Goods: "/goods",
-    Notice: "/support/notice",
+    GALLERY: "/gallery/artistgallery",
+    ARTIST: "/artist",
+    COMMUNITY: "/community",
+    GOODS: "/goods",
+    NOTICE: "/support/notice",
   };
 
   return (

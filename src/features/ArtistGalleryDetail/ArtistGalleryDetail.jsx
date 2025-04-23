@@ -20,8 +20,8 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 30px;
-  padding-top: 6.25rem;
-  padding-bottom: 6.25rem;
+  padding-top: 10.25rem ;
+  padding-bottom: 10.25rem;
 `;
 
 const BackTitle = styled.h1`
@@ -50,14 +50,13 @@ const ButtonDiv = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #ebf2ff;
+  background-color: #018ec8;
   border: none;
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
-  &:hover {
-    background-color: #b0c1e1;
-  }
+  cursor: pointer;
+  color: #ffffff;
 `;
 
 const Container = styled.div`
@@ -84,6 +83,8 @@ const Info = styled.h1`
   margin-top: 130px;
   text-align: center;
   margin-bottom: 50px;
+  color: #e0e0e0;
+
 `;
 
 function ArtistGalleryDetail() {
@@ -116,7 +117,7 @@ function ArtistGalleryDetail() {
           <Title>ARTIST GALLERY</Title>
         </TitleContainer>
         <ButtonDiv>
-          <Button onClick={() => navigate("/gallery/artistgallery")}>&lt; 목록 보기</Button>
+          <Button onClick={() => navigate("/gallery/artistgallery")}>전시회 목록</Button>
         </ButtonDiv>
         <Container>
           <PosterBox>
