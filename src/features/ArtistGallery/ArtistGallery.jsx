@@ -21,7 +21,7 @@ const TitleContainer = styled.div`
 `;
 
 const BackTitle = styled.h1`
-  font-size: 200px;
+  font-size: 180px;
   text-align: center;
   color: #8d8d8d26;
   padding: 0;
