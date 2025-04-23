@@ -1,35 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import ArtCard from '../components/ArtCard';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import ArtCard from "../components/ArtCard";
+import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리
 const artImages = import.meta.glob("/public/images/ArtListIMG/*", { eager: true });
 
 const getImageUrl = (filename) => {
-  if (!filename) return '/path/to/default-image.png';
+  if (!filename) return "/path/to/default-image.png";
 
-  const matched = Object.entries(artImages).find(([path]) =>
-    path.endsWith(filename)
-  );
+  const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
   if (matched) {
     return matched[1].default;
   }
 
-  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
+  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, "")}`;
 };
 
-const PageContainer = styled.div`padding: 20px; margin-top: 10px; min-height: 100vh;`;
-const ArtListTitle = styled.h2`font-size: 25px; font-weight: bold; color: #222; text-align: center; padding: 12px; border-radius: 6px; width: 200px; margin-top: -50px; margin-left: 15px;`;
-const ArtListContainer = styled.div`width: 1200px; margin: 0 auto; padding: 10px; border-radius: 8px; margin-top: 20px;`;
-const ArtListHeader = styled.div`display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;`;
-const SearchContainer = styled.div`display: flex; gap: 10px;`;
-const SearchInput = styled.input`width: 300px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;`;
-const SearchButton = styled.button`padding: 8px 16px; background: #3da9fc; color: white; border: none; border-radius: 4px; cursor: pointer; &:hover { background: #3da0e5; }`;
-const AddButton = styled.button`padding: 8px 16px; background: #3da9fc; color: white; border: none; position: absolute; margin-left: -94px; border-radius: 4px; cursor: pointer; &:hover { background: #3da0e5; }`;
+const PageContainer = styled.div`
+  padding: 20px;
+  margin-top: 10px;
+  min-height: 100vh;
+`;
+const ArtListTitle = styled.h2`
+  font-size: 25px;
+  font-weight: bold;
+  color: #222;
+  text-align: center;
+  padding: 12px;
+  border-radius: 6px;
+  width: 200px;
+  margin-top: -50px;
+  margin-left: 15px;
+`;
+const ArtListContainer = styled.div`
+  width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 20px;
+`;
+const ArtListHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+const SearchContainer = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+const SearchInput = styled.input`
+  width: 300px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+const SearchButton = styled.button`
+  padding: 8px 16px;
+  background: #3da9fc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background: #3da0e5;
+  }
+`;
+const AddButton = styled.button`
+  padding: 8px 16px;
+  background: #3da9fc;
+  color: white;
+  border: none;
+  position: absolute;
+  margin-left: -94px;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background: #3da0e5;
+  }
+`;
 
-const ArtGrid = styled.div`display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;`;
+const ArtGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+`;
 
 const ArtItem = styled.div`
   border: 1px solid #ddd;
@@ -38,7 +95,6 @@ const ArtItem = styled.div`
   text-align: center;
   position: relative;
   background: white;
-
 `;
 
 const ArtCardImageContainer = styled.div`
@@ -82,7 +138,7 @@ const MoreOptions = styled.div`
 `;
 
 const OptionsMenu = styled.div`
-  display: ${({ visible }) => (visible ? 'block' : 'none')};
+  display: ${({ visible }) => (visible ? "block" : "none")};
   position: absolute;
   top: 230px;
   right: 10px;
@@ -102,14 +158,19 @@ const OptionButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   color: ${({ danger }) => (danger ? "#e16060" : "#018ec8")};
-  &:hover { background: #f0f0f0; }
+  &:hover {
+    background: #f0f0f0;
+  }
 `;
 
 const ModalOverlay = styled.div`
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.7);
-  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
+  display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -130,13 +191,16 @@ const Modal = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px; right: 10px;
+  top: 10px;
+  right: 10px;
   background: none;
   border: none;
   font-size: 50px;
   cursor: pointer;
   color: #333;
-  &:hover { color: #303030; }
+  &:hover {
+    color: #303030;
+  }
 `;
 
 const ModalImageContainer = styled.div`
@@ -173,7 +237,9 @@ const AdminArtList = () => {
   const [selectedArt, setSelectedArt] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => { fetchArtList(); }, []);
+  useEffect(() => {
+    fetchArtList();
+  }, []);
   useEffect(() => {
     const handleClickOutside = () => setMenuOpen({});
     window.addEventListener("click", handleClickOutside);
@@ -182,10 +248,10 @@ const AdminArtList = () => {
 
   const fetchArtList = async () => {
     try {
-      const response = await api.get('/art');
+      const response = await api.get("/art");
       setArtList(response.data);
     } catch (error) {
-      console.error('작품 목록을 불러오는 중 오류 발생:', error);
+      console.error("작품 목록을 불러오는 중 오류 발생:", error);
     }
   };
 
@@ -199,7 +265,7 @@ const AdminArtList = () => {
       setMenuOpen({});
       fetchArtList();
     } catch (error) {
-      console.error('삭제 중 오류 발생:', error);
+      console.error("삭제 중 오류 발생:", error);
     }
   };
 
@@ -222,34 +288,44 @@ const AdminArtList = () => {
             />
             <SearchButton>검색</SearchButton>
           </SearchContainer>
-          <Link to="/AdminArtAdd"><AddButton>작품 추가</AddButton></Link>
+          <Link to="/AdminArtAdd">
+            <AddButton>작품 추가</AddButton>
+          </Link>
         </ArtListHeader>
 
         <ArtGrid>
           {filteredArtList.map((art) => (
-           <ArtItem key={art.id}>
-           {/* 옵션 버튼 */}
-           <MoreOptions onClick={(e) => {
-             e.stopPropagation();
-             toggleMenu(art.id);
-           }}>⋮</MoreOptions>
-         
-           {/* 메뉴 */}
-           <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
-             <OptionButton danger onClick={() => handleDelete(art.id)}>삭제</OptionButton>
-           </OptionsMenu>
-         
-           {/* ✅ 이미지에만 클릭 이벤트 적용 */}
-           <ArtCardImageContainer onClick={() => openModal(art)}>
-             <ArtCardImage src={getImageUrl(art.imgUrl)} alt={art.title} />
-           </ArtCardImageContainer>
-         
-           {/* 텍스트는 클릭 X */}
-           <ArtInfo>
-             <ArtTitle>{art.title}</ArtTitle>
-             <ArtDetails>{art.artistName} · {art.completionDate}</ArtDetails>
-           </ArtInfo>
-         </ArtItem>
+            <ArtItem key={art.id}>
+              {/* 옵션 버튼 */}
+              <MoreOptions
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMenu(art.id);
+                }}
+              >
+                ⋮
+              </MoreOptions>
+
+              {/* 메뉴 */}
+              <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
+                <OptionButton danger onClick={() => handleDelete(art.id)}>
+                  삭제
+                </OptionButton>
+              </OptionsMenu>
+
+              {/* ✅ 이미지에만 클릭 이벤트 적용 */}
+              <ArtCardImageContainer onClick={() => openModal(art)}>
+                <ArtCardImage src={getImageUrl(art.imgUrl)} alt={art.title} />
+              </ArtCardImageContainer>
+
+              {/* 텍스트는 클릭 X */}
+              <ArtInfo>
+                <ArtTitle>{art.title}</ArtTitle>
+                <ArtDetails>
+                  {art.artistName} · {art.completionDate}
+                </ArtDetails>
+              </ArtInfo>
+            </ArtItem>
           ))}
         </ArtGrid>
       </ArtListContainer>
