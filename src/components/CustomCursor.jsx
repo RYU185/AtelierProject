@@ -29,8 +29,8 @@ const CustomCursor = () => {
     };
 
     const animateCursor = () => {
-      cursorRef.current.x += (targetRef.current.x - cursorRef.current.x) * 0.085;
-      cursorRef.current.y += (targetRef.current.y - cursorRef.current.y) * 0.085;
+      cursorRef.current.x += (targetRef.current.x - cursorRef.current.x) * 0.09;
+      cursorRef.current.y += (targetRef.current.y - cursorRef.current.y) * 0.09;
 
       // 커서 위치 업데이트
       const cursorDot = document.querySelector(".cursor-dot");

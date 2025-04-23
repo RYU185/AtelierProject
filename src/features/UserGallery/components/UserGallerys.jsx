@@ -7,11 +7,10 @@ const Container = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   display: flex;
-  align-items: center; /* 변경: 세로 방향 중앙 정렬 */
+  align-items: center;
   cursor: pointer;
-  border: 1px solid #a2a2a2;
-  border-radius: 20px;
-  padding: 20px;
+  border: 1px solid #53535334;
+  border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
   &:hover {
@@ -25,13 +24,8 @@ const Img = styled.img`
   object-fit: cover;
   border-radius: 5px;
   margin-right: 40px;
-  margin-left: 40px;
   flex-shrink: 0;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  &:hover {
-    transform: scale(0.95);
-    opacity: 0.8;
-  }
 `;
 
 const ArtistGalleryIntro = styled.div`
@@ -39,35 +33,29 @@ const ArtistGalleryIntro = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  height: 250px;
 
   & h1 {
     font-size: 26px;
-    color: #1e1e1e;
-    margin: 0;
+    color: #cfcfcf;
   }
 
   & h2 {
     font-size: 18px;
-    color: #606060;
-    margin: 10px 0 0;
+    color: #cfcfcf;
+    margin-top: 10px;
   }
 
   & h3 {
     font-size: 16px;
-    color: #606060;
-    margin: 8px 0 0;
+    color: #cfcfcf;
+    margin-top: 10px;
   }
 
   & p {
     font-size: 14px;
     color: #606060;
-    margin-top: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
   }
 `;
 

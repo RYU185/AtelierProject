@@ -8,6 +8,11 @@ import ArtList from "./components/ArtList";
 import axios from "axios";
 import axiosInstance from "../../api/axiosInstance";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const TitleContainer = styled.div`
   width: 100%;
   position: relative;
@@ -15,12 +20,14 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 30px;
+  padding-top: 6.25rem;
+  padding-bottom: 6.25rem;
 `;
 
 const BackTitle = styled.h1`
-  font-size: 80px;
+  font-size: 200px;
   text-align: center;
-  color: #deeaff;
+  color: #8d8d8d26;
   padding: 0;
   margin: 0;
   position: absolute;
@@ -33,6 +40,7 @@ const Title = styled.h1`
   margin: 0;
   position: relative;
   z-index: 2;
+  color: #f0f0f0;
 `;
 
 const ButtonDiv = styled.div`
@@ -83,20 +91,17 @@ function ArtistGalleryDetail() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
-  const getImageUrl = (filename) =>
-    filename ? `/images/ArtistGalleryIMG/${filename}` : "";
+  const getImageUrl = (filename) => (filename ? `/images/ArtistGalleryIMG/${filename}` : "");
 
-  const getArtImageUrl = (filename) =>
-    filename ? `/images/ArtListIMG/${filename}` : "";
-
+  const getArtImageUrl = (filename) => (filename ? `/images/ArtListIMG/${filename}` : "");
 
   useEffect(() => {
-    const fetchGalleryDetail = async()=>{
-      try{
-        const res = await axiosInstance.get(`/artistgallery/id/${id}`)
+    const fetchGalleryDetail = async () => {
+      try {
+        const res = await axiosInstance.get(`/artistgallery/id/${id}`);
         setData(res.data);
-      }catch(error){
-        console.error(error)
+      } catch (error) {
+        console.error(error);
       }
     };
 
@@ -105,27 +110,27 @@ function ArtistGalleryDetail() {
 
   return (
     <div>
-      <TitleContainer>
-        <BackTitle>ARTIST GALLERY</BackTitle>
-        <Title>ARTIST GALLERY</Title>
-      </TitleContainer>
-      <ButtonDiv>
-        <Button onClick={() => navigate("/gallery/artistgallery")}>
-          &lt; 목록 보기
-        </Button>
-      </ButtonDiv>
-      <Container>
-        <PosterBox>
-          {data && <ArtistGalleryPoster url={getImageUrl(data.posterUrl)} />}
-          {data && <TicketButton galleryId={id} />}
-        </PosterBox>
-        <InfoBox>
-          <ArtistGalleryInformation data={data} />
-        </InfoBox>
-      </Container>
+      <GradientBackground>
+        <TitleContainer>
+          <BackTitle>ARTIST GALLERY</BackTitle>
+          <Title>ARTIST GALLERY</Title>
+        </TitleContainer>
+        <ButtonDiv>
+          <Button onClick={() => navigate("/gallery/artistgallery")}>&lt; 목록 보기</Button>
+        </ButtonDiv>
+        <Container>
+          <PosterBox>
+            {data && <ArtistGalleryPoster url={getImageUrl(data.posterUrl)} />}
+            {data && <TicketButton galleryId={id} />}
+          </PosterBox>
+          <InfoBox>
+            <ArtistGalleryInformation data={data} />
+          </InfoBox>
+        </Container>
 
-      <Info>참여 작품</Info>
-      <ArtList posters={(data?.artPoster || []).map(getArtImageUrl)} />
+        <Info>참여 작품</Info>
+        <ArtList posters={(data?.artPoster || []).map(getArtImageUrl)} />
+      </GradientBackground>
     </div>
   );
 }

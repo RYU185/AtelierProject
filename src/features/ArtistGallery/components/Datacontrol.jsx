@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const DataControlBox = styled.div`
-  width: 65%;
+  width: 52%;
   margin: 0 auto;
-  margin-top: 50px;
+  margin-top: 3.125rem;
   display: flex;
-  justify-content: space-between; /* 버튼 그룹과 검색창 양 끝으로 배치 */
-  padding-bottom: 20px;
-  border-bottom: 2px solid #bababa;
+  justify-content: space-between;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid #2c2c2c;
 `;
 
 const ButtonGroup = styled.div`
@@ -19,12 +19,12 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.div`
-  padding: 10px 15px;
+  padding: .625rem .9375rem;
   cursor: pointer;
-  font-size: 15px;
+  font-size: .9375rem;
   color: #606060;
   transition: 0.3s ease;
-  border-bottom: 3px solid #ffffff;
+  border-bottom: .1875rem solid #ffffff;
   &:hover {
     color: #018ec8;
   }
@@ -32,16 +32,20 @@ const Button = styled.div`
 
 const SearchBox = styled.div`
   position: relative;
-  width: 300px;
+  width: 18.75rem;
   display: flex;
   align-items: center;
 `;
 
 const Input = styled.input`
   width: 100%;
-  border: 2px solid #018ec8;
-  border-radius: 7px;
-  padding: 8px 30px 8px 10px;
+  border: .0625rem solid #ffffff;
+  border-radius: .4375rem;
+  padding: .5rem 1.875rem .5rem .625rem;
+  background-color: #2424241d;
+  color: #ffffff;
+  transition: 0.2s ease-in-out;
+
   &:focus {
     outline: none;
     border-color: #018ec8;
@@ -50,7 +54,7 @@ const Input = styled.input`
 
 const SearchIcon = styled(FontAwesomeIcon)`
   position: absolute;
-  right: 10px;
+  right: .625rem;
   color: #018ec8;
   font-size: 1.2em;
   cursor: pointer;
@@ -123,7 +127,7 @@ function Datacontrol({ onFilterChange }) {
               onClick={() => handleButtonClick(index)}
               style={
                 selectedButtonIndex === index
-                  ? { borderBottom: "2px solid #018ec8", color: "#018ec8" }
+                  ? { borderBottom: ".125rem solid #018ec8", color: "#018ec8" }
                   : {}
               }
             >

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import ArtistGallerys from "./ArtistGallerys";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import axiosInstance from "../../../api/axiosInstance";
 
 const Container = styled.div`
@@ -13,11 +12,11 @@ const Container = styled.div`
 const GalleryGrid = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
   width: 75%;
   margin: 0 auto;
   margin-top: 70px;
-  margin-bottom: 70px;
+  padding-bottom: 200px;
 `;
 
 function ArtistGalleryLsit({ filteredItems }) {

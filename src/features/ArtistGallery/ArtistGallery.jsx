@@ -16,14 +16,14 @@ const TitleContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 30px;
-  padding-top: 6.25rem ;
-  padding-bottom: 6.25rem;
+  padding-top: 10.25rem ;
+  padding-bottom: 10.25rem;
 `;
 
 const BackTitle = styled.h1`
   font-size: 200px;
   text-align: center;
-  color: #3333332c;
+  color: #8d8d8d26;
   padding: 0;
   margin: 0;
   position: absolute;

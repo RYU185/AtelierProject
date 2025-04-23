@@ -15,20 +15,18 @@ const Container = styled.div`
 const GalleryGrid = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 40px;
   width: 75%;
   margin: 0 auto;
   margin-top: 70px;
-  margin-bottom: 70px;
+  padding-bottom: 200px;
 `;
 
 function UserGalleryList({ filteredItems }) {
   const navigate = useNavigate();
   const [galleryItems, setGalleryItems] = useState([]);
   const getImageUrl = (filename) => {
-    const matched = Object.entries(images).find(([path]) =>
-      path.endsWith(filename)
-    );
+    const matched = Object.entries(images).find(([path]) => path.endsWith(filename));
     return matched ? matched[1].default : "";
   };
 
@@ -76,10 +74,7 @@ function UserGalleryList({ filteredItems }) {
     <Container>
       <GalleryGrid>
         {galleryItems.map((item) => (
-          <div
-            key={item.id}
-            onClick={() => navigate(`/gallery/usergallery/${item.id}`)}
-          >
+          <div key={item.id} onClick={() => navigate(`/gallery/usergallery/${item.id}`)}>
             <UserGallerys {...item} />
           </div>
         ))}
