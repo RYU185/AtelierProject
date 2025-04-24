@@ -16,7 +16,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 10.25rem ;
+  padding-top: 7.25rem ;
   padding-bottom: 4.25rem;
 `;
 
