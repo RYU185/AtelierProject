@@ -14,19 +14,25 @@ const dImages = import.meta.glob("/public/images/DrawingIMG/*", {
   eager: true,
 });
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const TitleContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30px;
+  padding-top: 7.25rem;
+  padding-bottom: 4.25rem;
 `;
 
 const BackTitle = styled.h1`
-  font-size: 80px;
+  font-size: 180px;
   text-align: center;
-  color: #deeaff;
+  color: #8d8d8d26;
   padding: 0;
   margin: 0;
   position: absolute;
@@ -39,6 +45,7 @@ const Title = styled.h1`
   margin: 0;
   position: relative;
   z-index: 2;
+  color: #f0f0f0;
 `;
 
 const ButtonDiv = styled.div`
@@ -48,14 +55,13 @@ const ButtonDiv = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #ebf2ff;
+  background-color: #018ec8;
   border: none;
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
-  &:hover {
-    background-color: #b0c1e1;
-  }
+  cursor: pointer;
+  color: #ffffff;
 `;
 
 const Container = styled.div`
@@ -68,9 +74,9 @@ const Container = styled.div`
 
 const PosterBox = styled.div`
   width: 30%;
-  height: 500px;
+  height: 560px;
   border-right: 1.3px solid #bababa;
-  padding-left: 40px;
+  padding-left: 30px;
 `;
 
 const InfoBox = styled.div`
@@ -81,24 +87,22 @@ const InfoBox = styled.div`
 const Info = styled.h1`
   margin-top: 130px;
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 150px;
+  color: #e0e0e0;
 `;
+
 function UserGalleryDetail() {
   const { id } = useParams(); // URL에서 id 추출
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
   const getImageUrl = (filename) => {
-    const matched = Object.entries(images).find(([path]) =>
-      path.endsWith(filename)
-    );
+    const matched = Object.entries(images).find(([path]) => path.endsWith(filename));
     return matched ? matched[1].default : "";
   };
 
   const getdImageUrl = (filename) => {
-    const matched = Object.entries(dImages).find(([path]) =>
-      path.endsWith(filename)
-    );
+    const matched = Object.entries(dImages).find(([path]) => path.endsWith(filename));
     return matched ? matched[1].default : "";
   };
 
@@ -114,15 +118,13 @@ function UserGalleryDetail() {
   }, [id]);
 
   return (
-    <div>
+    <GradientBackground>
       <TitleContainer>
-        <BackTitle>User GALLERY</BackTitle>
-        <Title>User GALLERY</Title>
+        <BackTitle>USER GALLERY</BackTitle>
+        <Title>USER GALLERY</Title>
       </TitleContainer>
       <ButtonDiv>
-        <Button onClick={() => navigate("/gallery/Usergallery")}>
-          &lt; 목록 보기
-        </Button>
+        <Button onClick={() => navigate("/gallery/Usergallery")}>&lt; 목록 보기</Button>
       </ButtonDiv>
       <Container>
         <PosterBox>
@@ -136,7 +138,7 @@ function UserGalleryDetail() {
 
       <Info>참여 작품</Info>
       <DrawingList posters={(data?.drawingImg || []).map(getdImageUrl)} />
-    </div>
+    </GradientBackground>
   );
 }
 

@@ -9,6 +9,11 @@ import axiosInstance from "../../api/axiosInstance";
 import { motion } from "framer-motion";
 import { useAuth } from "../../components/AuthContext";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const PageContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
@@ -16,9 +21,9 @@ const PageContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 40px;
+  font-size: 3rem;
+  font-weight: 500;
+  color: #e1e1e1;
 `;
 
 const ContentWrapper = styled.div`
@@ -26,16 +31,16 @@ const ContentWrapper = styled.div`
   grid-template-columns: 1fr 2fr 1fr;
   gap: 24px;
   margin-bottom: 54px;
-  margin-top: 10%;
+  margin-top: 2%;
 `;
 
 const ExhibitionCard = styled.div`
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.07);
   border-radius: 12px;
   overflow: hidden;
-
   padding: 20px;
+  width: 300px;
+  height: 560px;
 `;
 
 const ExhibitionImage = styled.img`
@@ -49,10 +54,11 @@ const ExhibitionTitle = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 10px;
   margin-left: 20px;
+  color: #e1e1e1;
 `;
 
 const ExhibitionDate = styled.p`
-  color: #666;
+  color: #c2c2c2;
   margin-bottom: 5px;
   margin-left: 20px;
 `;
@@ -105,9 +111,7 @@ function TicketPage() {
 
     const fetchReserveDates = async () => {
       try {
-        const res = await axiosInstance.get(
-          `/reservation/reserve-date?galleryId=${galleryId}`
-        );
+        const res = await axiosInstance.get(`/reservation/reserve-date?galleryId=${galleryId}`);
         setReserveDateList(res.data);
       } catch (error) {
         console.error("예약 가능 날짜 조회 실패:", error);
@@ -128,9 +132,7 @@ function TicketPage() {
 
       try {
         const res = await axiosInstance.get(
-          `/reservation/available-times?date=${formatDateForServer(
-            selectedDate
-          )}`
+          `/reservation/available-times?date=${formatDateForServer(selectedDate)}`
         );
 
         setAvailableTimes(res.data);
@@ -200,10 +202,10 @@ function TicketPage() {
   });
 
   return (
-    <>
+    <GradientBackground>
       <Header />
       <PageContainer>
-        <Title>티켓 구매</Title>
+        <Title>RESERVATION</Title>
         <ContentWrapper>
           <ExhibitionCard>
             <ExhibitionImage
@@ -213,13 +215,9 @@ function TicketPage() {
             <ExhibitionTitle>{galleryInfo?.title}</ExhibitionTitle>
 
             {galleryInfo?.artistList?.length > 0 && (
-              <ExhibitionDate style={{ fontWeight: "bold", color: "#444" }}>
-                {galleryInfo.artistList.join(", ")}
-              </ExhibitionDate>
+              <ExhibitionDate>{galleryInfo.artistList.join(", ")}</ExhibitionDate>
             )}
-            <ExhibitionCapacity
-              style={{ color: "#666", whiteSpace: "pre-line", lineHeight: 1.6 }}
-            >
+            <ExhibitionCapacity>
               {galleryInfo?.startDate}
               <span style={{ margin: "0 12px" }}>-</span>
               {galleryInfo?.endDate}
@@ -232,7 +230,7 @@ function TicketPage() {
               onDateSelect={handleDateSelect}
               activeDates={getActiveDates()}
               exhibitionStartDate={galleryInfo.startDate}
-              exhibitionEndDate={galleryInfo.deadline} // 🔥 수정된 부분
+              exhibitionEndDate={galleryInfo.deadline}
             />
             {/* 시간 선택 UI : FRAMER MOTION 사용
             10:00 ~ 17:00 , 1시간 단위 */}
@@ -247,13 +245,14 @@ function TicketPage() {
                   top: 0,
                   left: 0,
                   width: "100%",
-                  height: "420px",
-                  backgroundColor: "#ffffff",
+                  height: "520px",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
                   padding: "30px",
                   zIndex: 10,
                   border: "1px solid #d4d4d4",
                   borderRadius: "12px",
-                  // boxShadow: "0 2px 12px rgba(0, 0, 0, 0.15)",
+                  backdropFilter: "blur(100px)",
+                  color: "#ffffff",
                 }}
               >
                 <button
@@ -274,7 +273,7 @@ function TicketPage() {
 
                 <h4 style={{ marginBottom: "40px", fontSize: "1.2rem" }}>
                   예약할 시간을 선택해주세요 <br />
-                  <span style={{ fontSize: "0.95rem", color: "#888" }}>
+                  <span style={{ fontSize: "0.95rem", color: "#e1e1e1" }}>
                     남은 정원: {remainingCount}명
                   </span>
                 </h4>
@@ -296,15 +295,10 @@ function TicketPage() {
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         width: "100%",
-                        backgroundColor:
-                          selectedTime?.id === time.id ? "#0066ff" : "#ffffff",
+                        backgroundColor: selectedTime?.id === time.id ? "#003f9e" : "#ffffff",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
-                        transition:
-                          "background-color 0.3s ease, color 0.3s ease",
-                        border:
-                          selectedTime?.id === time.id
-                            ? "#0066ff"
-                            : "1px solid #b9b9b9",
+                        transition: "background-color 0.3s ease, color 0.3s ease",
+                        border: selectedTime?.id === time.id ? "#0066ff" : "1px solid #b9b9b9",
                         cursor: "pointer",
                       }}
                     >
@@ -330,7 +324,7 @@ function TicketPage() {
         </ContentWrapper>
       </PageContainer>
       <Footer />
-    </>
+    </GradientBackground>
   );
 }
 

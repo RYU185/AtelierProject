@@ -44,6 +44,7 @@ import CartPage from "../features/cart/CartPage";
 
 import AdminTicketManagement from "../features/adminpage/components/AdminTicketManagement";
 import EditProfile from "../features/mypage/components/EditProfile";
+import Review from "../features/Goods/components/Review";
 
 function AppRoutes() {
   return (
@@ -68,6 +69,7 @@ function AppRoutes() {
       <Route path="AdminTicketManagement" element={<AdminTicketManagement />} />
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
+      <Route path="/goods/:goodsId/review" element={<Review />} />
       <Route path="/gallery" element={<Gallery />}>
         <Route path="artistgallery" element={<ArtistGallery />} />
         <Route path="artistgallery/:id" element={<ArtistGalleryDetail />} />

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const CalendarContainer = styled.div`
-  background-color: #f8f9fa;
+  background-color: rgba(255, 255, 255, 0.07);
   padding: 30px;
   border-radius: 12px;
+  height: 560px;
 `;
 
 const CalendarHeader = styled.div`
@@ -18,14 +19,14 @@ const MonthTitle = styled.h2`
   margin: 0;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: #f8f8f8;
 `;
 
 const NavigationButton = styled.button`
   background: none;
   border: none;
   font-size: 1.2rem;
-  color: #333;
+  color: #ffffff;
   cursor: pointer;
   padding: 5px 10px;
 
@@ -42,7 +43,7 @@ const WeekdayHeader = styled.div`
 `;
 
 const WeekdayCell = styled.div`
-  color: #000d36;
+  color: #ffffff;
   font-size: 0.9rem;
   padding: 10px;
 `;
@@ -62,9 +63,9 @@ const DayCell = styled.div`
   margin-top: 5px;
   margin-bottom: 5px;
   background-color: ${({ $isSelected, $isActive, $inExhibitionRange }) => {
-    if ($isSelected) return "#0066ff";
-    if ($isActive) return "#90caf9";
-    if ($inExhibitionRange) return "#ebebeb";
+    if ($isSelected) return "#00317a";
+    if ($isActive) return "#008cff";
+    if ($inExhibitionRange) return "#2b2b2b";
     return "transparent";
   }};
 
@@ -75,8 +76,8 @@ const DayCell = styled.div`
     $inExhibitionRange,
   }) => {
     if ($isSelected) return "#fff";
-    if ($isCurrentMonth && ($isActive || $inExhibitionRange)) return "#333";
-    if ($inExhibitionRange) return "#aaaaaa";
+    if ($isCurrentMonth && ($isActive || $inExhibitionRange)) return "#ffffff";
+    if ($inExhibitionRange) return "#5c5c5c";
     return "#ccc";
   }};
 
@@ -160,8 +161,12 @@ const TicketCalendar = ({
   };
 
   const isActive = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const isAfterToday = date >= today;
+  
     const target = formatDate(date);
-    return activeDates.includes(target);
+    return activeDates.includes(target) && isAfterToday;
   };
 
   const isInExhibitionPeriod = (date) => {

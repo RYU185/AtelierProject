@@ -76,9 +76,9 @@ function ReviewBlock({ review }) {
   return (
     <div>
       <ReviewItem>
-        <ReviewerName>홍길동</ReviewerName>
-        <ReviewDate>{new Date(review.createdAt).toLocaleString()}</ReviewDate>
-        <ReviewContent>{review.content}</ReviewContent>
+        <ReviewerName>{review.user}</ReviewerName>
+        <ReviewDate>{review.createdAt}</ReviewDate>
+        <ReviewContent>{review.text}</ReviewContent>
         <MoreButton onClick={handleMoreClick}>⋮</MoreButton>
         <DropdownMenu isOpen={isOpen}>
           <MenuButton type="edit">수정</MenuButton>

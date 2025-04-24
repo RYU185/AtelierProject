@@ -8,14 +8,22 @@ import axiosInstance from "../../../api/axiosInstance";
 import useChatSocket from "../../../useChatsocket";
 import { useAuth } from "../../../components/AuthContext";
 
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`;
+
 const ChatContainer = styled.div`
   max-width: 1200px;
   margin: 10px auto 0;
-  min-height: calc(100vh - 200px);
+  height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  background: #fff;
+  overflow: hidden;
 `;
 
 const PageTitle = styled.div`
@@ -30,7 +38,7 @@ const PageTitle = styled.div`
 const Title = styled.h1`
   font-size: 32px;
   font-weight: 600;
-  color: #333;
+  color: #e0e0e0;
   text-align: center;
   letter-spacing: -0.5px;
 `;
@@ -75,19 +83,21 @@ const MainContent = styled.div`
   flex: 1;
   min-height: 0;
   margin-top: 10px;
+  padding-bottom: 30px;
+  overflow: hidden;
 `;
 
 const ProfileSection = styled.div`
   width: 260px;
   border-right: 1px solid rgba(0, 0, 0, 0.05);
   padding: 12px;
-  background: #fafafa;
   border-radius: 12px 0 0 12px;
+  border: 1px solid #2b2b2b;
 `;
 
 const ProfileBox = styled.div`
-  background: white;
   border-radius: 12px;
+  border: 1px solid #2b2b2b;
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 `;
@@ -123,7 +133,7 @@ const ProfileCircle = styled.div`
 
 const ProfileText = styled.div`
   font-size: 14px;
-  color: #333;
+  color: #e1e1e1;
   font-weight: 600;
   letter-spacing: -0.3px;
 `;
@@ -154,6 +164,7 @@ const ChatSection = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
 `;
 
 const ChatHeader = styled.div`
@@ -162,14 +173,15 @@ const ChatHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
+  border: 1px solid #2b2b2b;
+  border-left: none;
   border-radius: 0 12px 0 0;
 `;
 
 const ChatTitle = styled.div`
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: #e1e1e1;
 `;
 
 const OnlineStatus = styled.div`
@@ -193,6 +205,8 @@ const ChatMessages = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 20px;
+  border-right: 1px solid #2e2e2e;
+
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -217,9 +231,10 @@ const MessagesContainer = styled.div`
 
 const ChatFooter = styled.div`
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  background: #fff;
+  border: 1px solid #2b2b2b;
   border-radius: 0 0 12px 0;
   padding: 8px 0;
+  border-left: none;
 `;
 
 const InputContainer = styled.div`
@@ -227,7 +242,6 @@ const InputContainer = styled.div`
   align-items: center;
   gap: 8px;
   padding: 0 20px;
-  background: #fff;
 `;
 
 const ClipButton = styled.label`
@@ -258,7 +272,7 @@ const ChatInput = styled.input`
   border-radius: 30px;
   font-size: 14px;
   outline: none;
-  background: #fafafa;
+  border: 1px solid #2b2b2b;
   transition: all 0.2s;
 
   &::placeholder {
@@ -267,7 +281,6 @@ const ChatInput = styled.input`
 
   &:focus {
     border-color: rgba(0, 149, 225, 0.3);
-    background: #fff;
     box-shadow: 0 0 0 3px rgba(0, 149, 225, 0.08);
   }
 `;
@@ -343,16 +356,15 @@ const ChatRoom = ({ room: propRoom }) => {
   }, [room]);
 
   useEffect(() => {
-    if (isInitialLoad) {
-      setIsInitialLoad(false);
-      const inputElement = document.querySelector('input[type="text"]');
-      if (inputElement) inputElement.focus();
-    } else {
-      if (messages.length > 2) {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      }
+    const inputElement = document.querySelector('input[type="text"]');
+    if (inputElement) inputElement.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!isUserScrolled && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, isInitialLoad]);
+  }, [messages]);
 
   const handleScroll = () => {
     if (chatMessagesRef.current) {
@@ -383,7 +395,7 @@ const ChatRoom = ({ room: propRoom }) => {
     }
 
     const payload = {
-      sender: user?.username, 
+      sender: user?.username,
       receiver: isArtistSender ? room?.userId : room?.artistId,
       content: newMessage,
       senderNickname: nickname,
@@ -398,7 +410,7 @@ const ChatRoom = ({ room: propRoom }) => {
         message: newMessage,
         timestamp: new Date().toISOString(),
         isArtist: isArtistSender,
-        nickname: nickname
+        nickname: nickname,
       },
     ]);
     setNewMessage("");
@@ -406,7 +418,6 @@ const ChatRoom = ({ room: propRoom }) => {
   };
 
   console.log("user 객체 상태", user);
-
 
   const lastDate = messages.length
     ? new Date(messages[messages.length - 1].timestamp).toLocaleDateString("ko-KR", {
@@ -417,7 +428,7 @@ const ChatRoom = ({ room: propRoom }) => {
     : null;
 
   return (
-    <>
+    <PageWrapper>
       <Header />
       <ChatContainer>
         <PageTitle>
@@ -465,6 +476,7 @@ const ChatRoom = ({ room: propRoom }) => {
                   nickname={msg.nickname}
                 />
               ))}
+              <div ref={messagesEndRef} />
             </ChatMessages>
 
             <ChatFooter>
@@ -492,7 +504,7 @@ const ChatRoom = ({ room: propRoom }) => {
         </MainContent>
       </ChatContainer>
       <Footer />
-    </>
+    </PageWrapper>
   );
 };
 

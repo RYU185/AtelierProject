@@ -4,6 +4,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../Header";
 import Footer from "../../Footer";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
@@ -23,7 +28,7 @@ const PageContainer = styled.div`
 
 const CompleteMessage = styled.h1`
   font-size: 38px;
-  color: #333;
+  color: #f5f5f5;
   margin-bottom: 60px;
   text-align: center;
   font-weight: 600;
@@ -57,14 +62,15 @@ const InfoRow = styled.div`
 `;
 
 const Label = styled.span`
-  color: #666;
+  color: #fdfdfd;
   flex: 1;
-  text-align: right;
+  font-size: 25px;
 `;
 
 const Value = styled.span`
-  color: #333;
-  font-weight: 500;
+  color: #d8d8d8;
+  font-weight:300;
+  font-size: 25px;
   flex: 1;
   text-align: left;
 `;
@@ -72,7 +78,6 @@ const Value = styled.span`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 20px;
-  margin-top: 50px;
 `;
 
 const Button = styled.button`
@@ -81,6 +86,7 @@ const Button = styled.button`
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
+  width: 300px;
   background-color: ${(props) => (props.primary ? "#0066ff" : "white")};
   color: ${(props) => (props.primary ? "white" : "#0066ff")};
   border: ${(props) => (props.primary ? "none" : "1px solid #0066ff")};
@@ -113,49 +119,51 @@ const TicketComplete = () => {
   };
 
   return (
-    <Wrapper>
-      <Header />
-      <PageContainer>
-        <CompleteMessage>
-          전시가 <span>예약 완료</span>되었습니다!
-        </CompleteMessage>
+    <GradientBackground>
+      <Wrapper>
+        <Header />
+        <PageContainer>
+          <CompleteMessage>
+            전시가 <span>예약 완료</span>되었습니다!
+          </CompleteMessage>
 
-        <TicketInfoContainer>
-          <InfoRow>
-            <Label>전시 제목</Label>
-            <Value>{ticketInfo.title}</Value>
-          </InfoRow>
-          <InfoRow>
-            <Label>예약 날짜</Label>
-            <Value>{formatDate(ticketInfo.date)}</Value>
-          </InfoRow>
-          <InfoRow>
-            <Label>예약 인원</Label>
-            <Value>{ticketInfo.count}명</Value>
-          </InfoRow>
-          <InfoRow>
-            <Label>결제 금액</Label>
-            <Value>{ticketInfo.price.toLocaleString()}원</Value>
-          </InfoRow>
-          <InfoRow>
-            <Label>결제 회원</Label>
-            <Value>{ticketInfo.memberName}</Value>
-          </InfoRow>
-        </TicketInfoContainer>
+          <TicketInfoContainer>
+            <InfoRow>
+              <Label>전시 제목</Label>
+              <Value>{ticketInfo.title}</Value>
+            </InfoRow>
+            <InfoRow>
+              <Label>예약 날짜</Label>
+              <Value>{formatDate(ticketInfo.date)}</Value>
+            </InfoRow>
+            <InfoRow>
+              <Label>예약 인원</Label>
+              <Value>{ticketInfo.count}명</Value>
+            </InfoRow>
+            <InfoRow>
+              <Label>결제 금액</Label>
+              <Value>{ticketInfo.price.toLocaleString()}원</Value>
+            </InfoRow>
+            <InfoRow>
+              <Label>결제 회원</Label>
+              <Value>{ticketInfo.memberName}</Value>
+            </InfoRow>
+          </TicketInfoContainer>
 
-        <Divider />
+          <Divider />
 
-        <ButtonContainer>
-          <Button onClick={() => navigate("/gallery/artistgallery")} primary={false}>
-            전시회 목록
-          </Button>
-          <Button onClick={() => navigate("/mypage")} primary={true}>
-            나의 티켓 확인하기
-          </Button>
-        </ButtonContainer>
-      </PageContainer>
-      <StyledFooter />
-    </Wrapper>
+          <ButtonContainer>
+            <Button onClick={() => navigate("/gallery/artistgallery")} primary={false}>
+              전시회 목록
+            </Button>
+            <Button onClick={() => navigate("/mypage")} primary={true}>
+              나의 티켓 확인하기
+            </Button>
+          </ButtonContainer>
+        </PageContainer>
+        <StyledFooter />
+      </Wrapper>
+    </GradientBackground>
   );
 };
 

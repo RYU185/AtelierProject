@@ -4,12 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ChatRoom from "../components/ChatRoom";
 import ChatRoomList from "../components/ChatRoomList";
 
-const PageContainer = styled.div`
+const GradientBackground = styled.div`
   min-height: 100vh;
-  background-color: #fff;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
 `;
 
-
+const PageContainer = styled.div`
+  min-height: 100vh;
+`;
 
 const BackButton = styled.button`
   position: absolute;
@@ -33,27 +35,23 @@ const BackButton = styled.button`
   }
 `;
 
-
-
 const ChattingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedRoom, setSelectedRoom] = useState(
-    location.state?.room ?? null
-  );
+  const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
 
   return (
-    <PageContainer>
-      
-     
+    <GradientBackground>
+      <PageContainer>
         <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
-      
-      {!selectedRoom ? (
-        <ChatRoomList onSelectRoom={setSelectedRoom} />
-      ) : (
-        <ChatRoom room={selectedRoom} />
-      )}
-    </PageContainer>
+
+        {!selectedRoom ? (
+          <ChatRoomList onSelectRoom={setSelectedRoom} />
+        ) : (
+          <ChatRoom room={selectedRoom} />
+        )}
+      </PageContainer>
+    </GradientBackground>
   );
 };
 

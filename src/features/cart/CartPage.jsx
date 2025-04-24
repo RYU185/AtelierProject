@@ -7,11 +7,15 @@ import CartSummary from "./components/CartSummary";
 import Header from "../Header";
 import Footer from "../Footer";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fafafa;
 `;
 
 const PageContainer = styled.div`
@@ -22,28 +26,32 @@ const PageContainer = styled.div`
 `;
 
 const TitleContainer = styled.div`
-  text-align: center;
+  width: 100%;
   position: relative;
-  margin-bottom: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 3.25rem;
+  padding-bottom: 6.25rem;
 `;
 
 const BackTitle = styled.h1`
-  font-size: 140px;
-  font-weight: bold;
-  color: rgba(200, 216, 247, 0.3);
+  font-size: 180px;
+  text-align: center;
+  color: #8d8d8d26;
+  padding: 0;
   margin: 0;
-  line-height: 1;
+  position: absolute;
+  z-index: 1;
 `;
 
 const FrontTitle = styled.h2`
-  font-size: 48px;
-  color: #333;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  font-size: 50px;
+  text-align: center;
   margin: 0;
-  font-weight: bold;
+  position: relative;
+  z-index: 2;
+  color: #f0f0f0;
 `;
 
 const CartContainer = styled.div`
@@ -54,7 +62,7 @@ const CartContainer = styled.div`
 
 const CartContent = styled.div`
   flex: 1;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.07);
   border-radius: 8px;
   padding: 24px;
 `;
@@ -65,7 +73,7 @@ const SelectAllBar = styled.div`
   gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #636363;
 `;
 
 const Checkbox = styled.input`
@@ -96,10 +104,15 @@ const DeleteButton = styled.button`
 `;
 
 const EmptyCartMessage = styled.div`
+  width: 38.75rem;
+  height: 17.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 60px 0;
   font-size: 18px;
   color: #666;
+  background: rgba(255, 255, 255, 0.07);
 `;
 
 const Modal = styled.div`
@@ -170,10 +183,7 @@ const CartPage = () => {
       const selectedItems = cartListRef.current.getSelectedItems();
       const newTotal = {
         quantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
-        price: selectedItems.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        ),
+        price: selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
         selectedItems: selectedItems,
         hasItems: selectedItems.length > 0,
       };
@@ -199,8 +209,7 @@ const CartPage = () => {
       setIsEmpty(newTotal.hasItems === false);
 
       // 전체 선택 여부도 다시 계산
-      const isAllSelected =
-        selectedItems.length > 0 && selectedItems.length === allItems.length;
+      const isAllSelected = selectedItems.length > 0 && selectedItems.length === allItems.length;
       setIsAllSelected(isAllSelected);
     }
   };
@@ -243,53 +252,53 @@ const CartPage = () => {
   };
 
   return (
-    <Wrapper>
-      <Header />
-      <PageContainer>
-        <TitleContainer>
-          <BackTitle>CART</BackTitle>
-          <FrontTitle>CART</FrontTitle>
-        </TitleContainer>
-        <CartContainer>
-          <CartContent>
-            {isEmpty ? (
-              <EmptyCartMessage>
-                장바구니가 비어있습니다.
-                <br />
-                상품을 추가해주세요.
-              </EmptyCartMessage>
-            ) : (
-              <>
-                <SelectAllBar>
-                  <Checkbox
-                    type="checkbox"
-                    id="selectAll"
-                    checked={isAllSelected}
-                    onChange={handleSelectAll}
-                  />
-                  <SelectAllText>전체 선택</SelectAllText>
-                  <DeleteButton onClick={handleDeleteSelected}>
-                    선택상품 삭제
-                  </DeleteButton>
-                </SelectAllBar>
-                <CartList ref={cartListRef} onUpdateTotal={handleUpdateTotal} />
-              </>
-            )}
-          </CartContent>
-          <CartSummary total={total} onPurchase={handlePurchase} />
-        </CartContainer>
-      </PageContainer>
-      <Footer />
-      {showModal && (
-        <>
-          <ModalOverlay onClick={() => setShowModal(false)} />
-          <Modal>
-            <ModalText>구매하시겠습니까?</ModalText>
-            <ModalButton onClick={handleConfirmPurchase}>확인</ModalButton>
-          </Modal>
-        </>
-      )}
-    </Wrapper>
+    <GradientBackground>
+      <Wrapper>
+        <Header />
+        <PageContainer>
+          <TitleContainer>
+            <BackTitle>CART</BackTitle>
+            <FrontTitle>CART</FrontTitle>
+          </TitleContainer>
+          <CartContainer>
+            <CartContent>
+              {isEmpty ? (
+                <EmptyCartMessage>
+                  장바구니가 비어있습니다.
+                  <br />
+                  상품을 추가해주세요.
+                </EmptyCartMessage>
+              ) : (
+                <>
+                  <SelectAllBar>
+                    <Checkbox
+                      type="checkbox"
+                      id="selectAll"
+                      checked={isAllSelected}
+                      onChange={handleSelectAll}
+                    />
+                    <SelectAllText>전체 선택</SelectAllText>
+                    <DeleteButton onClick={handleDeleteSelected}>선택상품 삭제</DeleteButton>
+                  </SelectAllBar>
+                  <CartList ref={cartListRef} onUpdateTotal={handleUpdateTotal} />
+                </>
+              )}
+            </CartContent>
+            <CartSummary total={total} onPurchase={handlePurchase} />
+          </CartContainer>
+        </PageContainer>
+        <Footer />
+        {showModal && (
+          <>
+            <ModalOverlay onClick={() => setShowModal(false)} />
+            <Modal>
+              <ModalText>구매하시겠습니까?</ModalText>
+              <ModalButton onClick={handleConfirmPurchase}>확인</ModalButton>
+            </Modal>
+          </>
+        )}
+      </Wrapper>
+    </GradientBackground>
   );
 };
 

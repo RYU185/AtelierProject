@@ -5,7 +5,6 @@ import ArtistGalleryPoster from "./components/ArtistGalleryPoster";
 import ArtistGalleryInformation from "./components/ArtistGalleryInformation";
 import TicketButton from "./components/TicketButton";
 import ArtList from "./components/ArtList";
-import axios from "axios";
 import axiosInstance from "../../api/axiosInstance";
 
 const GradientBackground = styled.div`

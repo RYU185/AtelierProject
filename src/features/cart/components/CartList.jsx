@@ -18,8 +18,8 @@ const CartItemContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #eee;
-  background: white;
+  border: 2px solid #464646;
+  border-radius: 5px;
 `;
 
 const Checkbox = styled.input`
@@ -50,13 +50,13 @@ const ProductDetails = styled.div`
 
 const ProductName = styled.div`
   font-size: 16px;
-  color: #333;
+  color: #e1e1e1;
   margin-bottom: 8px;
 `;
 
 const PriceText = styled.div`
   font-size: 16px;
-  color: #333;
+  color: #e1e1e1;
   font-weight: 500;
 `;
 
@@ -73,7 +73,7 @@ const QuantityButton = styled.button`
   height: 28px;
   border: none;
   background-color: white;
-  color: #333;
+  color: #474747;
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -99,7 +99,7 @@ const DeleteButton = styled.button`
   padding: 6px 12px;
   border: none;
   background-color: transparent;
-  color: #666;
+  color: #c2c2c2;
   font-size: 14px;
   cursor: pointer;
 

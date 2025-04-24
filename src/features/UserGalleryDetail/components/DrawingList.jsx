@@ -19,10 +19,10 @@ const Container = styled.div`
   width: 1400px;
   height: 600px;
   margin: 0 auto;
-  margin-bottom: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 140px;
 `;
 
 const ImageWrapper = styled.div`

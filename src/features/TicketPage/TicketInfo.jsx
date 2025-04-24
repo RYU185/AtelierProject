@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const InfoContainer = styled.div`
-  background-color: #f8f9fa;
+  background-color: rgba(255, 255, 255, 0.07);
   padding: 30px;
   border-radius: 12px;
   width: 300px;
@@ -10,7 +10,7 @@ const InfoContainer = styled.div`
 
 const Title = styled.h3`
   font-size: 1.2rem;
-  color: #333;
+  color: #e1e1e1;
   margin-bottom: 30px;
 `;
 
@@ -19,15 +19,16 @@ const InfoSection = styled.div`
 `;
 
 const Label = styled.div`
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 1.2rem;
+
+  color: #e1e1e1;
   margin-bottom: 10px;
 `;
 
 const Value = styled.div`
   font-size: 1rem;
-  color: #333;
-  font-weight: 500;
+  font-weight: 100;
+  color: #d8d8d8;
 `;
 
 const CounterSection = styled.div`
@@ -36,7 +37,7 @@ const CounterSection = styled.div`
 
 const CounterLabel = styled.div`
   font-size: 0.9rem;
-  color: #666;
+  color: #9b9b9b;
   margin-bottom: 10px;
 `;
 
@@ -71,7 +72,7 @@ const CountButton = styled.button`
 
 const CountDisplay = styled.span`
   font-size: 1rem;
-  color: #333;
+  color: #d4d4d4;
   min-width: 30px;
   text-align: center;
 `;
@@ -88,7 +89,7 @@ const PriceSection = styled.div`
 const TotalPrice = styled.div`
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: #e1e1e1;
 `;
 
 const ReserveButton = styled.button`
@@ -110,6 +111,7 @@ const ReserveButton = styled.button`
 
   &:disabled {
     background-color: #ccc;
+    color: #9b9b9b;
     cursor: not-allowed;
   }
 `;
@@ -160,7 +162,7 @@ const TicketInfo = ({ title, time, date, price, count, onCountChange, onReserve,
       <ReserveButton onClick={onReserve} disabled={!date || isReserving}>
         {isReserving ? "예매 처리중..." : "예매하기"}
       </ReserveButton>
-      <Notice>* 인원 10명까지만 예매하실 수 있습니다.</Notice>
+      <Notice>* 해당 전시는 회차별 최대 10명까지 입장이 가능합니다.</Notice>
     </InfoContainer>
   );
 };

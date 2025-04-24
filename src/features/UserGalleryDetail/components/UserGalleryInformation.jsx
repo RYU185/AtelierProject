@@ -3,10 +3,10 @@ import styled from "styled-components";
 
 const InformationContainer = styled.div`
   width: 100%;
-  height: 500px;
+  height: auto;
   border-radius: 10px;
   padding: 20px;
-  background-color: #f4f4f4;
+  color: #d8d8d8;
 `;
 
 const InformationTitle = styled.h2`
@@ -46,10 +46,10 @@ const Title = styled.div`
 `;
 
 const Info = styled.div`
-  width: 589.85px;
+  width: 100%;
   top: 0;
   right: 0px;
-  position: absolute;
+  position: relative;
   padding: 15px;
 `;
 

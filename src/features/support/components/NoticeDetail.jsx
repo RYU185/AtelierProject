@@ -11,31 +11,12 @@ const Container = styled.div`
   padding: 2rem;
 `;
 
-const Title = styled.h2`
-  font-size: 4rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  color: #333;
-  position: relative;
-
-  &:before {
-    content: "NOTICE";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 8rem;
-    color: rgba(200, 200, 255, 0.2);
-    z-index: -1;
-  }
-`;
-
 const NoticeContainer = styled.div`
   padding: 1rem 0;
 `;
 
 const NoticeHeader = styled.div`
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid #e1e1e1;
   padding-bottom: 1.5rem;
   margin-bottom: 2rem;
 `;
@@ -43,7 +24,7 @@ const NoticeHeader = styled.div`
 const NoticeTitle = styled.h3`
   font-size: 1.8rem;
   margin-bottom: 1rem;
-  color: #333;
+  color: #e1e1e1;
   font-weight: 500;
 `;
 
@@ -54,7 +35,7 @@ const NoticeInfo = styled.div`
 
 const NoticeContent = styled.div`
   line-height: 1.8;
-  color: #333;
+  color: #e1e1e1;
   min-height: 200px;
   white-space: pre-line;
   padding: 2rem 0;
@@ -119,7 +100,7 @@ const NoticeDetail = () => {
   useEffect(() => {
     const fetchNotice = async () => {
       try {
-        const res = await axios.get(`/notices/${id}`); // ✅ 중복 /api 제거
+        const res = await axios.get(`/notices/${id}`);
         setNoticeData(res.data);
       } catch (error) {
         console.error("공지사항 불러오기 실패:", error);
@@ -138,7 +119,7 @@ const NoticeDetail = () => {
   const handleDeleteClick = async () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`/notices/${id}`); // ✅ 중복 api 제거
+        await axios.delete(`/notices/${id}`);
         alert("삭제되었습니다.");
         navigate("/support/notice");
       } catch (error) {
@@ -150,7 +131,7 @@ const NoticeDetail = () => {
 
   return (
     <Container>
-      <Title>NOTICE</Title>
+
       <NoticeContainer>
         <NoticeHeader>
           <NoticeTitle>{noticeData.title}</NoticeTitle>
@@ -161,7 +142,7 @@ const NoticeDetail = () => {
         <ButtonGroup>
           <Button onClick={handleBackClick}>목록</Button>
 
-          {isAdmin && ( // 🔥 여기 조건 추가!!!
+          {isAdmin && (
             <RightButtonGroup>
               <EditButton onClick={handleEditClick}>수정</EditButton>
               <DeleteButton onClick={handleDeleteClick}>삭제</DeleteButton>
