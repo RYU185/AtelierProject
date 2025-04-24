@@ -11,19 +11,27 @@ const Container = styled.div`
 `;
 
 const LeftSection = styled.div`
-  flex: 1;
+  flex: 3;
   background-image: url("/images/museum.jpg");
   background-size: cover;
   background-position: center;
 `;
 
-const RightSection = styled.div`
-  flex: 1;
-  background-color: #fff;
+const GradientBackground = styled.div`
+  flex: 2;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative; /* Added for positioning the home link */
+  position: relative;
+`;
+
+const RightSection = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 `;
 
 const HomeLink = styled(Link)`
@@ -31,7 +39,7 @@ const HomeLink = styled(Link)`
   top: 40px;
   right: 50px;
   font-size: 18px;
-  color: #333;
+  color: #ffffff;
   text-decoration: none;
 
   &:hover {
@@ -53,7 +61,7 @@ const Logo = styled.h1`
 
 const Subtitle = styled.p`
   font-size: 18px;
-  color: #333;
+  color: #e1e1e1;
   margin-bottom: 30px;
 `;
 
@@ -103,7 +111,7 @@ const Links = styled.div`
   color: #555;
 
   a {
-    color: #333;
+    color: #e1e1e1;
     text-decoration: none;
     margin: 0 6px;
 
@@ -160,13 +168,13 @@ const Login = () => {
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
       localStorage.setItem("nickname", nickname);
-      
+
       const loginPayload = {
         username: userId,
         role,
         isArtist,
         nickname,
-        authToken: token
+        authToken: token,
       };
 
       if (typeof isArtist !== "undefined") {
@@ -195,49 +203,50 @@ const Login = () => {
       handleLogin();
     }
   };
-  
 
   return (
     <Container>
       <LeftSection />
-      <RightSection>
+      <GradientBackground>
         <HomeLink to="/">홈페이지로 이동 &#8594; </HomeLink>
-        <FormWrapper>
-          <Logo>LOGO</Logo>
-          <Subtitle>로그인</Subtitle>
-          <Input
-            type="text"
-            placeholder="아이디"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          <Input
-            type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
-          <CheckboxLabel>
-            <input
-              type="checkbox"
-              checked={autoLogin}
-              onChange={(e) => setAutoLogin(e.target.checked)}
+        <RightSection>
+          <FormWrapper>
+            <Logo>LOGO</Logo>
+            <Subtitle>로그인</Subtitle>
+            <Input
+              type="text"
+              placeholder="아이디"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
-            자동 로그인
-          </CheckboxLabel>
-          <LoginButton onClick={handleLogin}>로그인</LoginButton>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <Links>
-            <Link to="/find-id">아이디 찾기</Link>
-            <Divider />
-            <Link to="/find-password">비밀번호 찾기</Link>
-            <Divider />
-            <Link to="/join">회원가입</Link>
-          </Links>
-        </FormWrapper>
-      </RightSection>
+            <Input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <CheckboxLabel>
+              <input
+                type="checkbox"
+                checked={autoLogin}
+                onChange={(e) => setAutoLogin(e.target.checked)}
+              />
+              자동 로그인
+            </CheckboxLabel>
+            <LoginButton onClick={handleLogin}>로그인</LoginButton>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            <Links>
+              <Link to="/find-id">아이디 찾기</Link>
+              <Divider />
+              <Link to="/find-password">비밀번호 찾기</Link>
+              <Divider />
+              <Link to="/join">회원가입</Link>
+            </Links>
+          </FormWrapper>
+        </RightSection>
+      </GradientBackground>
     </Container>
   );
 };

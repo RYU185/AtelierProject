@@ -40,16 +40,20 @@ const Overlay = styled.div`
 `;
 
 const Left = styled.div`
-  width: 180px;
-  height: 128px;
+  width: 220px;
+  height: auto;
   overflow: hidden;
-  font-size: 40px;
-  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: start;
   justify-content: center;
-  transform: translateY(-27px);
+
+  svg {
+    height: 80px;
+    width: auto;
+    scale: 1.5;
+    margin-top: -24px; 
+  }
 `;
 
 const CenterContainer = styled.div`
