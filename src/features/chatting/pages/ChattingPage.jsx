@@ -9,15 +9,7 @@ const PageContainer = styled.div`
   background-color: #fff;
 `;
 
-const Header = styled.div`
-  padding: 30px 40px;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+
 
 const BackButton = styled.button`
   position: absolute;
@@ -41,12 +33,7 @@ const BackButton = styled.button`
   }
 `;
 
-const Title = styled.h1`
-  font-size: 24px;
-  color: #333;
-  margin: 0;
-  font-weight: normal;
-`;
+
 
 const ChattingPage = () => {
   const navigate = useNavigate();
@@ -57,10 +44,10 @@ const ChattingPage = () => {
 
   return (
     <PageContainer>
-      <Header>
-        <Title>Chatting with ARTIST</Title>
+      
+     
         <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
-      </Header>
+      
       {!selectedRoom ? (
         <ChatRoomList onSelectRoom={setSelectedRoom} />
       ) : (
