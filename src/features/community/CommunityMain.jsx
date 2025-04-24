@@ -16,7 +16,6 @@ function CommunityMain() {
       <Header />
       <Container>
         <CommunityList />
-        {/* Outlet 제거 */}
       </Container>
       <TopButton />
       <Footer />

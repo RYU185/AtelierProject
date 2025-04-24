@@ -4,10 +4,12 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 const CommentContainer = styled.div`
   padding: 10px 0;
-  border-bottom: 2px solid #e0e0e0; /* 구분선 두께와 색상 변경 */
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  border-bottom: 2px solid #e0e0e0;
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 8px 10px;
+  align-items: start;
 
   &:last-child {
     border-bottom: none;
@@ -17,41 +19,46 @@ const CommentContainer = styled.div`
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80px;
-  align-items: center; /* 아이콘과 닉네임/일자 묶음 가운데 정렬 */
+  align-items: flex-start;
+  grid-column: 1;
+  grid-row: 1 / span 2;
 `;
 
 const Nickname = styled.span`
   font-weight: bold;
   font-size: 14px;
   color: #555;
-  margin-bottom: 5px;
-  text-align: center; /* 닉네임 가운데 정렬 */
+  margin-bottom: 3px;
+  text-align: left;
 `;
 
 const DateInfo = styled.div`
   font-size: 11px;
   color: #888;
-  margin-top: 3px; /* 아이콘과의 간격 */
 `;
 
 const CommentContent = styled.p`
   font-size: 14px;
   color: #333;
   line-height: 1.4;
-  flex-grow: 1;
+  text-align: left;
+  grid-column: 2;
+  grid-row: 1;
 `;
 
 const Actions = styled.div`
   display: flex;
-  flex-direction: column; /* 아이콘 묶음과 일자를 세로로 배치 */
-  align-items: center; /* 가운데 정렬 */
-  gap: 5px; /* 아이콘 사이 및 아이콘-일자 간 간격 */
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  grid-column: 3;
+  grid-row: 1 / span 2; /* 아이콘과 날짜가 같은 컬럼, 다른 행 차지 */
+  justify-self: end; /* 오른쪽 끝으로 정렬 */
 `;
 
 const IconsWrapper = styled.div`
   display: flex;
-  gap: 8px; /* 아이콘 사이 간격 */
+  gap: 10px;
 `;
 
 const ActionButton = styled.button`
@@ -75,7 +82,7 @@ const ActionButton = styled.button`
     color: #e74c3c;
 
     &:hover {
-      color: #972e23;
+      color: #871f13;
     }
   }
 `;
@@ -85,6 +92,7 @@ function Comment({ user, text, date }) {
     <CommentContainer>
       <UserInfo>
         <Nickname>{user}</Nickname>
+        {/* <DateInfo>{date}</DateInfo> UserInfo 영역에서 제거 */}
       </UserInfo>
       <CommentContent>{text}</CommentContent>
       <Actions>
@@ -96,7 +104,7 @@ function Comment({ user, text, date }) {
             <FiTrash2 />
           </ActionButton>
         </IconsWrapper>
-        <DateInfo>{date}</DateInfo>
+        <DateInfo>{date}</DateInfo> {/* Actions 영역 아래에 DateInfo 배치 */}
       </Actions>
     </CommentContainer>
   );

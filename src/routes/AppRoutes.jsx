@@ -102,7 +102,6 @@ function AppRoutes() {
       <Route path="/artist/:id" element={<ArtistDetail />} />
 
       <Route path="/community" element={<CommunityMain />} />
-      <Route path="/community/:id" element={<CommunityDetailModal />} />
 
       <Route path="/support" element={<SupportPage />}>
         <Route path="/support/notice" element={<NoticePage />} />

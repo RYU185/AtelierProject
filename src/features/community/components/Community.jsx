@@ -7,6 +7,7 @@ import {
   BsChevronLeft,
   BsChevronRight,
 } from "react-icons/bs";
+import { FiMoreVertical } from "react-icons/fi"; // 점 세 개 아이콘 추가
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -70,6 +71,7 @@ const PostImageCarousel = styled.div`
   overflow: hidden;
   border-radius: 8px;
   margin-top: 8px;
+  /* padding: 0 10px; 필요하다면 좌우 패딩 추가 */
 `;
 
 const PostImage = styled.img`
@@ -100,17 +102,17 @@ const NavigationButton = styled.button`
     opacity: 1;
   }
 
-  &.left {
-    left: 10px;
-  }
-
-  &.right {
-    right: 10px;
-  }
-
   /* 아이콘 스타일 */
   svg {
     stroke-width: 2;
+  }
+
+  &.left {
+    left: 5px; /* 값을 줄여서 더 왼쪽으로 이동 */
+  }
+
+  &.right {
+    right: 5px; /* 값을 줄여서 더 오른쪽으로 이동 */
   }
 `;
 
@@ -119,8 +121,9 @@ const MenuIconWrapper = styled.div`
   cursor: pointer;
 `;
 
-const MenuIcon = styled.div`
-  font-size: 16px;
+const MenuIcon = styled(FiMoreVertical)`
+  // FiMoreVertical 아이콘 사용
+  font-size: 20px; // 아이콘 크기 조정
   color: #888;
 `;
 
@@ -209,7 +212,7 @@ function Community({
   text,
   img,
   likes,
-  onDelete,
+  onDelete, // 상위 컴포넌트에서 전달받는 삭제 처리 함수
   onOpenModal,
   isModal,
   currentImageIndex: propCurrentImageIndex, // 모달로부터 전달받는 인덱스
@@ -312,9 +315,36 @@ function Community({
     navigate(`/community/modify/${id}`);
   };
 
-  const handleDeleteClick = (e) => {
+  const handleDeleteClick = async (e) => {
     e.stopPropagation();
-    onDelete(id);
+    try {
+      const response = await fetch(`/delete/${id}`, {
+        method: "POST",
+        headers: {
+          // 필요한 경우 인증 헤더 추가 (예: Authorization: `Bearer ${token}`)
+          "Content-Type": "application/json",
+        },
+        // 필요한 경우 요청 본문 추가 (예: JSON.stringify({ userId: user.id }))
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        console.log("삭제 성공:", result);
+        // 삭제 성공 후 UI 업데이트 (상위 컴포넌트의 상태 업데이트 함수 호출)
+        if (onDelete) {
+          onDelete(id); // 상위 컴포넌트로 ID를 전달하여 목록에서 제거
+        }
+      } else {
+        const error = await response.text();
+        console.error("삭제 실패:", error);
+        // 삭제 실패 처리 (예: 사용자에게 알림)
+      }
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error("삭제 요청 중 오류 발생:", error);
+      setIsMenuOpen(false);
+      // 네트워크 오류 처리
+    }
   };
 
   return (
@@ -325,7 +355,7 @@ function Community({
           <DateText>{formatDate(uploadDate)}</DateText>
         </UserInfo>
         <MenuIconWrapper onClick={toggleMenu}>
-          <MenuIcon />
+          <MenuIcon /> {/* 점 세 개 아이콘 렌더링 */}
           {isMenuOpen && (
             <MenuDropdown onClick={(e) => e.stopPropagation()}>
               <MenuItemM onClick={handleEdit}>수정</MenuItemM>
