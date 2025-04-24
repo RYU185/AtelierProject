@@ -14,7 +14,6 @@ const SearchContainer = styled.div`
   position: relative;
   margin-bottom: 20px;
   max-width: 1000px;
-  
 `;
 
 const SearchInput = styled.input`
@@ -69,7 +68,7 @@ const PurchaseList = styled.div`
 const PurchaseCard = styled.div`
   display: flex;
   padding: 24px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.07);
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `;
@@ -99,25 +98,25 @@ const GoodsHeader = styled.div`
 const GoodsTitle = styled.h3`
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: #e1e1e1;
   margin: 0;
 `;
 
 const PurchaseDate = styled.span`
   font-size: 14px;
-  color: #999;
+  color: #c2c2c2;
 `;
 
 const GoodsDetails = styled.div`
   font-size: 14px;
-  color: #666;
+  color: #e2e2e2;
   line-height: 1.5;
 `;
 
 const Price = styled.div`
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: #e9e9e9;
   margin-top: 12px;
 `;
 
@@ -176,22 +175,18 @@ const GoodsPurchase = () => {
       id: purchase.purchaseId,
       title: purchase.goodsName,
       image: `/public/images/goods-images/${purchase.thumbnailUrl}`,
-      price: `환불금액: ${(
-        purchase.price * purchase.quantity
-      ).toLocaleString()}원 · ${purchase.quantity}개
+      price: `환불금액: ${(purchase.price * purchase.quantity).toLocaleString()}원 · ${
+        purchase.quantity
+      }개
       (1개 당 ${purchase.price.toLocaleString()}원) `,
-      description: `구매일: ${new Date(
-        purchase.purchaseDate
-      ).toLocaleDateString()}`,
+      description: `구매일: ${new Date(purchase.purchaseDate).toLocaleDateString()}`,
     };
 
     setSelectedPurchase(formatted);
     setShowModal(true);
   };
   const handleRefundSuccess = (deletedId) => {
-    setPurchases((prev) =>
-      prev.filter((purchase) => purchase.purchaseId !== deletedId)
-    );
+    setPurchases((prev) => prev.filter((purchase) => purchase.purchaseId !== deletedId));
   };
 
   // 리뷰 작성하기 버튼 클릭 핸들러
@@ -219,9 +214,7 @@ const GoodsPurchase = () => {
           </p>
         ) : (
           filteredPurchases.map((purchase, index) => (
-            <PurchaseCard
-              key={`${purchase.goodsId}-${purchase.purchaseDate}-${index}`}
-            >
+            <PurchaseCard key={`${purchase.goodsId}-${purchase.purchaseDate}-${index}`}>
               <GoodsImage
                 src={
                   purchase.thumbnailUrl?.startsWith("/uploads")
@@ -240,21 +233,16 @@ const GoodsPurchase = () => {
                   </GoodsHeader>
                   <GoodsDetails>수량: {purchase.quantity}개</GoodsDetails>
                   <Price>
-                    총 금액:{" "}
-                    {(purchase.price * purchase.quantity).toLocaleString()}원 (
-                    1개 당 {purchase.price.toLocaleString()}원 )
+                    총 금액: {(purchase.price * purchase.quantity).toLocaleString()}원 ( 1개 당{" "}
+                    {purchase.price.toLocaleString()}원 )
                   </Price>
                 </div>
                 <ButtonContainer>
-                  <ActionButton
-                    onClick={() => handleWriteReview(purchase.goodsId)}
-                  >
+                  <ActionButton onClick={() => handleWriteReview(purchase.goodsId)}>
                     리뷰 작성/ 상품 구경하기
                   </ActionButton>
 
-                  <ActionButton onClick={() => handleRefund(purchase)}>
-                    교환/환불 신청
-                  </ActionButton>
+                  <ActionButton onClick={() => handleRefund(purchase)}>교환/환불 신청</ActionButton>
                 </ButtonContainer>
               </GoodsInfo>
             </PurchaseCard>
