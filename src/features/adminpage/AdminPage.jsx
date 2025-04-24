@@ -16,7 +16,12 @@ import AdminArtAdd from "./components/AdminArtAdd";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const Container = styled.div`
@@ -42,22 +47,26 @@ const AdminPage = () => {
       case "art":
         return <AdminArtList />;
       case "artAdd":
-      return <AdminArtAdd />;
+        return <AdminArtAdd />;
       case "goods":
         return <AdminGoods />;
       case "goodsChart":
         return <AdminGoodsChart />;
-        case "goodsAdd":
-          return <AdminGoodsAdd />;
-          case "ticket":
-            return <AdminTicketManagement />;
-            case "ticketChart":
-              return <AdminTicketChart />;
-              case "contact":
-              return <AdminContact />;
-              case "user":
-                return <AdminUser />;
-          
+      case "goodsAdd":
+        return <AdminGoodsAdd />;
+      case "ticket":
+        return <AdminTicketManagement />;
+      case "ticketChart":
+        return <AdminTicketChart />;
+      case "contact":
+        return <AdminContact />;
+      case "user":
+        return <AdminUser />;
+      case "artist":
+        return <AdminArtist />;
+      case "artistAdd":
+        return <AdminArtistAdd />;
+
       default:
         return <div>선택된 탭이 없습니다</div>;
     }
