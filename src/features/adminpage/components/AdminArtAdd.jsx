@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { AdminContentLayout } from "./AdminContentLayout";
+import TitleWrapper from "./Titlewrapper";
 
 
 const AdminArtAddWrapper = styled.div`
@@ -18,14 +20,16 @@ const AdminContent = styled.div`
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  
 `;
 
 const Title = styled.h2`
   text-align: center;
   margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
+
+  margin-right:330px;
+  font-size: 25px;
+  color: #ffffff;
 `;
 
 const InputContainer = styled.div`
@@ -61,7 +65,7 @@ const FileInput = styled.input`
 const ButtonContainer = styled.div`
   position: absolute;
   bottom: 250px;
-  right: 490px;
+  right: 500px;
   display: flex;
   gap: 10px;
 `;
@@ -196,78 +200,80 @@ function AdminArtAdd() {
 
   return (
     <>
-   <AdminArtAddWrapper>
-        <AdminContent>
-          <Title>작품 추가</Title>
-          <FlexContainer>
-            <ImagePreviewContainer>
-              {imagePreview ? (
-                <ImagePreview src={imagePreview} alt="미리보기" />
-              ) : (
-                <PlaceholderText>이미지를 업로드 해주세요</PlaceholderText>
-              )}
-            </ImagePreviewContainer>
+      <AdminArtAddWrapper>
 
-            <InputContainer>
-              <InputField
-                type="text"
-                placeholder="작품 제목"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+        <AdminContentLayout>
+          <TitleWrapper>작품 목록 관리</TitleWrapper>
+          <AdminContent>
+            <FlexContainer>
+              <ImagePreviewContainer>
+                {imagePreview ? (
+                  <ImagePreview src={imagePreview} alt="미리보기" />
+                ) : (
+                  <PlaceholderText>이미지를 업로드 해주세요</PlaceholderText>
+                )}
+              </ImagePreviewContainer>
 
-              <select
-                value={artistId}
-                onChange={(e) => setArtistId(e.target.value)}
-                style={{ width: '500px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '1px solid #2a7fbc' }}
-              >
-                <option value="">작가 선택</option>
-                {artistList.map((artist) => (
-                  <option key={artist.id} value={artist.id}>
-                    {artist.name}
-                  </option>
-                ))}
-              </select>
+              <InputContainer>
+                <InputField
+                  type="text"
+                  placeholder="작품 제목"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
 
-              <TextAreaField
-                placeholder="작품 설명"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+                <select
+                  value={artistId}
+                  onChange={(e) => setArtistId(e.target.value)}
+                  style={{ width: '500px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '1px solid #2a7fbc' }}
+                >
+                  <option value="">작가 선택</option>
+                  {artistList.map((artist) => (
+                    <option key={artist.id} value={artist.id}>
+                      {artist.name}
+                    </option>
+                  ))}
+                </select>
 
-              <InputField
-                type="number"
-                placeholder="제작 연도 (예: 2023)"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-              />
+                <TextAreaField
+                  placeholder="작품 설명"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
 
-              <InputField
-                type="date"
-                placeholder="업로드 날짜"
-                value={uploadDate}
-                onChange={(e) => setUploadDate(e.target.value)}
-              />
-            </InputContainer>
-          </FlexContainer>
-        </AdminContent>
- 
+                <InputField
+                  type="number"
+                  placeholder="제작 연도 (예: 2023)"
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                />
 
-      <ButtonContainer>
-        <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
-        <SubmitButton disabled={!imageFile} onClick={handleSubmit}>
-          등록
-        </SubmitButton>
-      </ButtonContainer>
+                <InputField
+                  type="date"
+                  placeholder="업로드 날짜"
+                  value={uploadDate}
+                  onChange={(e) => setUploadDate(e.target.value)}
+                />
+              </InputContainer>
+            </FlexContainer>
+          </AdminContent>
+        </AdminContentLayout>
 
-      <FileInput
-        type="file"
-        id="file-input"
-        accept="image/*"
-        onChange={handleImageUpload}
-      />
-    </AdminArtAddWrapper>
-      
+        <ButtonContainer>
+          <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
+          <SubmitButton disabled={!imageFile} onClick={handleSubmit}>
+            등록
+          </SubmitButton>
+        </ButtonContainer>
+
+        <FileInput
+          type="file"
+          id="file-input"
+          accept="image/*"
+          onChange={handleImageUpload}
+        />
+      </AdminArtAddWrapper>
+
     </>
   );
 }

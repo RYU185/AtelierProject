@@ -17,7 +17,7 @@ const AdminContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+  margin-top: -54px;
 `;
 
 const Title = styled.h2`
@@ -59,7 +59,7 @@ const FileInput = styled.input`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  bottom: 200px;
+  bottom: 300px;
   right: 500px;
   display: flex;
   gap: 10px;

@@ -29,7 +29,8 @@ const FilterContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   max-width: 1500px;
-  margin-top: 20px;
+  margin-top: 45px;
+  position: relative;
 `;
 
 const SearchInput = styled.input`

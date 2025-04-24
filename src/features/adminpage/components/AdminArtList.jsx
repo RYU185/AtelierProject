@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import ArtCard from "../components/ArtCard";
+import { AdminContentLayout} from "./AdminContentLayout";
+import TitleWrapper from "./Titlewrapper";
 import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
@@ -23,23 +24,13 @@ const PageContainer = styled.div`
   margin-top: 3px;
   min-height: 100vh;
 `;
-const ArtListTitle = styled.h2`
-  font-size: 25px;
-  font-weight: bold;
-  color: #222;
-  text-align: center;
-  padding: 12px;
-  border-radius: 6px;
-  width: 200px;
-  margin-top: -50px;
-  margin-left: 15px;
-`;
+
 const ArtListContainer = styled.div`
   width: 1200px;
   margin: 0 auto;
   padding: 10px;
   border-radius: 8px;
-  margin-top: 20px;
+ 
 `;
 const ArtListHeader = styled.div`
   display: flex;
@@ -75,6 +66,7 @@ const AddButton = styled.button`
   border: none;
   position: absolute;
   margin-left: -94px;
+position: relative;
   border-radius: 4px;
   cursor: pointer;
   &:hover {
@@ -276,60 +268,59 @@ const handleDelete = async (id) => {
 
   return (
     <PageContainer>
-      <ArtListTitle>작품 목록 관리</ArtListTitle>
-      <ArtListContainer>
-        <ArtListHeader>
-          <SearchContainer>
-            <SearchInput
-              type="text"
-              placeholder="작품명을 검색하세요"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-            <SearchButton>검색</SearchButton>
-          </SearchContainer>
-          <Link to="/AdminArtAdd">
-            <AddButton>작품 추가</AddButton>
-          </Link>
-        </ArtListHeader>
-
-        <ArtGrid>
-          {filteredArtList.map((art) => (
-            <ArtItem key={art.id}>
-              {/* 옵션 버튼 */}
-              <MoreOptions
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleMenu(art.id);
-                }}
-              >
-                ⋮
-              </MoreOptions>
-
-              {/* 메뉴 */}
-              <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
-                <OptionButton danger onClick={() => handleDelete(art.id)}>
-                  삭제
-                </OptionButton>
-              </OptionsMenu>
-
-              {/* ✅ 이미지에만 클릭 이벤트 적용 */}
-              <ArtCardImageContainer onClick={() => openModal(art)}>
-                <ArtCardImage src={getImageUrl(art.imgUrl)} alt={art.title} />
-              </ArtCardImageContainer>
-
-              {/* 텍스트는 클릭 X */}
-              <ArtInfo>
-                <ArtTitle>{art.title}</ArtTitle>
-                <ArtDetails>
-                  {art.artistName} · {art.completionDate}
-                </ArtDetails>
-              </ArtInfo>
-            </ArtItem>
-          ))}
-        </ArtGrid>
-      </ArtListContainer>
-
+      <AdminContentLayout>
+        <TitleWrapper>작품 목록 관리</TitleWrapper>
+  
+        <ArtListContainer>
+          <ArtListHeader>
+            <SearchContainer>
+              <SearchInput
+                type="text"
+                placeholder="작품명을 검색하세요"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              <SearchButton>검색</SearchButton>
+            </SearchContainer>
+            <Link to="/AdminArtAdd">
+              <AddButton>작품 추가</AddButton>
+            </Link>
+          </ArtListHeader>
+  
+          <ArtGrid>
+            {filteredArtList.map((art) => (
+              <ArtItem key={art.id}>
+                <MoreOptions
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleMenu(art.id);
+                  }}
+                >
+                  ⋮
+                </MoreOptions>
+  
+                <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
+                  <OptionButton danger onClick={() => handleDelete(art.id)}>
+                    삭제
+                  </OptionButton>
+                </OptionsMenu>
+  
+                <ArtCardImageContainer onClick={() => openModal(art)}>
+                  <ArtCardImage src={getImageUrl(art.imgUrl)} alt={art.title} />
+                </ArtCardImageContainer>
+  
+                <ArtInfo>
+                  <ArtTitle>{art.title}</ArtTitle>
+                  <ArtDetails>
+                    {art.artistName} · {art.completionDate}
+                  </ArtDetails>
+                </ArtInfo>
+              </ArtItem>
+            ))}
+          </ArtGrid>
+        </ArtListContainer>
+      </AdminContentLayout>
+  
       <ModalOverlay isOpen={selectedArt !== null} onClick={closeModal}>
         {selectedArt && (
           <Modal onClick={(e) => e.stopPropagation()}>

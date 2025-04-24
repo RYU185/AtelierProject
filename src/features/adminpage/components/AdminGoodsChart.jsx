@@ -27,9 +27,9 @@ const AdminGoodsChartWrapper = styled.div`
 
 const ChartWrapper = styled.div`
   width: 100%;
-  margin-left: 10px;
+  margin-left: -50px;
   padding: 40px;
-  margin-top: 30px;
+  margin-top: -90px;
 `;
 
 const InnerChart = styled.div`
@@ -46,8 +46,8 @@ const TitleWrapper = styled.div`
 
 const MenubarWrapper = styled.div`
   position: relative;
-  top: -21px;
-  margin-left: -470px;
+  top: -100px;
+  margin-left: -475px;
 `;
 
 

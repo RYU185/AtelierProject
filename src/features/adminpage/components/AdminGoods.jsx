@@ -31,6 +31,7 @@ const AdminGoodsWrapper = styled.div`
 const TitleWrapper = styled.div`
   margin-bottom: 10px;
   font-size: 25px;
+  margin-right: 30px;
   font-weight: bold;
   text-align: center;
 `;

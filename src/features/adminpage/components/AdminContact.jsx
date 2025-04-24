@@ -15,7 +15,7 @@ const AdminContactWrapper = styled.div`
 
 const InquiryList = styled.ul`
   position: relative;
-  margin-top: 72px;
+  margin-top: 27px;
   list-style: none;
   padding: 0;
   max-height: 500px;
@@ -69,22 +69,7 @@ const Input = styled.textarea`
   }
 `;
 
-const Button = styled.button`
-  margin-top: 20px;
-  padding: 12px 18px;
-  background: ${(props) => (props.disabled ? "#ccc" : "#007bff")};
-  color: ${(props) => (props.disabled ? "#666" : "white")};
-  border: none;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background: ${(props) => (props.disabled ? "#ccc" : "#0056b3")};
-  }
-`;
 
 const StatusIcon = styled.span`
   font-size: 18px;
@@ -120,7 +105,7 @@ const FilterButton = styled.button`
   font-weight: bold;
   background: ${(props) => (props.active ? "#007bff" : "#ddd")};
   color: ${(props) => (props.active ? "white" : "black")};
-  
+  margin-top: 44px;
   &:hover {
     background: ${(props) => (props.active ? "#0056b3" : "#bbb")};
   }
