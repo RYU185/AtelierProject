@@ -3,6 +3,7 @@ import axios from "../../../api/axiosInstance";
 import { useAuth } from "../../../components/AuthContext";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
+import LogoIconFinal from "../../LogoIconFinal";
 
 const Container = styled.div`
   display: flex;
@@ -36,9 +37,9 @@ const RightSection = styled.div`
 
 const HomeLink = styled(Link)`
   position: absolute;
-  top: 40px;
-  right: 50px;
-  font-size: 18px;
+  top: 2.5rem;
+  right: 3.125rem;
+  font-size: 1.125rem;
   color: #ffffff;
   text-decoration: none;
 
@@ -49,29 +50,29 @@ const HomeLink = styled(Link)`
 `;
 
 const FormWrapper = styled.div`
-  width: 320px;
+  width: 20rem;
   text-align: center;
+  margin-top: -7.5rem;
 `;
 
-const Logo = styled.h1`
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 10px;
+const Logo = styled.div`
+height: 10.625rem;
+
 `;
 
 const Subtitle = styled.p`
-  font-size: 18px;
+  font-size: 1.125rem;
   color: #e1e1e1;
-  margin-bottom: 30px;
+  margin-bottom: 1.875rem;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 12px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: .75rem;
+  margin-bottom: 1rem;
+  border: .0625rem solid #ccc;
+  border-radius: .25rem;
+  font-size: .875rem;
 
   &:focus {
     border-color: #007aff;
@@ -82,22 +83,22 @@ const Input = styled.input`
 const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
-  font-size: 14px;
-  margin-bottom: 16px;
+  font-size: .875rem;
+  margin-bottom: 1rem;
 
   input {
-    margin-right: 6px;
+    margin-right: .375rem;
   }
 `;
 
 const LoginButton = styled.button`
   width: 100%;
-  padding: 12px;
+  padding: .75rem;
   background-color: #0038a8;
   color: white;
-  font-size: 16px;
+  font-size: 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: .25rem;
   cursor: pointer;
 
   &:hover {
@@ -106,14 +107,14 @@ const LoginButton = styled.button`
 `;
 
 const Links = styled.div`
-  margin-top: 20px;
-  font-size: 14px;
+  margin-top: 1.25rem;
+  font-size: .875rem;
   color: #555;
 
   a {
     color: #e1e1e1;
     text-decoration: none;
-    margin: 0 6px;
+    margin: 0 .375rem;
 
     &:hover {
       text-decoration: underline;
@@ -124,13 +125,13 @@ const Links = styled.div`
 
 const Divider = styled.span`
   color: #aaa;
-  margin: 0 6px;
+  margin: 0 .375rem;
 `;
 
 const ErrorMessage = styled.p`
   color: red;
-  font-size: 14px;
-  margin-top: 12px;
+  font-size: .875rem;
+  margin-top: .75rem;
 `;
 
 const Login = () => {
@@ -211,7 +212,9 @@ const Login = () => {
         <HomeLink to="/">홈페이지로 이동 &#8594; </HomeLink>
         <RightSection>
           <FormWrapper>
-            <Logo>LOGO</Logo>
+            <Logo>
+              <LogoIconFinal />
+            </Logo>
             <Subtitle>로그인</Subtitle>
             <Input
               type="text"
