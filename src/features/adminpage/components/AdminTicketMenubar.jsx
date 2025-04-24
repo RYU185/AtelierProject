@@ -1,6 +1,6 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 const MenuContainer = styled.div`
   display: flex;
@@ -16,8 +16,8 @@ const TabButton = styled.button`
   font-size: 14px;
   border: 1px solid #bbb;
   border-radius: 10px;
-  background: ${(props) => (props.active ? '#6ea8fe' : '#f1f1f1')};
-  color: ${(props) => (props.active ? '#fff' : '#666')};
+  background: ${(props) => (props.active ? "#6ea8fe" : "#f1f1f1")};
+  color: ${(props) => (props.active ? "#fff" : "#666")};
   cursor: pointer;
   transition: background 0.2s;
   margin-right: 5px;
@@ -34,10 +34,8 @@ const TabButton = styled.button`
   }
 `;
 
-// ✅ `AdminTicketChart`에서만 적용될 추가 스타일
 const ChartTabButton = styled(TabButton)`
   top: 30px;
-  
 `;
 
 function AdminTicketMenubar({ className }) {
@@ -46,17 +44,17 @@ function AdminTicketMenubar({ className }) {
 
   return (
     <MenuContainer>
-      {className === 'chart-menubar' ? (
+      {className === "chart-menubar" ? (
         <>
           <ChartTabButton
-            active={location.pathname === '/AdminTicketManagement'}
-            onClick={() => navigate('/AdminTicketManagement')}
+            active={location.pathname === "/AdminTicketManagement"}
+            onClick={() => navigate("/AdminTicketManagement")}
           >
             전시회 별 현황
           </ChartTabButton>
           <ChartTabButton
-            active={location.pathname === '/AdminTicketChart'}
-            onClick={() => navigate('/AdminTicketChart')}
+            active={location.pathname === "/AdminTicketChart"}
+            onClick={() => navigate("/AdminTicketChart")}
           >
             전시회 분석
           </ChartTabButton>
@@ -64,19 +62,27 @@ function AdminTicketMenubar({ className }) {
       ) : (
         <>
           <TabButton
-            active={location.pathname === '/AdminTicketManagement'}
-            onClick={() => navigate('/AdminTicketManagement')}
+            active={location.pathname === "/AdminTicketManagement"}
+            onClick={() => navigate("/AdminTicketManagement")}
           >
             전시회 별 현황
           </TabButton>
           <TabButton
-            active={location.pathname === '/AdminTicketChart'}
-            onClick={() => navigate('/AdminTicketChart')}
+            active={location.pathname === "/AdminTicketChart"}
+            onClick={() => navigate("/AdminTicketChart")}
           >
             전시회 분석
           </TabButton>
         </>
       )}
+
+      {/* ✅ 티켓 추가 버튼은 조건 없이 항상 보이도록 마지막에 추가 */}
+      <TabButton
+        active={location.pathname === "/admin/tickets/add"}
+        onClick={() => navigate("/admin/tickets/add")}
+      >
+        티켓 추가
+      </TabButton>
     </MenuContainer>
   );
 }
