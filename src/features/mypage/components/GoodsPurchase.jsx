@@ -22,7 +22,9 @@ const SearchInput = styled.input`
   border: 2px solid #e1e1e1;
   border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  color: #ffffff;
+  transition: 0.3s ease-in-out;
+  background-color: rgba(255, 255, 255, 0.07);
 
   &::placeholder {
     color: #999;

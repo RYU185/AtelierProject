@@ -20,7 +20,9 @@ const SearchInput = styled.input`
   border: 2px solid #e1e1e1;
   border-radius: 4px;
   font-size: 14px;
-  color: #333;
+  color: #e1e1e1;
+  background-color: rgba(255, 255, 255, 0.07);
+  transition: 0.5s ease-in-out;
 
   &::placeholder {
     color: #999;
@@ -49,7 +51,6 @@ const DrawingGrid = styled.div`
   max-height: 435px;
   overflow-y: auto;
   padding-right: 2px;
-  /* 예쁜 스크롤바를 원한다면: */
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -65,15 +66,13 @@ const DrawingGrid = styled.div`
 `;
 
 const DrawingItem = styled.div`
-  background: #f1f1f1;
-  border: 0.1px solid #b5b4b4;
+  background: rgba(255, 255, 255, 0.07);
 `;
 
 const DrawingImage = styled.img`
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  background-color: #ffffff;
 `;
 
 const DrawingInfo = styled.div`
@@ -82,10 +81,13 @@ const DrawingInfo = styled.div`
 
 const DrawingTitle = styled.div`
   font-size: 16px;
+  font-weight: 300;
   margin-bottom: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #e1e1e1;
+
 
   span.status {
     color: ${(props) => (props.status === "임시저장" ? "#029149" : "#0551ea")};
@@ -95,14 +97,13 @@ const DrawingTitle = styled.div`
 
 const DrawingDate = styled.div`
   font-size: 14px;
-  color: #666;
+  color: #8b8b8b;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   gap: 3px;
-  padding: 8px;
-  background: #f5f5f5;
+  background:rgba(255, 255, 255, 0.07);
 `;
 
 const ActionButton = styled.button`
@@ -233,17 +234,11 @@ const MyDrawings = () => {
             </DrawingInfo>
             <ButtonContainer>
               {drawing.status === "임시저장" && (
-                <ActionButton
-                  className="continue"
-                  onClick={() => handleEdit(drawing.id)}
-                >
+                <ActionButton className="continue" onClick={() => handleEdit(drawing.id)}>
                   이어서 그리기
                 </ActionButton>
               )}
-              <ActionButton
-                className="delete"
-                onClick={() => handleDelete(drawing.id)}
-              >
+              <ActionButton className="delete" onClick={() => handleDelete(drawing.id)}>
                 삭제
               </ActionButton>
             </ButtonContainer>
