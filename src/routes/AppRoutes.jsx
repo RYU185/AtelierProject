@@ -33,14 +33,13 @@ import NoticeEdit from "../features/support/components/NoticeEdit";
 
 import CommunityMain from "../features/community/CommunityMain";
 
-
 import ChattingPage from "../features/chatting/pages/ChattingPage";
 import CartPage from "../features/cart/CartPage";
-
 
 import EditProfile from "../features/mypage/components/EditProfile";
 import Review from "../features/Goods/components/Review";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
+import CommunityDetailModal from "../features/community/components/CommunityDetailModal";
 
 function AppRoutes() {
   return (
@@ -53,16 +52,43 @@ function AppRoutes() {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/updateprofile" element={<EditProfile />} />
       <Route path="/adminpage" element={<AdminPage />} />
-    
-    <Route path="/AdminGoods" element={<Navigate to="/adminpage?tab=goods" replace />} />
-    <Route path="/AdminArtList" element={<Navigate to="/adminpage?tab=art" replace />} />
-    <Route path="/AdminGoodsChart" element={<Navigate to="/adminpage?tab=goodsChart" replace />} />
-    <Route path="/AdminGoodsAdd" element={<Navigate to="/adminpage?tab=goodsAdd" replace />} />
-    <Route path="/AdminTicketManagement" element={<Navigate to="/adminpage?tab=ticket" replace />} />
-    <Route path="/AdminTicketChart" element={<Navigate to="/adminpage?tab=ticketChart" replace />} />
-    <Route path="/AdminContact" element={<Navigate to="/adminpage?tab=contact" replace />} />
-    <Route path="/AdminUser" element={<Navigate to="/adminpage?tab=user" replace />} />
-    <Route path="/AdminArtAdd" element={<Navigate to="/adminpage?tab=artAdd" replace />} />
+
+      <Route
+        path="/AdminGoods"
+        element={<Navigate to="/adminpage?tab=goods" replace />}
+      />
+      <Route
+        path="/AdminArtList"
+        element={<Navigate to="/adminpage?tab=art" replace />}
+      />
+      <Route
+        path="/AdminGoodsChart"
+        element={<Navigate to="/adminpage?tab=goodsChart" replace />}
+      />
+      <Route
+        path="/AdminGoodsAdd"
+        element={<Navigate to="/adminpage?tab=goodsAdd" replace />}
+      />
+      <Route
+        path="/AdminTicketManagement"
+        element={<Navigate to="/adminpage?tab=ticket" replace />}
+      />
+      <Route
+        path="/AdminTicketChart"
+        element={<Navigate to="/adminpage?tab=ticketChart" replace />}
+      />
+      <Route
+        path="/AdminContact"
+        element={<Navigate to="/adminpage?tab=contact" replace />}
+      />
+      <Route
+        path="/AdminUser"
+        element={<Navigate to="/adminpage?tab=user" replace />}
+      />
+      <Route
+        path="/AdminArtAdd"
+        element={<Navigate to="/adminpage?tab=artAdd" replace />}
+      />
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
       <Route path="/goods/:goodsId/review" element={<Review />} />
@@ -76,6 +102,7 @@ function AppRoutes() {
       <Route path="/artist/:id" element={<ArtistDetail />} />
 
       <Route path="/community" element={<CommunityMain />} />
+      <Route path="/community/:id" element={<CommunityDetailModal />} />
 
       <Route path="/support" element={<SupportPage />}>
         <Route path="/support/notice" element={<NoticePage />} />
