@@ -40,6 +40,8 @@ import EditProfile from "../features/mypage/components/EditProfile";
 import Review from "../features/Goods/components/Review";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CommunityDetailModal from "../features/community/components/CommunityDetailModal";
+import AdminTicketAdd from "../features/adminpage/components/AdminTicketAdd";
+
 
 function AppRoutes() {
   return (
@@ -120,6 +122,7 @@ function AppRoutes() {
       <Route path="/chat" element={<ChattingPage />} />
       <Route path="/chatting" element={<ChattingPage />} />
       <Route path="/artist/:artistId/chat" element={<ChattingPage />} />
+      <Route path="/admin/tickets/add" element={<AdminTicketAdd />} />
     </Routes>
   );
 }
