@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "../Header";
+
 
 const Container = styled.div`
   max-width: 1200px;
@@ -104,7 +104,7 @@ const GuidePage = () => {
 
   return (
     <>
-      <Header />
+      
       <Container>
         <Title>시설 안내</Title>
         <FacilityGrid>
