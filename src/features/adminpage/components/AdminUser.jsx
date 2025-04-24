@@ -5,6 +5,12 @@ import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
+
 const Container = styled.div`
   display: flex;
   padding: 23px;
@@ -150,6 +156,7 @@ const AdminUser = () => {
 
   return (
     <>
+    <GradientBackground>
       <Header />
       <TitleWrapper>유저 관리</TitleWrapper>
 
@@ -200,6 +207,7 @@ const AdminUser = () => {
         </div>
       </Container>
       <Footer />
+      </GradientBackground>
     </>
   );
 };

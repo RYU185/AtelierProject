@@ -259,15 +259,15 @@ const AdminArtList = () => {
   const openModal = (art) => setSelectedArt(art);
   const closeModal = () => setSelectedArt(null);
 
-  const handleDelete = async (id) => {
-    try {
-      await api.post(`/art/${id}/delete`);
-      setMenuOpen({});
-      fetchArtList();
-    } catch (error) {
-      console.error("삭제 중 오류 발생:", error);
-    }
-  };
+const handleDelete = async (id) => {
+  try {
+    await api.post(`/art/${id}/delete`);
+    setMenuOpen({});
+    setArtList((prev) => prev.filter((art) => art.id !== id)); // UI에서 즉시 삭제 반영
+  } catch (error) {
+    console.error("삭제 중 오류 발생:", error);
+  }
+};
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const filteredArtList = artList.filter((art) =>

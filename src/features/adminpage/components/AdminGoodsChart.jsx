@@ -17,7 +17,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 const Container = styled.div`
   display: flex;
   padding: 10px;
@@ -113,6 +116,7 @@ function AdminGoodsChart() {
 
   return (
     <>
+    <GradientBackground>
       <Header />
       <TitleWrapper>월별 굿즈 판매량</TitleWrapper>
 
@@ -133,6 +137,7 @@ function AdminGoodsChart() {
       </Container>
 
       <Footer />
+      </GradientBackground>
     </>
   );
 }

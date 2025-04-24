@@ -18,6 +18,10 @@ const getImageUrl = (filename) => {
   );
   return matched ? matched[1].default : '/images/default-image.png';
 };
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 
 // ✅ 스타일 정의
 const Container = styled.div`
@@ -204,6 +208,7 @@ const AdminTicketList = () => {
 
   return (
     <>
+    
       <Header />
       <AdminGoodsMenubarWrapper>
         <AdminTicketMenubar />

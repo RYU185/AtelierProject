@@ -4,7 +4,10 @@ import Header from '../../Header';
 import Footer from '../../Footer';
 import AdminMenu from './AdminMenu';
 import axios from 'axios';
-
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 const Container = styled.div`
   padding: 20px;
   min-height: 100vh;
@@ -182,6 +185,7 @@ function AdminGoodsAdd() {
 
   return (
     <>
+    <GradientBackground>
       <Header />
       <Container>
         <AdminMenu />
@@ -243,6 +247,7 @@ function AdminGoodsAdd() {
       />
 
       <Footer />
+      </GradientBackground>
     </>
   );
 }

@@ -25,7 +25,10 @@ const getGoodsImageUrl = (filename) => {
 
   return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, '')}`;
 };
-
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 // 스타일 컴포넌트 정의
 const Container = styled.div`
   display: flex;
@@ -192,6 +195,7 @@ function AdminGoods() {
 
   return (
     <>
+    <GradientBackground>
       <Header />
       <TitleWrapper>전체 굿즈 판매량 통계</TitleWrapper>
       <AdminGoodsMenubarWrapper>
@@ -241,6 +245,7 @@ function AdminGoods() {
         </ContentWrapper>
       </Container>
       <Footer />
+      </GradientBackground>
     </>
   );
 }

@@ -12,7 +12,10 @@ const getImageUrl = (filename) => {
   const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
   return matched ? matched[1].default : '/images/default-image.png';
 };
-
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 const Container = styled.div`
   display: flex;
   padding: 20px;
@@ -170,6 +173,7 @@ const AdminTicketManagement = () => {
 
   return (
     <>
+    <GradientBackground>
       <Header />
       <AdminGoodsMenubarWrapper>
         <AdminTicketMenubar />
@@ -240,6 +244,7 @@ const AdminTicketManagement = () => {
         </MainContent>
       </Container>
       <Footer />
+      </GradientBackground>
     </>
   );
 };

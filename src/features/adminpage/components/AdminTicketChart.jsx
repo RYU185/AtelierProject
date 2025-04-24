@@ -31,6 +31,10 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 
 const Container = styled.div`
   display: flex;
@@ -304,6 +308,7 @@ function AdminTicketChart() {
 
   return (
     <>
+    <GradientBackground>
       <Header />
       <TitleWrapper>
         {filterType === 'daily' ? '날짜별' : filterType === 'weekly' ? '주별' : '월별'} 티켓 판매량
@@ -349,6 +354,7 @@ function AdminTicketChart() {
       </Container>
 
       <Footer />
+      </GradientBackground>
     </>
   );
 }
