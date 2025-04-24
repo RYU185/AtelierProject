@@ -4,20 +4,35 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 
-// 이미지 glob import
-const images = import.meta.glob('/src/assets/ArtListIMG/*', { eager: true, as: 'url' });
+const images = import.meta.glob("/public/images/goods-images/*", {
+  eager: true,
+  as: "url",
+});
 
-const getImageSrc = (url) => {
-  if (!url) return '';
-  if (url.startsWith('/uploads')) return `http://localhost:8081${url}`;
-  return images[`/src/assets/ArtListIMG/${url}`] || '';
+const getGoodsImageUrl = (filename) => {
+  if (!filename || typeof filename !== "string") return "/images/goods-images/default.jpg";
+
+  if (
+    filename.startsWith("/uploads") ||
+    filename.startsWith("/images") ||
+    filename.startsWith("http")
+  ) {
+    return filename;
+  }
+  const onlyName = filename.split("/").pop(); // goods3_1.png
+  const matched = Object.entries(images).find(([path]) => path.endsWith(onlyName));
+  return matched ? matched[1] : `/images/goods-images/${onlyName}`;
 };
+
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
 
 const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #fafafa;
 `;
 
 const PageContainer = styled.div`
@@ -30,7 +45,7 @@ const PageContainer = styled.div`
 
 const Title = styled.h1`
   font-size: 48px;
-  color: #333;
+  color: #ececec;
   margin-bottom: 40px;
 `;
 
@@ -42,9 +57,9 @@ const CompletedMessage = styled.div`
 `;
 
 const PurchaseInfo = styled.div`
-  background: white;
+  background: rgba(255, 255, 255, 0.07);
   padding: 40px;
-  border-radius: 12px;
+  border-radius: 10px;
   max-width: 600px;
   margin: 0 auto;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -58,7 +73,7 @@ const ItemRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
+  /* padding: 16px 0; */
   border-bottom: 1px solid #eee;
 
   &:last-child {
@@ -84,19 +99,19 @@ const ItemDetails = styled.div`
 `;
 
 const ItemName = styled.div`
-  font-size: 16px;
-  color: #333;
+  font-size: 20px;
+  color: #eeeeee;
   margin-bottom: 8px;
 `;
 
 const ItemQuantity = styled.div`
-  font-size: 14px;
-  color: #666;
+  font-size: 16px;
+  color: #cacaca;
 `;
 
 const ItemPrice = styled.div`
-  font-size: 16px;
-  color: #333;
+  font-size: 22px;
+  color: #9e9e9e;
   font-weight: bold;
 `;
 
@@ -111,7 +126,7 @@ const TotalRow = styled.div`
 
 const TotalLabel = styled.span`
   font-size: 18px;
-  color: #333;
+  color: #acacac;
   font-weight: bold;
 `;
 
@@ -154,65 +169,66 @@ const PurchaseCompletePage = () => {
   const location = useLocation();
   const { items = [], totalPrice = 0 } = location.state || {};
 
+  console.log("썸네일 경로 확인:", items.thumbnailUrl);
+
   if (!items || items.length === 0) {
     return (
+      <GradientBackground>
+        <Wrapper>
+          <Header />
+          <PageContainer>
+            <Title>구매 내역이 없습니다.</Title>
+            <ButtonContainer>
+              <Button onClick={() => navigate("/cartpage")}>장바구니로 돌아가기</Button>
+            </ButtonContainer>
+          </PageContainer>
+          <Footer />
+        </Wrapper>
+      </GradientBackground>
+    );
+  }
+
+  return (
+    <GradientBackground>
       <Wrapper>
         <Header />
         <PageContainer>
-          <Title>구매 내역이 없습니다.</Title>
+          <Title>굿즈가 구매 완료되었습니다!</Title>
+          <CompletedMessage>구매해 주셔서 감사합니다.</CompletedMessage>
+          <PurchaseInfo>
+            <ItemList>
+              {items.map((item, idx) => (
+                <ItemRow key={idx}>
+                  <ItemInfo>
+                    <ItemImage src={getGoodsImageUrl(item.thumbnailUrl)} alt={item.goodsName} />
+
+                    <ItemDetails>
+                      <ItemName>{item.goodsName}</ItemName>
+                      <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
+                    </ItemDetails>
+                  </ItemInfo>
+                  <ItemPrice>{(item.price * item.quantity).toLocaleString()}원</ItemPrice>
+                </ItemRow>
+              ))}
+            </ItemList>
+            <TotalRow>
+              <TotalLabel>총 결제 금액</TotalLabel>
+              <TotalPrice>{totalPrice.toLocaleString()}원</TotalPrice>
+            </TotalRow>
+          </PurchaseInfo>
           <ButtonContainer>
-            <Button onClick={() => navigate("/cartpage")}>
-              장바구니로 돌아가기
+            <Button onClick={() => navigate("/goods")}>계속 쇼핑하기</Button>
+            <Button
+              primary
+              onClick={() => navigate("/mypage", { state: { activeTab: "purchase" } })}
+            >
+              나의 굿즈 구매현황
             </Button>
           </ButtonContainer>
         </PageContainer>
         <Footer />
       </Wrapper>
-    );
-  }
-
-  return (
-    <Wrapper>
-      <Header />
-      <PageContainer>
-        <Title>굿즈가 구매 완료되었습니다!</Title>
-        <CompletedMessage>구매해 주셔서 감사합니다.</CompletedMessage>
-        <PurchaseInfo>
-          <ItemList>
-            {items.map((item, idx) => (
-              <ItemRow key={idx}>
-                <ItemInfo>
-                  <ItemImage src={getImageSrc(item.thumbnailUrl)} alt={item.goodsName} />
-                  <ItemDetails>
-                    <ItemName>{item.goodsName}</ItemName>
-                    <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
-                  </ItemDetails>
-                </ItemInfo>
-                <ItemPrice>
-                  {(item.price * item.quantity).toLocaleString()}원
-                </ItemPrice>
-              </ItemRow>
-            ))}
-          </ItemList>
-          <TotalRow>
-            <TotalLabel>총 결제 금액</TotalLabel>
-            <TotalPrice>{totalPrice.toLocaleString()}원</TotalPrice>
-          </TotalRow>
-        </PurchaseInfo>
-        <ButtonContainer>
-          <Button onClick={() => navigate("/goods")}>계속 쇼핑하기</Button>
-          <Button
-            primary
-            onClick={() =>
-              navigate("/mypage", { state: { activeTab: "purchase" } })
-            }
-          >
-            나의 굿즈 구매현황
-          </Button>
-        </ButtonContainer>
-      </PageContainer>
-      <Footer />
-    </Wrapper>
+    </GradientBackground>
   );
 };
 
