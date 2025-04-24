@@ -22,39 +22,46 @@ const ModalContent = styled.div`
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   width: 90%;
-  max-width: 1300px;
-  max-height: 90%;
+  max-width: 1350px;
+  max-height: 95%;
   position: relative;
   display: flex;
-  overflow: hidden; /* 이미지 넘기기 버튼이 컨텐츠 밖으로 나가지 않도록 */
+  overflow: hidden;
 `;
 
 const ContentWrapper = styled.div`
   flex: 1;
   padding: 30px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(98vh - 60px - 250px /* 댓글 영역 예상 높이 감소 */);
+`;
+
+const CommunityWrapper = styled.div`
+  flex-shrink: 0;
   overflow-y: auto;
 `;
 
 const CommentsWrapper = styled.div`
-  width: 550px; /* 댓글 영역 너비 */
+  width: 550px;
   padding: 30px;
   border-left: 1px solid #e2e8f0;
-  overflow-y: auto; /* 댓글이 많아질 경우 스크롤 */
+  overflow-y: auto;
 `;
 
 const CloseButton = styled(IoClose)`
   position: absolute;
-  top: 10px; /* 살짝 아래로 조정 */
-  right: 10px; /* 살짝 안쪽으로 조정 */
+  top: 10px;
+  right: 10px;
   font-size: 36px;
   cursor: pointer;
   color: #4a5568;
   transition: color 0.2s ease-in-out;
-  z-index: 10; /* 다른 요소 위에 표시 */
+  z-index: 10;
 
   &:hover {
-    color: #e53e3e; /* 호버 시 붉은색 계열 */
+    color: #e53e3e;
   }
 `;
 
@@ -65,16 +72,14 @@ function CommunityDetailModal({ post, onClose }) {
         <CloseButton onClick={onClose} />
         <ContentWrapper>
           {post && (
-            <div style={{ position: "relative" }}>
-              {" "}
-              {/* 이미지 넘기기 버튼 absolute positioning 기준 */}
+            <CommunityWrapper>
               <Community
                 {...post}
                 onOpenModal={() => {}}
                 onDelete={() => {}}
                 isModal={true}
               />
-            </div>
+            </CommunityWrapper>
           )}
         </ContentWrapper>
         <CommentsWrapper>

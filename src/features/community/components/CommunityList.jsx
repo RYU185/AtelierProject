@@ -112,6 +112,15 @@ function CommunityList() {
   const [sortBy, setSortBy] = useState("latest");
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isMyPostsView, setIsMyPostsView] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false); // ⭐추가
+
+  const handleAddPostClick = () => {
+    setIsAddModalOpen(true); // 모달 열기
+  };
+
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false); // 모달 닫기
+  };
 
   useEffect(() => {
     fetchCommunityData(); // 처음 로드될 때 전체 글 목록 불러오기
@@ -186,12 +195,6 @@ function CommunityList() {
     setIsDetailModalOpen(false);
   };
 
-  const handleAddPostClick = () => {
-    navigate("/community/add");
-  };
-
-  const handleCloseAddModal = () => {};
-
   const handleDelete = async (id) => {
     const confirmed = window.confirm("정말 삭제하시겠습니까?");
     if (confirmed) {
@@ -232,8 +235,6 @@ function CommunityList() {
   const handleSortChange = (type) => {
     setSortBy(type);
   };
-
-  const isAddModalOpen = location.pathname === "/community/add";
 
   return (
     <div>
@@ -326,19 +327,22 @@ function CommunityList() {
             <Community
               key={post.id}
               {...post}
-              onOpenModal={handleOpenModal} // 수정된 handleOpenModal 전달
+              user={{ nickname: post.userNickname }}
+              onOpenModal={handleOpenModal}
               onDelete={handleDelete}
             />
           ))}
         </Grid>
+        {isAddModalOpen && (
+          <AddPostModal
+            onClose={handleCloseAddModal}
+            onSubmit={handleAddPost}
+          />
+        )}
       </Container>
 
       {isDetailModalOpen && selectedPost && (
         <CommunityDetailModal post={selectedPost} onClose={handleCloseModal} />
-      )}
-
-      {isAddModalOpen && (
-        <AddPostModal onClose={handleCloseAddModal} onSubmit={handleAddPost} />
       )}
     </div>
   );
