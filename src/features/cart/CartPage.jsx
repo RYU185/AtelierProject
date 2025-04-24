@@ -7,6 +7,7 @@ import CartSummary from "./components/CartSummary";
 import Header from "../Header";
 import Footer from "../Footer";
 
+
 const GradientBackground = styled.div`
   min-height: 100vh;
   background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
@@ -204,11 +205,7 @@ const CartPage = () => {
     if (cartListRef.current) {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
-
-      // 장바구니가 비어있는지 확인 (전체 아이템 기준)
       setIsEmpty(newTotal.hasItems === false);
-
-      // 전체 선택 여부도 다시 계산
       const isAllSelected = selectedItems.length > 0 && selectedItems.length === allItems.length;
       setIsAllSelected(isAllSelected);
     }
@@ -237,13 +234,21 @@ const CartPage = () => {
 
       navigate("/purchase-complete", {
         state: {
+          
           items: data.goods.map((item) => {
-            const matched = selectedItems.find(
-              (s) => s.goodsName === item.goodsName
-            );
+            const matched = selectedItems.find((s) => s.name === item.goodsName);
+            let imageUrl = "";
+
+            if (matched?.image?.startsWith("/uploads") || matched?.image?.startsWith("http")) {
+              imageUrl = matched.image;
+            } else {
+              imageUrl = `/images/goods-images/${matched?.image}`;
+            }
+            console.log("item.goodsName:", item.goodsName);
+            console.log("selectedItems:", selectedItems);
             return {
               ...item,
-              thumbnailUrl: matched?.image || "",
+              thumbnailUrl: imageUrl,
             };
           }),
           totalPrice: data.totalPrice,
@@ -253,7 +258,7 @@ const CartPage = () => {
       });
     } catch (err) {
       console.error("구매 실패:", err);
-      alert("재고가.");
+      alert("재고가 부족하거나 오류가 발생했습니다.");
     } finally {
       setShowModal(false);
     }
