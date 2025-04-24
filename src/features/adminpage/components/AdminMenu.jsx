@@ -68,11 +68,11 @@ const AdminMenu = () => {
           {/* ✅ '/AdminPage' 또는 '/AdminArtAdd'일 때 작품 조회 버튼 활성화 */}
           <MenuItem
             active={
-              location.pathname.includes("/AdminPage") || location.pathname.includes("/AdminArtAdd")
+              location.pathname.includes("/AdminArtList") || location.pathname.includes("/AdminArtAdd")
             }
           >
             <Link
-              to="/AdminPage"
+              to="/AdminArtList"
               style={{
                 textDecoration: "none",
                 color: "inherit",

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../Header';
-import Footer from '../../Footer';
-import AdminMenu from './AdminMenu';
+
 import styled from 'styled-components';
 import AdminTicketMenubar from './AdminTicketMenubar';
 
@@ -23,27 +21,18 @@ const GradientBackground = styled.div`
   background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
 `;
 
-// ✅ 스타일 정의
-const Container = styled.div`
+const AdminTicketWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
   display: flex;
-  padding: 20px;
-  margin-left: 23px;
-  position: relative;
+  flex-direction: column;
+  color: white;
+ margin-top: -60px;
 `;
 
-const AdminGoodsMenubarWrapper = styled.div`
-  position: relative;
-  top: 100px;
-  left: 45px;
-  z-index: 10;
-  margin-left: -85px;
-`;
 
-const AdminMenuWrapper = styled.div`
-  position: relative;
-  top: -30px;
-  margin-left: 13px;
-`;
+
+
 
 const MainContent = styled.div`
   flex: 1;
@@ -209,15 +198,8 @@ const AdminTicketList = () => {
   return (
     <>
     
-      <Header />
-      <AdminGoodsMenubarWrapper>
-        <AdminTicketMenubar />
-      </AdminGoodsMenubarWrapper>
-      <Container>
-        <AdminMenuWrapper>
-          <AdminMenu />
-        </AdminMenuWrapper>
-
+   < AdminTicketWrapper>
+    
         <MainContent>
           <Title>티켓 예약 현황</Title>
 
@@ -268,8 +250,7 @@ const AdminTicketList = () => {
             </tbody>
           </Table>
         </MainContent>
-      </Container>
-      <Footer />
+        </AdminTicketWrapper>
     </>
   );
 };

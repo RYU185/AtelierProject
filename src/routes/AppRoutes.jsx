@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import Home from "../features/home/Home";
 import Login from "../features/home/components/Login";
 import FindId from "../features/home/components/FindId";
@@ -21,30 +22,25 @@ import LocationPage from "../features/support/LocationPage";
 import ContactusPage from "../features/support/ContactusPage";
 import TicketPage from "../features/ticketpage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
-import AdminArtAdd from "../features/adminpage/components/AdminArtAdd";
-import AdminGoods from "../features/adminpage/components/AdminGoods";
-import AdminTicketList from "../features/adminpage/components/AdminTicketList";
-import AdminUser from "../features/adminpage/components/AdminUser";
+
 import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
 import UserGalleryDetail from "../features/UserGalleryDetail/UserGalleryDetail";
 import PurchaseCompletePage from "../features/cart/PurchaseCompletePage";
-import DrawingCanvas from "../features/Drawing/DrawingCanvas";
-import AdminGoodsChart from "../features/adminpage/components/AdminGoodsChart";
-import AdminGoodsAdd from "../features/adminpage/components/AdminGoodsAdd";
+
 import NoticeCreate from "../features/support/components/NoticeCreate";
 import NoticeDetail from "../features/support/components/NoticeDetail";
 import NoticeEdit from "../features/support/components/NoticeEdit";
 
 import CommunityMain from "../features/community/CommunityMain";
 
-import AdminTicketChart from "../features/adminpage/components/AdminTicketChart";
-import AdminContact from "../features/adminpage/components/AdminContact";
+
 import ChattingPage from "../features/chatting/pages/ChattingPage";
 import CartPage from "../features/cart/CartPage";
 
-import AdminTicketManagement from "../features/adminpage/components/AdminTicketManagement";
+
 import EditProfile from "../features/mypage/components/EditProfile";
 import Review from "../features/Goods/components/Review";
+import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 
 function AppRoutes() {
   return (
@@ -57,16 +53,16 @@ function AppRoutes() {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/updateprofile" element={<EditProfile />} />
       <Route path="/adminpage" element={<AdminPage />} />
-      <Route path="/AdminArtAdd" element={<AdminArtAdd />} />
-      <Route path="/AdminGoods" element={<AdminGoods />} />
-      <Route path="/AdminTicketList" element={<AdminTicketList />} />
-      <Route path="/AdminUser" element={<AdminUser />} />
-      <Route path="AdminGoodsChart" element={<AdminGoodsChart />} />
-      <Route path="AdminGoodsAdd" element={<AdminGoodsAdd />} />
-      <Route path="AdminUser" element={<AdminUser />} />
-      <Route path="AdminTicketChart" element={<AdminTicketChart />} />
-      <Route path="AdminContact" element={<AdminContact />} />
-      <Route path="AdminTicketManagement" element={<AdminTicketManagement />} />
+    
+    <Route path="/AdminGoods" element={<Navigate to="/adminpage?tab=goods" replace />} />
+    <Route path="/AdminArtList" element={<Navigate to="/adminpage?tab=art" replace />} />
+    <Route path="/AdminGoodsChart" element={<Navigate to="/adminpage?tab=goodsChart" replace />} />
+    <Route path="/AdminGoodsAdd" element={<Navigate to="/adminpage?tab=goodsAdd" replace />} />
+    <Route path="/AdminTicketManagement" element={<Navigate to="/adminpage?tab=ticket" replace />} />
+    <Route path="/AdminTicketChart" element={<Navigate to="/adminpage?tab=ticketChart" replace />} />
+    <Route path="/AdminContact" element={<Navigate to="/adminpage?tab=contact" replace />} />
+    <Route path="/AdminUser" element={<Navigate to="/adminpage?tab=user" replace />} />
+    <Route path="/AdminArtAdd" element={<Navigate to="/adminpage?tab=artAdd" replace />} />
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
       <Route path="/goods/:goodsId/review" element={<Review />} />

@@ -20,7 +20,7 @@ const getImageUrl = (filename) => {
 
 const PageContainer = styled.div`
   padding: 20px;
-  margin-top: 10px;
+  margin-top: 3px;
   min-height: 100vh;
 `;
 const ArtListTitle = styled.h2`

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from '../../Header';
-import Footer from '../../Footer';
-import AdminMenu from './AdminMenu';
+
 import AdminTicketMenubar from './AdminTicketMenubar';
 
 const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", { eager: true });
@@ -12,33 +10,28 @@ const getImageUrl = (filename) => {
   const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
   return matched ? matched[1].default : '/images/default-image.png';
 };
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`;
-const Container = styled.div`
+const AdminTicketWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
   display: flex;
-  padding: 20px;
-  margin-left: 23px;
-  position: relative;
+  flex-direction: column;
+  color: white;
+ margin-top: -60px;
 `;
+
 const AdminGoodsMenubarWrapper = styled.div`
   position: relative;
-  top: 100px;
-  left: 45px;
+  top: 80px;
+  left: -335px;
   z-index: 10;
-  margin-left: -85px;
+  margin-left: -135px;
 `;
-const AdminMenuWrapper = styled.div`
-  position: relative;
-  top: -30px;
-  margin-left: 13px;
-`;
+
 const MainContent = styled.div`
   flex: 1;
   padding: 20px;
-  margin-top: -60px;
-  margin-left: 30px;
+  margin-top: -48px;
+  margin-left: -20px;
 `;
 const Title = styled.h1`
   font-size: 32px;
@@ -173,15 +166,12 @@ const AdminTicketManagement = () => {
 
   return (
     <>
-    <GradientBackground>
-      <Header />
+      <AdminTicketWrapper>
       <AdminGoodsMenubarWrapper>
         <AdminTicketMenubar />
       </AdminGoodsMenubarWrapper>
-      <Container>
-        <AdminMenuWrapper>
-          <AdminMenu />
-        </AdminMenuWrapper>
+
+     
 
         <MainContent>
           <Title>티켓 판매 내역 및 마감일 관리</Title>
@@ -242,9 +232,7 @@ const AdminTicketManagement = () => {
             </tbody>
           </Table>
         </MainContent>
-      </Container>
-      <Footer />
-      </GradientBackground>
+        </AdminTicketWrapper>
     </>
   );
 };

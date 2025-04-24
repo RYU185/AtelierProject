@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
-import Header from "../../Header";
-import Footer from "../../Footer";
+
 import styled from "styled-components";
-import AdminMenu from "./AdminMenu";
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`;
-const Container = styled.div`
+
+const AdminContactWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
   display: flex;
-  padding: 23px;
-  margin-left: 23px;
-  position: relative;
+  flex-direction: column;
+  color: white;
+ margin-top: -60px;
 `;
 
 const InquiryList = styled.ul`
   position: relative;
+  margin-top: 72px;
   list-style: none;
   padding: 0;
-  max-height: 400px;
+  max-height: 500px;
   width: 650px;
   overflow-y: auto;
   border: 1px solid #ddd;
@@ -72,7 +70,7 @@ const Input = styled.textarea`
 `;
 
 const Button = styled.button`
-  margin-top: 15px;
+  margin-top: 20px;
   padding: 12px 18px;
   background: ${(props) => (props.disabled ? "#ccc" : "#007bff")};
   color: ${(props) => (props.disabled ? "#666" : "white")};
@@ -111,6 +109,7 @@ const FilterButtons = styled.div`
   margin-bottom: 15px;
   display: flex;
   gap: 10px;
+  
 `;
 
 const FilterButton = styled.button`
@@ -121,7 +120,7 @@ const FilterButton = styled.button`
   font-weight: bold;
   background: ${(props) => (props.active ? "#007bff" : "#ddd")};
   color: ${(props) => (props.active ? "white" : "black")};
-
+  
   &:hover {
     background: ${(props) => (props.active ? "#0056b3" : "#bbb")};
   }
@@ -231,10 +230,9 @@ function AdminContact() {
 
   return (
     <>
-    <GradientBackground>
-      <Header />
-      <Container>
-        <AdminMenu />
+ 
+ <AdminContactWrapper>
+  
         <div style={{ padding: "20px", flex: 1 }}>
           <h2>문의 관리</h2>
           <FilterButtons>
@@ -276,9 +274,7 @@ function AdminContact() {
             </InquiryDetail>
           )}
         </div>
-      </Container>
-      <Footer />
-      </GradientBackground>
+        </AdminContactWrapper>
     </>
   );
 }

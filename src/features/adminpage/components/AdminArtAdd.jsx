@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Header from '../../Header';
-import Footer from '../../Footer';
-import AdminMenu from './AdminMenu';
 import axios from 'axios';
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`;
-const Container = styled.div`
-  padding: 20px;
-  min-height: 100vh;
+
+
+const AdminArtAddWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
   display: flex;
+  flex-direction: column;
+  color: white;
+ margin-top: -55px;
 `;
+
 
 const AdminContent = styled.div`
   flex: 1;
@@ -197,10 +196,7 @@ function AdminArtAdd() {
 
   return (
     <>
-    <GradientBackground>
-      <Header />
-      <Container>
-        <AdminMenu />
+   <AdminArtAddWrapper>
         <AdminContent>
           <Title>작품 추가</Title>
           <FlexContainer>
@@ -255,7 +251,7 @@ function AdminArtAdd() {
             </InputContainer>
           </FlexContainer>
         </AdminContent>
-      </Container>
+ 
 
       <ButtonContainer>
         <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
@@ -270,9 +266,8 @@ function AdminArtAdd() {
         accept="image/*"
         onChange={handleImageUpload}
       />
-
-      <Footer />
-      </GradientBackground>
+    </AdminArtAddWrapper>
+      
     </>
   );
 }

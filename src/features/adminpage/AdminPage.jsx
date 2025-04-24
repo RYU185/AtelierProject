@@ -4,6 +4,15 @@ import Footer from "../Footer";
 import styled from "styled-components";
 import AdminMenu from "./components/AdminMenu";
 import AdminArtList from "./components/AdminArtList";
+import AdminGoods from "./components/AdminGoods";
+import { useLocation } from "react-router-dom";
+import AdminGoodsChart from "./components/AdminGoodsChart";
+import AdminGoodsAdd from "./components/AdminGoodsAdd";
+import AdminTicketManagement from "./components/AdminTicketManagement";
+import AdminTicketChart from "./components/AdminTicketChart";
+import AdminContact from "./components/AdminContact";
+import AdminUser from "./components/AdminUser";
+import AdminArtAdd from "./components/AdminArtAdd";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
@@ -24,7 +33,37 @@ const Wrapper = styled.div`
 `;
 
 const AdminPage = () => {
-  const [tab, setTab] = useState("check");
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const initialTab = query.get("tab") || "art";
+
+  const [tab, setTab] = useState(initialTab);
+
+  const renderComponent = () => {
+    switch (tab) {
+      case "art":
+        return <AdminArtList />;
+      case "artAdd":
+      return <AdminArtAdd />;
+      case "goods":
+        return <AdminGoods />;
+      case "goodsChart":
+        return <AdminGoodsChart />;
+        case "goodsAdd":
+          return <AdminGoodsAdd />;
+          case "ticket":
+            return <AdminTicketManagement />;
+            case "ticketChart":
+              return <AdminTicketChart />;
+              case "contact":
+              return <AdminContact />;
+              case "user":
+                return <AdminUser />;
+          
+      default:
+        return <div>선택된 탭이 없습니다</div>;
+    }
+  };
 
   return (
     <GradientBackground>
@@ -32,7 +71,7 @@ const AdminPage = () => {
       <Container>
         <Wrapper>
           <AdminMenu tab={tab} setTab={setTab} />
-          <AdminArtList />
+          {renderComponent()}
         </Wrapper>
       </Container>
       <Footer />

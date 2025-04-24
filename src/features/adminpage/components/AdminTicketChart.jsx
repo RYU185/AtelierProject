@@ -1,9 +1,7 @@
 // AdminTicketChart.jsx
 
 import React, { useState, useEffect } from 'react';
-import Header from '../../Header';
-import Footer from '../../Footer';
-import AdminMenu from './AdminMenu';
+
 import AdminTicketMenubar from './AdminTicketMenubar';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -31,23 +29,22 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+
+const AdminTicketChartWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+ margin-top: -60px;
 `;
 
-const Container = styled.div`
-  display: flex;
-  padding: 10px;
-  margin-left: 30px;
-  margin-top: -50px;
-`;
 
 const ChartWrapper = styled.div`
   width: 100%;
-  margin-left: 10px;
+  margin-left: -100px;
   padding: 40px;
-  margin-top: 30px;
+  margin-top: -50px;
 `;
 
 const InnerChart = styled.div`
@@ -63,20 +60,20 @@ const TitleWrapper = styled.div`
 `;
 
 const MenubarWrapper = styled.div`
+ 
   position: relative;
   top: -30px;
-  margin-left: -20px;
+  left: -335px;
+  z-index: 10;
+  margin-left: -135px;
+
+
 `;
 
-const AdminMenuWrapper = styled.div`
-  position: relative;
-  top: -80px;
-  margin-left: 16px;
-`;
 
 const FilterSelect = styled.select`
-  top: 40px;
-  margin-left: 1380px;
+  top: 30px;
+  margin-left: 1140px;
   font-size: 16px;
   padding: 5px 10px;
   width: 100px;
@@ -85,6 +82,7 @@ const FilterSelect = styled.select`
   border: 1px solid #ccc;
   cursor: pointer;
   background-color: #fff;
+  position: relative;
 
   &:hover {
     border-color: #888;
@@ -308,26 +306,24 @@ function AdminTicketChart() {
 
   return (
     <>
-    <GradientBackground>
-      <Header />
-      <TitleWrapper>
-        {filterType === 'daily' ? '날짜별' : filterType === 'weekly' ? '주별' : '월별'} 티켓 판매량
-      </TitleWrapper>
+      <AdminTicketChartWrapper>
 
-      <FilterSelect value={filterType} onChange={(e) => setFilterType(e.target.value)}>
-        <option value="daily">날짜별</option>
-        <option value="weekly">주별</option>
-        <option value="monthly">월별</option>
-      </FilterSelect>
+        <TitleWrapper>
+          {filterType === 'daily' ? '날짜별' : filterType === 'weekly' ? '주별' : '월별'} 티켓 판매량
+        </TitleWrapper>
 
-      <MenubarWrapper>
-        <AdminTicketMenubar />
-      </MenubarWrapper>
+        <FilterSelect value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+          <option value="daily">날짜별</option>
+          <option value="weekly">주별</option>
+          <option value="monthly">월별</option>
+        </FilterSelect>
 
-      <Container>
-        <AdminMenuWrapper>
-          <AdminMenu />
-        </AdminMenuWrapper>
+        <MenubarWrapper>
+          <AdminTicketMenubar />
+        </MenubarWrapper>
+
+
+
 
         <ChartWrapper>
           <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -351,10 +347,9 @@ function AdminTicketChart() {
             )}
           </div>
         </ChartWrapper>
-      </Container>
 
-      <Footer />
-      </GradientBackground>
+      </AdminTicketChartWrapper>
+
     </>
   );
 }

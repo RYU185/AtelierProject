@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axiosInstance from '../../../api/axiosInstance'; // 네가 만든 axios 인스턴스 경로
-import Header from '../../Header';
-import Footer from '../../Footer';
-import AdminMenu from './AdminMenu';
-
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`;
 
 
-const Container = styled.div`
+
+const AdminUserWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
   display: flex;
-  padding: 23px;
-  margin-left: 23px;
-  position: relative;
+  flex-direction: column;
+  color: white;
+ margin-top: -60px;
 `;
 
-const AdminMenuWrapper = styled.div`
-  position: relative;
-  top: -58px;
-  margin-left: 13px;
-`;
 
 const TitleWrapper = styled.div`
   position: relative;
@@ -156,14 +146,10 @@ const AdminUser = () => {
 
   return (
     <>
-    <GradientBackground>
-      <Header />
+   <AdminUserWrapper>
       <TitleWrapper>유저 관리</TitleWrapper>
 
-      <Container>
-        <AdminMenuWrapper>
-          <AdminMenu />
-        </AdminMenuWrapper>
+  
 
         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <FilterContainer>
@@ -205,9 +191,7 @@ const AdminUser = () => {
             </TableWrapper>
           </TableContainer>
         </div>
-      </Container>
-      <Footer />
-      </GradientBackground>
+        </AdminUserWrapper>
     </>
   );
 };

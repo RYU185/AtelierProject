@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../Header';
-import Footer from '../../Footer';
-import AdminMenu from './AdminMenu';
+
+
 import AdminGoodsMenubar from './AdminGoodsMenubar';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -17,15 +16,13 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`;
-const Container = styled.div`
+
+const AdminGoodsChartWrapper = styled.div`
+  flex: 1;
+  padding: 20px 40px;
   display: flex;
-  padding: 10px;
-  margin-left: 30px;
-  margin-top: -50px;
+  flex-direction: column;
+  color: white;
 `;
 
 const ChartWrapper = styled.div`
@@ -49,15 +46,11 @@ const TitleWrapper = styled.div`
 
 const MenubarWrapper = styled.div`
   position: relative;
-  top: -30px;
-  margin-left: -20px;
+  top: -21px;
+  margin-left: -470px;
 `;
 
-const AdminMenuWrapper = styled.div`
-  position: relative;
-  top: -80px;
-  margin-left: 16px;
-`;
+
 
 function AdminGoodsChart() {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
@@ -116,28 +109,25 @@ function AdminGoodsChart() {
 
   return (
     <>
-    <GradientBackground>
-      <Header />
+  
+  <AdminGoodsChartWrapper>
       <TitleWrapper>월별 굿즈 판매량</TitleWrapper>
 
       <MenubarWrapper>
         <AdminGoodsMenubar />
       </MenubarWrapper>
 
-      <Container>
-        <AdminMenuWrapper>
-          <AdminMenu />
-        </AdminMenuWrapper>
+     
+     
 
         <ChartWrapper>
           <InnerChart>
             <Bar data={chartData} options={options} />
           </InnerChart>
         </ChartWrapper>
-      </Container>
-
-      <Footer />
-      </GradientBackground>
+    
+        </AdminGoodsChartWrapper>
+ 
     </>
   );
 }
