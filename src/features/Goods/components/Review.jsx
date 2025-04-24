@@ -8,6 +8,10 @@ const ReviewListWrapper = styled.div`
   padding: 50px;
 `;
 
+const ReviewH2 = styled.h2`
+  color: #e1e1e1;
+`
+
 const ReviewList = styled.div`
   margin-top: 20px;
 `;
@@ -94,7 +98,7 @@ function Review() {
     <>
       <div>
         <ReviewListWrapper>
-          <h2>상품평</h2>
+          <ReviewH2>상품평</ReviewH2>
           <ReviewList>
             {currentReviews.map((review, index) => (
               // review를 주면 ReviewBlock에서 렌더링
