@@ -3,7 +3,6 @@ import CommunityList from "./components/CommunityList.jsx";
 import Footer from "../Footer";
 import Header from "../Header";
 import styled from "styled-components";
-import { Outlet } from "react-router-dom";
 import TopButton from "../TopButton.jsx";
 
 const Container = styled.div`
@@ -17,7 +16,7 @@ function CommunityMain() {
       <Header />
       <Container>
         <CommunityList />
-        <Outlet />
+        {/* Outlet 제거 */}
       </Container>
       <TopButton />
       <Footer />

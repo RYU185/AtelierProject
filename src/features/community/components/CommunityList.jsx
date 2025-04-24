@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
-import Community from "./Community";
-import CommunityDetail from "./CommunityDetail";
 import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
-import AddPostModal from "./AddPostModal";
 import axios from "axios";
+import Community from "./Community";
+import CommunityDetailModal from "./CommunityDetailModal"; // 변경된 모달 컴포넌트 import
+import AddPostModal from "./AddPostModal";
 
 const backgroundColor = "#f0f4f8";
 const cardBackground = "#ffffff";
 const textColor = "#2e3a59";
 const borderColor = "#dce3eb";
-
 const shadow = "0 4px 20px rgba(0,0,0,0.06)";
 const buttonGradient = "linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%)";
-
 const drawButtonGradient = "linear-gradient(135deg, #b3e5fc 0%, #4fc3f7 100%)";
 const drawButtonHoverGradient =
   "linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%)";
@@ -112,26 +110,28 @@ function CommunityList() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [communityItems, setCommunityItems] = useState([]);
   const [sortBy, setSortBy] = useState("latest");
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isMyPostsView, setIsMyPostsView] = useState(false);
 
   useEffect(() => {
-    const fetchCommunityData = async () => {
-      try {
-        const response = await axios.get("/api/community");
-        setCommunityItems(response.data);
-      } catch (error) {
-        console.error("커뮤니티 데이터를 가져오는 데 실패했습니다:", error);
-      }
-    };
-
-    fetchCommunityData();
+    fetchCommunityData(); // 처음 로드될 때 전체 글 목록 불러오기
+    setIsMyPostsView(false); // 초기 상태는 전체 보기
   }, []);
 
+  const fetchCommunityData = async () => {
+    try {
+      const response = await axios.get("/api/community");
+      setCommunityItems(response.data);
+      setIsMyPostsView(false);
+    } catch (error) {
+      console.error("커뮤니티 데이터를 가져오는 데 실패했습니다:", error);
+    }
+  };
+
   const handleViewMyPostsClick = async () => {
-    const accessToken = localStorage.getItem("accessToken"); // 예시: 로컬 스토리지에서 액세스 토큰 가져오기
+    const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       alert("로그인이 필요한 기능입니다.");
-      // 필요하다면 로그인 페이지로 리디렉션
-      // navigate("/login");
       return;
     }
 
@@ -143,18 +143,22 @@ function CommunityList() {
       });
       setCommunityItems(response.data);
       setSortBy("latest");
+      setIsMyPostsView(true);
     } catch (error) {
       console.error("나의 커뮤니티 데이터를 가져오는 데 실패했습니다:", error);
       if (error.response && error.response.status === 401) {
         alert(
           "액세스 토큰이 만료되었거나 유효하지 않습니다. 다시 로그인해 주세요."
         );
-        // 필요하다면 로그인 페이지로 리디렉션 또는 토큰 갱신 로직 수행
-        // navigate("/login");
       } else {
         alert("나의 글을 불러오는 중 오류가 발생했습니다.");
       }
     }
+  };
+
+  const handleViewAllPostsClick = () => {
+    fetchCommunityData();
+    setIsMyPostsView(false);
   };
 
   const sortedCommunityItems = [...communityItems].sort((a, b) => {
@@ -174,21 +178,19 @@ function CommunityList() {
   const handleOpenModal = (e, post) => {
     e.stopPropagation();
     setSelectedPost(post);
-    navigate(`/community/detail/id/${post.id}`);
+    setIsDetailModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setSelectedPost(null);
-    navigate("/community");
+    setIsDetailModalOpen(false);
   };
 
   const handleAddPostClick = () => {
     navigate("/community/add");
   };
 
-  const handleCloseAddModal = () => {
-    navigate("/community");
-  };
+  const handleCloseAddModal = () => {};
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("정말 삭제하시겠습니까?");
@@ -200,7 +202,7 @@ function CommunityList() {
           alert(response.data);
           if (selectedPost && selectedPost.id === id) {
             setSelectedPost(null);
-            navigate("/community");
+            setIsDetailModalOpen(false);
           }
         } else {
           alert("삭제에 실패했습니다.");
@@ -232,24 +234,40 @@ function CommunityList() {
   };
 
   const isAddModalOpen = location.pathname === "/community/add";
-  const isDetailModalOpen = location.pathname.startsWith(
-    "/community/detail/id/"
-  );
-  const detailPostId = isDetailModalOpen
-    ? location.pathname.split("/").pop()
-    : null;
-  const selectedDetailPost = communityItems.find(
-    (post) => post.id === parseInt(detailPostId)
-  );
 
   return (
     <div>
       <Container>
         <ButtonBox>
-          <StyledButton onClick={handleAddPostClick}>게시글 등록</StyledButton>
-          <StyledButton onClick={handleViewMyPostsClick}>
+          <StyledButton
+            onClick={handleViewAllPostsClick}
+            style={{
+              background: !isMyPostsView ? buttonGradient : "white",
+              color: !isMyPostsView ? "white" : textColor,
+              borderColor: !isMyPostsView ? "transparent" : borderColor,
+              transform: !isMyPostsView ? "translateY(-3px)" : "none",
+              boxShadow: !isMyPostsView
+                ? "0 4px 10px rgba(0, 0, 0, 0.15)"
+                : "0 2px 5px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            전체 보기
+          </StyledButton>
+          <StyledButton
+            onClick={handleViewMyPostsClick}
+            style={{
+              background: isMyPostsView ? buttonGradient : "white",
+              color: isMyPostsView ? "white" : textColor,
+              borderColor: isMyPostsView ? "transparent" : borderColor,
+              transform: isMyPostsView ? "translateY(-3px)" : "none",
+              boxShadow: isMyPostsView
+                ? "0 4px 10px rgba(0, 0, 0, 0.15)"
+                : "0 2px 5px rgba(0, 0, 0, 0.1)",
+            }}
+          >
             나의 글 보기
           </StyledButton>
+          <StyledButton onClick={handleAddPostClick}>게시글 등록</StyledButton>
           <StyledDrawwButton onClick={() => navigate("/drawingcanvas")}>
             작품 그리기
           </StyledDrawwButton>
@@ -308,19 +326,15 @@ function CommunityList() {
             <Community
               key={post.id}
               {...post}
-              onOpenModal={handleOpenModal}
+              onOpenModal={handleOpenModal} // 수정된 handleOpenModal 전달
               onDelete={handleDelete}
             />
           ))}
         </Grid>
       </Container>
 
-      {selectedDetailPost && (
-        <CommunityDetail
-          post={selectedDetailPost}
-          onClose={handleCloseModal}
-          onDelete={handleDelete}
-        />
+      {isDetailModalOpen && selectedPost && (
+        <CommunityDetailModal post={selectedPost} onClose={handleCloseModal} />
       )}
 
       {isAddModalOpen && (

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
-  BsThreeDots,
   BsHeart,
   BsHeartFill,
   BsChat,
@@ -20,6 +19,7 @@ const Container = styled.div`
   margin-bottom: 15px;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 `;
 
 const Header = styled.div`
@@ -38,13 +38,11 @@ const Nickname = styled.span`
   font-size: 16px;
   font-weight: bold;
   color: #777;
-  cursor: pointer;
 `;
 
 const DateText = styled.span`
   font-size: 11px;
   color: #a0a0a0;
-  cursor: pointer;
 `;
 
 const Divider = styled.hr`
@@ -55,36 +53,65 @@ const Divider = styled.hr`
 `;
 
 const Content = styled.p`
-  font-size: 12px;
+  font-size: 14px; /* 글자 크기 키움 */
   color: #666;
   line-height: 1.4;
-  cursor: pointer;
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5; /* 이미지가 없을 때 최대 5줄 표시 */
+  -webkit-line-clamp: 5;
   flex-grow: 1;
 `;
 
-const PostImageWrapper = styled.div`
+const PostImageCarousel = styled.div`
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 8px;
   margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 30px; /* 화살표가 위치할 공간 확보 */
 `;
 
 const PostImage = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
   cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+  opacity: ${(props) => (props.$active ? 1 : 0)};
+`;
+
+const NavigationButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #add8e6; /* 옅은 하늘색 */
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &.left {
+    left: 10px;
+  }
+
+  &.right {
+    right: 10px;
+  }
+
+  /* 아이콘 스타일 */
+  svg {
+    stroke-width: 2;
+  }
 `;
 
 const MenuIconWrapper = styled.div`
@@ -92,7 +119,7 @@ const MenuIconWrapper = styled.div`
   cursor: pointer;
 `;
 
-const MenuIcon = styled(BsThreeDots)`
+const MenuIcon = styled.div`
   font-size: 16px;
   color: #888;
 `;
@@ -164,7 +191,7 @@ const ActionIcon = styled.div`
   }
 `;
 
-const ChatIcon = styled(BsChat)`
+const ChatIconStyled = styled(BsChat)`
   font-size: 18px;
   color: #888;
   cursor: pointer;
@@ -175,49 +202,33 @@ const ChatIcon = styled(BsChat)`
   }
 `;
 
-const ImageNavigationButton = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #99cedf; /* 옅은 하늘색 */
-
-  cursor: pointer;
-  z-index: 10;
-  padding: 10px;
-
-  &.left {
-    left: 10px;
-  }
-
-  &.right {
-    right: 10px;
-  }
-`;
-
-const ImageControl = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  margin-top: 5px;
-`;
-
-const ImageCount = styled.span`
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-`;
-
-function Community({ id, user, uploadDate, text, img, likes, onDelete }) {
+function Community({
+  id,
+  user,
+  uploadDate,
+  text,
+  img,
+  likes,
+  onDelete,
+  onOpenModal,
+  isModal,
+  currentImageIndex: propCurrentImageIndex, // 모달로부터 전달받는 인덱스
+}) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
   const [likeCount, setLikeCount] = useState(likes || 0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 내부에서 관리하는 인덱스
   const navigate = useNavigate();
   const hasImage = img && img.length > 0;
+
+  useEffect(() => {
+    // 모달로부터 currentImageIndex prop이 전달되면 내부 state를 업데이트
+    if (propCurrentImageIndex !== undefined) {
+      setCurrentImageIndex(propCurrentImageIndex);
+    } else {
+      setCurrentImageIndex(0); // 모달이 아닐 경우 항상 첫 번째 이미지
+    }
+  }, [propCurrentImageIndex, img]); // img prop이 변경될 때도 초기화
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -229,106 +240,133 @@ function Community({ id, user, uploadDate, text, img, likes, onDelete }) {
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   };
 
-  const toggleHeart = () => {
+  const toggleHeart = (e) => {
+    e.stopPropagation();
     setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
     setIsHeartFilled(!isHeartFilled);
-    // TODO: 백엔드에 좋아요 토글 요청 보내기
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setIsMenuOpen(!isMenuOpen);
+  };
 
-  const handlePostClick = () => {
-    navigate(`/community/detail/${id}`); // 상세 페이지 경로로 이동
+  const handlePostClick = (e) => {
+    if (!isModal) {
+      onOpenModal(e, { id, user, uploadDate, text, img, likes });
+    }
+  };
+
+  const handleImageClick = (e) => {
+    e.stopPropagation();
+    if (!isModal && hasImage) {
+      onOpenModal(e, {
+        id,
+        user,
+        uploadDate,
+        text,
+        img,
+        likes,
+        initialImageIndex: currentImageIndex,
+      });
+    }
+  };
+
+  const handleChatClick = (e) => {
+    e.stopPropagation();
+    if (!isModal) {
+      onOpenModal(e, {
+        id,
+        user,
+        uploadDate,
+        text,
+        img,
+        likes,
+        showComments: true,
+      });
+    }
   };
 
   const goToPreviousImage = (e) => {
     e.stopPropagation();
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex > 0 ? prevIndex - 1 : img.length - 1
-    );
+    if (hasImage) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : img.length - 1
+      );
+    }
   };
 
   const goToNextImage = (e) => {
     e.stopPropagation();
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex < img.length - 1 ? prevIndex + 1 : 0
-    );
+    if (hasImage) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex < img.length - 1 ? prevIndex + 1 : 0
+      );
+    }
   };
 
-  const handleEdit = () => {
-    // 수정 기능 구현 (예: 수정 모달 열기)
+  const handleEdit = (e) => {
+    e.stopPropagation();
     console.log("수정 기능 (ID:", id, ")");
     setIsMenuOpen(false);
-    // TODO: 수정 페이지 또는 모달로 이동하는 로직 구현
+    navigate(`/community/modify/${id}`);
+  };
+
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    onDelete(id);
   };
 
   return (
-    <Container>
+    <Container onClick={handlePostClick}>
       <Header>
         <UserInfo>
-          <Nickname onClick={handlePostClick}>{user}</Nickname>
-          <DateText onClick={handlePostClick}>
-            {formatDate(uploadDate)}
-          </DateText>
+          <Nickname>{user}</Nickname>
+          <DateText>{formatDate(uploadDate)}</DateText>
         </UserInfo>
         <MenuIconWrapper onClick={toggleMenu}>
           <MenuIcon />
           {isMenuOpen && (
             <MenuDropdown onClick={(e) => e.stopPropagation()}>
               <MenuItemM onClick={handleEdit}>수정</MenuItemM>
-              <MenuItemD onClick={() => onDelete(id)}>삭제</MenuItemD>
+              <MenuItemD onClick={handleDeleteClick}>삭제</MenuItemD>
             </MenuDropdown>
           )}
         </MenuIconWrapper>
       </Header>
       <Divider />
 
-      <Content $hasImage={hasImage} onClick={handlePostClick}>
-        {text}
-      </Content>
+      <Content>{text}</Content>
 
       {hasImage && (
-        <>
-          <PostImageWrapper $hasImage={hasImage} onClick={handlePostClick}>
+        <PostImageCarousel>
+          {img.map((image, index) => (
             <PostImage
-              src={`/public/images/DrawingIMG/${img[currentImageIndex]}`}
-              alt={`첨부된 이미지 ${currentImageIndex + 1}`}
+              key={index}
+              src={`/public/images/DrawingIMG/${image}`}
+              alt={`첨부된 이미지 ${index + 1}`}
+              $active={index === currentImageIndex}
             />
-            {img.length > 1 && (
-              <>
-                <ImageNavigationButton
-                  className="left"
-                  onClick={goToPreviousImage}
-                  style={{ left: 0 }}
-                >
-                  <BsChevronLeft />
-                </ImageNavigationButton>
-                <ImageNavigationButton
-                  className="right"
-                  onClick={goToNextImage}
-                  style={{ right: 0 }}
-                >
-                  <BsChevronRight />
-                </ImageNavigationButton>
-              </>
-            )}
-          </PostImageWrapper>
+          ))}
           {img.length > 1 && (
-            <ImageControl>
-              <ImageCount>
-                {currentImageIndex + 1} / {img.length}
-              </ImageCount>
-            </ImageControl>
+            <>
+              <NavigationButton className="left" onClick={goToPreviousImage}>
+                <BsChevronLeft />
+              </NavigationButton>
+              <NavigationButton className="right" onClick={goToNextImage}>
+                <BsChevronRight />
+              </NavigationButton>
+            </>
           )}
-        </>
+        </PostImageCarousel>
       )}
 
-      <Actions>
+      <Actions onClick={(e) => e.stopPropagation()}>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}
           <span>{likeCount}</span>
         </ActionIcon>
-        <ChatIcon onClick={handlePostClick} />
+        <ChatIconStyled onClick={handleChatClick} />
       </Actions>
     </Container>
   );
