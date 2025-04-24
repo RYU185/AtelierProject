@@ -10,7 +10,9 @@ const ReviewItem = styled.div`
 `;
 
 const ReviewerName = styled.div`
-  font-weight: bold;
+  font-weight: 400;
+  font-size: 18px;
+  color: #e1e1e1;
 `;
 
 const ReviewDate = styled.div`
@@ -20,6 +22,10 @@ const ReviewDate = styled.div`
 
 const ReviewContent = styled.div`
   margin-top: 10px;
+  font-weight: 400;
+  font-size: 15px;
+  color: #e1e1e1;
+
 `;
 
 const MoreButton = styled.button`
@@ -29,6 +35,9 @@ const MoreButton = styled.button`
   border: none;
   background: none;
   cursor: pointer;
+  color: aliceblue;
+  margin-top: 10px;
+  scale: 2;
 `;
 
 const DropdownMenu = styled.div`
