@@ -237,7 +237,15 @@ const CartPage = () => {
 
       navigate("/purchase-complete", {
         state: {
-          items: data.goods,
+          items: data.goods.map((item) => {
+            const matched = selectedItems.find(
+              (s) => s.goodsName === item.goodsName
+            );
+            return {
+              ...item,
+              thumbnailUrl: matched?.image || "",
+            };
+          }),
           totalPrice: data.totalPrice,
           purchaseDate: data.purchaseDate,
           purchaseId: data.purchaseId,

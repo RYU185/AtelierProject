@@ -1,13 +1,15 @@
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // ✅ useLocation 추가
-import styled from 'styled-components';
+import React from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom"; // ✅ useLocation 추가
+import styled from "styled-components";
 
 const MenuContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
-  margin-bottom: -10px;
-  margin-top: 20px;
-  padding-left: 469px;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
 `;
 
 const TabButton = styled.button`
@@ -16,15 +18,12 @@ const TabButton = styled.button`
   font-size: 14px;
   border: 1px solid #bbb;
   border-radius: 10px 10px 10px 10px;
-  background: ${(props) => (props.active ? '#6ea8fe' : '#f1f1f1')};
-  color: ${(props) => (props.active ? '#fff' : '#666')};
+  background: ${(props) => (props.active ? "#6ea8fe" : "#f1f1f1")};
+  color: ${(props) => (props.active ? "#fff" : "#666")};
   cursor: pointer;
   transition: background 0.2s;
   margin-right: 5px;
   text-align: center;
-
-  position: relative; /* ✅ 버튼 위치 조정 가능하게 설정 */
-  top: 30px; /* ✅ 버튼을 아래로 내림 */
 
   &:hover {
     background: #6ea8fe;
@@ -36,24 +35,50 @@ const TabButton = styled.button`
   }
 `;
 
+const AddButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const AddButton = styled.button`
+  padding: 8px 16px;
+  background: #3da9fc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  &:hover {
+    background: #3da0e5;
+  }
+`;
+
 function AdminGoodsMenubar() {
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
   const location = useLocation(); // ✅ 현재 URL 가져오기
 
   return (
     <MenuContainer>
-      <TabButton 
-        active={location.pathname === '/AdminGoods'} // ✅ 현재 URL이 /AdminGoods면 활성화
-        onClick={() => navigate('/AdminGoods')}
-      >
-        굿즈 판매내역 관리
-      </TabButton>
-      <TabButton 
-        active={location.pathname === '/AdminGoodsChart'} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
-        onClick={() => navigate('/AdminGoodsChart')}
-      >
-        통계 관리
-      </TabButton>
+      <ButtonWrapper>
+        <TabButton
+          active={location.pathname === "/AdminGoods"} // ✅ 현재 URL이 /AdminGoods면 활성화
+          onClick={() => navigate("/AdminGoods")}
+        >
+          굿즈 판매내역 관리
+        </TabButton>
+        <TabButton
+          active={location.pathname === "/AdminGoodsChart"} // ✅ 현재 URL이 /AdminGoodsChart면 활성화
+          onClick={() => navigate("/AdminGoodsChart")}
+        >
+          통계 관리
+        </TabButton>
+      </ButtonWrapper>
+
+      <AddButtonWrapper>
+        <Link to="/AdminGoodsAdd" style={{ textDecoration: "none" }}>
+          <AddButton>굿즈 추가</AddButton>
+        </Link>
+      </AddButtonWrapper>
     </MenuContainer>
   );
 }

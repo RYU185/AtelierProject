@@ -1,48 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-import AdminTicketMenubar from './AdminTicketMenubar';
+import AdminTicketMenubar from "./AdminTicketMenubar";
 
 const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", { eager: true });
 const getImageUrl = (filename) => {
-  if (!filename) return '/images/default-image.png';
+  if (!filename) return "/images/default-image.png";
   const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
-  return matched ? matched[1].default : '/images/default-image.png';
+  return matched ? matched[1].default : "/images/default-image.png";
 };
 const AdminTicketWrapper = styled.div`
   flex: 1;
-  padding: 20px 40px;
-  display: flex;
   flex-direction: column;
   color: white;
- margin-top: -60px;
 `;
 
 const AdminGoodsMenubarWrapper = styled.div`
-  position: relative;
-  top: 80px;
-  left: -335px;
-  z-index: 10;
-  margin-left: -135px;
+
 `;
 
 const MainContent = styled.div`
   flex: 1;
-  padding: 20px;
-  margin-top: -48px;
-  margin-left: -20px;
 `;
 const Title = styled.h1`
-  font-size: 32px;
+  font-size: 25px;
   font-weight: bold;
-  margin-bottom: 30px;
 `;
 const Table = styled.table`
   width: 100%;
   max-width: 1300px;
   border-collapse: collapse;
-  margin-top: 90px;
   font-size: 16px;
   text-align: center;
 `;
@@ -70,15 +58,12 @@ const ActionButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   color: #333;
-  background-color: ${props =>
-    props.variant === 'edit' ? '#a4d4f3' :
-    props.variant === 'delete' ? '#f7b6b6' : '#d6ccf7'};
-  
+  background-color: ${(props) =>
+    props.variant === "edit" ? "#a4d4f3" : props.variant === "delete" ? "#f7b6b6" : "#d6ccf7"};
 
   &:hover {
-    background-color: ${props =>
-      props.variant === 'edit' ? '#7dc5f3' :
-      props.variant === 'delete' ? '#f48c8c' : '#c4b8f0'};
+    background-color: ${(props) =>
+      props.variant === "edit" ? "#7dc5f3" : props.variant === "delete" ? "#f48c8c" : "#c4b8f0"};
   }
 `;
 
@@ -86,14 +71,14 @@ const AdminTicketManagement = () => {
   const navigate = useNavigate();
   const [tickets, setTickets] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({ deadline: '' });
+  const [formData, setFormData] = useState({ deadline: "" });
 
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
 
       try {
-        const res = await fetch('/api/reservation/admin/summary/gallery/all', {
+        const res = await fetch("/api/reservation/admin/summary/gallery/all", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -105,7 +90,7 @@ const AdminTicketManagement = () => {
         const formatted = summary.map(formatTicket);
         setTickets(formatted);
       } catch (error) {
-        console.error('데이터 로딩 오류:', error);
+        console.error("데이터 로딩 오류:", error);
       }
     };
 
@@ -135,47 +120,43 @@ const AdminTicketManagement = () => {
   const handleSave = async (id) => {
     try {
       const response = await fetch(`/api/artistgallery/deadline/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ deadline: formData.deadline }),
       });
 
-      if (!response.ok) throw new Error('마감일 수정 실패');
+      if (!response.ok) throw new Error("마감일 수정 실패");
 
       alert(await response.text());
 
-      setTickets(prev =>
-        prev.map(ticket =>
+      setTickets((prev) =>
+        prev.map((ticket) =>
           ticket.id === id ? { ...ticket, deadline: formData.deadline } : ticket
         )
       );
 
       setEditingId(null);
     } catch (error) {
-      console.error('마감일 수정 오류:', error);
-      alert('수정 중 오류 발생');
+      console.error("마감일 수정 오류:", error);
+      alert("수정 중 오류 발생");
     }
   };
 
   const handleDelete = (id) => {
-    setTickets(prev => prev.filter(ticket => ticket.id !== id));
+    setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
   };
 
   return (
     <>
       <AdminTicketWrapper>
-      <AdminGoodsMenubarWrapper>
-        <AdminTicketMenubar />
-      </AdminGoodsMenubarWrapper>
-
-     
-
+        <Title>티켓 판매 내역 및 마감일 관리</Title>
+        <AdminGoodsMenubarWrapper>
+          <AdminTicketMenubar />
+        </AdminGoodsMenubarWrapper>
         <MainContent>
-          <Title>티켓 판매 내역 및 마감일 관리</Title>
-
           <Table>
             <thead>
               <tr>
@@ -190,7 +171,7 @@ const AdminTicketManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {tickets.map(ticket => (
+              {tickets.map((ticket) => (
                 <tr key={ticket.id}>
                   <Td>
                     <Thumbnail
@@ -203,17 +184,24 @@ const AdminTicketManagement = () => {
                   <Td>{ticket.dateRange}</Td>
                   <Td>{ticket.reservationLimit}</Td>
                   <Td>{ticket.visitors}</Td>
-                  <Td style={{ color: ticket.remaining === 0 ? 'red' : ticket.remaining <= 10 ? 'orange' : 'inherit' }}>
-                    {ticket.remaining === 0 ? '마감' : ticket.remaining}
+                  <Td
+                    style={{
+                      color:
+                        ticket.remaining === 0
+                          ? "red"
+                          : ticket.remaining <= 10
+                          ? "orange"
+                          : "inherit",
+                    }}
+                  >
+                    {ticket.remaining === 0 ? "마감" : ticket.remaining}
                   </Td>
                   <Td>
                     {editingId === ticket.id ? (
                       <input
                         type="date"
                         value={formData.deadline}
-                        onChange={(e) =>
-                          setFormData({ ...formData, deadline: e.target.value })
-                        }
+                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
                       />
                     ) : (
                       ticket.deadline
@@ -221,18 +209,24 @@ const AdminTicketManagement = () => {
                   </Td>
                   <Td>
                     {editingId === ticket.id ? (
-                      <ActionButton variant="edit" onClick={() => handleSave(ticket.id)}>저장</ActionButton>
+                      <ActionButton variant="edit" onClick={() => handleSave(ticket.id)}>
+                        저장
+                      </ActionButton>
                     ) : (
-                      <ActionButton variant="edit" onClick={() => handleEditClick(ticket)}>수정</ActionButton>
+                      <ActionButton variant="edit" onClick={() => handleEditClick(ticket)}>
+                        수정
+                      </ActionButton>
                     )}
-                    <ActionButton variant="delete" onClick={() => handleDelete(ticket.id)}>삭제</ActionButton>
+                    <ActionButton variant="delete" onClick={() => handleDelete(ticket.id)}>
+                      삭제
+                    </ActionButton>
                   </Td>
                 </tr>
               ))}
             </tbody>
           </Table>
         </MainContent>
-        </AdminTicketWrapper>
+      </AdminTicketWrapper>
     </>
   );
 };

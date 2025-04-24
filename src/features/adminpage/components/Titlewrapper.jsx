@@ -7,7 +7,6 @@ const TitleWrapper = styled.h2`
   text-align: left;
   margin-right: 80px;
   position: relative;
-  top: -30px;
   
 `;
 

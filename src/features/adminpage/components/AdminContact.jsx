@@ -6,16 +6,19 @@ import styled from "styled-components";
 
 const AdminContactWrapper = styled.div`
   flex: 1;
-  padding: 20px 40px;
   display: flex;
   flex-direction: column;
   color: white;
- margin-top: -60px;
+  margin-top: 116px;
 `;
+
+const Title = styled.h2`
+  font-size: 25px;
+  margin-bottom: 20px;
+`
 
 const InquiryList = styled.ul`
   position: relative;
-  margin-top: 27px;
   list-style: none;
   padding: 0;
   max-height: 500px;
@@ -45,30 +48,14 @@ const InquiryItem = styled.li`
 
 const InquiryDetail = styled.div`
   position: relative;
-  margin-top: -345px;
+  margin-top: -418px;
+  margin-right: 30px;
   padding: 20px;
-  background: #fff;
+  background:rgba(255, 255, 255, 0.07);;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-left: 700px;
+  margin-left: 690px;
 `;
-
-const Input = styled.textarea`
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  transition: all 0.2s ease-in-out;
-
-  &:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
-    outline: none;
-  }
-`;
-
 
 
 const StatusIcon = styled.span`
@@ -88,27 +75,6 @@ const Avatar = styled.img`
   border-radius: 50%;
   margin-right: 10px;
   border: 2px solid #ddd;
-`;
-
-const FilterButtons = styled.div`
-  margin-bottom: 15px;
-  display: flex;
-  gap: 10px;
-  
-`;
-
-const FilterButton = styled.button`
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  background: ${(props) => (props.active ? "#007bff" : "#ddd")};
-  color: ${(props) => (props.active ? "white" : "black")};
-  margin-top: 44px;
-  &:hover {
-    background: ${(props) => (props.active ? "#0056b3" : "#bbb")};
-  }
 `;
 
 let stompClient = null;
@@ -135,26 +101,30 @@ function AdminContact() {
       const socket = new SockJS("http://localhost:8081/ws");
       stompClient = over(socket);
 
-      stompClient.connect({}, () => {
-        console.log("🟢 AdminContact WebSocket 연결 성공");
+      stompClient.connect(
+        {},
+        () => {
+          console.log("🟢 AdminContact WebSocket 연결 성공");
 
-        stompClient.subscribe("/topic/inquiry", (message) => {
-          const data = JSON.parse(message.body);
+          stompClient.subscribe("/topic/inquiry", (message) => {
+            const data = JSON.parse(message.body);
 
-          const newInquiry = {
-            id: Date.now(),
-            name: data.sender,
-            title: data.message,
-            content: "",
-            isReplied: false,
-            createdAt: new Date().toISOString(),
-          };
+            const newInquiry = {
+              id: Date.now(),
+              name: data.sender,
+              title: data.message,
+              content: "",
+              isReplied: false,
+              createdAt: new Date().toISOString(),
+            };
 
-          setInquiries((prev) => [newInquiry, ...prev]);
-        });
-      }, (err) => {
-        console.error("❌ WebSocket 연결 실패:", err);
-      });
+            setInquiries((prev) => [newInquiry, ...prev]);
+          });
+        },
+        (err) => {
+          console.error("❌ WebSocket 연결 실패:", err);
+        }
+      );
 
       // 컴포넌트 언마운트 시 WebSocket 연결 종료
       return () => {
@@ -215,19 +185,9 @@ function AdminContact() {
 
   return (
     <>
- 
- <AdminContactWrapper>
-  
-        <div style={{ padding: "20px", flex: 1 }}>
-          <h2>문의 관리</h2>
-          <FilterButtons>
-            <FilterButton active={filter === "all"} onClick={() => setFilter("all")}>
-              전체 문의
-            </FilterButton>
-            <FilterButton active={filter === "unreplied"} onClick={() => setFilter("unreplied")}>
-              미해결 문의만 보기
-            </FilterButton>
-          </FilterButtons>
+      <AdminContactWrapper>
+        <div>
+          <Title>문의 관리</Title>
           <InquiryList>
             {inquiriesToDisplay.map((inquiry) => (
               <InquiryItem
@@ -236,7 +196,9 @@ function AdminContact() {
                 onClick={() => handleSelectInquiry(inquiry)}
               >
                 <div>
-                  <span>{inquiry.title} - {inquiry.name}</span>
+                  <span>
+                    {inquiry.title} - {inquiry.name}
+                  </span>
                   <DateText>{inquiry.createdAt?.split("T")[0]}</DateText>
                 </div>
                 <StatusIcon replied={inquiry.isReplied}>
@@ -249,17 +211,27 @@ function AdminContact() {
           {selectedInquiry && (
             <InquiryDetail>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <Avatar src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${selectedInquiry.name}`} />
+                <Avatar
+                  src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${selectedInquiry.name}`}
+                />
                 <h3>{selectedInquiry.title}</h3>
               </div>
-              <p><strong>이름:</strong> {selectedInquiry.name}</p>
-              <p><strong>이메일:</strong> {selectedInquiry.email}</p>
-              <p><strong>문의 날짜:</strong> {selectedInquiry.createdAt}</p>
-              <p><strong>내용:</strong> {selectedInquiry.content}</p>
+              <p>
+                <strong>이름:</strong> {selectedInquiry.name}
+              </p>
+              <p>
+                <strong>이메일:</strong> {selectedInquiry.email}
+              </p>
+              <p>
+                <strong>문의 날짜:</strong> {selectedInquiry.createdAt}
+              </p>
+              <p>
+                <strong>내용:</strong> {selectedInquiry.content}
+              </p>
             </InquiryDetail>
           )}
         </div>
-        </AdminContactWrapper>
+      </AdminContactWrapper>
     </>
   );
 }

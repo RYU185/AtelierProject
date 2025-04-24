@@ -129,11 +129,11 @@ const InfoSection = styled.div`
   margin-top: 10px;
 `;
 
-const CountText= styled.p`
+const CountText = styled.p`
   font-size: 19px;
   font-weight: 400;
   color: #e1e1e1;
-`
+`;
 
 const ProductTitle = styled.h1`
   font-size: 24px;
@@ -218,7 +218,6 @@ const CounterButton = styled.button`
   font-size: 16px;
   background-color: #00000018;
   color: #ffffff;
-  
 `;
 
 const CounterInput = styled.input`
@@ -469,6 +468,7 @@ function GoodsDetail() {
   const handleTitleClick = () => navigate("/goods");
 
   const handlePurchase = () => setShowPurchaseModal(true);
+  
 
   const handlePurchaseConfirm = async () => {
     try {
@@ -480,15 +480,17 @@ function GoodsDetail() {
       }
 
       const dto = {
-        quantity: quantity, // ✅ 이거!
+        quantity: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
       };
 
+      const safeThumbnail = currentProductImages?.[selectedImage] || currentProductImages?.[0];
+
       await axiosInstance.post("/purchase/buy-now", dto);
-      console.log("🟦 보내는 DTO:", dto);
-      setShowPurchaseModal(false); // 구매 후 모달 닫기
+      console.log("보내는 DTO:", dto);
+      setShowPurchaseModal(false);
       navigate("/purchase-complete", {
         state: {
           items: [
@@ -496,7 +498,7 @@ function GoodsDetail() {
               goodsName: goods.name,
               price: goods.price,
               quantity: quantity,
-              thumbnailUrl: currentProductImages[selectedImage], // 여기!
+              thumbnailUrl: safeThumbnail,
             },
           ],
           totalPrice: goods.price * quantity,

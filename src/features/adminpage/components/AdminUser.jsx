@@ -6,18 +6,12 @@ import axiosInstance from '../../../api/axiosInstance'; // 네가 만든 axios �
 
 const AdminUserWrapper = styled.div`
   flex: 1;
-  padding: 20px 40px;
-  display: flex;
   flex-direction: column;
   color: white;
- margin-top: -60px;
 `;
 
-
 const TitleWrapper = styled.div`
-  position: relative;
   top: 40px;
-  margin-left: 480px;
   color: #222;
   font-size: 25px;
   font-weight: bold;
@@ -29,7 +23,6 @@ const FilterContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   max-width: 1500px;
-  margin-top: 45px;
   position: relative;
 `;
 
@@ -152,7 +145,7 @@ const AdminUser = () => {
 
   
 
-        <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <div>
           <FilterContainer>
             <SearchInput
               type="text"

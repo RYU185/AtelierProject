@@ -20,15 +20,12 @@ const getImageUrl = (filename) => {
 };
 
 const PageContainer = styled.div`
-  padding: 20px;
-  margin-top: 3px;
   min-height: 100vh;
 `;
 
 const ArtListContainer = styled.div`
   width: 1200px;
   margin: 0 auto;
-  padding: 10px;
   border-radius: 8px;
  
 `;

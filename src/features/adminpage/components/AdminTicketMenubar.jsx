@@ -5,9 +5,6 @@ import styled from "styled-components";
 const MenuContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-bottom: -10px;
-  margin-top: 20px;
-  padding-left: 469px;
 `;
 
 const TabButton = styled.button`
