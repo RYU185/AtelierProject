@@ -20,7 +20,7 @@ import NoticePage from "../features/support/NoticePage";
 import GuidePage from "../features/support/GuidePage";
 import LocationPage from "../features/support/LocationPage";
 import ContactusPage from "../features/support/ContactusPage";
-import TicketPage from "../features/ticketpage/TicketPage";
+import TicketPage from "../features/TicketPage/TicketPage";
 import TicketComplete from "../features/TicketPage/components/TicketComplete";
 
 import ArtistGalleryDetail from "../features/ArtistGalleryDetail/ArtistGalleryDetail";
