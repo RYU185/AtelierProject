@@ -357,9 +357,7 @@ function Community({
     <Container onClick={handlePostClick}>
       <Header>
         <UserInfo>
-          <Nickname>
-            {postUser?.nickname || postUser?.username || "알 수 없는 사용자"}
-          </Nickname>
+          <Nickname>{postUser?.nickname || "알 수 없는 사용자"}</Nickname>
           <DateText>{formatDate(uploadDate)}</DateText>
         </UserInfo>
         <MenuIconWrapper onClick={toggleMenu}>

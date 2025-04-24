@@ -337,6 +337,7 @@ function CommunityList() {
           <AddPostModal
             onClose={handleCloseAddModal}
             onSubmit={handleAddPost}
+            userNickname={localStorage.getItem("nickname")}
           />
         )}
       </Container>

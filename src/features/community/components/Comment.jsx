@@ -67,11 +67,11 @@ const ActionButton = styled.button`
   padding: 0;
   margin: 0;
   cursor: pointer;
-  color: #888;
+  color: #6799e5;
   transition: color 0.2s ease-in-out;
 
   &:hover {
-    color: #333;
+    color: #1c4f96;
   }
 
   svg {

@@ -75,6 +75,7 @@ function CommunityDetailModal({ post, onClose }) {
             <CommunityWrapper>
               <Community
                 {...post}
+                user={{ nickname: post.userNickname }}
                 onOpenModal={() => {}}
                 onDelete={() => {}}
                 isModal={true}

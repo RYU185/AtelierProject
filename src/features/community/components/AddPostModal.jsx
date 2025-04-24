@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
+import axios from "axios";
 
 const Overlay = styled.div`
   position: fixed;
@@ -77,7 +78,7 @@ const ImagePreviewWrapper = styled.div`
   margin-bottom: 20px;
   padding-bottom: 5px;
   width: 100%;
-  justify-content: flex-start;
+  justify-content: center; /* ✅ 가운데 정렬로 변경 */
 `;
 
 const ImagePreviewContainer = styled.div`
@@ -128,6 +129,13 @@ const FileLabel = styled.label`
   padding: 6px 12px;
   transition: all 0.3s ease;
   width: fit-content;
+
+  &:hover {
+    background: #018ec8;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(1, 142, 200, 0.3);
+  }
 `;
 
 const HiddenFileInput = styled.input`
@@ -144,7 +152,17 @@ const SubmitButton = styled.button`
   border-radius: 14px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #007bbf;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 191, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 const WarningText = styled.p`
@@ -154,7 +172,7 @@ const WarningText = styled.p`
   text-align: center;
 `;
 
-function AddPostModal({ onClose, onSubmit }) {
+function AddPostModal({ onClose, onSubmit, userNickname }) {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -167,7 +185,7 @@ function AddPostModal({ onClose, onSubmit }) {
       return;
     }
     setUploadError("");
-    setImages((prevImages) => [...prevImages, ...files]);
+    setImages((prev) => [...prev, ...files]);
 
     files.forEach((file) => {
       const reader = new FileReader();
@@ -179,41 +197,48 @@ function AddPostModal({ onClose, onSubmit }) {
   };
 
   const handleCancelImage = (index) => {
-    const newImages = [...images];
-    newImages.splice(index, 1);
-    setImages(newImages);
-
-    const newPreviews = [...imagePreviews];
-    newPreviews.splice(index, 1);
-    setImagePreviews(newPreviews);
+    setImages((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (images.length > 4) {
       setUploadError("이미지는 최대 4장까지 업로드할 수 있습니다.");
       return;
     }
-    const now = new Date();
-    const datetext = now.toISOString().slice(0, 16).replace("T", " ");
-    const nickname = "익명";
 
-    const newPost = {
-      id: Date.now(),
-      nickname,
-      content,
-      datetext,
-      drawingImages: imagePreviews,
-    };
+    try {
+      // 👉 이미지 업로드 URL 리스트 받기 (가정: base64 → 서버 변환 API 존재)
+      const uploadedUrls = await Promise.all(
+        images.map(async (img) => {
+          const formData = new FormData();
+          formData.append("file", img);
+          const res = await axios.post("/api/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          return res.data.url;
+        })
+      );
 
-    onSubmit(newPost);
-    onClose();
+      const postData = {
+        text: content,
+        img: uploadedUrls,
+      };
+
+      await axios.post("/api/community/add", postData);
+      onSubmit(postData);
+      onClose();
+    } catch (err) {
+      console.error("게시글 등록 실패:", err);
+      setUploadError("게시글 등록 중 오류가 발생했습니다.");
+    }
   };
 
   return (
     <Overlay onClick={onClose}>
       <Modal onClick={(e) => e.stopPropagation()}>
         <CloseBtn onClick={onClose}>×</CloseBtn>
-        <NicknameDisplay>작성자: 익명</NicknameDisplay>
+        <NicknameDisplay>작성자 : {userNickname}</NicknameDisplay>
         <TextArea
           placeholder="내용 입력"
           value={content}
