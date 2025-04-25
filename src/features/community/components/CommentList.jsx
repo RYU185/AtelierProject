@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Comment from "./Comment";
 import axios from "axios";
 
+
 const CommentListContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,29 +50,30 @@ function CommentList({ postId }) {
   const [error, setError] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await axios.get(`/api/community/detail/id/${postId}`);
-        const fetchedComments = response.data.commentUser.map(
-          (user, index) => ({
-            userNickname: user,
-            text: response.data.commentText[index],
-            creationDate: response.data.creationDateList[index],
-            id: index, // 임시 ID
-          })
-        );
-        setComments(fetchedComments);
-      } catch (error) {
-        console.error("댓글 목록을 가져오는 중 오류 발생:", error);
-        setError("댓글 목록을 불러오는 데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // 💡 여기로 옮긴다!
+  const fetchComments = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`/api/community/detail/id/${postId}`);
+      const fetchedComments = response.data.commentUser.map(
+        (user, index) => ({
+          userNickname: user,
+          text: response.data.commentText[index],
+          creationDate: response.data.creationDateList[index],
+          id: index,
+        })
+      );
+      setComments(fetchedComments);
+    } catch (error) {
+      console.error("댓글 목록을 가져오는 중 오류 발생:", error);
+      setError("댓글 목록을 불러오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (postId) {
       fetchComments();
     } else {
@@ -87,19 +89,22 @@ function CommentList({ postId }) {
     }
 
     try {
-      const accessToken = localStorage.getItem("accessToken"); // 토큰 확인 (필요에 따라)
+      const accessToken = localStorage.getItem("accessToken");
       const response = await axios.post(
-        `/api/community/${postId}/comment/add`, // 댓글 추가 API 엔드포인트 (서버와 맞춰야 함)
-        { text: newCommentText },
+        `/api/comment/add`,
+        {
+          text: newCommentText,
+          communityId: postId, // ✅ 꼭 포함
+        },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`, // 필요한 경우
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
 
       if (response.status === 201) {
-        fetchComments();
+        await fetchComments(); // 🔥 이제 여기도 문제 없음
         setNewCommentText("");
       } else {
         alert("댓글 등록에 실패했습니다.");
@@ -109,6 +114,7 @@ function CommentList({ postId }) {
       alert("댓글 등록 중 오류가 발생했습니다.");
     }
   };
+
 
   if (loading) {
     return <div>댓글을 불러오는 중...</div>;
