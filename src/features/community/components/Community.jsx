@@ -7,7 +7,7 @@ import {
   BsChevronLeft,
   BsChevronRight,
 } from "react-icons/bs";
-import { FiMoreVertical } from "react-icons/fi"; // 점 세 개 아이콘 추가
+import { FiMoreVertical } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -61,7 +61,7 @@ const Content = styled.p`
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 5; /* 모달에서 보이는 줄 수 증가 */
+  -webkit-line-clamp: 5;
   flex-grow: 1;
 `;
 
@@ -72,7 +72,7 @@ const PostImageCarousel = styled.div`
   overflow: hidden;
   border-radius: 8px;
   margin-top: 8px;
-  max-height: 400px; /* 모달에서 이미지 캐러셀 최대 높이 증가 */
+  max-height: 400px;
 `;
 
 const PostImage = styled.img`
@@ -93,7 +93,7 @@ const NavigationButton = styled.button`
   background: none;
   border: none;
   font-size: 24px;
-  color: #add8e6; /* 옅은 하늘색 */
+  color: #add8e6;
   cursor: pointer;
   z-index: 10;
   opacity: 0.7;
@@ -103,17 +103,16 @@ const NavigationButton = styled.button`
     opacity: 1;
   }
 
-  /* 아이콘 스타일 */
   svg {
     stroke-width: 2;
   }
 
   &.left {
-    left: 5px; /* 값을 줄여서 더 왼쪽으로 이동 */
+    left: 5px;
   }
 
   &.right {
-    right: 5px; /* 값을 줄여서 더 오른쪽으로 이동 */
+    right: 5px;
   }
 `;
 
@@ -123,8 +122,7 @@ const MenuIconWrapper = styled.div`
 `;
 
 const MenuIcon = styled(FiMoreVertical)`
-  // FiMoreVertical 아이콘 사용
-  font-size: 20px; // 아이콘 크기 조정
+  font-size: 20px;
   color: #888;
 `;
 
@@ -197,7 +195,7 @@ const ActionIcon = styled.div`
 
 const ChatIconStyled = styled(BsChat)`
   font-size: 18px;
-  color: #555; // 👈 짙은 회색으로 변경
+  color: #555;
   cursor: pointer;
   transition: transform 0.3s ease;
 
@@ -212,28 +210,83 @@ function Community({
   uploadDate,
   text,
   img,
-  likes,
-  commentCount = 0, // ✅ 기본값 0
+  likes: initialLikes,
+  commentCount = 0,
   onDelete,
   onOpenModal,
   isModal,
-  currentUser,
+  currentUser: propCurrentUser, // prop으로 받는 currentUser 이름 변경
   currentImageIndex: propCurrentImageIndex,
 }) {
   const [isHeartFilled, setIsHeartFilled] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes || 0);
+  const [likeCount, setLikeCount] = useState(initialLikes || 0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentUser, setCurrentUser] = useState(propCurrentUser); // 로컬 상태로 currentUser 관리
   const navigate = useNavigate();
   const hasImage = img && img.length > 0;
 
   useEffect(() => {
-    if (propCurrentImageIndex !== undefined) {
-      setCurrentImageIndex(propCurrentImageIndex);
+    // prop으로 받은 currentUser가 있다면 로컬 상태 업데이트
+    if (propCurrentUser) {
+      setCurrentUser(propCurrentUser);
     } else {
-      setCurrentImageIndex(0);
+      // prop이 없다면 컴포넌트 자체에서 사용자 정보 로딩
+      const fetchCurrentUser = async () => {
+        const accessToken = localStorage.getItem("accessToken");
+        if (accessToken) {
+          try {
+            const response = await axios.get("/api/user/me", {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+            setCurrentUser(response.data);
+          } catch (error) {
+            console.error("Community: 현재 사용자 정보 가져오기 실패:", error);
+            setCurrentUser(null);
+          }
+        } else {
+          setCurrentUser(null);
+        }
+      };
+      fetchCurrentUser();
     }
-  }, [propCurrentImageIndex, img]);
+  }, [propCurrentUser]); // propCurrentUser가 변경될 때도 업데이트
+
+  useEffect(() => {
+    const checkInitialLikeStatus = async () => {
+      console.log("Community 렌더링, currentUser:", currentUser);
+      console.log("useEffect - checkInitialLikeStatus 호출됨", {
+        id,
+        currentUser: currentUser?.id,
+      });
+      if (currentUser?.id && id) {
+        try {
+          const accessToken = localStorage.getItem("accessToken");
+          console.log("useEffect - accessToken:", accessToken);
+          const response = await axios.get(`/api/community/like/check/${id}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          console.log("useEffect - 서버 응답 (isLikedByUser):", response.data);
+          setIsHeartFilled(response.data.isLikedByUser);
+          console.log("useEffect - isHeartFilled 상태:", isHeartFilled);
+        } catch (error) {
+          console.error("useEffect - 초기 좋아요 상태 확인 에러:", error);
+        }
+      } else {
+        setIsHeartFilled(false);
+        console.log(
+          "useEffect - 로그인 안됨 또는 id 없음, isHeartFilled:",
+          false
+        );
+      }
+    };
+
+    checkInitialLikeStatus();
+  }, [id, currentUser]); // 의존성 배열에 로컬 currentUser 포함
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -245,20 +298,41 @@ function Community({
     return `${year}.${month}.${day} ${hours}:${minutes}`;
   };
 
-  const toggleHeart = (e) => {
+  const toggleHeart = async (e) => {
     e.stopPropagation();
-    setLikeCount(isHeartFilled ? likeCount - 1 : likeCount + 1);
-    setIsHeartFilled(!isHeartFilled);
+    console.log("toggleHeart 호출됨, 현재 isHeartFilled:", isHeartFilled);
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      console.log("toggleHeart - accessToken:", accessToken);
+      const response = await axios.post(
+        `/api/community/like/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("toggleHeart - 서버 응답:", response.data);
+      setLikeCount(response.data.likeCount);
+      setIsHeartFilled(!isHeartFilled);
+      console.log("toggleHeart - isHeartFilled 변경됨:", !isHeartFilled);
+    } catch (error) {
+      console.error("toggleHeart - 좋아요 에러:", error);
+      alert("좋아요/취소 요청에 실패했습니다.");
+    }
   };
 
   const toggleMenu = (e) => {
     e.stopPropagation();
     setIsMenuOpen(!isMenuOpen);
+    console.log("toggleMenu 호출됨, isMenuOpen:", !isMenuOpen);
   };
 
   const handlePostClick = (e) => {
     if (!isModal) {
-      onOpenModal(e, { id, postUser, uploadDate, text, img, likes });
+      onOpenModal(e, { id, postUser, uploadDate, text, img, likes: likeCount });
+      console.log("handlePostClick 호출됨, id:", id);
     }
   };
 
@@ -271,9 +345,15 @@ function Community({
         uploadDate,
         text,
         img,
-        likes,
+        likes: likeCount,
         initialImageIndex: currentImageIndex,
       });
+      console.log(
+        "handleImageClick 호출됨, id:",
+        id,
+        "currentImageIndex:",
+        currentImageIndex
+      );
     }
   };
 
@@ -286,9 +366,10 @@ function Community({
         uploadDate,
         text,
         img,
-        likes,
+        likes: likeCount,
         showComments: true,
       });
+      console.log("handleChatClick 호출됨, id:", id);
     }
   };
 
@@ -297,6 +378,10 @@ function Community({
     if (hasImage) {
       setCurrentImageIndex((prevIndex) =>
         prevIndex > 0 ? prevIndex - 1 : img.length - 1
+      );
+      console.log(
+        "goToPreviousImage 호출됨, currentImageIndex:",
+        currentImageIndex - 1
       );
     }
   };
@@ -307,11 +392,16 @@ function Community({
       setCurrentImageIndex((prevIndex) =>
         prevIndex < img.length - 1 ? prevIndex + 1 : 0
       );
+      console.log(
+        "goToNextImage 호출됨, currentImageIndex:",
+        currentImageIndex + 1
+      );
     }
   };
 
   const handleDeleteClick = async (e) => {
     e.stopPropagation();
+    console.log("handleDeleteClick 호출됨, postId:", id);
 
     if (currentUser?.id !== postUser?.id && !currentUser?.isAdmin) {
       alert("본인의 글 또는 관리자만 삭제할 수 있습니다.");
@@ -323,7 +413,7 @@ function Community({
 
     try {
       const accessToken = localStorage.getItem("accessToken");
-
+      console.log("handleDeleteClick - accessToken:", accessToken);
       const response = await axios.post(
         `/api/community/delete/${id}`,
         {},
@@ -335,25 +425,23 @@ function Community({
         }
       );
 
-      alert(response.data); // 성공 메시지 표시
+      alert(response.data);
       if (onDelete) onDelete(id);
       setIsMenuOpen(false);
+      console.log("handleDeleteClick - 삭제 완료");
     } catch (error) {
-      console.error("삭제 에러:", error);
-
-      if (error.response) {
-        if (error.response.status === 500) {
-          alert("본인의 글만 삭제할 수 있습니다.");
-        } else {
-          alert("삭제 요청에 실패했습니다. 다시 시도해주세요.");
-        }
+      console.error("handleDeleteClick - 삭제 에러:", error);
+      if (error.response?.status === 500) {
+        alert("본인의 글만 삭제할 수 있습니다.");
       } else {
-        alert("서버와의 통신 중 문제가 발생했습니다.");
+        alert("삭제 요청에 실패했습니다. 다시 시도해주세요.");
       }
-
       setIsMenuOpen(false);
     }
   };
+
+  console.log("렌더링:", { id, isHeartFilled, likeCount });
+
   return (
     <Container onClick={handlePostClick}>
       <Header>
@@ -372,9 +460,7 @@ function Community({
         </MenuIconWrapper>
       </Header>
       <Divider />
-
       <Content>{text}</Content>
-
       {hasImage && (
         <PostImageCarousel>
           {img.map((image, index) => (
@@ -397,7 +483,6 @@ function Community({
           )}
         </PostImageCarousel>
       )}
-
       <Actions onClick={(e) => e.stopPropagation()}>
         <ActionIcon onClick={toggleHeart}>
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}

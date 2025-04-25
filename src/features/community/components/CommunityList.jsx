@@ -18,11 +18,11 @@ const drawButtonHoverGradient =
 
 const Container = styled.div`
   width: 70%;
-  background-color: ${backgroundColor};
+  background-color: #f0f4f8;
   border-radius: 16px;
   margin: 0 auto 80px;
   padding-top: 20px;
-  box-shadow: ${shadow};
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 `;
 
 const ButtonBox = styled.div`
@@ -37,14 +37,14 @@ const StyledButton = styled.button`
   font-weight: 600;
   font-size: 16px;
   background-color: white;
-  border: 1.5px solid ${borderColor};
-  color: ${textColor};
+  border: 1.5px solid #dce3eb;
+  color: #2e3a59;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background: ${buttonGradient};
+    background: linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%);
     border-color: transparent;
     color: white;
     transform: translateY(-3px);
@@ -58,13 +58,13 @@ const StyledButton = styled.button`
 `;
 
 const StyledDrawwButton = styled(StyledButton)`
-  background: ${drawButtonGradient};
+  background: linear-gradient(135deg, #b3e5fc 0%, #4fc3f7 100%);
   color: white;
   border: none;
   box-shadow: 0 2px 5px rgba(179, 229, 252, 0.3);
 
   &:hover {
-    background: ${drawButtonHoverGradient};
+    background: linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%);
     box-shadow: 0 4px 10px rgba(179, 229, 252, 0.4);
     transform: translateY(-3px);
   }
@@ -90,9 +90,9 @@ const Grid = styled.div`
   padding: 24px;
 
   & > div {
-    background: ${cardBackground};
+    background: #ffffff;
     border-radius: 16px;
-    box-shadow: ${shadow};
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: 20px;
 
@@ -105,63 +105,123 @@ const Grid = styled.div`
 
 function CommunityList() {
   const navigate = useNavigate();
-  const location = useLocation();
-
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
   const [communityItems, setCommunityItems] = useState([]);
   const [sortBy, setSortBy] = useState("latest");
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isMyPostsView, setIsMyPostsView] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false); // ⭐추가
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleAddPostClick = () => {
-    setIsAddModalOpen(true); // 모달 열기
+    setIsAddModalOpen(true);
   };
 
   const handleCloseAddModal = () => {
-    setIsAddModalOpen(false); // 모달 닫기
+    setIsAddModalOpen(false);
   };
 
   useEffect(() => {
-    fetchCommunityData(); // 처음 로드될 때 전체 글 목록 불러오기
-    setIsMyPostsView(false); // 초기 상태는 전체 보기
+    const fetchCurrentUser = async () => {
+      const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
+      if (accessToken) {
+        try {
+          const response = await axios.get("/api/user/me", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          // 응답 데이터에서 필요한 사용자 정보 추출
+          setLoggedInUser({
+            userId: response.data.userId, // 실제 userId 필드명으로 변경
+            nickname: response.data.nickname,
+            // 필요한 다른 사용자 정보도 포함
+          });
+        } catch (error) {
+          console.error("CommunityList: 사용자 정보 가져오기 실패:", error);
+          setLoggedInUser(null);
+        } finally {
+          setIsLoadingUser(false);
+        }
+      } else {
+        setLoggedInUser(null);
+        setIsLoadingUser(false);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    fetchCommunityData();
+    setIsMyPostsView(false);
   }, []);
 
   const fetchCommunityData = async () => {
     try {
       const response = await axios.get("/api/community");
-      setCommunityItems(response.data);
+      // 각 게시글에 현재 사용자의 좋아요 여부 정보를 추가
+      const updatedItems = await Promise.all(
+        response.data.map(async (post) => {
+          const isLiked = loggedInUser?.userId
+            ? await checkLikeStatus(post.id, localStorage.getItem("token"))
+            : false;
+          return { ...post, isLiked };
+        })
+      );
+      setCommunityItems(updatedItems);
       setIsMyPostsView(false);
     } catch (error) {
-      console.error("커뮤니티 데이터를 가져오는 데 실패했습니다:", error);
+      console.error("커뮤니티 데이터 로딩 실패:", error);
+    }
+  };
+
+  const checkLikeStatus = async (communityId, token) => {
+    if (!token) return false;
+    try {
+      const response = await axios.get(
+        `/api/community/like/check/${communityId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("좋아요 상태 확인 실패:", error);
+      return false;
     }
   };
 
   const handleViewMyPostsClick = async () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
     if (!accessToken) {
-      alert("로그인이 필요한 기능입니다.");
+      alert("로그인이 필요합니다.");
       return;
     }
-
     try {
       const response = await axios.get("/api/community/my", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      setCommunityItems(response.data);
+      // 각 게시글에 현재 사용자의 좋아요 여부 정보를 추가
+      const updatedItems = await Promise.all(
+        response.data.map(async (post) => {
+          const isLiked = loggedInUser?.userId
+            ? await checkLikeStatus(post.id, localStorage.getItem("token"))
+            : false;
+          return { ...post, isLiked };
+        })
+      );
+      setCommunityItems(updatedItems);
       setSortBy("latest");
       setIsMyPostsView(true);
     } catch (error) {
-      console.error("나의 커뮤니티 데이터를 가져오는 데 실패했습니다:", error);
-      if (error.response && error.response.status === 401) {
-        alert(
-          "액세스 토큰이 만료되었거나 유효하지 않습니다. 다시 로그인해 주세요."
-        );
-      } else {
-        alert("나의 글을 불러오는 중 오류가 발생했습니다.");
-      }
+      console.error("나의 게시글 로딩 실패:", error);
+      alert("나의 게시글을 불러오는 중 오류가 발생했습니다.");
     }
   };
 
@@ -173,7 +233,6 @@ function CommunityList() {
   const sortedCommunityItems = [...communityItems].sort((a, b) => {
     const dateA = new Date(a.uploadDate);
     const dateB = new Date(b.uploadDate);
-
     if (sortBy === "popular") {
       return b.likes - a.likes;
     } else if (sortBy === "latest") {
@@ -198,37 +257,47 @@ function CommunityList() {
   const handleDelete = async (id) => {
     const confirmed = window.confirm("정말 삭제하시겠습니까?");
     if (confirmed) {
+      const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
       try {
-        const response = await axios.post(`/api/community/delete/${id}`);
+        const response = await axios.post(`/api/community/delete/${id}`, null, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         if (response.status === 200) {
-          setCommunityItems((prev) => prev.filter((post) => post.id !== id));
+          setCommunityItems((prev) => prev.filter((item) => item.id !== id));
           alert(response.data);
           if (selectedPost && selectedPost.id === id) {
             setSelectedPost(null);
             setIsDetailModalOpen(false);
           }
         } else {
-          alert("삭제에 실패했습니다.");
+          alert("삭제 실패");
         }
       } catch (error) {
         console.error("삭제 요청 에러:", error);
-        alert("삭제 중 오류가 발생했습니다.");
+        alert("삭제 중 오류 발생");
       }
     }
   };
 
   const handleAddPost = async (newPost) => {
+    const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
     try {
-      const response = await axios.post("/api/community/add", newPost);
+      const response = await axios.post("/api/community/add", newPost, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       if (response.status === 201) {
         setCommunityItems((prev) => [response.data, ...prev]);
         navigate("/community");
       } else {
-        alert("게시글 등록에 실패했습니다.");
+        alert("게시글 등록 실패");
       }
     } catch (error) {
       console.error("게시글 등록 에러:", error);
-      alert("게시글 등록 중 오류가 발생했습니다.");
+      alert("게시글 등록 중 오류 발생");
     }
   };
 
@@ -246,10 +315,6 @@ function CommunityList() {
               background: !isMyPostsView ? buttonGradient : "white",
               color: !isMyPostsView ? "white" : textColor,
               borderColor: !isMyPostsView ? "transparent" : borderColor,
-              transform: !isMyPostsView ? "translateY(-3px)" : "none",
-              boxShadow: !isMyPostsView
-                ? "0 4px 10px rgba(0, 0, 0, 0.15)"
-                : "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}
           >
             전체 보기
@@ -260,10 +325,6 @@ function CommunityList() {
               background: isMyPostsView ? buttonGradient : "white",
               color: isMyPostsView ? "white" : textColor,
               borderColor: isMyPostsView ? "transparent" : borderColor,
-              transform: isMyPostsView ? "translateY(-3px)" : "none",
-              boxShadow: isMyPostsView
-                ? "0 4px 10px rgba(0, 0, 0, 0.15)"
-                : "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}
           >
             나의 글 보기
@@ -281,11 +342,6 @@ function CommunityList() {
               background: sortBy === "latest" ? buttonGradient : "white",
               color: sortBy === "latest" ? "white" : textColor,
               borderColor: sortBy === "latest" ? "transparent" : borderColor,
-              transform: sortBy === "latest" ? "translateY(-3px)" : "none",
-              boxShadow:
-                sortBy === "latest"
-                  ? "0 4px 10px rgba(0, 0, 0, 0.15)"
-                  : "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}
           >
             최신순
@@ -296,11 +352,6 @@ function CommunityList() {
               background: sortBy === "oldest" ? buttonGradient : "white",
               color: sortBy === "oldest" ? "white" : textColor,
               borderColor: sortBy === "oldest" ? "transparent" : borderColor,
-              transform: sortBy === "oldest" ? "translateY(-3px)" : "none",
-              boxShadow:
-                sortBy === "oldest"
-                  ? "0 4px 10px rgba(0, 0, 0, 0.15)"
-                  : "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}
           >
             오래된순
@@ -311,11 +362,6 @@ function CommunityList() {
               background: sortBy === "popular" ? buttonGradient : "white",
               color: sortBy === "popular" ? "white" : textColor,
               borderColor: sortBy === "popular" ? "transparent" : borderColor,
-              transform: sortBy === "popular" ? "translateY(-3px)" : "none",
-              boxShadow:
-                sortBy === "popular"
-                  ? "0 4px 10px rgba(0, 0, 0, 0.15)"
-                  : "0 2px 5px rgba(0, 0, 0, 0.1)",
             }}
           >
             인기순
@@ -323,15 +369,19 @@ function CommunityList() {
         </SortButtonBox>
 
         <Grid>
-          {sortedCommunityItems.map((post) => (
-            <Community
-              key={post.id}
-              {...post}
-              user={{ nickname: post.userNickname }}
-              onOpenModal={handleOpenModal}
-              onDelete={handleDelete}
-            />
-          ))}
+          {!isLoadingUser &&
+            sortedCommunityItems.map((post) => (
+              <Community
+                key={post.id}
+                {...post}
+                user={{ nickname: post.userNickname }}
+                onOpenModal={handleOpenModal}
+                onDelete={handleDelete}
+                currentUser={loggedInUser}
+                isLiked={post.isLiked} // 좋아요 여부 prop 전달
+              />
+            ))}
+          {isLoadingUser && <div>사용자 정보를 로딩 중입니다...</div>}
         </Grid>
         {isAddModalOpen && (
           <AddPostModal
