@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const MessageContainer = styled.div`
   display: flex;
-  flex-direction: ${(props) => (props.$isArtist ? "row" : "row-reverse")};
+  flex-direction: ${(props) => (props.$isSender ? "row-reverse" : "row")};
   align-items: flex-end;
   gap: 8px;
   margin: 8px 0;
@@ -13,8 +13,8 @@ const ProfileCircle = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: ${(props) => (props.$isArtist ? "#0095E1" : "#f5f5f5")};
-  color: ${(props) => (props.$isArtist ? "white" : "#666")};
+  background-color: ${(props) => (props.$isSender ? "#0095E1" : "#f5f5f5")};
+  color: ${(props) => (props.$isSender ? "white" : "#666")};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,15 +25,16 @@ const ProfileCircle = styled.div`
 const MessageContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${(props) => (props.$isArtist ? "flex-start" : "flex-end")};
+  align-items: ${(props) => (props.$isSender ? "flex-end" : "flex-start")};
   gap: 4px;
 `;
 
 const MessageBubble = styled.div`
-  background: ${(props) => (props.$isArtist ? "#f0f0f0" : "#0095E1")};
-  color: ${(props) => (props.$isArtist ? "#333" : "#fff")};
+  background: ${(props) => (props.$isSender ? "#0095E1" : "#f0f0f0")};
+  color: ${(props) => (props.$isSender ? "#fff" : "#333")};
   padding: 8px 12px;
-  border-radius: ${(props) => (props.$isArtist ? "0 12px 12px 12px" : "12px 0 12px 12px")};
+  border-radius: ${(props) =>
+    props.$isSender ? "12px 0 12px 12px" : "0 12px 12px 12px"};
   word-break: break-word;
   font-size: 15px;
   max-width: 600px;
@@ -77,10 +78,10 @@ const FileInfo = styled.div`
   background: rgba(0, 0, 0, 0.05);
   border-radius: 8px;
   font-size: 13px;
-  color: ${(props) => (props.$isArtist ? "#333" : "#fff")};
+  color: ${(props) => (props.$isSender ? "#333" : "#fff")};
 `;
 
-const ChatMessage = ({ message, timestamp, isArtist, file, nickname }) => {
+const ChatMessage = ({ message, timestamp, isSender, file, nickname }) => {
   const renderFilePreview = () => {
     if (!file) return null;
 
@@ -95,12 +96,15 @@ const ChatMessage = ({ message, timestamp, isArtist, file, nickname }) => {
     return <FileInfo $isArtist={isArtist}>📎 {file.name}</FileInfo>;
   };
 
-  const displayNickname = nickname && nickname.trim() !== "" ? nickname : "익명";
+  const displayNickname =
+    nickname && nickname.trim() !== "" ? nickname : "익명";
 
   return (
-    <MessageContainer $isArtist={isArtist}>
-      {isArtist && <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>}
-      <MessageContent $isArtist={isArtist}>
+    <MessageContainer $isSender={isSender}>
+      {isSender && (
+        <ProfileCircle $isSender={isSender}>{displayNickname[0]}</ProfileCircle>
+      )}
+      <MessageContent $isSender={isSender}>
         <MessageInfo>
           <ProfileName>{displayNickname}</ProfileName>
           <TimeStamp>
@@ -113,12 +117,14 @@ const ChatMessage = ({ message, timestamp, isArtist, file, nickname }) => {
               : "??:??"}
           </TimeStamp>
         </MessageInfo>
-        <MessageBubble $isArtist={isArtist}>
+        <MessageBubble $isSender={isSender}>
           {message}
           {renderFilePreview()}
         </MessageBubble>
       </MessageContent>
-      {!isArtist && <ProfileCircle $isArtist={isArtist}>{displayNickname[0]}</ProfileCircle>}
+      {!isSender  && (
+        <ProfileCircle $isSender={isSender}>{displayNickname[0]}</ProfileCircle>
+      )}
     </MessageContainer>
   );
 };

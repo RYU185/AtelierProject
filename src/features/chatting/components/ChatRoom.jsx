@@ -510,6 +510,7 @@ const ChatRoom = ({ room: propRoom }) => {
                   isArtist={msg.isArtist}
                   file={msg.file}
                   nickname={msg.nickname}
+                  isSender={msg.isArtist === (user?.isArtist)}
                 />
               ))}
               <div ref={messagesEndRef} />
