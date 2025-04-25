@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, editMode, editText } from "react";
 import styled from "styled-components";
 import Comment from "./Comment";
 import axios from "axios";
+
 
 const CommentListContainer = styled.div`
   display: flex;
@@ -16,7 +17,7 @@ const CommentTitle = styled.h3`
 
 const CommentInputArea = styled.div`
   display: flex;
-  margin-top: 20px;
+  margin-top: 20px; /* 아래 여백 대신 위에 여백 추가 */
 `;
 
 const CommentInput = styled.textarea`
@@ -48,31 +49,23 @@ function CommentList({ postId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
+  const [editMode, setEditMode] = useState(null);
+const [editText, setEditText] = useState("");
 
-  // 수정 상태 관련
-  const [editMode, setEditMode] = useState(null); // 수정 중인 commentId
-  const [editText, setEditText] = useState("");   // 수정용 텍스트
-
+  // 💡 여기로 옮긴다!
   const fetchComments = async () => {
     setLoading(true);
     setError(null);
     try {
-      const { data } = await axios.get(`/api/community/detail/id/${postId}`);
-  
-      if (!data.commentUser || !Array.isArray(data.commentText)) {
-        console.warn("응답 데이터 누락됨:", data);
-        setComments([]);
-        setError("댓글 데이터를 불러오는 데 실패했습니다.");
-        return;
-      }
-  
-      const fetchedComments = data.commentUser.map((user, index) => ({
-        userNickname: user,
-        text: data.commentText[index] ?? "",
-        creationDate: data.creationDateList?.[index] ?? null,
-        id: data.commentIdList?.[index] ?? index,
-      }));
-  
+      const response = await axios.get(`/api/community/detail/id/${postId}`);
+      const fetchedComments = response.data.commentUser.map(
+        (user, index) => ({
+          userNickname: user,
+          text: response.data.commentText[index],
+          creationDate: response.data.creationDateList[index],
+          id: index,
+        })
+      );
       setComments(fetchedComments);
     } catch (error) {
       console.error("댓글 목록을 가져오는 중 오류 발생:", error);
@@ -81,6 +74,7 @@ function CommentList({ postId }) {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (postId) {
       fetchComments();
@@ -102,7 +96,7 @@ function CommentList({ postId }) {
         `/api/comment/add`,
         {
           text: newCommentText,
-          communityId: postId,
+          communityId: postId, // ✅ 꼭 포함
         },
         {
           headers: {
@@ -112,7 +106,7 @@ function CommentList({ postId }) {
       );
 
       if (response.status === 201) {
-        await fetchComments();
+        await fetchComments(); // 🔥 이제 여기도 문제 없음
         setNewCommentText("");
       } else {
         alert("댓글 등록에 실패했습니다.");
@@ -123,39 +117,13 @@ function CommentList({ postId }) {
     }
   };
 
-  const handleCommentUpdate = async (commentId) => {
-    const accessToken = localStorage.getItem("accessToken");
+  if (loading) {
+    return <div>댓글을 불러오는 중...</div>;
+  }
 
-    try {
-        const response = await axios.put(
-            `/api/comment/update/${commentId}`,
-            { text: editText, communityId: postId },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`, // JWT 토큰 포함
-                },
-            }
-        );
-
-        if (response.status === 200) {
-            await fetchComments();
-            setEditMode(null);
-            setEditText("");
-        } else {
-            alert("댓글 수정에 실패했습니다.");
-        }
-    } catch (error) {
-        console.error("댓글 수정 중 오류 발생:", error);
-        if (error.response && error.response.status === 403) {
-            alert("본인의 댓글만 수정할 수 있습니다.");
-        } else {
-            alert("댓글 수정 중 오류가 발생했습니다.");
-        }
-    }
-};
-
-  if (loading) return <div>댓글을 불러오는 중...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <CommentListContainer>
@@ -165,32 +133,16 @@ function CommentList({ postId }) {
         <div>아직 댓글이 없습니다.</div>
       ) : (
         comments.map((comment) => (
-          <div key={comment.id}>
-            {editMode === comment.id ? (
-              <>
-                <CommentInput
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                />
-                <CommentButton onClick={() => handleCommentUpdate(comment.id)}>저장</CommentButton>
-                <CommentButton onClick={() => setEditMode(null)}>취소</CommentButton>
-              </>
-            ) : (
-              <Comment
-                user={comment.userNickname}
-                text={comment.text}
-                date={
-                  comment.creationDate
-                    ? new Date(comment.creationDate).toLocaleString()
-                    : ""
-                }
-                onEdit={() => {
-                  setEditMode(comment.id);
-                  setEditText(comment.text);
-                }}
-              />
-            )}
-          </div>
+          <Comment
+            key={comment.id}
+            user={comment.userNickname}
+            text={comment.text}
+            date={
+              comment.creationDate
+                ? new Date(comment.creationDate).toLocaleString()
+                : ""
+            }
+          />
         ))
       )}
       <CommentInputArea>
