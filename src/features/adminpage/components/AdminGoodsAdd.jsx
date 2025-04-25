@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 
-import axios from 'axios';
+import axios from "axios";
 
 const AdminGoodsAddWrapper = styled.div`
   flex: 1;
@@ -9,7 +9,6 @@ const AdminGoodsAddWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
-  
 `;
 const AdminContent = styled.div`
   flex: 1;
@@ -72,7 +71,7 @@ const UploadButton = styled.label`
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
-margin-top: ;
+  margin-top: ;
   &:hover {
     background-color: #2a7fbc;
   }
@@ -128,17 +127,17 @@ const PlaceholderText = styled.div`
 function AdminGoodsAdd() {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [stock, setStock] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("");
+  const [description, setDescription] = useState("");
 
   const token = localStorage.getItem("accessToken");
   const isLoggedIn = !!token;
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
-    const previews = files.map(file => URL.createObjectURL(file));
+    const previews = files.map((file) => URL.createObjectURL(file));
     setImagePreviews(previews);
     setImageFiles(files);
   };
@@ -161,19 +160,19 @@ function AdminGoodsAdd() {
     try {
       const response = await axios.post("/api/goods/add", formData, {
         headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       if (response.status === 201) {
         alert("굿즈 등록 완료!");
         setImagePreviews([]);
         setImageFiles([]);
-        setName('');
-        setPrice('');
-        setStock('');
-        setDescription('');
+        setName("");
+        setPrice("");
+        setStock("");
+        setDescription("");
       }
     } catch (err) {
       console.error("굿즈 등록 실패:", err);
@@ -183,11 +182,7 @@ function AdminGoodsAdd() {
 
   return (
     <>
- 
-   
-  
-<AdminGoodsAddWrapper>
- 
+      <AdminGoodsAddWrapper>
         <AdminContent>
           <Title>굿즈 추가</Title>
           <FlexContainer>
@@ -228,25 +223,22 @@ function AdminGoodsAdd() {
             </InputContainer>
           </FlexContainer>
         </AdminContent>
-  
 
-      <ButtonContainer>
-        <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
-        <SubmitButton disabled={imageFiles.length === 0} onClick={handleSubmit}>
-          등록
-        </SubmitButton>
-      </ButtonContainer>
+        <ButtonContainer>
+          <UploadButton htmlFor="file-input">파일 업로드</UploadButton>
+          <SubmitButton disabled={imageFiles.length === 0} onClick={handleSubmit}>
+            등록
+          </SubmitButton>
+        </ButtonContainer>
 
-      <FileInput
-        type="file"
-        id="file-input"
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-      />
-
-</AdminGoodsAddWrapper>
-    
+        <FileInput
+          type="file"
+          id="file-input"
+          accept="image/*"
+          multiple
+          onChange={handleImageUpload}
+        />
+      </AdminGoodsAddWrapper>
     </>
   );
 }

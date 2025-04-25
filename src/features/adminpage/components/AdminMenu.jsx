@@ -3,25 +3,27 @@ import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 
 const Container = styled.div`
+  margin: 40px 90px;
+  width: 300px;
   display: flex;
   flex-direction: column;
-  padding: 40px 60px;
-  min-height: 80vh;
+  align-items: center;
 `;
 
 const Title = styled.h1`
   font-size: 35px;
-  margin-bottom: 30px;
-  margin-left: -20px;
+  color: #e1e1e1;
+  text-align: center;
+  margin-bottom: 20px;
 `;
 
 const Sidebar = styled.div`
-  width: 240px;
+  width: 270px;
   height: 500px;
-  margin-left: -40px;
   padding: 20px;
-  background: #e9ecef;
+  background: rgba(255, 255, 255, 0.07) ;
   border-radius: 8px;
+  text-align: center;
 `;
 
 const AdminInfo = styled.div`
@@ -42,8 +44,8 @@ const MenuList = styled.ul`
 const MenuItem = styled.li`
   padding: 10px 12px;
   margin: 6px 0;
-  background: ${({ active }) => (active ? "#3DA9FC" : "transparent")};
-  color: ${({ active }) => (active ? "white" : "#333")};
+  background: ${({ active }) => (active ? "#949494" : "transparent")};
+  color: ${({ active }) => (active ? "#161616ff" : "#e1e1e1")};
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
@@ -51,6 +53,7 @@ const MenuItem = styled.li`
 
   &:hover {
     background: ${({ active }) => (active ? "#3da0e5" : "#ccc")};
+    color: ${({ active }) => (active ? "#e1e1e1" : "#000000")};;
   }
 `;
 
@@ -62,13 +65,14 @@ const AdminMenu = () => {
       <Title>관리자 페이지</Title>
       <Sidebar>
         <AdminInfo>
-          관리자 김동근님 <br /> 어서오세요
+          관리자님 <br /> 어서오세요
         </AdminInfo>
         <MenuList>
-          {/* ✅ '/AdminPage' 또는 '/AdminArtAdd'일 때 작품 조회 버튼 활성화 */}
+          {/* '/AdminPage' 또는 '/AdminArtAdd'일 때 작품 조회 버튼 활성화 */}
           <MenuItem
             active={
-              location.pathname.includes("/AdminArtList") || location.pathname.includes("/AdminArtAdd")
+              location.pathname.includes("/AdminArtList") ||
+              location.pathname.includes("/AdminArtAdd")
             }
           >
             <Link
@@ -112,12 +116,7 @@ const AdminMenu = () => {
               티켓 관리
             </Link>
           </MenuItem>
-          <MenuItem
-            active={
-              location.pathname.includes("/AdminContact") ||
-              location.pathname.includes("/AdminContact")
-            }
-          >
+          <MenuItem active={location.pathname.includes("/AdminContact")}>
             <Link
               to="/AdminContact"
               style={{
@@ -143,6 +142,21 @@ const AdminMenu = () => {
               }}
             >
               유저 관리
+            </Link>
+          </MenuItem>
+
+          <MenuItem active={location.pathname === "/AdminArtist"}>
+            <Link
+              to="/AdminArtist"
+              style={{
+                textDecoration: "none",
+                color: "inherit",
+                display: "block",
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              작가 관리
             </Link>
           </MenuItem>
         </MenuList>
