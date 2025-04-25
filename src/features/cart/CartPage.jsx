@@ -6,6 +6,7 @@ import CartList from "./components/CartList";
 import CartSummary from "./components/CartSummary";
 import Header from "../Header";
 import Footer from "../Footer";
+import { getGoodsImageUrl } from "../../utils/getGoodsImageUrl";
 
 
 const GradientBackground = styled.div`
@@ -234,26 +235,17 @@ const CartPage = () => {
 
       navigate("/purchase-complete", {
         state: {
-          
           items: data.goods.map((item) => {
             const matched = selectedItems.find((s) => s.name === item.goodsName);
-            let imageUrl = "";
-
-            if (matched?.image?.startsWith("/uploads") || matched?.image?.startsWith("http")) {
-              imageUrl = matched.image;
-            } else {
-              imageUrl = `/images/goods-images/${matched?.image}`;
-            }
-            console.log("item.goodsName:", item.goodsName);
-            console.log("selectedItems:", selectedItems);
             return {
               ...item,
-              thumbnailUrl: imageUrl,
+              thumbnailUrl: matched?.image ?? '', // 여기서 변환 X!
             };
           }),
           totalPrice: data.totalPrice,
           purchaseDate: data.purchaseDate,
           purchaseId: data.purchaseId,
+
         },
       });
     } catch (err) {
