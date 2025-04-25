@@ -167,7 +167,7 @@ const NoticeItem = styled.div`
   cursor: pointer;
   transition: 0.3s ease-in-out;
 
-  &:first-child{
+  &:first-child {
     border-top: 1px solid #f0f0f0;
   }
 
@@ -179,8 +179,6 @@ const NoticeItem = styled.div`
     } */
   }
 `;
-
-
 
 const Arrow = styled.div`
   margin-left: 1rem;
@@ -233,7 +231,6 @@ const SubmitButton = styled.button`
   }
 `;
 
-
 const NoticePage = () => {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
@@ -262,8 +259,8 @@ const NoticePage = () => {
           },
         });
 
-        setNotices(res.data.content); 
-        setTotalPages(res.data.totalPages); 
+        setNotices(res.data.content);
+        setTotalPages(res.data.totalPages);
       } catch (err) {
         console.error("❌ 공지사항 불러오기 실패", err);
       }
@@ -275,18 +272,16 @@ const NoticePage = () => {
   const filteredNotices = notices.filter((notice) => {
     if (!searchTerm) return true;
     if (searchType === "date") {
-      return notice.date.includes(searchTerm);
+      return notice.createdDate?.includes(searchTerm); // ← 여기 수정
     }
-    return notice.title.toLowerCase().includes(searchTerm.toLowerCase());
+    return notice.title?.toLowerCase().includes(searchTerm.toLowerCase());
   });
-
 
   const sortedNotices = [...filteredNotices].sort((a, b) => {
     const dateA = new Date(a.createdDate); // ← 여기로
     const dateB = new Date(b.createdDate);
     return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
   });
-
 
   const paginatedNotices = sortedNotices.slice(
     (currentPage - 1) * itemsPerPage,
@@ -397,7 +392,7 @@ const NoticePage = () => {
           ))}
           <PageButton onClick={() => goToPage(currentPage + 1)}>›</PageButton>
         </PageButtonGroup>
-        {userRole?.includes("ADMIN") && (
+        {typeof userRole === "string" && userRole.includes("ADMIN") && (
           <SubmitButton onClick={handleCreateClick}>등록</SubmitButton>
         )}
       </Pagination>
