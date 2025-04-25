@@ -23,8 +23,8 @@ const ModalContent = styled.div`
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   width: 90%;
-  max-width: 1350px;
-  max-height: 95%;
+  max-width: 1300px;
+  min-height: 640px;
   position: relative;
   display: flex;
   overflow: hidden;
@@ -36,7 +36,7 @@ const ContentWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-height: calc(98vh - 60px - 250px);
+  max-height: calc(100vh - 60px - 250px);
 `;
 
 const CommunityWrapper = styled.div`
@@ -48,6 +48,7 @@ const CommentsWrapper = styled.div`
   width: 550px;
   padding: 30px;
   border-left: 1px solid #e2e8f0;
+  max-height: calc(100vh - 60px - 250px);
   overflow-y: auto;
 `;
 

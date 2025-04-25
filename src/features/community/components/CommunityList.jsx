@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Community from "./Community";
-import CommunityDetailModal from "./CommunityDetailModal"; // 변경된 모달 컴포넌트 import
+import CommunityDetailModal from "./CommunityDetailModal";
 import AddPostModal from "./AddPostModal";
 
 const backgroundColor = "#f0f4f8";
@@ -124,7 +124,7 @@ function CommunityList() {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
-      const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
+      const accessToken = localStorage.getItem("token");
       if (accessToken) {
         try {
           const response = await axios.get("/api/user/me", {
@@ -132,11 +132,9 @@ function CommunityList() {
               Authorization: `Bearer ${accessToken}`,
             },
           });
-          // 응답 데이터에서 필요한 사용자 정보 추출
           setLoggedInUser({
-            userId: response.data.userId, // 실제 userId 필드명으로 변경
+            userId: response.data.userId,
             nickname: response.data.nickname,
-            // 필요한 다른 사용자 정보도 포함
           });
         } catch (error) {
           console.error("CommunityList: 사용자 정보 가져오기 실패:", error);
@@ -161,7 +159,6 @@ function CommunityList() {
   const fetchCommunityData = async () => {
     try {
       const response = await axios.get("/api/community");
-      // 각 게시글에 현재 사용자의 좋아요 여부 정보를 추가
       const updatedItems = await Promise.all(
         response.data.map(async (post) => {
           const isLiked = loggedInUser?.userId
@@ -196,7 +193,7 @@ function CommunityList() {
   };
 
   const handleViewMyPostsClick = async () => {
-    const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
+    const accessToken = localStorage.getItem("token");
     if (!accessToken) {
       alert("로그인이 필요합니다.");
       return;
@@ -207,7 +204,6 @@ function CommunityList() {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      // 각 게시글에 현재 사용자의 좋아요 여부 정보를 추가
       const updatedItems = await Promise.all(
         response.data.map(async (post) => {
           const isLiked = loggedInUser?.userId
@@ -254,35 +250,8 @@ function CommunityList() {
     setIsDetailModalOpen(false);
   };
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm("정말 삭제하시겠습니까?");
-    if (confirmed) {
-      const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
-      try {
-        const response = await axios.post(`/api/community/delete/${id}`, null, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        if (response.status === 200) {
-          setCommunityItems((prev) => prev.filter((item) => item.id !== id));
-          alert(response.data);
-          if (selectedPost && selectedPost.id === id) {
-            setSelectedPost(null);
-            setIsDetailModalOpen(false);
-          }
-        } else {
-          alert("삭제 실패");
-        }
-      } catch (error) {
-        console.error("삭제 요청 에러:", error);
-        alert("삭제 중 오류 발생");
-      }
-    }
-  };
-
   const handleAddPost = async (newPost) => {
-    const accessToken = localStorage.getItem("token"); // 백엔드 응답에 따른 키 값 사용
+    const accessToken = localStorage.getItem("token");
     try {
       const response = await axios.post("/api/community/add", newPost, {
         headers: {
@@ -376,9 +345,8 @@ function CommunityList() {
                 {...post}
                 user={{ nickname: post.userNickname }}
                 onOpenModal={handleOpenModal}
-                onDelete={handleDelete}
                 currentUser={loggedInUser}
-                isLiked={post.isLiked} // 좋아요 여부 prop 전달
+                isLiked={post.isLiked}
               />
             ))}
           {isLoadingUser && <div>사용자 정보를 로딩 중입니다...</div>}
@@ -398,5 +366,4 @@ function CommunityList() {
     </div>
   );
 }
-
 export default CommunityList;
