@@ -5,6 +5,7 @@ import SockJS from "sockjs-client";
 const useChatSocket = ({ userId, onMessageReceive }) => {
   const clientRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
+  const isSubscribedRef = useRef(false);
 
   useEffect(() => {
     if (!userId || clientRef.current) return;
@@ -12,11 +13,7 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
     const client = new Client({
       brokerURL: undefined,
       webSocketFactory: () =>
-        new SockJS(
-          `http://localhost:8081/ws?token=${localStorage.getItem(
-            "accessToken"
-          )}`
-        ),
+        new SockJS(`http://localhost:8081/ws?token=${localStorage.getItem("accessToken")}`),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -28,15 +25,21 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
         setIsConnected(true);
 
         const topic = `/user/queue/messages`;
-        client.subscribe(topic, (msg) => {
-          try {
-            const message = JSON.parse(msg.body);
-            console.log("📥 수신한 메시지:", message);
-            onMessageReceive(message);
-          } catch (e) {
-            console.error("❌ 수신 메시지 파싱 실패:", e);
-          }
-        });
+
+        if (!isSubscribedRef.current) {
+          console.log("📡 구독 시작:", topic);
+          client.subscribe(topic, (msg) => {
+            try {
+              const message = JSON.parse(msg.body);
+              console.log("📥 수신한 메시지:", message);
+              onMessageReceive(message);
+            } catch (e) {
+              console.error("❌ 수신 메시지 파싱 실패:", e);
+            }
+          });
+
+          isSubscribedRef.current = true;
+        }
       },
       onDisconnect: () => {
         console.warn("⚠️ WebSocket 연결 해제");
@@ -56,6 +59,7 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
     return () => {
       clientRef.current?.deactivate();
       clientRef.current = null;
+      isSubscribedRef.current = false;
       console.log("🔌 WebSocket 종료");
     };
   }, [userId]);
