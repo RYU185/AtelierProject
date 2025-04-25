@@ -52,8 +52,8 @@ const Actions = styled.div`
   align-items: center;
   gap: 5px;
   grid-column: 3;
-  grid-row: 1 / span 2; /* 아이콘과 날짜가 같은 컬럼, 다른 행 차지 */
-  justify-self: end; /* 오른쪽 끝으로 정렬 */
+  grid-row: 1 / span 2;
+  justify-self: end;
 `;
 
 const IconsWrapper = styled.div`
@@ -87,24 +87,23 @@ const ActionButton = styled.button`
   }
 `;
 
-function Comment({ user, text, date }) {
+function Comment({ user, text, date, onEdit, onDelete }) {
   return (
     <CommentContainer>
       <UserInfo>
         <Nickname>{user}</Nickname>
-        {/* <DateInfo>{date}</DateInfo> UserInfo 영역에서 제거 */}
       </UserInfo>
       <CommentContent>{text}</CommentContent>
       <Actions>
         <IconsWrapper>
-          <ActionButton>
+          <ActionButton onClick={onEdit}>
             <FiEdit />
           </ActionButton>
-          <ActionButton className="delete">
+          <ActionButton className="delete" onClick={onDelete}>
             <FiTrash2 />
           </ActionButton>
         </IconsWrapper>
-        <DateInfo>{date}</DateInfo> {/* Actions 영역 아래에 DateInfo 배치 */}
+        <DateInfo>{date}</DateInfo>
       </Actions>
     </CommentContainer>
   );
