@@ -151,16 +151,13 @@ const AdminTicketAdd = () => {
     const reader = new FileReader();
     reader.onloadend = async () => {
       const base64Image = reader.result;
-      const posterName = file.name;
+      const posterName = file.name; // ✅ 확장자까지 포함된 원본 이름 그대로!
 
       try {
-        console.log("🔥 요청 보낸 포스터:", posterName);
-
         const matched = await axiosInstance.get(
           `/artistgallery/poster-match?filename=${posterName}`
         );
 
-        // 🔥 타입 맞춤: 반드시 숫자로!
         const artistIds = matched.data.map(Number);
         console.log("✅ 응답 받은 artistIds:", artistIds);
 
