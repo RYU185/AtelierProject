@@ -128,7 +128,8 @@ const ProfileCircle = styled.div`
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: ${(props) => (props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none")};
+  box-shadow: ${(props) =>
+    props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none"};
 `;
 
 const ProfileText = styled.div`
@@ -306,7 +307,9 @@ const ChatRoom = ({ room: propRoom }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
+  const nicknameRef = useRef(
+    user?.nickname ?? localStorage.getItem("nickname") ?? "익명"
+  );
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -321,16 +324,34 @@ const ChatRoom = ({ room: propRoom }) => {
   const { sendMessage, isConnected } = useChatSocket({
     userId: user?.username,
     onMessageReceive: (msg) => {
-      const formattedMessage = {
-        id: msg.id,
-        message: msg.content || "내용 없음",
-        timestamp: msg.timestamp,
-        isArtist: msg.sender === room.artistId,
-        nickname: msg.senderNickname || "익명",
-      };
+      setMessages((prev) => {
+        if (msg.tempId) {
+          return prev.map((m) =>
+            m.id === msg.tempId
+              ? {
+                  id: msg.id,
+                  message: msg.content,
+                  timestamp: msg.timestamp,
+                  isArtist: msg.sender === room.artistId,
+                  nickname: msg.senderNickname || "익명",
+                  sending: false,
+                }
+              : m
+          );
+        }
 
-      console.log("📥 받은 메시지 추가:", formattedMessage);
-      setMessages((prev) => [...prev, formattedMessage]);
+        return [
+          ...prev,
+          {
+            id: msg.id,
+            message: msg.content,
+            timestamp: msg.timestamp,
+            isArtist: msg.sender === room.artistId,
+            nickname: msg.senderNickname || "익명",
+            sending: false,
+          },
+        ];
+      });
     },
   });
 
@@ -344,7 +365,8 @@ const ChatRoom = ({ room: propRoom }) => {
           message: msg.content,
           timestamp: msg.timestamp ?? null,
           isArtist: msg.sender === room.artistId,
-          nickname: msg.sender === room.artistId ? room.artistName : room.userName,
+          nickname:
+            msg.sender === room.artistId ? room.artistName : room.userName,
         }));
         setMessages(loadedMessages);
       } catch (err) {
@@ -368,7 +390,8 @@ const ChatRoom = ({ room: propRoom }) => {
   const handleScroll = () => {
     if (chatMessagesRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
-      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
+      const isScrolledToBottom =
+        Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
       setIsUserScrolled(!isScrolledToBottom);
     }
   };
@@ -384,34 +407,37 @@ const ChatRoom = ({ room: propRoom }) => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
-
-    const isArtistSender = user?.username === room?.artistId;
-    const nickname = nicknameRef.current;
+    const tempId = `temp-${Date.now()}`;
 
     if (!isConnected) {
       alert("서버와 연결 중입니다. 잠시 후 다시 시도해주세요.");
       return;
     }
 
+    const isArtistSender = user?.username === room?.artistId;
+    const nickname = nicknameRef.current;
+
     const payload = {
       sender: user?.username,
       receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
       senderNickname: nickname,
+      tempId,
     };
-
-    sendMessage(payload);
 
     setMessages((prev) => [
       ...prev,
       {
-        id: Date.now(),
+        id: tempId,
         message: newMessage,
         timestamp: new Date().toISOString(),
         isArtist: isArtistSender,
         nickname,
+        sending: true,
       },
     ]);
+
+    sendMessage(payload);
     setNewMessage("");
     setSelectedFile(null);
   };
@@ -419,11 +445,14 @@ const ChatRoom = ({ room: propRoom }) => {
   console.log("user 객체 상태", user);
 
   const lastDate = messages.length
-    ? new Date(messages[messages.length - 1].timestamp).toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
+    ? new Date(messages[messages.length - 1].timestamp).toLocaleDateString(
+        "ko-KR",
+        {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }
+      )
     : null;
 
   return (
@@ -431,7 +460,9 @@ const ChatRoom = ({ room: propRoom }) => {
       <Header />
       <ChatContainer>
         <PageTitle>
-          <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
+          <BackButton onClick={() => navigate("/artist")}>
+            Artist List
+          </BackButton>
           <Title>Chatting with ARTIST</Title>
         </PageTitle>
 
@@ -440,7 +471,9 @@ const ChatRoom = ({ room: propRoom }) => {
             <ProfileBox>
               <ProfileItem>
                 <ProfileCircle $isArtist={true}>
-                  {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                  {(room &&
+                    (user?.isArtist ? room.artistName : room.userName))?.[0] ??
+                    "?"}
                 </ProfileCircle>
                 <ProfileText>
                   {room && (user?.isArtist ? room.artistName : room.userName)}
@@ -448,7 +481,9 @@ const ChatRoom = ({ room: propRoom }) => {
               </ProfileItem>
               <ProfileItem>
                 <ProfileCircle $isArtist={false}>
-                  {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                  {(room &&
+                    (!user?.isArtist ? room.artistName : room.userName))?.[0] ??
+                    "?"}
                 </ProfileCircle>
                 <ProfileText>
                   {room && (!user?.isArtist ? room.artistName : room.userName)}
@@ -460,7 +495,9 @@ const ChatRoom = ({ room: propRoom }) => {
 
           <ChatSection>
             <ChatHeader>
-              <ChatTitle>{user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}</ChatTitle>
+              <ChatTitle>
+                {user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}
+              </ChatTitle>
               <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
             </ChatHeader>
 
