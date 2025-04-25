@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Community from "./Community";
 import CommentList from "./CommentList";
-import { IoClose } from "react-icons/io5"; // 닫기 아이콘 import
+import { IoClose } from "react-icons/io5";
+import axios from "axios";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -35,7 +36,7 @@ const ContentWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  max-height: calc(98vh - 60px - 250px /* 댓글 영역 예상 높이 감소 */);
+  max-height: calc(98vh - 60px - 250px);
 `;
 
 const CommunityWrapper = styled.div`
@@ -66,16 +67,40 @@ const CloseButton = styled(IoClose)`
 `;
 
 function CommunityDetailModal({ post, onClose }) {
+  const [detailData, setDetailData] = useState(null);
+
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        const response = await axios.get(`/api/community/detail/id/${post.id}`);
+        const data = response.data;
+        setDetailData({
+          id: data.id,
+          text: data.text,
+          img: data.img,
+          likes: data.likes,
+          uploadDate: data.uploadDate,
+          user: { nickname: data.user },
+          commentCount: data.commentText?.length || 0, // ✅ 댓글 수 계산
+        });
+      } catch (error) {
+        console.error("❌ 상세 정보 요청 실패:", error);
+      }
+    };
+
+    if (post?.id) fetchDetail();
+  }, [post]);
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose} />
         <ContentWrapper>
-          {post && (
+          {detailData && (
             <CommunityWrapper>
               <Community
-                {...post}
-                user={{ nickname: post.userNickname }}
+                {...detailData}
+                user={detailData.user}
                 onOpenModal={() => {}}
                 onDelete={() => {}}
                 isModal={true}
@@ -84,7 +109,7 @@ function CommunityDetailModal({ post, onClose }) {
           )}
         </ContentWrapper>
         <CommentsWrapper>
-          {post && <CommentList postId={post ? post.id : null} />}
+          {post && <CommentList postId={post.id} />}
         </CommentsWrapper>
       </ModalContent>
     </ModalOverlay>

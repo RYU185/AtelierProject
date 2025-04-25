@@ -197,7 +197,7 @@ const ActionIcon = styled.div`
 
 const ChatIconStyled = styled(BsChat)`
   font-size: 18px;
-  color: #888;
+  color: #555; // 👈 짙은 회색으로 변경
   cursor: pointer;
   transition: transform 0.3s ease;
 
@@ -213,6 +213,7 @@ function Community({
   text,
   img,
   likes,
+  commentCount = 0, // ✅ 기본값 0
   onDelete,
   onOpenModal,
   isModal,
@@ -402,7 +403,10 @@ function Community({
           {isHeartFilled ? <BsHeartFill /> : <BsHeart />}
           <span>{likeCount}</span>
         </ActionIcon>
-        <ChatIconStyled onClick={handleChatClick} />
+        <ActionIcon onClick={handleChatClick}>
+          <ChatIconStyled />
+          <span>{commentCount}</span>
+        </ActionIcon>
       </Actions>
     </Container>
   );
