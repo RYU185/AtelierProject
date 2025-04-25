@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import axios from "axios";
 import { AdminContentLayout } from "./AdminContentLayout";
 import TitleWrapper from "./Titlewrapper";
-
 
 const AdminArtAddWrapper = styled.div`
   flex: 1;
@@ -11,23 +10,21 @@ const AdminArtAddWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
- margin-top: -55px;
+  margin-top: -55px;
 `;
-
 
 const AdminContent = styled.div`
   flex: 1;
   padding-left: 20px;
   display: flex;
   flex-direction: column;
-  
 `;
 
 const Title = styled.h2`
   text-align: center;
   margin-bottom: 20px;
 
-  margin-right:330px;
+  margin-right: 330px;
   font-size: 25px;
   color: #ffffff;
 `;
@@ -78,7 +75,7 @@ const UploadButton = styled.label`
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
- 
+
   &:hover {
     background-color: #2a7fbc;
   }
@@ -145,9 +142,10 @@ function AdminArtAdd() {
   const isLoggedIn = !!token;
 
   useEffect(() => {
-    axios.get('/api/artist')
-      .then(res => setArtistList(res.data))
-      .catch(err => console.error("작가 목록 불러오기 실패", err));
+    axios
+      .get("/api/artist")
+      .then((res) => setArtistList(res.data))
+      .catch((err) => console.error("작가 목록 불러오기 실패", err));
   }, []);
 
   const handleImageUpload = (event) => {
@@ -175,9 +173,9 @@ function AdminArtAdd() {
     try {
       const response = await axios.post("/api/art/add", formData, {
         headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "multipart/form-data"
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       if (response.status === 201) {
@@ -201,7 +199,6 @@ function AdminArtAdd() {
   return (
     <>
       <AdminArtAddWrapper>
-
         <AdminContentLayout>
           <TitleWrapper>작품 목록 관리</TitleWrapper>
           <AdminContent>
@@ -225,7 +222,13 @@ function AdminArtAdd() {
                 <select
                   value={artistId}
                   onChange={(e) => setArtistId(e.target.value)}
-                  style={{ width: '500px', padding: '10px', fontSize: '16px', borderRadius: '4px', border: '1px solid #2a7fbc' }}
+                  style={{
+                    width: "500px",
+                    padding: "10px",
+                    fontSize: "16px",
+                    borderRadius: "4px",
+                    border: "1px solid #2a7fbc",
+                  }}
                 >
                   <option value="">작가 선택</option>
                   {artistList.map((artist) => (
@@ -266,14 +269,8 @@ function AdminArtAdd() {
           </SubmitButton>
         </ButtonContainer>
 
-        <FileInput
-          type="file"
-          id="file-input"
-          accept="image/*"
-          onChange={handleImageUpload}
-        />
+        <FileInput type="file" id="file-input" accept="image/*" onChange={handleImageUpload} />
       </AdminArtAddWrapper>
-
     </>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import styled from "styled-components";
@@ -13,6 +13,8 @@ import AdminTicketChart from "./components/AdminTicketChart";
 import AdminContact from "./components/AdminContact";
 import AdminUser from "./components/AdminUser";
 import AdminArtAdd from "./components/AdminArtAdd";
+import AdminArtist from "./components/AdminArtist";
+import AdminArtistAdd from "./components/AdminArtistAdd";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
@@ -26,7 +28,7 @@ const GradientBackground = styled.div`
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column; /* 세로 배치 */
+  flex-direction: column;
   min-height: 80vh;
   position: relative;
 `;
@@ -41,6 +43,12 @@ const AdminPage = () => {
   const initialTab = query.get("tab") || "art";
 
   const [tab, setTab] = useState(initialTab);
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const newTab = query.get("tab") || "art";
+    setTab(newTab);
+  }, [location.search]); 
 
   const renderComponent = () => {
     switch (tab) {

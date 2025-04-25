@@ -42,7 +42,6 @@ import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CommunityDetailModal from "../features/community/components/CommunityDetailModal";
 import AdminTicketAdd from "../features/adminpage/components/AdminTicketAdd";
 
-
 function AppRoutes() {
   return (
     <Routes>
@@ -55,22 +54,13 @@ function AppRoutes() {
       <Route path="/updateprofile" element={<EditProfile />} />
       <Route path="/adminpage" element={<AdminPage />} />
 
-      <Route
-        path="/AdminGoods"
-        element={<Navigate to="/adminpage?tab=goods" replace />}
-      />
-      <Route
-        path="/AdminArtList"
-        element={<Navigate to="/adminpage?tab=art" replace />}
-      />
+      <Route path="/AdminGoods" element={<Navigate to="/adminpage?tab=goods" replace />} />
+      <Route path="/AdminArtList" element={<Navigate to="/adminpage?tab=art" replace />} />
       <Route
         path="/AdminGoodsChart"
         element={<Navigate to="/adminpage?tab=goodsChart" replace />}
       />
-      <Route
-        path="/AdminGoodsAdd"
-        element={<Navigate to="/adminpage?tab=goodsAdd" replace />}
-      />
+      <Route path="/AdminGoodsAdd" element={<Navigate to="/adminpage?tab=goodsAdd" replace />} />
       <Route
         path="/AdminTicketManagement"
         element={<Navigate to="/adminpage?tab=ticket" replace />}
@@ -79,18 +69,13 @@ function AppRoutes() {
         path="/AdminTicketChart"
         element={<Navigate to="/adminpage?tab=ticketChart" replace />}
       />
-      <Route
-        path="/AdminContact"
-        element={<Navigate to="/adminpage?tab=contact" replace />}
-      />
-      <Route
-        path="/AdminUser"
-        element={<Navigate to="/adminpage?tab=user" replace />}
-      />
-      <Route
-        path="/AdminArtAdd"
-        element={<Navigate to="/adminpage?tab=artAdd" replace />}
-      />
+      <Route path="/AdminContact" element={<Navigate to="/adminpage?tab=contact" replace />} />
+      <Route path="/AdminUser" element={<Navigate to="/adminpage?tab=user" replace />} />
+      <Route path="/AdminArtAdd" element={<Navigate to="/adminpage?tab=artAdd" replace />} />
+
+      <Route path="/AdminArtist" element={<Navigate to="/adminpage?tab=artist" replace />} />
+      <Route path="/AdminArtistAdd" element={<Navigate to="/adminpage?tab=artistAdd" replace />} />
+
       <Route path="/goods" element={<Goods />} />
       <Route path="/goods/:id" element={<GoodsDetail />} />
       <Route path="/goods/:goodsId/review" element={<Review />} />
