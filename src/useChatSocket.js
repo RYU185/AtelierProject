@@ -13,7 +13,11 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
     const client = new Client({
       brokerURL: undefined,
       webSocketFactory: () =>
-        new SockJS(`http://localhost:8081/ws?token=${localStorage.getItem("accessToken")}`),
+        new SockJS(
+          `http://localhost:8081/ws?token=${localStorage.getItem(
+            "accessToken"
+          )}`
+        ),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -21,20 +25,21 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: () => {
-        console.log("✅ WebSocket 연결 성공 (userId:", userId, ")");
+        console.log("WebSocket 연결 성공 (userId:", userId, ")");
         setIsConnected(true);
 
         const topic = `/user/queue/messages`;
 
         if (!isSubscribedRef.current) {
-          console.log("📡 구독 시작:", topic);
+          console.log("구독 시작:", topic);
+          clientRef.current.unsubscribe("chat-subscription");
           client.subscribe(topic, (msg) => {
             try {
               const message = JSON.parse(msg.body);
-              console.log("📥 수신한 메시지:", message);
+              console.log("수신한 메시지:", message);
               onMessageReceive(message);
             } catch (e) {
-              console.error("❌ 수신 메시지 파싱 실패:", e);
+              console.error("수신 메시지 파싱 실패:", e);
             }
           });
 
@@ -42,14 +47,14 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
         }
       },
       onDisconnect: () => {
-        console.warn("⚠️ WebSocket 연결 해제");
+        console.warn("WebSocket 연결 해제");
         setIsConnected(false);
       },
       onStompError: (frame) => {
-        console.error("💥 STOMP 오류:", frame);
+        console.error("STOMP 오류:", frame);
       },
       onWebSocketError: (event) => {
-        console.error("💥 WebSocket 오류:", event);
+        console.error("WebSocket 오류:", event);
       },
     });
 
