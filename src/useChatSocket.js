@@ -75,9 +75,9 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
         destination: "/app/chat.send",
         body: JSON.stringify(payload),
       });
-      console.log("📤 메시지 전송:", payload);
+      console.log("메시지 전송:", payload);
     } else {
-      console.warn("❌ WebSocket 연결 안됨 - 메시지 못 보냄");
+      console.warn("WebSocket 연결 안됨 - 메시지 못 보냄");
     }
   };
 
