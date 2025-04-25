@@ -10,34 +10,40 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
     if (!userId || clientRef.current) return;
 
     const client = new Client({
-      brokerURL: undefined, // SockJS 사용 시 반드시 undefined로 설정
-      webSocketFactory: () => new SockJS("http://localhost:8081/ws"),
+      brokerURL: undefined,
+      webSocketFactory: () =>
+        new SockJS(
+          `http://localhost:8081/ws?token=${localStorage.getItem(
+            "accessToken"
+          )}`
+        ),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
       reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
       onConnect: () => {
-        console.log("✅ WebSocket 연결 성공");
-
+        console.log("✅ WebSocket 연결 성공 (userId:", userId, ")");
         setIsConnected(true);
 
-        const topic = `/user/${userId}/queue/messages`;
+        const topic = `/user/queue/messages`;
         client.subscribe(topic, (msg) => {
           try {
             const message = JSON.parse(msg.body);
-            console.log("📥 수신 메시지 구조 확인:", message);
+            console.log("📥 수신한 메시지:", message);
             onMessageReceive(message);
           } catch (e) {
-            console.error("❌ 메시지 파싱 오류:", e);
+            console.error("❌ 수신 메시지 파싱 실패:", e);
           }
         });
       },
       onDisconnect: () => {
-        console.warn("⚠️ WebSocket 연결 해제됨");
+        console.warn("⚠️ WebSocket 연결 해제");
         setIsConnected(false);
       },
       onStompError: (frame) => {
-        console.error("💥 STOMP 에러:", frame);
+        console.error("💥 STOMP 오류:", frame);
       },
       onWebSocketError: (event) => {
         console.error("💥 WebSocket 오류:", event);
@@ -60,9 +66,9 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
         destination: "/app/chat.send",
         body: JSON.stringify(payload),
       });
-      console.log("📤 전송:", payload);
+      console.log("📤 메시지 전송:", payload);
     } else {
-      console.warn("❌ WebSocket 연결 안됨 - 메시지 전송 실패");
+      console.warn("❌ WebSocket 연결 안됨 - 메시지 못 보냄");
     }
   };
 
