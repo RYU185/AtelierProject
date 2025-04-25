@@ -395,12 +395,23 @@ const ChatRoom = ({ room: propRoom }) => {
 
     const payload = {
       sender: user?.username,
-      receiver: isArtistSender ? room.userId : room.artistId,
+      receiver: isArtistSender ? room.userId : room.artistId, // 🔥 정확하게!
       content: newMessage,
       senderNickname: nickname,
     };
 
     sendMessage(payload);
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        message: newMessage,
+        timestamp: new Date().toISOString(),
+        isArtist: isArtistSender,
+        nickname,
+      },
+    ]);
     setNewMessage("");
     setSelectedFile(null);
   };
