@@ -70,15 +70,19 @@ const SortOption = styled.div`
   padding: 10px;
   font-size: 14px;
   cursor: pointer;
+  color:rgb(47, 47, 47);
+  transition: 0.3s;
   &:hover {
-    background: #f0f0f0;
+    background: #3a92e5;
+     color: #e1e1e1;
   }
 `;
 
 const TableContainer = styled.div`
   width: 100%;
-  max-width: 1500px;
   margin-top: 20px;
+  background: rgba(255, 255, 255, 0.07);
+  max-width: 1500px;
 `;
 
 const TableWrapper = styled.div`
@@ -90,8 +94,8 @@ const TableWrapper = styled.div`
 
 const TableHeaderWrapper = styled.div`
   display: grid;
-  grid-template-columns: 150px 140px 120px 180px 150px 200px 150px 140px 100px 80px;
-  background: #f8f8f8;
+  grid-template-columns: 150px 140px 120px 250px 150px 200px 150px 140px 100px 80px;
+  background:rgb(42, 42, 42);
   font-weight: bold;
   padding: 12px;
   border-bottom: 2px solid #bbb;
@@ -102,7 +106,7 @@ const TableHeaderWrapper = styled.div`
 
 const TableRow = styled.div`
   display: grid;
-  grid-template-columns: 155px 150px 120px 180px 150px 200px 150px 140px 100px 80px;
+  grid-template-columns: 155px 150px 120px 250px 150px 200px 150px 140px 100px 80px;
   text-align: center;
 `;
 
