@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from "react"; // useContext 추가
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsHeart, BsChat, BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import { FiMoreVertical } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { AuthContext } from '../contexts/AuthContext'; // 예시: Context API를 사용하는 경우
 
 const Container = styled.div`
   width: 100%;
@@ -210,23 +209,21 @@ function Community({
   onDelete,
   onOpenModal,
   isModal,
-  currentUser: propCurrentUser, // prop으로 받는 currentUser 이름 변경
+  currentUser: propCurrentUser,
   currentImageIndex: propCurrentImageIndex,
+  openEditModal, // 수정 모달 열기 함수 props로 받음
 }) {
   const [likeCount, setLikeCount] = useState(initialLikes || 0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [currentUser, setCurrentUser] = useState(propCurrentUser); // 로컬 상태로 currentUser 관리
+  const [currentUser, setCurrentUser] = useState(propCurrentUser);
   const navigate = useNavigate();
   const hasImage = img && img.length > 0;
-  // const { isLoggedIn } = useContext(AuthContext); // 예시: Context API 사용
 
   useEffect(() => {
-    // prop으로 받은 currentUser가 있다면 로컬 상태 업데이트
     if (propCurrentUser) {
       setCurrentUser(propCurrentUser);
     } else {
-      // prop이 없다면 컴포넌트 자체에서 사용자 정보 로딩
       const fetchCurrentUser = async () => {
         const accessToken = localStorage.getItem("accessToken");
         if (accessToken) {
@@ -238,7 +235,7 @@ function Community({
             });
             setCurrentUser(response.data);
           } catch (error) {
-            console.error("Community: 현재 사용자 정보 가져오기 실패:", error);
+            console.error("Community: 사용자 정보 가져오기 실패:", error);
             setCurrentUser(null);
           }
         } else {
@@ -247,7 +244,16 @@ function Community({
       };
       fetchCurrentUser();
     }
-  }, [propCurrentUser]); // propCurrentUser가 변경될 때도 업데이트
+  }, [propCurrentUser]);
+
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    if (currentUser?.id !== postUser?.id) {
+      alert("본인의 글만 수정할 수 있습니다.");
+      return;
+    }
+    openEditModal({ id, text }); // 수정 모달 열기 함수 호출
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -262,13 +268,12 @@ function Community({
   const toggleHeart = async (e) => {
     e.stopPropagation();
 
-    // 예시: localStorage에서 accessToken을 확인하여 로그인 상태를 확인
     const accessToken = localStorage.getItem("accessToken");
-    const isLoggedIn = !!accessToken; // accessToken이 있으면 로그인된 것으로 간주
+    const isLoggedIn = !!accessToken;
 
     if (!isLoggedIn) {
       alert("로그인 후 좋아요를 누를 수 있습니다.");
-      navigate("/login"); // 예시: 로그인 페이지로 이동
+      navigate("/login");
       return;
     }
 
@@ -374,6 +379,7 @@ function Community({
 
       alert(response.data);
       if (onDelete) onDelete(id);
+      window.location.reload();
       setIsMenuOpen(false);
     } catch (error) {
       console.error("handleDeleteClick - 삭제 에러:", error);
@@ -387,57 +393,59 @@ function Community({
   };
 
   return (
-    <Container onClick={handlePostClick}>
-      <Header>
-        <UserInfo>
-          <Nickname>{postUser?.nickname || "알 수 없는 사용자"}</Nickname>
-          <DateText>{formatDate(uploadDate)}</DateText>
-        </UserInfo>
-        <MenuIconWrapper onClick={toggleMenu}>
-          <MenuIcon />
-          {isMenuOpen && (
-            <MenuDropdown onClick={(e) => e.stopPropagation()}>
-              <MenuItemM>수정</MenuItemM>
-              <MenuItemD onClick={handleDeleteClick}>삭제</MenuItemD>
-            </MenuDropdown>
-          )}
-        </MenuIconWrapper>
-      </Header>
-      <Divider />
-      <Content>{text}</Content>
-      {hasImage && (
-        <PostImageCarousel>
-          {img.map((image, index) => (
-            <PostImage
-              key={index}
-              src={`/public/images/DrawingIMG/${image}`}
-              alt={`첨부된 이미지 ${index + 1}`}
-              $active={index === currentImageIndex}
-            />
-          ))}
-          {img.length > 1 && (
-            <>
-              <NavigationButton className="left" onClick={goToPreviousImage}>
-                <BsChevronLeft />
-              </NavigationButton>
-              <NavigationButton className="right" onClick={goToNextImage}>
-                <BsChevronRight />
-              </NavigationButton>
-            </>
-          )}
-        </PostImageCarousel>
-      )}
-      <Actions onClick={(e) => e.stopPropagation()}>
-        <ActionIcon onClick={toggleHeart}>
-          <BsHeart /> {/* 하트 아이콘 유지 */}
-          <span>{likeCount}</span>
-        </ActionIcon>
-        <ActionIcon onClick={handleChatClick}>
-          <ChatIconStyled />
-          <span>{commentCount}</span>
-        </ActionIcon>
-      </Actions>
-    </Container>
+    <>
+      <Container onClick={handlePostClick}>
+        <Header>
+          <UserInfo>
+            <Nickname>{postUser?.nickname || "알 수 없는 사용자"}</Nickname>
+            <DateText>{formatDate(uploadDate)}</DateText>
+          </UserInfo>
+          <MenuIconWrapper onClick={toggleMenu}>
+            <MenuIcon />
+            {isMenuOpen && (
+              <MenuDropdown onClick={(e) => e.stopPropagation()}>
+                <MenuItemM onClick={handleEditClick}>수정</MenuItemM>{" "}
+                <MenuItemD onClick={handleDeleteClick}>삭제</MenuItemD>
+              </MenuDropdown>
+            )}
+          </MenuIconWrapper>
+        </Header>
+        <Divider />
+        <Content>{text}</Content>
+        {hasImage && (
+          <PostImageCarousel>
+            {img.map((image, index) => (
+              <PostImage
+                key={index}
+                src={`/public/images/DrawingIMG/${image}`}
+                alt={`첨부된 이미지 ${index + 1}`}
+                $active={index === currentImageIndex}
+              />
+            ))}
+            {img.length > 1 && (
+              <>
+                <NavigationButton className="left" onClick={goToPreviousImage}>
+                  <BsChevronLeft />
+                </NavigationButton>
+                <NavigationButton className="right" onClick={goToNextImage}>
+                  <BsChevronRight />
+                </NavigationButton>
+              </>
+            )}
+          </PostImageCarousel>
+        )}
+        <Actions onClick={(e) => e.stopPropagation()}>
+          <ActionIcon onClick={toggleHeart}>
+            <BsHeart />
+            <span>{likeCount}</span>
+          </ActionIcon>
+          <ActionIcon onClick={handleChatClick}>
+            <ChatIconStyled />
+            <span>{commentCount}</span>
+          </ActionIcon>
+        </Actions>
+      </Container>
+    </>
   );
 }
 

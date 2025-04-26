@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Community from "./Community";
 import CommunityDetailModal from "./CommunityDetailModal";
 import AddPostModal from "./AddPostModal";
+import EditPostModal from "./EditPostModal"; // EditPostModal import 추가
 
 const backgroundColor = "#f0f4f8";
 const cardBackground = "#ffffff";
@@ -16,6 +17,12 @@ const drawButtonGradient = "linear-gradient(135deg, #b3e5fc 0%, #4fc3f7 100%)";
 const drawButtonHoverGradient =
   "linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%)";
 
+const NoPostsMessage = styled.div`
+  padding: 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #777;
+`;
 const Container = styled.div`
   width: 70%;
   background-color: #f0f4f8;
@@ -105,6 +112,7 @@ const Grid = styled.div`
 
 function CommunityList() {
   const navigate = useNavigate();
+  const [loadingMyPosts, setLoadingMyPosts] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [isLoadingUser, setIsLoadingUser] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
@@ -113,6 +121,8 @@ function CommunityList() {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isMyPostsView, setIsMyPostsView] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Edit 모달 상태
+  const [postToEdit, setPostToEdit] = useState(null); // 수정할 게시글 정보
 
   const handleAddPostClick = () => {
     setIsAddModalOpen(true);
@@ -193,11 +203,12 @@ function CommunityList() {
   };
 
   const handleViewMyPostsClick = async () => {
-    const accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
       alert("로그인이 필요합니다.");
       return;
     }
+    setLoadingMyPosts(true);
     try {
       const response = await axios.get("/api/community/my", {
         headers: {
@@ -218,6 +229,9 @@ function CommunityList() {
     } catch (error) {
       console.error("나의 게시글 로딩 실패:", error);
       alert("나의 게시글을 불러오는 중 오류가 발생했습니다.");
+      setCommunityItems([]);
+    } finally {
+      setLoadingMyPosts(false); // 로딩 종료 설정
     }
   };
 
@@ -272,6 +286,46 @@ function CommunityList() {
 
   const handleSortChange = (type) => {
     setSortBy(type);
+  };
+
+  const openEditModal = (postToEdit) => {
+    setPostToEdit(postToEdit);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setPostToEdit(null);
+  };
+
+  const handleEditSubmit = async (updatedPost) => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.put(
+        `/api/community/edit/${updatedPost.id}`,
+        { text: updatedPost.text },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setCommunityItems((prev) =>
+          prev.map((post) =>
+            post.id === updatedPost.id
+              ? { ...post, text: updatedPost.text }
+              : post
+          )
+        );
+        closeEditModal();
+      } else {
+        alert("게시글 수정 실패");
+      }
+    } catch (error) {
+      console.error("게시글 수정 에러:", error);
+      alert("게시글 수정 중 오류 발생");
+    }
   };
 
   return (
@@ -338,7 +392,14 @@ function CommunityList() {
         </SortButtonBox>
 
         <Grid>
+                   {" "}
           {!isLoadingUser &&
+          isMyPostsView &&
+          communityItems.length === 0 &&
+          !loadingMyPosts ? (
+            <NoPostsMessage>작성한 커뮤니티가 없습니다.</NoPostsMessage>
+          ) : (
+            !isLoadingUser &&
             sortedCommunityItems.map((post) => (
               <Community
                 key={post.id}
@@ -347,10 +408,16 @@ function CommunityList() {
                 onOpenModal={handleOpenModal}
                 currentUser={loggedInUser}
                 isLiked={post.isLiked}
+                openEditModal={openEditModal} // 수정 모달 열기 함수 전달
               />
-            ))}
-          {isLoadingUser && <div>사용자 정보를 로딩 중입니다...</div>}
+            ))
+          )}
+                    {isLoadingUser && <div>사용자 정보를 로딩 중입니다...</div>}
+                   {" "}
+          {loadingMyPosts && <div>나의 게시글을 불러오는 중입니다...</div>}     
+           {" "}
         </Grid>
+
         {isAddModalOpen && (
           <AddPostModal
             onClose={handleCloseAddModal}
@@ -362,6 +429,15 @@ function CommunityList() {
 
       {isDetailModalOpen && selectedPost && (
         <CommunityDetailModal post={selectedPost} onClose={handleCloseModal} />
+      )}
+
+      {/* EditPostModal을 Container 바깥으로 이동 */}
+      {isEditModalOpen && postToEdit && (
+        <EditPostModal
+          post={postToEdit}
+          onClose={closeEditModal}
+          onSubmit={handleEditSubmit}
+        />
       )}
     </div>
   );

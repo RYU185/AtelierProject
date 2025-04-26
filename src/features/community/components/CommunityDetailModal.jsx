@@ -4,6 +4,7 @@ import Community from "./Community";
 import CommentList from "./CommentList";
 import { IoClose } from "react-icons/io5";
 import axios from "axios";
+import EditPostModal from "./EditPostModal"; // EditPostModal import
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -69,6 +70,8 @@ const CloseButton = styled(IoClose)`
 
 function CommunityDetailModal({ post, onClose }) {
   const [detailData, setDetailData] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [postToEdit, setPostToEdit] = useState(null);
 
   useEffect(() => {
     const fetchDetail = async () => {
@@ -92,6 +95,44 @@ function CommunityDetailModal({ post, onClose }) {
     if (post?.id) fetchDetail();
   }, [post]);
 
+  const openEditModal = (postToEdit) => {
+    setPostToEdit(postToEdit);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setPostToEdit(null);
+  };
+
+  const handleEditSubmit = async (updatedPost) => {
+    const accessToken = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.put(
+        `/api/community/edit/${updatedPost.id}`,
+        { text: updatedPost.text },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setDetailData((prevData) =>
+          prevData?.id === updatedPost.id
+            ? { ...prevData, text: updatedPost.text }
+            : prevData
+        );
+        closeEditModal();
+      } else {
+        alert("게시글 수정 실패");
+      }
+    } catch (error) {
+      console.error("게시글 수정 에러:", error);
+      alert("게시글 수정 중 오류 발생");
+    }
+  };
+
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -105,6 +146,7 @@ function CommunityDetailModal({ post, onClose }) {
                 onOpenModal={() => {}}
                 onDelete={() => {}}
                 isModal={true}
+                openEditModal={openEditModal} // 수정 모달 열기 함수 전달
               />
             </CommunityWrapper>
           )}
@@ -113,6 +155,15 @@ function CommunityDetailModal({ post, onClose }) {
           {post && <CommentList postId={post.id} />}
         </CommentsWrapper>
       </ModalContent>
+
+      {/* EditPostModal을 CommunityDetailModal 내에 렌더링 */}
+      {isEditModalOpen && postToEdit && (
+        <EditPostModal
+          post={postToEdit}
+          onClose={closeEditModal}
+          onSubmit={handleEditSubmit}
+        />
+      )}
     </ModalOverlay>
   );
 }
