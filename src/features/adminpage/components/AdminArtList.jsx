@@ -1,22 +1,29 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { AdminContentLayout} from "./AdminContentLayout";
+import { AdminContentLayout } from "./AdminContentLayout";
 import TitleWrapper from "./Titlewrapper";
 import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리
-const artImages = import.meta.glob("/public/images/ArtListIMG/*", { eager: true });
+const artImages = import.meta.glob("/public/images/ArtListIMG/*", {
+  eager: true,
+});
 
 const getImageUrl = (filename) => {
   if (!filename) return "/path/to/default-image.png";
 
-  const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
+  const matched = Object.entries(artImages).find(([path]) =>
+    path.endsWith(filename)
+  );
   if (matched) {
     return matched[1].default;
   }
 
-  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, "")}`;
+  return `http://localhost:8081/uploads/${filename.replace(
+    /^\/uploads\//,
+    ""
+  )}`;
 };
 
 const PageContainer = styled.div`
@@ -27,8 +34,8 @@ const ArtListContainer = styled.div`
   width: 1200px;
   margin: 0 auto;
   border-radius: 8px;
- 
 `;
+
 const ArtListHeader = styled.div`
   display: flex;
   justify-content: space-between;
@@ -63,7 +70,7 @@ const AddButton = styled.button`
   border: none;
   position: absolute;
   margin-left: -94px;
-position: relative;
+  position: relative;
   border-radius: 4px;
   cursor: pointer;
   &:hover {
@@ -244,19 +251,20 @@ const AdminArtList = () => {
     }
   };
 
-  const toggleMenu = (id) => setMenuOpen((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleMenu = (id) =>
+    setMenuOpen((prev) => ({ ...prev, [id]: !prev[id] }));
   const openModal = (art) => setSelectedArt(art);
   const closeModal = () => setSelectedArt(null);
 
-const handleDelete = async (id) => {
-  try {
-    await api.post(`/art/${id}/delete`);
-    setMenuOpen({});
-    setArtList((prev) => prev.filter((art) => art.id !== id)); // UI에서 즉시 삭제 반영
-  } catch (error) {
-    console.error("삭제 중 오류 발생:", error);
-  }
-};
+  const handleDelete = async (id) => {
+    try {
+      await api.post(`/art/${id}/delete`);
+      setMenuOpen({});
+      setArtList((prev) => prev.filter((art) => art.id !== id)); // UI에서 즉시 삭제 반영
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+    }
+  };
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
   const filteredArtList = artList.filter((art) =>
@@ -267,7 +275,7 @@ const handleDelete = async (id) => {
     <PageContainer>
       <AdminContentLayout>
         <TitleWrapper>작품 목록 관리</TitleWrapper>
-  
+
         <ArtListContainer>
           <ArtListHeader>
             <SearchContainer>
@@ -283,7 +291,7 @@ const handleDelete = async (id) => {
               <AddButton>작품 추가</AddButton>
             </Link>
           </ArtListHeader>
-  
+
           <ArtGrid>
             {filteredArtList.map((art) => (
               <ArtItem key={art.id}>
@@ -295,17 +303,20 @@ const handleDelete = async (id) => {
                 >
                   ⋮
                 </MoreOptions>
-  
-                <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
+
+                <OptionsMenu
+                  visible={menuOpen[art.id]}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <OptionButton danger onClick={() => handleDelete(art.id)}>
                     삭제
                   </OptionButton>
                 </OptionsMenu>
-  
+
                 <ArtCardImageContainer onClick={() => openModal(art)}>
                   <ArtCardImage src={getImageUrl(art.imgUrl)} alt={art.title} />
                 </ArtCardImageContainer>
-  
+
                 <ArtInfo>
                   <ArtTitle>{art.title}</ArtTitle>
                   <ArtDetails>
@@ -317,13 +328,16 @@ const handleDelete = async (id) => {
           </ArtGrid>
         </ArtListContainer>
       </AdminContentLayout>
-  
+
       <ModalOverlay isOpen={selectedArt !== null} onClick={closeModal}>
         {selectedArt && (
           <Modal onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={closeModal}>×</CloseButton>
             <ModalImageContainer>
-              <img src={getImageUrl(selectedArt.imgUrl)} alt={selectedArt.title} />
+              <img
+                src={getImageUrl(selectedArt.imgUrl)}
+                alt={selectedArt.title}
+              />
             </ModalImageContainer>
             <ModalDescriptionContainer>
               <h2>{selectedArt.title}</h2>

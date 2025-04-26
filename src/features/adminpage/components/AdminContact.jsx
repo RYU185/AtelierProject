@@ -9,13 +9,15 @@ const AdminContactWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
-  margin-top: 116px;
 `;
 
 const Title = styled.h2`
-  font-size: 25px;
-  margin-bottom: 20px;
-`
+  font-size: 30px;
+  color: #3da9fc;
+  margin-top: 43px;
+  margin-bottom: 24px;
+  font-weight: 500;
+`;
 
 const InquiryList = styled.ul`
   position: relative;
@@ -24,15 +26,17 @@ const InquiryList = styled.ul`
   max-height: 500px;
   width: 650px;
   overflow-y: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solidrgba(67, 67, 67, 0.11);
+  border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: rgba(65, 65, 65, 0.07);
 `;
 
 const InquiryItem = styled.li`
   padding: 12px 15px;
-  border-bottom: 1px solid #ddd;
-  background: ${(props) => (props.replied ? "#f2f2f2" : "rgba(255, 255, 255, 0.9)")};
+  border-bottom: 1px solid rgb(76, 76, 76);
+  background: ${(props) =>
+    props.replied ? "#f2f2f2" : "rgba(255, 255, 255, 0.07)"};
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: flex;
@@ -48,15 +52,15 @@ const InquiryItem = styled.li`
 
 const InquiryDetail = styled.div`
   position: relative;
-  margin-top: -418px;
+  margin-top: -416px;
   margin-right: 30px;
-  padding: 20px;
-  background:rgba(255, 255, 255, 0.07);;
-  border-radius: 8px;
+  padding: 30px;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-left: 690px;
 `;
-
 
 const StatusIcon = styled.span`
   font-size: 18px;
@@ -75,6 +79,7 @@ const Avatar = styled.img`
   border-radius: 50%;
   margin-right: 10px;
   border: 2px solid #ddd;
+  margin-bottom: 20px;
 `;
 
 let stompClient = null;
@@ -217,16 +222,16 @@ function AdminContact() {
                 <h3>{selectedInquiry.title}</h3>
               </div>
               <p>
-                <strong>이름:</strong> {selectedInquiry.name}
+                <strong>이름: </strong> {selectedInquiry.name}
               </p>
               <p>
-                <strong>이메일:</strong> {selectedInquiry.email}
+                <strong>이메일: </strong> {selectedInquiry.email}
               </p>
               <p>
-                <strong>문의 날짜:</strong> {selectedInquiry.createdAt}
+                <strong>문의 날짜: </strong> {selectedInquiry.createdAt}
               </p>
               <p>
-                <strong>내용:</strong> {selectedInquiry.content}
+                <strong>내용: </strong> {selectedInquiry.content}
               </p>
             </InquiryDetail>
           )}

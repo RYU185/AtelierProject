@@ -5,15 +5,22 @@ import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 
 // 정적 이미지 불러오기
-const goodsImages = import.meta.glob("/public/images/goods-images/*", { eager: true });
+const goodsImages = import.meta.glob("/public/images/goods-images/*", {
+  eager: true,
+});
 
 const getGoodsImageUrl = (filename) => {
   if (!filename) return "/default.jpg";
-  const matched = Object.entries(goodsImages).find(([path]) => path.endsWith(filename));
+  const matched = Object.entries(goodsImages).find(([path]) =>
+    path.endsWith(filename)
+  );
   if (matched) {
     return matched[1].default;
   }
-  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, "")}`;
+  return `http://localhost:8081/uploads/${filename.replace(
+    /^\/uploads\//,
+    ""
+  )}`;
 };
 
 const AdminGoodsWrapper = styled.div`
@@ -24,12 +31,14 @@ const AdminGoodsWrapper = styled.div`
 `;
 
 const TitleWrapper = styled.div`
-  font-size: 25px;
-  font-weight: bold;
+  font-size: 30px;
+  color: #3da9fc;
+  margin-top: 43px;
+  margin-bottom: 24px;
+  font-weight: 500;
 `;
 
 const AdminGoodsMenubarWrapper = styled.div``;
-
 
 const Table = styled.table`
   width: 100%;
@@ -127,7 +136,6 @@ function AdminGoods() {
       <TitleWrapper>전체 굿즈 판매량 통계</TitleWrapper>
       <AdminGoodsMenubarWrapper>
         <AdminGoodsMenubar />
-
       </AdminGoodsMenubarWrapper>
 
       <Table>
@@ -142,8 +150,14 @@ function AdminGoods() {
           {goodsData.map((item) => (
             <ProductRow key={item.id}>
               <ProductCell>
-                <Link to={`/goods/${item.id}`} style={{ display: "inline-block" }}>
-                  <ProductImage src={getGoodsImageUrl(item.imgUrlList?.[0])} alt={item.name} />
+                <Link
+                  to={`/goods/${item.id}`}
+                  style={{ display: "inline-block" }}
+                >
+                  <ProductImage
+                    src={getGoodsImageUrl(item.imgUrlList?.[0])}
+                    alt={item.name}
+                  />
                 </Link>
                 <ProductInfo>
                   <strong style={{ fontSize: "16px" }}>{item.name}</strong>

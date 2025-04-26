@@ -12,6 +12,7 @@ const Title = styled.h2`
   color: #3da9fc;
   margin-top: 43px;
   margin-bottom: 24px;
+  font-weight: 500;
 `;
 
 const ControllerContainer = styled.div`
@@ -39,6 +40,13 @@ const SearchBar = styled.input`
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  color: #e1e1e1;
+  background-color: rgba(255, 255, 255, 0.07);
+  transition: 0.3s ease-in-out;
+  &:focus {
+    outline: none;
+    border-color: #3da9fc;
+  }
 `;
 
 const ListContainer = styled.div`
@@ -98,7 +106,8 @@ const Pagination = styled.div`
 `;
 
 const PageButton = styled.button`
-  background-color: ${({ active }) => (active ? "#3da9fc" : "rgba(255, 255, 255, 0.07);")};
+  background-color: ${({ active }) =>
+    active ? "#3da9fc" : "rgba(255, 255, 255, 0.07);"};
   color: ${({ active }) => (active ? "#fff" : "#eeeeee")};
   border: none;
   margin: 0 5px;
@@ -129,7 +138,9 @@ const AdminArtist = () => {
 
   const fetchArtistsByName = async () => {
     try {
-      const res = await axiosInstance.get(`/artist/name/${encodeURIComponent(search.trim())}`);
+      const res = await axiosInstance.get(
+        `/artist/name/${encodeURIComponent(search.trim())}`
+      );
       setArtists(res.data);
       setCurrentPage(1);
     } catch (err) {
@@ -151,7 +162,10 @@ const AdminArtist = () => {
     }
   };
 
-  const paginatedData = artists.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedData = artists.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   const totalPages = Math.ceil(artists.length / itemsPerPage);
 
   return (
@@ -184,7 +198,11 @@ const AdminArtist = () => {
 
       <Pagination>
         {Array.from({ length: totalPages }, (_, i) => (
-          <PageButton key={i} active={currentPage === i + 1} onClick={() => setCurrentPage(i + 1)}>
+          <PageButton
+            key={i}
+            active={currentPage === i + 1}
+            onClick={() => setCurrentPage(i + 1)}
+          >
             {i + 1}
           </PageButton>
         ))}

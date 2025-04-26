@@ -24,10 +24,13 @@ const MainContent = styled.div`
   flex: 1;
 `;
 const Title = styled.h1`
-  font-size: 25px;
-  font-weight: bold;
-`;
-const Table = styled.table`
+  font-size: 30px;
+  color: #3da9fc;
+  margin-top: 43px;
+  margin-bottom: 24px;
+  font-weight: 500;
+  `
+  const Table = styled.table`
   width: 100%;
   max-width: 1300px;
   border-collapse: collapse;

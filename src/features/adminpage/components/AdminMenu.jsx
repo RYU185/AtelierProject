@@ -21,7 +21,7 @@ const Sidebar = styled.div`
   width: 270px;
   height: 500px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.07) ;
+  background: rgba(255, 255, 255, 0.07);
   border-radius: 8px;
   text-align: center;
 `;
@@ -52,8 +52,8 @@ const MenuItem = styled.li`
   transition: 0.2s;
 
   &:hover {
-    background: ${({ active }) => (active ? "#3da0e5" : "#ccc")};
-    color: ${({ active }) => (active ? "#e1e1e1" : "#000000")};;
+    background: ${({ active }) => (active ? "#949494" : "#ccc")};
+    color: ${({ active }) => (active ? "#161616ff" : "#000000")};
   }
 `;
 
