@@ -36,9 +36,10 @@ const Title = styled.h1`
   border-collapse: collapse;
   font-size: 16px;
   text-align: center;
+  margin-top: 20px;
 `;
 const Th = styled.th`
-  background: #f0f0f0;
+  background: rgba(255, 255, 255, 0.07);
   padding: 12px;
   border: 1px solid #ddd;
 `;
