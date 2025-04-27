@@ -177,6 +177,7 @@ const MyPage = () => {
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [showTicketModal, setShowTicketModal] = useState(false);
+  const [fetchError, setFetchError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState(null); // 사용자 정보 초기값 null
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
@@ -199,6 +200,7 @@ const MyPage = () => {
       try {
         const response = await axios.get("/api/user/me");
         setUserInfo(response.data);
+        setFetchError(null);
       } catch (error) {
         console.error("마이페이지 사용자 정보 불러오기 실패:", error);
         setFetchError("사용자 정보를 불러오는 데 실패했습니다.");

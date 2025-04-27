@@ -202,7 +202,7 @@ const Menu = ({ isOpen, onClose }) => {
       main: "Community",
       subs: [
         { name: "Community", path: "/community" },
-        { name: "DrawingCanvas", path: "/DrawingCanvas" },
+        { name: "DrawingCanvas", path: "/drawingcanvas" },
       ],
     },
     {
