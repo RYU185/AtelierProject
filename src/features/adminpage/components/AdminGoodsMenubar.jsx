@@ -19,14 +19,14 @@ const TabButton = styled.button`
   border: 1px solid #bbb;
   border-radius: 10px 10px 10px 10px;
   background: ${(props) => (props.active ? "#6ea8fe" : "rgba(255, 255, 255, 0.07)")};
-  color: ${(props) => (props.active ? "#fff" : "#666")};
+  color: ${(props) => (props.active ? "#fff" : "#e1e1e1")};
   cursor: pointer;
   transition: background 0.2s;
   margin-right: 5px;
   text-align: center;
 
   &:hover {
-    background: #6ea8fe;
+    background: #3381f7;
     color: #fff;
   }
 
@@ -38,24 +38,26 @@ const TabButton = styled.button`
 const AddButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+ 
 `;
 
 const AddButton = styled.button`
   padding: 8px 16px;
-  background: #3da9fc;
+  background: rgba(255, 255, 255, 0.07);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: 0.3s ease-in-out;
   text-align: center;
   &:hover {
-    background: #3da0e5;
+    background: #3381f7;
   }
 `;
 
 function AdminGoodsMenubar() {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ 현재 URL 가져오기
+  const location = useLocation(); 
 
   return (
     <MenuContainer>
