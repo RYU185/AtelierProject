@@ -13,8 +13,8 @@ const TabButton = styled.button`
   font-size: 14px;
   border: 1px solid #bbb;
   border-radius: 10px;
-  background: ${(props) => (props.active ? "#6ea8fe" : "#f1f1f1")};
-  color: ${(props) => (props.active ? "#fff" : "#666")};
+  background: ${(props) => (props.active ? "#6ea8fe" : "rgba(255, 255, 255, 0.07);")};
+  color: ${(props) => (props.active ? "#fff" : "#e1e1e1")};
   cursor: pointer;
   transition: background 0.2s;
   margin-right: 5px;

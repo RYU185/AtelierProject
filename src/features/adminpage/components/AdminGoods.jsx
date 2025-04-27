@@ -38,7 +38,10 @@ const TitleWrapper = styled.div`
   font-weight: 500;
 `;
 
-const AdminGoodsMenubarWrapper = styled.div``;
+const AdminGoodsMenubarWrapper = styled.div`
+  margin-bottom: 24px;
+  padding-right: 260px;
+`;
 
 const Table = styled.table`
   width: 100%;

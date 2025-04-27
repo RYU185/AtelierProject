@@ -1,24 +1,29 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
-import styled from 'styled-components';
-import AdminTicketMenubar from './AdminTicketMenubar';
+import styled from "styled-components";
+import AdminTicketMenubar from "./AdminTicketMenubar";
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리 (현재는 정적만 사용)
 const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", {
   eager: true,
 });
 const getImageUrl = (filename) => {
-  if (!filename) return '/images/default-image.png';
+  if (!filename) return "/images/default-image.png";
 
   const matched = Object.entries(artImages).find(([path]) =>
     path.endsWith(filename)
   );
-  return matched ? matched[1].default : '/images/default-image.png';
+  return matched ? matched[1].default : "/images/default-image.png";
 };
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const AdminTicketWrapper = styled.div`
@@ -27,12 +32,8 @@ const AdminTicketWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
- margin-top: -60px;
+  margin-top: -60px;
 `;
-
-
-
-
 
 const MainContent = styled.div`
   flex: 1;
@@ -142,14 +143,14 @@ const Thumbnail = styled.img`
 
 const AdminTicketList = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState('default');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("default");
   const [ticketData, setTicketData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/artistgallery/now');
+        const response = await fetch("/api/artistgallery/now");
         const galleries = await response.json();
 
         const updatedData = await Promise.all(
@@ -159,14 +160,14 @@ const AdminTicketList = () => {
               image: getImageUrl(gallery.posterUrl),
               dateRange: `${gallery.startDate} - ${gallery.endDate}`,
               title: gallery.title,
-              visitors: 0 // 예약자 수 추후 추가
+              visitors: 0, // 예약자 수 추후 추가
             };
           })
         );
 
         setTicketData(updatedData);
       } catch (error) {
-        console.error('데이터를 불러오는 중 오류 발생:', error);
+        console.error("데이터를 불러오는 중 오류 발생:", error);
       }
     };
 
@@ -180,15 +181,15 @@ const AdminTicketList = () => {
   const filteredAndSortedData = useMemo(() => {
     let data = [...ticketData];
 
-    if (searchTerm.trim() !== '') {
+    if (searchTerm.trim() !== "") {
       data = data.filter((ticket) =>
         ticket.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    if (sortOption === 'asc') {
+    if (sortOption === "asc") {
       data.sort((a, b) => a.visitors - b.visitors);
-    } else if (sortOption === 'desc') {
+    } else if (sortOption === "desc") {
       data.sort((a, b) => b.visitors - a.visitors);
     }
 
@@ -197,9 +198,7 @@ const AdminTicketList = () => {
 
   return (
     <>
-    
-   < AdminTicketWrapper>
-    
+      <AdminTicketWrapper>
         <MainContent>
           <Title>티켓 예약 현황</Title>
 
@@ -239,9 +238,11 @@ const AdminTicketList = () => {
                       alt="전시 이미지"
                       onClick={() => handleThumbnailClick(ticket.id)}
                     />
-                    <div style={{ marginTop: '200px' }}>
+                    <div style={{ marginTop: "200px" }}>
                       <p>{ticket.dateRange}</p>
-                      <p><strong>{ticket.title}</strong></p>
+                      <p>
+                        <strong>{ticket.title}</strong>
+                      </p>
                     </div>
                   </Td>
                   <Td>{ticket.visitors} 명</Td>
@@ -250,7 +251,7 @@ const AdminTicketList = () => {
             </tbody>
           </Table>
         </MainContent>
-        </AdminTicketWrapper>
+      </AdminTicketWrapper>
     </>
   );
 };

@@ -51,6 +51,14 @@ const SearchInput = styled.input`
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  padding: 11px;
+  color: #e1e1e1;
+  background-color: rgba(255, 255, 255, 0.07);
+  transition: 0.3s ease-in-out;
+  &:focus {
+    outline: none;
+    border-color: #3da9fc;
+  }
 `;
 const SearchButton = styled.button`
   padding: 8px 16px;
@@ -64,17 +72,18 @@ const SearchButton = styled.button`
   }
 `;
 const AddButton = styled.button`
-  padding: 8px 16px;
-  background: #3da9fc;
-  color: white;
   border: none;
-  position: absolute;
-  margin-left: -94px;
-  position: relative;
-  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.07);
+  width: 120px;
+  border-radius: 5px;
+  color: #e1e1e1;
+  margin-right: 10px;
+  padding: 10px;
   cursor: pointer;
+  transition: 0.3s ease-in-out;
+
   &:hover {
-    background: #3da0e5;
+    background-color: #3da9fc;
   }
 `;
 
@@ -85,12 +94,17 @@ const ArtGrid = styled.div`
 `;
 
 const ArtItem = styled.div`
-  border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   text-align: center;
   position: relative;
   background: white;
+  transition: 0.3s ease;
+  border: 1px solid rgb(9, 9, 9);
+
+  &:hover {
+    border: 1px solid rgb(189, 189, 189);
+  }
 `;
 
 const ArtCardImageContainer = styled.div`
