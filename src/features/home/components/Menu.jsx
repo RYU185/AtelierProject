@@ -27,7 +27,7 @@ const MenuOverlay = styled.div`
 
 const MenuContainer = styled.div`
   max-width: 1400px;
-  margin: 120px auto 0;
+  margin: 80px auto 0;
   padding: 0 80px;
   position: relative;
   z-index: 2001;
