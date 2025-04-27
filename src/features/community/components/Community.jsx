@@ -248,11 +248,23 @@ function Community({
 
   const handleEditClick = (e) => {
     e.stopPropagation();
-    if (currentUser?.id !== postUser?.id) {
-      alert("본인의 글만 수정할 수 있습니다.");
+
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
       return;
     }
-    openEditModal({ id, text }); // 수정 모달 열기 함수 호출
+
+    // postUser에 userId가 없는 경우 nickname으로 비교
+    if (
+      postUser?.userId === undefined &&
+      currentUser?.nickName === postUser?.nickname
+    ) {
+      openEditModal({ id, text });
+    } else if (currentUser?.userId === postUser?.userId) {
+      openEditModal({ id, text });
+    } else {
+      alert("본인이 작성한 커뮤니티만 수정할 수 있습니다.");
+    }
   };
 
   const formatDate = (dateString) => {
@@ -404,7 +416,7 @@ function Community({
             <MenuIcon />
             {isMenuOpen && (
               <MenuDropdown onClick={(e) => e.stopPropagation()}>
-                <MenuItemM onClick={handleEditClick}>수정</MenuItemM>{" "}
+                <MenuItemM onClick={handleEditClick}>수정</MenuItemM>
                 <MenuItemD onClick={handleDeleteClick}>삭제</MenuItemD>
               </MenuDropdown>
             )}

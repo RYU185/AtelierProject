@@ -228,8 +228,7 @@ function CommunityList() {
       setIsMyPostsView(true);
     } catch (error) {
       console.error("나의 게시글 로딩 실패:", error);
-      alert("나의 게시글을 불러오는 중 오류가 발생했습니다.");
-      setCommunityItems([]);
+      alert("게시물이 존재하지 않습니다.");
     } finally {
       setLoadingMyPosts(false); // 로딩 종료 설정
     }
@@ -392,30 +391,24 @@ function CommunityList() {
         </SortButtonBox>
 
         <Grid>
-                   {" "}
-          {!isLoadingUser &&
-          isMyPostsView &&
-          communityItems.length === 0 &&
-          !loadingMyPosts ? (
+          {!isLoadingUser && isMyPostsView && communityItems.length === 0 ? (
             <NoPostsMessage>작성한 커뮤니티가 없습니다.</NoPostsMessage>
-          ) : (
-            !isLoadingUser &&
+          ) : !isLoadingUser ? (
             sortedCommunityItems.map((post) => (
               <Community
                 key={post.id}
                 {...post}
-                user={{ nickname: post.userNickname }}
+                user={{ userId: post.userId, nickname: post.userNickname }}
                 onOpenModal={handleOpenModal}
                 currentUser={loggedInUser}
                 isLiked={post.isLiked}
-                openEditModal={openEditModal} // 수정 모달 열기 함수 전달
+                openEditModal={openEditModal} // openEditModal prop 전달 확인
               />
             ))
+          ) : (
+            <div>사용자 정보를 로딩 중입니다...</div>
           )}
-                    {isLoadingUser && <div>사용자 정보를 로딩 중입니다...</div>}
-                   {" "}
-          {loadingMyPosts && <div>나의 게시글을 불러오는 중입니다...</div>}     
-           {" "}
+          {loadingMyPosts && <div>나의 게시글을 불러오는 중입니다...</div>}
         </Grid>
 
         {isAddModalOpen && (
