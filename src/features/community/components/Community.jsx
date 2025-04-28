@@ -211,10 +211,9 @@ function Community({
   isModal,
   currentUser: propCurrentUser,
   currentImageIndex: propCurrentImageIndex,
-  openEditModal,
+  openEditModal, // 수정 모달 열기 함수 props로 받음
 }) {
   const [likeCount, setLikeCount] = useState(initialLikes || 0);
-  const [commentCnt, setCommentCnt] = useState(commentCount);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentUser, setCurrentUser] = useState(propCurrentUser);
@@ -343,9 +342,7 @@ function Community({
         text,
         img,
         likes: likeCount,
-        commentCount: commentCnt,
         showComments: true,
-        onCommentAdded: () => setCommentCnt((prev) => prev + 1),
       });
     }
   };
@@ -456,7 +453,7 @@ function Community({
           </ActionIcon>
           <ActionIcon onClick={handleChatClick}>
             <ChatIconStyled />
-            <span>{commentCnt}</span>
+            <span>{commentCount}</span>
           </ActionIcon>
         </Actions>
       </Container>

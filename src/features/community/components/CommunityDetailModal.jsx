@@ -152,12 +152,7 @@ function CommunityDetailModal({ post, onClose }) {
           )}
         </ContentWrapper>
         <CommentsWrapper>
-          {post && (
-            <CommentList
-              postId={post.id}
-              onCommentAdded={post.onCommentAdded} // ✅ 추가!
-            />
-          )}
+          {post && <CommentList postId={post.id} />}
         </CommentsWrapper>
       </ModalContent>
 
