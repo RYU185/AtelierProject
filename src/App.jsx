@@ -8,8 +8,12 @@ import { InquiryProvider } from "./features/adminpage/components/InquiryContext"
 import { AuthProvider } from "./components/AuthContext.jsx";
 import { NotificationProvider } from "./features/Notification/NotificationContext.jsx";
 import ReservationNotificationComponent from "./features/Notification/ReservationNotificationComponent.jsx";
+import useWebSocket from "./socket/useWebSocket.js";
 
 const App = () => {
+  useWebSocket();
+
+  
   return (
     <NotificationProvider>
       <AuthProvider>

@@ -7,7 +7,6 @@ import Footer from "../../Footer";
 import axiosInstance from "../../../api/axiosInstance";
 import useSocketStore from "../../../socket/socketStore";
 import { useAuth } from "../../../components/AuthContext";
-import useWebSocket from "../../../socket/useWebSocket";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -308,7 +307,12 @@ const ChatRoom = ({ room: propRoom }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
-  const { chatMessages , setChatMessages } = useSocketStore();
+  const {
+    chatMessages,
+    setChatMessages,
+    sendMessage,
+    isSocketConnected: isConnected,
+  } = useSocketStore();
   const [newMessage, setNewMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -317,8 +321,6 @@ const ChatRoom = ({ room: propRoom }) => {
   const [isUserScrolled, setIsUserScrolled] = useState(false);
   const { artistId } = useParams();
   const [room, setRoom] = useState(propRoom || location.state?.room || null);
-
-  const { sendMessage, isConnected } = useWebSocket();
 
   useEffect(() => {
     if (!room) return;
@@ -390,6 +392,18 @@ const ChatRoom = ({ room: propRoom }) => {
     };
 
     sendMessage(payload);
+
+    setChatMessages((prev) => [
+      ...prev,
+      {
+        id: tempId,
+        message: newMessage,
+        timestamp: new Date().toISOString(),
+        isArtist: isArtistSender,
+        nickname: nickname,
+      },
+    ]);
+
     setNewMessage("");
     setSelectedFile(null);
   };
