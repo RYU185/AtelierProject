@@ -9,21 +9,28 @@ const ReservationNotificationComponent = () => {
   const { client } = useWebSocket();
 
   useEffect(() => {
-    if (!client || !token) return;
+    if (!client || !token || !client.connected) {
+      console.warn("🚫 아직 소켓 연결 안됨 - 구독 시도 안 함");
+      return;
+    }
 
-    const subscription = client.subscribe("/user/queue/notifications", (message) => {
-      try {
-        const notification = JSON.parse(message.body);
-        console.log("[Notification]", notification);
-        addNotification(notification);
-      } catch (error) {
-        console.error("[Notification Parsing Error]", error);
+    const subscription = client.subscribe(
+      "/user/queue/notifications",
+      (message) => {
+        try {
+          const notification = JSON.parse(message.body);
+          console.log("[Notification]", notification);
+          addNotification(notification);
+        } catch (error) {
+          console.error("[Notification Parsing Error]", error);
+        }
       }
-    });
+    );
+
     return () => {
       subscription.unsubscribe();
     };
-  }, [client, token, addNotification]);
+  }, [client, token, client?.connected]);
 
   return null;
 };
