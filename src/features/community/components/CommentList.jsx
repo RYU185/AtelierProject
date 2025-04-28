@@ -95,7 +95,7 @@ function CommentList({ postId }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
