@@ -308,7 +308,7 @@ const ChatRoom = ({ room: propRoom }) => {
   const { user } = useAuth();
   const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
   const {
-    chatMessages,
+    chatMessages = [],
     setChatMessages,
     sendMessage,
     isSocketConnected: isConnected,
@@ -318,6 +318,13 @@ const ChatRoom = ({ room: propRoom }) => {
   const messagesEndRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
+  const defaultRoom = {
+    id: "default-room",
+    artistId: "artist-id",
+    artistName: "작가",
+    userId: "user-id",
+    userName: "유저",
+  };
   const [room, setRoom] = useState(propRoom || location.state?.room || null);
 
   useEffect(() => {
@@ -330,7 +337,10 @@ const ChatRoom = ({ room: propRoom }) => {
           message: msg.content,
           timestamp: msg.timestamp ?? null,
           isArtist: msg.sender === room.artistId,
-          nickname: msg.sender === room.artistId ? room.artistName : room.userName,
+          nickname:
+            msg.senderNickname ??
+            (msg.sender === room.artistId ? room.artistName : room.userName) ??
+            "익명",
         }));
 
         setChatMessages(loadedMessages);
@@ -379,14 +389,14 @@ const ChatRoom = ({ room: propRoom }) => {
 
     sendMessage(payload);
 
-    setChatMessages((prev) => [
+    setChatMessages((prev = []) => [
       ...prev,
       {
         id: tempId,
         message: newMessage,
         timestamp: new Date().toISOString(),
         isArtist: isArtistSender,
-        nickname: nickname,
+        nickname: nicknameRef.current,
       },
     ]);
 
@@ -404,7 +414,38 @@ const ChatRoom = ({ room: propRoom }) => {
         </PageTitle>
 
         <MainContent>
-          <ProfileSection>{/* 아티스트 정보 */}</ProfileSection>
+          <ProfileSection>
+            <ProfileBox>
+              <ProfileItem>
+                <ProfileCircle $isArtist={true}>
+                  {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                </ProfileCircle>
+                <ProfileText>
+                  {room && (user?.isArtist ? room.artistName : room.userName)}
+                </ProfileText>
+              </ProfileItem>
+              <ProfileItem>
+                <ProfileCircle $isArtist={false}>
+                  {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                </ProfileCircle>
+                <ProfileText>
+                  {room && (!user?.isArtist ? room.artistName : room.userName)}
+                </ProfileText>
+              </ProfileItem>
+              <DateText>
+                {chatMessages.length
+                  ? new Date(chatMessages[chatMessages.length - 1].timestamp).toLocaleDateString(
+                      "ko-KR",
+                      {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      }
+                    )
+                  : "????"}
+              </DateText>
+            </ProfileBox>
+          </ProfileSection>
 
           <ChatSection>
             <ChatHeader>
