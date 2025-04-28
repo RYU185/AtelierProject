@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리
-const artImages = import.meta.glob("/public/images/ArtListIMG/*", {
+const artImages = import.meta.glob("/images/ArtListIMG/*", {
   eager: true,
 });
 
