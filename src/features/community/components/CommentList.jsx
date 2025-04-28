@@ -86,7 +86,7 @@ function CommentList({ postId }) {
     }
 
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("authToken");
       const response = await axios.post(
         `/api/comment/add`,
         {
@@ -95,7 +95,7 @@ function CommentList({ postId }) {
         },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
