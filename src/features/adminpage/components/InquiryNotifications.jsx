@@ -14,7 +14,7 @@ const InquiryNotifications = () => {
   useWebSocket();
 
   const checkLoginStatus = () => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
     if (token) {
       try {
         jwtDecode(token); // 토큰 유효성만 체크
@@ -44,7 +44,7 @@ const InquiryNotifications = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       checkLoginStatus();
-    }, 3000); // 3초마다 로그인 체크
+    }, 30000); // 3초마다 로그인 체크
 
     return () => clearInterval(interval);
   }, []);

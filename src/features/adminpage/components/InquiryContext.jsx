@@ -13,7 +13,7 @@ export const InquiryProvider = ({ children }) => {
   });
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
     try {
       if (token) {
         jwtDecode(token); // 유효성 확인
@@ -50,12 +50,12 @@ export const InquiryProvider = ({ children }) => {
   };
 
   const login = (token) => {
-    localStorage.setItem("accessToken", token);
+    localStorage.setItem("authToken", token);
     setIsLoggedIn(true);
   };
 
   const logout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("authToken");
     setIsLoggedIn(false);
   };
 
