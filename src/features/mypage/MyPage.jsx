@@ -51,7 +51,8 @@ const TabButton = styled.button`
   padding: 16px 40px;
   font-size: 15px;
   border: none;
-  background-color: ${(props) => (props.$active ? "#4199FF" : "rgba(255, 255, 255, 0.07)")};
+  background-color: ${(props) =>
+    props.$active ? "#4199FF" : "rgba(255, 255, 255, 0.07)"};
   color: ${(props) => (props.$active ? "#fff" : "#e1e1e1")};
   cursor: pointer;
   font-weight: 500;
@@ -60,7 +61,7 @@ const TabButton = styled.button`
   transition: 0.3s ease-in-out;
 
   &:hover {
-    color: #4199FF;
+    color: #4199ff;
     background-color: ${(props) => (props.$active ? "#4199FF" : "#E5E5E5")};
   }
 `;
@@ -74,7 +75,7 @@ const ContentContainer = styled.div`
 const ProfileSection = styled.div`
   width: 380px;
   height: 500px;
-  background-color:rgba(255, 255, 255, 0.07);
+  background-color: rgba(255, 255, 255, 0.07);
   padding: 32px;
   border-radius: 4px;
 `;
@@ -156,7 +157,7 @@ const Label = styled.span`
 `;
 
 const Value = styled.span`
-  color:#e1e1e1;
+  color: #e1e1e1;
   text-align: right;
   margin-left: 40px;
 `;

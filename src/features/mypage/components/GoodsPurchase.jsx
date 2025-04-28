@@ -151,7 +151,7 @@ const GoodsPurchase = () => {
   const navigate = useNavigate(); // useNavigate 훅 초기화
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
     if (!token) return;
 
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;

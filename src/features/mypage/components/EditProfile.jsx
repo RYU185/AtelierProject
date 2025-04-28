@@ -163,7 +163,7 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("authToken");
         if (!token) {
           navigate("/login");
           return;
