@@ -112,9 +112,10 @@ const TableRow = styled.div`
 `;
 
 const TableCell = styled.div`
-  padding: 10px;
+  padding: 0 10px;
   border-bottom: 1px solid #ddd;
   text-align: center;
+  font-size: 13px;
 `;
 
 const AdminUser = () => {
