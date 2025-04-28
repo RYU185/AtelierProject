@@ -17,10 +17,7 @@ const getGoodsImageUrl = (filename) => {
   if (matched) {
     return matched[1].default;
   }
-  return `http://localhost:8081/uploads/${filename.replace(
-    /^\/uploads\//,
-    ""
-  )}`;
+  return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
 };
 
 const AdminGoodsWrapper = styled.div`

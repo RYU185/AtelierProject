@@ -9,7 +9,12 @@ import axios from "../../api/axiosInstance";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const Container = styled.div`
@@ -24,7 +29,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 7.25rem ;
+  padding-top: 7.25rem;
   padding-bottom: 7.25rem;
 `;
 
@@ -126,7 +131,6 @@ const ProductInfo = styled.div`
   border: 1px solid #444444;
   border-top: none;
   border-radius: 0 0 5px 5px;
-
 `;
 
 const ProductName = styled.h3`
@@ -182,13 +186,15 @@ const getGoodsImageUrl = (filename) => {
   if (!filename) return "/default.jpg";
 
   // 정적 이미지 경로 처리
-  const matched = Object.entries(goodsImages).find(([path]) => path.endsWith(filename));
+  const matched = Object.entries(goodsImages).find(([path]) =>
+    path.endsWith(filename)
+  );
   if (matched) {
     return matched[1].default; // 정적 이미지 경로 반환
   }
 
   // 업로드된 이미지 경로 처리
-  return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, "")}`;
+  return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
 };
 
 const Goods = () => {
@@ -219,7 +225,9 @@ const Goods = () => {
   const handleSort = (e) => setSortOption(e.target.value);
 
   const filteredAndSortedGoods = goodsList
-    .filter((goods) => goods.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .filter((goods) =>
+      goods.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     .sort((a, b) => {
       switch (sortOption) {
         case "price_asc":
@@ -263,8 +271,14 @@ const Goods = () => {
 
         <ProductGrid>
           {filteredAndSortedGoods.map((goods) => (
-            <ProductCard key={goods.id} onClick={() => handleProductClick(goods.id)}>
-              <ProductImage src={getGoodsImageUrl(goods.imgUrlList?.[0])} alt={goods.name} />
+            <ProductCard
+              key={goods.id}
+              onClick={() => handleProductClick(goods.id)}
+            >
+              <ProductImage
+                src={getGoodsImageUrl(goods.imgUrlList?.[0])}
+                alt={goods.name}
+              />
               <ProductInfo>
                 <ProductName>{goods.name}</ProductName>
                 <ProductPrice>{goods.price.toLocaleString()}원</ProductPrice>

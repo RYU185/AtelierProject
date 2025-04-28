@@ -11,11 +11,11 @@ const useWebSocket = () => {
     console.log("🧩 useWebSocket 실행됨");
 
     const client = new Client({
-      brokerURL: "http://localhost:8081/ws",
+      brokerURL: "/ws",
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`, // JWT 토큰으로 인증
       },
-      webSocketFactory: () => new SockJS("http://localhost:8081/ws"), // sockjs로 websocket 연결-브라우저 호환성 고려
+      webSocketFactory: () => new SockJS("/ws"), // sockjs로 websocket 연결-브라우저 호환성 고려
       onConnect: () => {
         console.log("✅ WebSocket 연결 성공");
 

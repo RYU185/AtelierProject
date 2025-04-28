@@ -103,7 +103,7 @@ function AdminContact() {
 
     // WebSocket 연결, 이미 연결된 상태에서 추가 연결되지 않도록
     if (isAdmin && !stompClient) {
-      const socket = new SockJS("http://localhost:8081/ws");
+      const socket = new SockJS("/ws");
       stompClient = over(socket);
 
       stompClient.connect(
@@ -147,7 +147,7 @@ function AdminContact() {
   useEffect(() => {
     const fetchInquiries = async () => {
       try {
-        const res = await fetch("http://localhost:8081/api/contacts", {
+        const res = await fetch("/api/contacts", {
           headers: { "Content-Type": "application/json" },
         });
         const data = await res.json();

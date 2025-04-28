@@ -177,18 +177,22 @@ const GoodsPurchase = () => {
       id: purchase.purchaseId,
       title: purchase.goodsName,
       image: `/public/images/goods-images/${purchase.thumbnailUrl}`,
-      price: `환불금액: ${(purchase.price * purchase.quantity).toLocaleString()}원 · ${
-        purchase.quantity
-      }개
+      price: `환불금액: ${(
+        purchase.price * purchase.quantity
+      ).toLocaleString()}원 · ${purchase.quantity}개
       (1개 당 ${purchase.price.toLocaleString()}원) `,
-      description: `구매일: ${new Date(purchase.purchaseDate).toLocaleDateString()}`,
+      description: `구매일: ${new Date(
+        purchase.purchaseDate
+      ).toLocaleDateString()}`,
     };
 
     setSelectedPurchase(formatted);
     setShowModal(true);
   };
   const handleRefundSuccess = (deletedId) => {
-    setPurchases((prev) => prev.filter((purchase) => purchase.purchaseId !== deletedId));
+    setPurchases((prev) =>
+      prev.filter((purchase) => purchase.purchaseId !== deletedId)
+    );
   };
 
   // 리뷰 작성하기 버튼 클릭 핸들러
@@ -216,11 +220,13 @@ const GoodsPurchase = () => {
           </p>
         ) : (
           filteredPurchases.map((purchase, index) => (
-            <PurchaseCard key={`${purchase.goodsId}-${purchase.purchaseDate}-${index}`}>
+            <PurchaseCard
+              key={`${purchase.goodsId}-${purchase.purchaseDate}-${index}`}
+            >
               <GoodsImage
                 src={
                   purchase.thumbnailUrl?.startsWith("/uploads")
-                    ? `http://localhost:8081${purchase.thumbnailUrl}`
+                    ? `${purchase.thumbnailUrl}`
                     : `/images/goods-images/${purchase.thumbnailUrl}`
                 }
                 alt={purchase.goodsName}
@@ -235,16 +241,21 @@ const GoodsPurchase = () => {
                   </GoodsHeader>
                   <GoodsDetails>수량: {purchase.quantity}개</GoodsDetails>
                   <Price>
-                    총 금액: {(purchase.price * purchase.quantity).toLocaleString()}원 ( 1개 당{" "}
-                    {purchase.price.toLocaleString()}원 )
+                    총 금액:{" "}
+                    {(purchase.price * purchase.quantity).toLocaleString()}원 (
+                    1개 당 {purchase.price.toLocaleString()}원 )
                   </Price>
                 </div>
                 <ButtonContainer>
-                  <ActionButton onClick={() => handleWriteReview(purchase.goodsId)}>
+                  <ActionButton
+                    onClick={() => handleWriteReview(purchase.goodsId)}
+                  >
                     리뷰 작성/ 상품 구경하기
                   </ActionButton>
 
-                  <ActionButton onClick={() => handleRefund(purchase)}>교환/환불 신청</ActionButton>
+                  <ActionButton onClick={() => handleRefund(purchase)}>
+                    교환/환불 신청
+                  </ActionButton>
                 </ButtonContainer>
               </GoodsInfo>
             </PurchaseCard>

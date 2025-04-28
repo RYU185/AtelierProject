@@ -13,7 +13,7 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
     const client = new Client({
       brokerURL: undefined,
       webSocketFactory: () =>
-        new SockJS(`http://localhost:8081/ws?token=${localStorage.getItem("accessToken")}`),
+        new SockJS(`/ws?token=${localStorage.getItem("accessToken")}`),
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },

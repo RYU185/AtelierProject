@@ -10,7 +10,12 @@ import { useAuth } from "../../components/AuthContext";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const TitleContainer = styled.div`
@@ -468,7 +473,6 @@ function GoodsDetail() {
   const handleTitleClick = () => navigate("/goods");
 
   const handlePurchase = () => setShowPurchaseModal(true);
-  
 
   const handlePurchaseConfirm = async () => {
     try {
@@ -486,7 +490,8 @@ function GoodsDetail() {
         userId: userId,
       };
 
-      const safeThumbnail = currentProductImages?.[selectedImage] || currentProductImages?.[0];
+      const safeThumbnail =
+        currentProductImages?.[selectedImage] || currentProductImages?.[0];
 
       await axiosInstance.post("/purchase/buy-now", dto);
       console.log("보내는 DTO:", dto);
@@ -552,15 +557,18 @@ function GoodsDetail() {
   // 공통 이미지 처리 함수
   const getGoodsImageUrl = (filename) => {
     if (!filename) return "/default.jpg";
-    const matched = Object.entries(goodsImages).find(([path]) => path.endsWith(filename));
+    const matched = Object.entries(goodsImages).find(([path]) =>
+      path.endsWith(filename)
+    );
     if (matched) {
       return matched[1].default;
     }
-    return `http://localhost:8081/uploads/${filename.replace(/^\/uploads\//, "")}`;
+    return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
   };
 
   // 기존 currentProductImages 생성 부분 수정
-  const currentProductImages = goods.imgUrlList?.map((url) => getGoodsImageUrl(url)) || [];
+  const currentProductImages =
+    goods.imgUrlList?.map((url) => getGoodsImageUrl(url)) || [];
 
   return (
     <GradientBackground>
@@ -627,18 +635,26 @@ function GoodsDetail() {
 
             <AmountCountContainer>
               <AmountCount>총 금액</AmountCount>
-              <AmountCountText>{(goods.price * quantity).toLocaleString()}원</AmountCountText>
+              <AmountCountText>
+                {(goods.price * quantity).toLocaleString()}원
+              </AmountCountText>
             </AmountCountContainer>
 
             <ButtonContainer>
-              <GoToCartButton onClick={handleAddToCart}>장바구니 담기</GoToCartButton>
+              <GoToCartButton onClick={handleAddToCart}>
+                장바구니 담기
+              </GoToCartButton>
               {showCartNotice && (
                 <CartNotification>
                   <NotificationText>장바구니에 담겼습니다</NotificationText>
-                  <GoToCartLink onClick={handleGoToCart}>장바구니로 가기</GoToCartLink>
+                  <GoToCartLink onClick={handleGoToCart}>
+                    장바구니로 가기
+                  </GoToCartLink>
                 </CartNotification>
               )}
-              <PurchaseButton onClick={handlePurchase}>바로 구매하기</PurchaseButton>
+              <PurchaseButton onClick={handlePurchase}>
+                바로 구매하기
+              </PurchaseButton>
             </ButtonContainer>
           </InfoSection>
         </ProductContainer>
