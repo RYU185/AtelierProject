@@ -88,7 +88,6 @@ const DrawingTitle = styled.div`
   align-items: center;
   color: #e1e1e1;
 
-
   span.status {
     color: ${(props) => (props.status === "임시저장" ? "#029149" : "#0551ea")};
     font-size: 15px;
@@ -103,7 +102,7 @@ const DrawingDate = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 3px;
-  background:rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.07);
 `;
 
 const ActionButton = styled.button`
@@ -148,7 +147,7 @@ const MyDrawings = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
     if (!token) {
       navigate("/login");
       return;
@@ -185,7 +184,7 @@ const MyDrawings = () => {
     if (!confirmDelete) return;
 
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("authToken");
       await axios.delete(`/api/realdrawing/delete/${drawingId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -234,11 +233,17 @@ const MyDrawings = () => {
             </DrawingInfo>
             <ButtonContainer>
               {drawing.status === "임시저장" && (
-                <ActionButton className="continue" onClick={() => handleEdit(drawing.id)}>
+                <ActionButton
+                  className="continue"
+                  onClick={() => handleEdit(drawing.id)}
+                >
                   이어서 그리기
                 </ActionButton>
               )}
-              <ActionButton className="delete" onClick={() => handleDelete(drawing.id)}>
+              <ActionButton
+                className="delete"
+                onClick={() => handleDelete(drawing.id)}
+              >
                 삭제
               </ActionButton>
             </ButtonContainer>
