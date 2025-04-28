@@ -1,6 +1,7 @@
 // src/InquiryContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import useWebSocket from "../../../socket/useWebSocket";
 
 // Context 생성
 const InquiryContext = createContext();
@@ -25,6 +26,26 @@ export const InquiryProvider = ({ children }) => {
     return false;
   });
 
+  const { client } = useWebSocket();
+
+  useEffect(() => {
+    if (!client || !isLoggedIn) return;
+
+    const subscription = client.subscribe("/topic/inquiry", (message) => {
+      try {
+        const inquiry = JSON.parse(message.body);
+        console.log("[Inquiry 알림]", inquiry);
+        addInquiry(inquiry); // 
+      } catch (error) {
+        console.error("[Inquiry Parsing Error]", error);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [client, isLoggedIn]);
+
   // 문의 상태 → localStorage 저장
   useEffect(() => {
     localStorage.setItem("inquiries", JSON.stringify(inquiries));
@@ -42,8 +63,7 @@ export const InquiryProvider = ({ children }) => {
       const isDuplicate = prev.some(
         (inquiry) =>
           inquiry.id === inquiryToAdd.id ||
-          (inquiry.subject === inquiryToAdd.subject &&
-           inquiry.sender === inquiryToAdd.sender)
+          (inquiry.subject === inquiryToAdd.subject && inquiry.sender === inquiryToAdd.sender)
       );
       return isDuplicate ? prev : [inquiryToAdd, ...prev];
     });

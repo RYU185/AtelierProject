@@ -2,54 +2,39 @@ import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { useInquiry } from "./InquiryContext";
 import { useNavigate } from "react-router-dom";
-import useWebSocket from "../../../socket";
 
 const InquiryNotifications = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { inquiries, setInquiries } = useInquiry();
   const unreadCount = inquiries.length;
   const [showList, setShowList] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  useWebSocket();
-
-  const checkLoginStatus = () => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const token = localStorage.getItem("authToken");
       try {
-        jwtDecode(token); // 토큰 유효성만 체크
-        setIsLoggedIn(true);
-      } catch (err) {
-        console.error("토큰 디코딩 실패", err);
+        token && jwtDecode(token);
+        setIsLoggedIn(!!token);
+      } catch {
         setIsLoggedIn(false);
       }
-    } else {
-      setIsLoggedIn(false);
-    }
-  };
-
-  useEffect(() => {
-    checkLoginStatus(); // 🔥 최초 렌더 직후 즉시 실행
-
-    const handleStorageChange = () => {
-      checkLoginStatus(); // 스토리지 변경 감지
     };
 
+    checkLoginStatus();
+
+    const handleStorageChange = () => checkLoginStatus();
     window.addEventListener("storage", handleStorageChange);
+
+    const interval = setInterval(checkLoginStatus, 30000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
     };
   }, []);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      checkLoginStatus();
-    }, 30000); // 3초마다 로그인 체크
 
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleNotificationClick = () => {
+  const handleClick = () => {
     if (unreadCount > 0) {
       setInquiries([]);
       setShowList(false);
@@ -60,16 +45,9 @@ const InquiryNotifications = () => {
   if (!isLoggedIn || unreadCount === 0) return null;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "100px",
-        right: "40px",
-        zIndex: 1000,
-      }}
-    >
+    <div style={{ position: "fixed", bottom: "100px", right: "40px", zIndex: 1000 }}>
       <button
-        onClick={() => setShowList(!showList)}
+        onClick={() => setShowList((prev) => !prev)}
         style={{
           background: "none",
           border: "none",
@@ -82,8 +60,8 @@ const InquiryNotifications = () => {
         <span
           style={{
             position: "absolute",
-            top: "0px",
-            right: "0px",
+            top: "0",
+            right: "0",
             background: "red",
             color: "white",
             fontSize: "12px",
@@ -112,11 +90,7 @@ const InquiryNotifications = () => {
           <h4>📩 새로운 문의</h4>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {inquiries.map((inquiry, index) => (
-              <li
-                key={index}
-                style={{ padding: "5px 0", cursor: "pointer" }}
-                onClick={handleNotificationClick}
-              >
+              <li key={index} onClick={handleClick} style={{ padding: "5px 0", cursor: "pointer" }}>
                 {inquiry.subject}
               </li>
             ))}
