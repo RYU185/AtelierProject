@@ -28,7 +28,7 @@ axiosInstance.interceptors.request.use(
     const isPublic = PUBLIC_PATHS.some((path) => config.url.startsWith(path));
 
     if (!isPublic) {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("authToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
         console.log("🔐 토큰 포함됨:", token);
