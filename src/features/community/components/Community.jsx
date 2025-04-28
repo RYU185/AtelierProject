@@ -429,7 +429,7 @@ function Community({
             {img.map((image, index) => (
               <PostImage
                 key={index}
-                src={`/public/images/DrawingIMG/${image}`}
+                src={`/images/DrawingIMG/${image}`}
                 alt={`첨부된 이미지 ${index + 1}`}
                 $active={index === currentImageIndex}
               />
