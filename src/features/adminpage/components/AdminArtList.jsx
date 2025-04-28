@@ -20,7 +20,7 @@ const getImageUrl = (filename) => {
     return matched[1].default;
   }
 
-  return `./uploads/${filename.replace(/^\/uploads\//, "")}`;
+  return `./uploads/${filename}`;
 };
 
 const PageContainer = styled.div`
