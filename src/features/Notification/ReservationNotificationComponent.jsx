@@ -1,24 +1,28 @@
 import { useNotification } from "./NotificationContext";
-import useNotificationWebSocket from "./useNotificationWebSocket";
 import { useAuth } from "../../components/AuthContext";
-import { useEffect } from "react";
+import useWebSocket from "../../socket/useWebSocket";
 
 const ReservationNotificationComponent = () => {
   const { addNotification, reservationAlarms } = useNotification();
   const { token } = useAuth();
-
-  if (!token) {
-    return null;
-  }
+  const { client } = useWebSocket();
 
   useEffect(() => {
-  }, [reservationAlarms]);
+    if (!client || !token) return;
 
-  useNotificationWebSocket({
-    onNotification: (noti) => {
-      addNotification(noti);
-    },
-  });
+    const subscription = client.subscribe("/user/queue/notifications", (message) => {
+      try {
+        const notification = JSON.parse(message.body);
+        console.log("[Notification]", notification);
+        addNotification(notification);
+      } catch (error) {
+        console.error("[Notification Parsing Error]", error);
+      }
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [client, token, addNotification]);
 
   return null;
 };

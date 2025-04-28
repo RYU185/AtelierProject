@@ -332,6 +332,7 @@ const ChatRoom = ({ room: propRoom }) => {
           isArtist: msg.sender === room.artistId,
           nickname: msg.sender === room.artistId ? room.artistName : room.userName,
         }));
+
         setChatMessages(loadedMessages);
       } catch (err) {
         console.error("메시지 로딩 실패:", err);

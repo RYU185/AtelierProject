@@ -58,6 +58,7 @@ const useWebSocket = () => {
           }
         });
       },
+      
       onDisconnect: () => {
         console.log("[WebSocket] 연결 해제");
         setSocketConnected(false);
