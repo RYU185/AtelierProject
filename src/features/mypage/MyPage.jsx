@@ -188,7 +188,7 @@ const MyPage = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
 
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     if (!token) {
