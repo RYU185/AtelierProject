@@ -103,6 +103,9 @@ function CommentList({ postId }) {
       if (response.status === 201) {
         await fetchComments();
         setNewCommentText("");
+        if (onCommentAdded) {
+          onCommentAdded(); // ✅ 여기!!
+        }
       } else {
         alert("댓글 등록에 실패했습니다.");
       }
