@@ -7,8 +7,14 @@ import { useAuth } from "../components/AuthContext";
 const useWebSocket = () => {
   const { token } = useAuth();
   const clientRef = useRef(null);
-  const { setSocketConnected, addNotification, addInquiry, addChatMessage, clearAll } =
-    useSocketStore();
+  const {
+    setSocketConnected,
+    addNotification,
+    addInquiry,
+    addChatMessage,
+    clearAll,
+    isSocketConnected,
+  } = useSocketStore();
 
   useEffect(() => {
     if (!token) {
@@ -104,7 +110,7 @@ const useWebSocket = () => {
 
     console.log("메세지 전송완료", payload);
   }, []);
-  return { sendMessage, client: clientRef.current };
+  return { sendMessage, client: clientRef.current, isConnected: isSocketConnected };
 };
 
 export default useWebSocket;

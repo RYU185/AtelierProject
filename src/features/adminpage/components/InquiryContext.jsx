@@ -29,13 +29,13 @@ export const InquiryProvider = ({ children }) => {
   const { client } = useWebSocket();
 
   useEffect(() => {
-    if (!client || !isLoggedIn) return;
+    if (!client || !isConnected || !isLoggedIn) return;
 
     const subscription = client.subscribe("/topic/inquiry", (message) => {
       try {
         const inquiry = JSON.parse(message.body);
         console.log("[Inquiry 알림]", inquiry);
-        addInquiry(inquiry); // 
+        addInquiry(inquiry); //
       } catch (error) {
         console.error("[Inquiry Parsing Error]", error);
       }
@@ -44,7 +44,7 @@ export const InquiryProvider = ({ children }) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [client, isLoggedIn]);
+  }, [client, isConnected, isLoggedIn]);
 
   // 문의 상태 → localStorage 저장
   useEffect(() => {
