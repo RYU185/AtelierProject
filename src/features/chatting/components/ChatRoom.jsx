@@ -5,8 +5,9 @@ import ChatMessage from "./ChatMessage";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import axiosInstance from "../../../api/axiosInstance";
-import useChatSocket from "../../../useChatsocket";
+import useSocketStore from "../../../socket/socketStore";
 import { useAuth } from "../../../components/AuthContext";
+import useWebSocket from "../../../socket/useWebSocket";
 
 const PageWrapper = styled.div`
   display: flex;
@@ -128,8 +129,7 @@ const ProfileCircle = styled.div`
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: ${(props) =>
-    props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none"};
+  box-shadow: ${(props) => (props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none")};
 `;
 
 const ProfileText = styled.div`
@@ -307,11 +307,8 @@ const ChatRoom = ({ room: propRoom }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const nicknameRef = useRef(
-    user?.nickname ?? localStorage.getItem("nickname") ?? "익명"
-  );
-
-  const [messages, setMessages] = useState([]);
+  const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
+  const { chatMessages } = useSocketStore();
   const [newMessage, setNewMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -321,39 +318,7 @@ const ChatRoom = ({ room: propRoom }) => {
   const { artistId } = useParams();
   const [room, setRoom] = useState(propRoom || location.state?.room || null);
 
-  const { sendMessage, isConnected } = useChatSocket({
-    userId: user?.username,
-    onMessageReceive: (msg) => {
-      setMessages((prev) => {
-        if (msg.tempId) {
-          return prev.map((m) =>
-            m.id === msg.tempId
-              ? {
-                  id: msg.id,
-                  message: msg.content,
-                  timestamp: msg.timestamp,
-                  isArtist: msg.sender === room.artistId,
-                  nickname: msg.senderNickname || "익명",
-                  sending: false,
-                }
-              : m
-          );
-        }
-
-        return [
-          ...prev,
-          {
-            id: msg.id,
-            message: msg.content,
-            timestamp: msg.timestamp,
-            isArtist: msg.sender === room.artistId,
-            nickname: msg.senderNickname || "익명",
-            sending: false,
-          },
-        ];
-      });
-    },
-  });
+  const { sendMessage, isConnected } = useWebSocket();
 
   useEffect(() => {
     if (!room) return;
@@ -365,8 +330,7 @@ const ChatRoom = ({ room: propRoom }) => {
           message: msg.content,
           timestamp: msg.timestamp ?? null,
           isArtist: msg.sender === room.artistId,
-          nickname:
-            msg.sender === room.artistId ? room.artistName : room.userName,
+          nickname: msg.sender === room.artistId ? room.artistName : room.userName,
         }));
         setMessages(loadedMessages);
       } catch (err) {
@@ -385,13 +349,12 @@ const ChatRoom = ({ room: propRoom }) => {
     if (!isUserScrolled && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [chatMessages]);
 
   const handleScroll = () => {
     if (chatMessagesRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
-      const isScrolledToBottom =
-        Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
+      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
       setIsUserScrolled(!isScrolledToBottom);
     }
   };
@@ -425,18 +388,6 @@ const ChatRoom = ({ room: propRoom }) => {
       tempId,
     };
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: tempId,
-        message: newMessage,
-        timestamp: new Date().toISOString(),
-        isArtist: isArtistSender,
-        nickname,
-        sending: true,
-      },
-    ]);
-
     sendMessage(payload);
     setNewMessage("");
     setSelectedFile(null);
@@ -444,15 +395,12 @@ const ChatRoom = ({ room: propRoom }) => {
 
   console.log("user 객체 상태", user);
 
-  const lastDate = messages.length
-    ? new Date(messages[messages.length - 1].timestamp).toLocaleDateString(
-        "ko-KR",
-        {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }
-      )
+  const lastDate = chatMessages.length
+    ? new Date(chatMessages[chatMessages.length - 1].timestamp).toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
     : null;
 
   return (
@@ -460,9 +408,7 @@ const ChatRoom = ({ room: propRoom }) => {
       <Header />
       <ChatContainer>
         <PageTitle>
-          <BackButton onClick={() => navigate("/artist")}>
-            Artist List
-          </BackButton>
+          <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
           <Title>Chatting with ARTIST</Title>
         </PageTitle>
 
@@ -471,9 +417,7 @@ const ChatRoom = ({ room: propRoom }) => {
             <ProfileBox>
               <ProfileItem>
                 <ProfileCircle $isArtist={true}>
-                  {(room &&
-                    (user?.isArtist ? room.artistName : room.userName))?.[0] ??
-                    "?"}
+                  {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
                 </ProfileCircle>
                 <ProfileText>
                   {room && (user?.isArtist ? room.artistName : room.userName)}
@@ -481,9 +425,7 @@ const ChatRoom = ({ room: propRoom }) => {
               </ProfileItem>
               <ProfileItem>
                 <ProfileCircle $isArtist={false}>
-                  {(room &&
-                    (!user?.isArtist ? room.artistName : room.userName))?.[0] ??
-                    "?"}
+                  {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
                 </ProfileCircle>
                 <ProfileText>
                   {room && (!user?.isArtist ? room.artistName : room.userName)}
@@ -495,14 +437,12 @@ const ChatRoom = ({ room: propRoom }) => {
 
           <ChatSection>
             <ChatHeader>
-              <ChatTitle>
-                {user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}
-              </ChatTitle>
+              <ChatTitle>{user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}</ChatTitle>
               <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
             </ChatHeader>
 
             <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
-              {messages.map((msg, index) => (
+              {chatMessages.map((msg, index) => (
                 <ChatMessage
                   key={msg.id || `${msg.timestamp}-${index}`} // 고유한 키 사용
                   message={msg.message}
@@ -510,7 +450,7 @@ const ChatRoom = ({ room: propRoom }) => {
                   isArtist={msg.isArtist}
                   file={msg.file}
                   nickname={msg.nickname}
-                  isSender={msg.isArtist === (user?.isArtist)}
+                  isSender={msg.isArtist === user?.isArtist}
                 />
               ))}
               <div ref={messagesEndRef} />
