@@ -225,7 +225,7 @@ function Community({
       setCurrentUser(propCurrentUser);
     } else {
       const fetchCurrentUser = async () => {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem("authToken");
         if (accessToken) {
           try {
             const response = await axios.get("/api/user/me", {
@@ -280,7 +280,7 @@ function Community({
   const toggleHeart = async (e) => {
     e.stopPropagation();
 
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("authToken");
     const isLoggedIn = !!accessToken;
 
     if (!isLoggedIn) {
@@ -377,7 +377,7 @@ function Community({
     if (!confirmed) return;
 
     try {
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("authToken");
       const response = await axios.post(
         `/api/community/delete/${id}`,
         {},
