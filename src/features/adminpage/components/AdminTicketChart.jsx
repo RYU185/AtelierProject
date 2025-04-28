@@ -40,6 +40,10 @@ const AdminTicketChartWrapper = styled.div`
 `;
 
 
+const AdminGoodsMenubarWrapper = styled.div`
+
+`;
+
 const ChartWrapper = styled.div`
   width: 100%;
   margin-left: -100px;
@@ -59,16 +63,7 @@ const TitleWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-const MenubarWrapper = styled.div`
- 
-  position: relative;
-  top: -30px;
-  left: -335px;
-  z-index: 10;
-  margin-left: -135px;
 
-
-`;
 
 
 const FilterSelect = styled.select`
@@ -311,16 +306,16 @@ function AdminTicketChart() {
         <TitleWrapper>
           {filterType === 'daily' ? '날짜별' : filterType === 'weekly' ? '주별' : '월별'} 티켓 판매량
         </TitleWrapper>
-
+        <AdminGoodsMenubarWrapper>
+          <AdminTicketMenubar />
+        </AdminGoodsMenubarWrapper>
         <FilterSelect value={filterType} onChange={(e) => setFilterType(e.target.value)}>
           <option value="daily">날짜별</option>
           <option value="weekly">주별</option>
           <option value="monthly">월별</option>
         </FilterSelect>
 
-        <MenubarWrapper>
-          <AdminTicketMenubar />
-        </MenubarWrapper>
+       
 
 
 

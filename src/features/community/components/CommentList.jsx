@@ -106,7 +106,7 @@ const [editText, setEditText] = useState("");
       );
 
       if (response.status === 201) {
-        await fetchComments(); // 🔥 이제 여기도 문제 없음
+        await fetchComments(); 
         setNewCommentText("");
       } else {
         alert("댓글 등록에 실패했습니다.");
