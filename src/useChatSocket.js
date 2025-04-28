@@ -12,7 +12,12 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
 
     const client = new Client({
       brokerURL: undefined,
+<<<<<<< HEAD
       webSocketFactory: () => new SockJS(`http://localhost:8081/ws`), // ✅ 쿼리스트링 삭제
+=======
+      webSocketFactory: () =>
+        new SockJS(`/ws?token=${localStorage.getItem("accessToken")}`),
+>>>>>>> 9221f57ffe355e801c4d6a23bdf1bb76e01d314d
       connectHeaders: {
         Authorization: `Bearer ${localStorage.getItem("authToken")}`, // ✅ "authToken"으로 통일 (네 프로젝트에 맞게)
       },

@@ -58,7 +58,7 @@ const FileInput = styled.input`
 
 const ButtonContainer = styled.div`
   position: absolute;
-  bottom: 300px;
+  bottom: 200px;
   right: 500px;
   display: flex;
   gap: 10px;

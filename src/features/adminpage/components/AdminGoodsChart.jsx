@@ -24,6 +24,10 @@ const AdminGoodsChartWrapper = styled.div`
   flex-direction: column;
   color: white;
 `;
+const AdminGoodsMenubarWrapper = styled.div`
+  margin-bottom: 80px;
+  padding-right: 260px;
+`;
 
 const ChartWrapper = styled.div`
   width: 100%;
@@ -44,11 +48,6 @@ const TitleWrapper = styled.div`
   margin-bottom: 10px;
 `;
 
-const MenubarWrapper = styled.div`
-  position: relative;
-  top: -100px;
-  margin-left: -475px;
-`;
 
 
 
@@ -113,9 +112,9 @@ function AdminGoodsChart() {
   <AdminGoodsChartWrapper>
       <TitleWrapper>월별 굿즈 판매량</TitleWrapper>
 
-      <MenubarWrapper>
+      <AdminGoodsMenubarWrapper>
         <AdminGoodsMenubar />
-      </MenubarWrapper>
+      </AdminGoodsMenubarWrapper>
 
      
      

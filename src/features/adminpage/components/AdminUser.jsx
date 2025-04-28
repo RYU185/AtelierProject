@@ -21,7 +21,7 @@ const FilterContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 1500px;
+  max-width: 1340px;
   position: relative;
 `;
 
@@ -42,12 +42,13 @@ const SearchInput = styled.input`
 
 const SortButton = styled.button`
   padding: 8px 16px;
-  background: #3da9fc;
+  background: rgba(255, 255, 255, 0.07);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: 0.3s ease;
   &:hover {
     background: #3a92e5;
   }
@@ -59,7 +60,7 @@ const SortOptions = styled.div`
   position: absolute;
   top: 45px;
   left: 0;
-  width: 150px;
+  width: 95px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -68,36 +69,36 @@ const SortOptions = styled.div`
 
 const SortOption = styled.div`
   padding: 10px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
-  color:rgb(47, 47, 47);
+  color: rgb(47, 47, 47);
   transition: 0.3s;
   &:hover {
     background: #3a92e5;
-     color: #e1e1e1;
+    color: #ffffff;
   }
 `;
 
 const TableContainer = styled.div`
   width: 100%;
-  margin-top: 20px;
+  margin-top: 10px;
   background: rgba(255, 255, 255, 0.07);
-  max-width: 1500px;
+  max-width: 1340px;
 `;
 
 const TableWrapper = styled.div`
   max-height: 500px;
   overflow-y: auto;
   display: block;
-  border-top: 3px solid #bbb;
+  border-top: 1px solid #bbb;
 `;
 
 const TableHeaderWrapper = styled.div`
   display: grid;
-  grid-template-columns: 150px 140px 120px 250px 150px 200px 150px 140px 100px 80px;
-  background:rgb(42, 42, 42);
+  grid-template-columns: 80px 120px 120px 250px 150px 200px 150px 140px 100px 80px;
+  background: rgba(255, 255, 255, 0.123);
   font-weight: bold;
-  padding: 12px;
+  padding: 10px;
   border-bottom: 2px solid #bbb;
   text-align: center;
   position: sticky;
@@ -106,14 +107,15 @@ const TableHeaderWrapper = styled.div`
 
 const TableRow = styled.div`
   display: grid;
-  grid-template-columns: 155px 150px 120px 250px 150px 200px 150px 140px 100px 80px;
+  grid-template-columns: 90px 120px 120px 250px 150px 200px 150px 140px 100px 80px;
   text-align: center;
 `;
 
 const TableCell = styled.div`
-  padding: 12px;
+  padding: 0 10px;
   border-bottom: 1px solid #ddd;
   text-align: center;
+  font-size: 13px;
 `;
 
 const AdminUser = () => {
@@ -162,9 +164,7 @@ const AdminUser = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <div style={{ position: "relative" }}>
-              <SortButton onClick={() => setSortOpen(!sortOpen)}>
-                검색 정렬
-              </SortButton>
+              <SortButton onClick={() => setSortOpen(!sortOpen)}>검색 정렬</SortButton>
               <SortOptions open={sortOpen}>
                 <SortOption
                   onClick={() => {

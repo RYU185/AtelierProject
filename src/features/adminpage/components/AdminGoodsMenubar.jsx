@@ -16,6 +16,7 @@ const TabButton = styled.button`
   width: 220px;
   padding: 10px 30px;
   font-size: 14px;
+  
   border: 1px solid #bbb;
   border-radius: 10px 10px 10px 10px;
   background: ${(props) => (props.active ? "#6ea8fe" : "rgba(255, 255, 255, 0.07)")};
@@ -43,6 +44,7 @@ const AddButtonWrapper = styled.div`
 
 const AddButton = styled.button`
   padding: 8px 16px;
+  
   background: rgba(255, 255, 255, 0.07);
   color: white;
   border: none;

@@ -124,7 +124,7 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
           price: item.goodsPrice,
           quantity: item.amount,
           image: item.imgUrl?.includes("/uploads")
-            ? `http://localhost:8081${item.imgUrl}`
+            ? `${item.imgUrl}`
             : `/images/goods-images/${item.imgUrl?.replace(/^.*[\\/]/, "")}`,
           checked: false,
         }));

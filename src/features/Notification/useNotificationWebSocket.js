@@ -16,7 +16,7 @@ const useNotificationWebSocket = ({ onNotification }) => {
     }
 
     const client = new Client({
-      webSocketFactory: () => new SockJS(`http://localhost:8081/ws?token=${token}`),
+      webSocketFactory: () => new SockJS(`/ws?token=${token}`),
       connectHeaders: {
         Authorization: `Bearer ${token}`,
       },
