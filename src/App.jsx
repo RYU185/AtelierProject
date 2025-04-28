@@ -11,23 +11,29 @@ import ReservationNotificationComponent from "./features/Notification/Reservatio
 import useWebSocket from "./socket/useWebSocket.js";
 
 const App = () => {
-  useWebSocket();
-
-  
   return (
     <NotificationProvider>
       <AuthProvider>
         <InquiryProvider>
           <Router>
-            <InquiryNotifications />
-            <ReservationNotificationComponent />
-            <CustomCursor />
-            <GlobalStyle />
-            <AppRoutes />
+            <AppContent />
           </Router>
         </InquiryProvider>
       </AuthProvider>
     </NotificationProvider>
+  );
+};
+
+const AppContent = () => {
+  useWebSocket();
+  return (
+    <>
+      <InquiryNotifications />
+      <ReservationNotificationComponent />
+      <CustomCursor />
+      <GlobalStyle />
+      <AppRoutes />
+    </>
   );
 };
 
