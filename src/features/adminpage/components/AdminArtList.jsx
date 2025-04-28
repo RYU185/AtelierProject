@@ -20,7 +20,7 @@ const getImageUrl = (filename) => {
     return matched[1].default;
   }
 
-  return `192.168.0.77:81/uploads/${filename.replace(/^\/uploads\//, "")}`;
+  return `${filename.replace(/^\/uploads\//, "")}`;
 };
 
 const PageContainer = styled.div`
