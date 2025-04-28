@@ -27,12 +27,16 @@ export const useSocketStore = create((set) => ({
 
   setChatMessages: (messages) => set({ chatMessages: messages }),
 
-  replaceTempMessage: (tempId, message) =>
-    set((state) => ({
-      chatMessages: state.chatMessages.map((msg) =>
+  replaceTempMessage: (tempId, message) => {
+    console.log("tempId 교체 시도:", tempId);
+    set((state) => {
+      const updatedMessages = state.chatMessages.map((msg) =>
         msg.tempId === tempId ? { ...msg, ...message, isTemporary: false } : msg
-      ),
-    })),
+      );
+      console.log("updatedMessages:", updatedMessages); // 로그 추가
+      return { chatMessages: updatedMessages };
+    });
+  },
 
   clearAll: () =>
     set({
