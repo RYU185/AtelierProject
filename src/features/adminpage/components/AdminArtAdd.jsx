@@ -130,7 +130,7 @@ function AdminArtAdd() {
   const [artistId, setArtistId] = useState("");
   const [artistList, setArtistList] = useState([]);
 
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("authToken");
   const isLoggedIn = !!token;
 
   useEffect(() => {

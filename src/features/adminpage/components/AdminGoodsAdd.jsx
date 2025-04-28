@@ -133,7 +133,7 @@ function AdminGoodsAdd() {
   const [stock, setStock] = useState("");
   const [description, setDescription] = useState("");
 
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("authToken");
   const isLoggedIn = !!token;
 
   const handleImageUpload = (event) => {
