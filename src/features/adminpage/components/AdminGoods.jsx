@@ -83,7 +83,6 @@ const ProductCell = styled.td`
   display: flex;
   align-items: center;
   gap: 30px;
-  padding: 6px;
   border-right: 1px solid #bbb;
   border-bottom: 1px solid #bbb;
 `;
@@ -107,6 +106,7 @@ const ProductInfo = styled.div`
   font-size: 14px;
   text-align: left;
   min-width: 110px;
+  color: #e1e1e1;
 `;
 
 function AdminGoods() {
@@ -148,7 +148,7 @@ function AdminGoods() {
                   <ProductImage src={getGoodsImageUrl(item.imgUrlList?.[0])} alt={item.name} />
                 </Link>
                 <ProductInfo>
-                  <strong style={{ fontSize: "16px" }}>{item.name}</strong>
+                  <strong>{item.name}</strong>
                 </ProductInfo>
               </ProductCell>
               <Td>{item.stock}</Td>
