@@ -45,34 +45,32 @@ const Th = styled.th`
   color: #e1e1e1;
   padding: 9px 0;
   font-weight: bold;
-  border-top: 3px solid #bbb;
-  border-bottom: 2px solid #bbb;
-  border-right: 1px solid #bbb;
+  border-top: 3px solid #686868;
+  border-bottom: 2px solid #686868;
+  border-right: 1px solid #686868;
 `;
 
 const ThLast = styled.th`
   color: #e1e1e1;
   padding: 9px 0;
   font-weight: bold;
-  border-top: 3px solid #bbb;
-  border-bottom: 2px solid #bbb;
+  border-top: 3px solid #686868;
+  border-bottom: 2px solid #686868;
   border-right: none;
 `;
 
 const Td = styled.td`
-  padding: 10px;
   font-size: 16px;
   vertical-align: middle;
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
+  border-right: 1px solid #686868;
+  border-bottom: 1px solid #686868;
 `;
 
 const TdLast = styled.td`
-  padding: 10px;
   font-size: 16px;
   vertical-align: middle;
   border-right: none;
-  border-bottom: 1px solid #bbb;
+  border-bottom: 1px solid #686868;
 `;
 
 const ProductRow = styled.tr`
@@ -83,15 +81,14 @@ const ProductCell = styled.td`
   display: flex;
   align-items: center;
   gap: 30px;
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
+  border-right: 1px solid #686868;
+  border-bottom: 1px solid #686868;
 `;
 
 const ProductImage = styled.img`
   width: 180px;
   height: 130px;
   object-fit: cover;
-  border-radius: 5px;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   &:hover {
