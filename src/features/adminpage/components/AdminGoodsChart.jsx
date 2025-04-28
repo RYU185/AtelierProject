@@ -17,10 +17,9 @@ import axios from "axios";
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const AdminGoodsChartWrapper = styled.div`
-  width: 100vw;
+  width: 880px;
 `;
 const AdminGoodsMenubarWrapper = styled.div`
-  padding-right: 260px;
   margin-bottom: 40px;
 `;
 

@@ -72,7 +72,6 @@ const UploadButton = styled.label`
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: ;
   &:hover {
     background-color: #2a7fbc;
   }
