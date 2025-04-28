@@ -387,8 +387,6 @@ const ChatRoom = ({ room: propRoom }) => {
       tempId,
     };
 
-    sendMessage(payload);
-
     setChatMessages((prev = []) => [
       ...prev,
       {
@@ -397,9 +395,12 @@ const ChatRoom = ({ room: propRoom }) => {
         timestamp: new Date().toISOString(),
         isArtist: isArtistSender,
         nickname: nicknameRef.current,
+        isTemporary: true, 
+        tempId,
       },
     ]);
 
+    sendMessage(payload);
     setNewMessage("");
     setSelectedFile(null);
   };

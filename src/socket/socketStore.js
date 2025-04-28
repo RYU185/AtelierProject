@@ -27,6 +27,13 @@ export const useSocketStore = create((set) => ({
 
   setChatMessages: (messages) => set({ chatMessages: messages }),
 
+  replaceTempMessage: (tempId, message) =>
+    set((state) => ({
+      chatMessages: state.chatMessages.map((msg) =>
+        msg.tempId === tempId ? { ...msg, ...message, isTemporary: false } : msg
+      ),
+    })),
+
   clearAll: () =>
     set({
       isSocketConnected: false,
