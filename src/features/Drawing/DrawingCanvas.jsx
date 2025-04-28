@@ -342,13 +342,6 @@ const DrawingCanvas = () => {
     link.click();
   };
 
-  const fillCanvasWithWhiteBackground = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-  };
-
   useEffect(() => {
     const canvas = canvasRef.current;
     canvas.width = 1920;
@@ -577,7 +570,7 @@ const DrawingCanvas = () => {
     }
 
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("authToken");
       if (!token) {
         alert("로그인이 필요합니다.");
         return;
@@ -648,7 +641,7 @@ const DrawingCanvas = () => {
 
     if (!id) return;
 
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
     if (!token) {
       navigate("/login");
       return;
