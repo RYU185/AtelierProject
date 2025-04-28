@@ -1,7 +1,6 @@
 import { useNotification } from "./NotificationContext";
 import { useAuth } from "../../components/AuthContext";
 import useWebSocket from "../../socket/useWebSocket";
-import { useEffect } from "react";
 
 const ReservationNotificationComponent = () => {
   const { reservationAlarms } = useNotification();

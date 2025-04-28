@@ -93,7 +93,7 @@ const ChatMessage = ({ message, timestamp, isSender, file, nickname }) => {
       );
     }
 
-    return <FileInfo $isArtist={isArtist}>📎 {file.name}</FileInfo>;
+    return <FileInfo $isSender={isSender}>📎 {file.name}</FileInfo>;
   };
 
   const displayNickname =
