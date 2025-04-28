@@ -254,13 +254,25 @@ function CommunityList() {
 
   const handleOpenModal = (e, post) => {
     e.stopPropagation();
-    setSelectedPost(post);
-    setIsDetailModalOpen(true);
-  };
 
-  const handleCloseModal = () => {
-    setSelectedPost(null);
-    setIsDetailModalOpen(false);
+    const postWithHandlers = {
+      ...post,
+      onCommentAdded: () => {
+        setCommunityItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === post.id
+              ? { ...item, commentCount: (item.commentCount || 0) + 1 }
+              : item
+          )
+        );
+        setSelectedPost((prev) =>
+          prev ? { ...prev, commentCount: (prev.commentCount || 0) + 1 } : prev
+        );
+      },
+    };
+
+    setSelectedPost(postWithHandlers);
+    setIsDetailModalOpen(true);
   };
 
   const handleAddPost = async (newPost) => {

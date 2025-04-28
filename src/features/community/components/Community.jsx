@@ -206,19 +206,18 @@ function Community({
   img,
   likes: initialLikes,
   commentCount = 0,
-  onCommentChange,
   onDelete,
   onOpenModal,
   isModal,
   currentUser: propCurrentUser,
   currentImageIndex: propCurrentImageIndex,
-  openEditModal, // 수정 모달 열기 함수 props로 받음
+  openEditModal,
 }) {
   const [likeCount, setLikeCount] = useState(initialLikes || 0);
+  const [commentCnt, setCommentCnt] = useState(commentCount);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentUser, setCurrentUser] = useState(propCurrentUser);
-  const [commentCnt, setCommentCnt] = useState(commentCount);
   const navigate = useNavigate();
   const hasImage = img && img.length > 0;
 
@@ -344,8 +343,9 @@ function Community({
         text,
         img,
         likes: likeCount,
+        commentCount: commentCnt,
         showComments: true,
-        onCommentChange: (newCount) => setCommentCnt(newCount),
+        onCommentAdded: () => setCommentCnt((prev) => prev + 1),
       });
     }
   };
