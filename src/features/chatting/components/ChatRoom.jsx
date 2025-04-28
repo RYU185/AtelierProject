@@ -308,7 +308,7 @@ const ChatRoom = ({ room: propRoom }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
-  const { chatMessages } = useSocketStore();
+  const { chatMessages , setChatMessages } = useSocketStore();
   const [newMessage, setNewMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -332,7 +332,7 @@ const ChatRoom = ({ room: propRoom }) => {
           isArtist: msg.sender === room.artistId,
           nickname: msg.sender === room.artistId ? room.artistName : room.userName,
         }));
-        setMessages(loadedMessages);
+        setChatMessages(loadedMessages);
       } catch (err) {
         console.error("메시지 로딩 실패:", err);
       }

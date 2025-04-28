@@ -24,6 +24,8 @@ export const useSocketStore = create((set) => ({
       chatMessages: [...state.chatMessages, message],
     })),
 
+  setChatMessages: (messages) => set({ chatMessages: messages }),
+
   clearAll: () =>
     set({
       isSocketConnected: false,
