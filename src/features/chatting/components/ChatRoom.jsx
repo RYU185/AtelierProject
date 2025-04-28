@@ -315,11 +315,9 @@ const ChatRoom = ({ room: propRoom }) => {
   } = useSocketStore();
   const [newMessage, setNewMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const messagesEndRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
-  const { artistId } = useParams();
   const [room, setRoom] = useState(propRoom || location.state?.room || null);
 
   useEffect(() => {
@@ -344,39 +342,18 @@ const ChatRoom = ({ room: propRoom }) => {
   }, [room]);
 
   useEffect(() => {
-    const inputElement = document.querySelector('input[type="text"]');
-    if (inputElement) inputElement.focus();
-  }, []);
-
-  useEffect(() => {
     if (!isUserScrolled && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [chatMessages]);
-
-  const handleScroll = () => {
-    if (chatMessagesRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
-      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
-      setIsUserScrolled(!isScrolledToBottom);
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      setNewMessage(`파일: ${file.name}`);
-    }
-  };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
     const tempId = `temp-${Date.now()}`;
 
-    if (!isConnected) {
-      alert("서버와 연결 중입니다. 잠시 후 다시 시도해주세요.");
+    if (!isConnected || !sendMessage) {
+      alert("서버 연결 안됨, 다시 시도해주세요.");
       return;
     }
 
@@ -384,6 +361,7 @@ const ChatRoom = ({ room: propRoom }) => {
     const nickname = nicknameRef.current;
 
     const payload = {
+      type: "CHAT",
       sender: user?.username,
       receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
@@ -408,16 +386,6 @@ const ChatRoom = ({ room: propRoom }) => {
     setSelectedFile(null);
   };
 
-  console.log("user 객체 상태", user);
-
-  const lastDate = chatMessages.length
-    ? new Date(chatMessages[chatMessages.length - 1].timestamp).toLocaleDateString("ko-KR", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-    : null;
-
   return (
     <PageWrapper>
       <Header />
@@ -428,27 +396,7 @@ const ChatRoom = ({ room: propRoom }) => {
         </PageTitle>
 
         <MainContent>
-          <ProfileSection>
-            <ProfileBox>
-              <ProfileItem>
-                <ProfileCircle $isArtist={true}>
-                  {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
-                </ProfileCircle>
-                <ProfileText>
-                  {room && (user?.isArtist ? room.artistName : room.userName)}
-                </ProfileText>
-              </ProfileItem>
-              <ProfileItem>
-                <ProfileCircle $isArtist={false}>
-                  {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
-                </ProfileCircle>
-                <ProfileText>
-                  {room && (!user?.isArtist ? room.artistName : room.userName)}
-                </ProfileText>
-              </ProfileItem>
-              <DateText>{lastDate ?? "????"}</DateText>
-            </ProfileBox>
-          </ProfileSection>
+          <ProfileSection>{/* 아티스트 정보 */}</ProfileSection>
 
           <ChatSection>
             <ChatHeader>
@@ -456,10 +404,10 @@ const ChatRoom = ({ room: propRoom }) => {
               <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
             </ChatHeader>
 
-            <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
+            <ChatMessages ref={chatMessagesRef} onScroll={() => {}}>
               {chatMessages.map((msg, index) => (
                 <ChatMessage
-                  key={msg.id || `${msg.timestamp}-${index}`} // 고유한 키 사용
+                  key={msg.id || `${msg.timestamp}-${index}`}
                   message={msg.message}
                   timestamp={msg.timestamp}
                   isArtist={msg.isArtist}
@@ -475,18 +423,13 @@ const ChatRoom = ({ room: propRoom }) => {
               <InputContainer>
                 <ClipButton htmlFor="file-upload">
                   📎
-                  <FileInput
-                    id="file-upload"
-                    type="file"
-                    onChange={handleFileChange}
-                    accept="image/*,.pdf,.doc,.docx"
-                  />
+                  <FileInput id="file-upload" type="file" onChange={() => {}} />
                 </ClipButton>
                 <ChatInput
                   type="text"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSendMessage(e)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
                   placeholder="메시지를 입력하세요..."
                 />
                 <SendButton onClick={handleSendMessage}>전송</SendButton>

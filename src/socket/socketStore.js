@@ -1,13 +1,14 @@
 import { create } from "zustand";
 
-// 전역상태관리 zustand 사용
 export const useSocketStore = create((set) => ({
   isSocketConnected: false,
   notifications: [],
   inquiries: [],
   chatMessages: [],
+  sendMessage: null,
 
   setSocketConnected: (status) => set({ isSocketConnected: status }),
+  setSendMessage: (fn) => set({ sendMessage: fn }),
 
   addNotification: (notification) =>
     set((state) => ({
@@ -32,6 +33,7 @@ export const useSocketStore = create((set) => ({
       notifications: [],
       inquiries: [],
       chatMessages: [],
+      sendMessage: null,
     }),
 }));
 

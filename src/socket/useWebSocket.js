@@ -4,21 +4,33 @@ import SockJS from "sockjs-client";
 import { useSocketStore } from "../socket/socketStore";
 import { useAuth } from "../components/AuthContext";
 
-const useWebSocket = () => {
+export const useWebSocket = () => {
   const { token } = useAuth();
   const clientRef = useRef(null);
   const {
     setSocketConnected,
+    setSendMessage,
     addNotification,
     addInquiry,
     addChatMessage,
     clearAll,
-    isSocketConnected,
   } = useSocketStore();
+
+  const sendMessage = useCallback((payload) => {
+    if (!clientRef.current || !clientRef.current.connected) {
+      console.log("웹소켓 연결 안됨 → 메세지 전송 실패");
+      return;
+    }
+    clientRef.current.publish({
+      destination: "/app/chat.send",
+      body: JSON.stringify(payload),
+    });
+    console.log("메세지 전송완료", payload);
+  }, []);
 
   useEffect(() => {
     if (!token) {
-      console.warn("[WebSocket] 토큰 없음, 연결하지 않음");
+      console.warn("[WebSocket] 토큰 없음, 연결 안함");
       return;
     }
 
@@ -33,6 +45,7 @@ const useWebSocket = () => {
       onConnect: () => {
         console.log("[WebSocket] 연결 성공");
         setSocketConnected(true);
+        setSendMessage(() => sendMessage);
 
         client.subscribe("/user/queue/notifications", (message) => {
           try {
@@ -64,7 +77,6 @@ const useWebSocket = () => {
           }
         });
       },
-
       onDisconnect: () => {
         console.log("[WebSocket] 연결 해제");
         setSocketConnected(false);
@@ -87,30 +99,13 @@ const useWebSocket = () => {
       setSocketConnected(false);
       clearAll();
     };
-  }, [token, setSocketConnected, addNotification, addInquiry, addChatMessage, clearAll]);
-
-  const sendMessage = useCallback(({ type, content, sender, receiver, tempId }) => {
-    if (!clientRef.current || !clientRef.current.connected) {
-      console.log("웹소켓 연결안됨-> 메세지 전송실패");
-      return;
-    }
-
-    const payload = {
-      type,
-      content,
-      sender,
-      receiver,
-      tempId,
-    };
-
-    clientRef.current.publish({
-      destination: "/app/chat.send",
-      body: JSON.stringify(payload),
-    });
-
-    console.log("메세지 전송완료", payload);
-  }, []);
-  return { sendMessage, client: clientRef.current, isConnected: isSocketConnected };
+  }, [
+    token,
+    setSocketConnected,
+    setSendMessage,
+    addNotification,
+    addInquiry,
+    addChatMessage,
+    clearAll,
+  ]);
 };
-
-export default useWebSocket;
