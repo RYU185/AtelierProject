@@ -404,21 +404,22 @@ const ChatRoom = ({ room: propRoom }) => {
               <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
             </ChatHeader>
 
-            <ChatMessages ref={chatMessagesRef} onScroll={() => {}}>
-              {chatMessages.map((msg, index) => (
-                <ChatMessage
-                  key={msg.id || `${msg.timestamp}-${index}`}
-                  message={msg.message}
-                  timestamp={msg.timestamp}
-                  isArtist={msg.isArtist}
-                  file={msg.file}
-                  nickname={msg.nickname}
-                  isSender={msg.isArtist === user?.isArtist}
-                />
-              ))}
+            <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
+              {Array.isArray(chatMessages) &&
+                chatMessages.map((msg, index) => (
+                  <ChatMessage
+                    key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
+                    message={msg.message}
+                    timestamp={msg.timestamp}
+                    isArtist={msg.isArtist}
+                    file={msg.file}
+                    nickname={msg.nickname}
+                    isSender={msg.isArtist === user?.isArtist}
+                  />
+                ))}
               <div ref={messagesEndRef} />
             </ChatMessages>
-
+            
             <ChatFooter>
               <InputContainer>
                 <ClipButton htmlFor="file-upload">
