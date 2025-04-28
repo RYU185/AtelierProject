@@ -12,16 +12,15 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
 
     const client = new Client({
       brokerURL: undefined,
-      webSocketFactory: () =>
-        new SockJS(`http://localhost:8081/ws?token=${localStorage.getItem("accessToken")}`),
+      webSocketFactory: () => new SockJS(`http://localhost:8081/ws`), // ✅ 쿼리스트링 삭제
       connectHeaders: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        Authorization: `Bearer ${localStorage.getItem("authToken")}`, // ✅ "authToken"으로 통일 (네 프로젝트에 맞게)
       },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: () => {
-        console.log("WebSocket 연결 성공 (userId:", userId, ")");
+        console.log("✅ WebSocket 연결 성공 (userId:", userId, ")");
         setIsConnected(true);
 
         const topic = `/user/queue/messages`;
@@ -31,7 +30,7 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
           client.subscribe(topic, (msg) => {
             try {
               const message = JSON.parse(msg.body);
-              console.log("수신한 메시지:", message);
+              console.log("📩 수신한 메시지:", message);
               onMessageReceive(message);
             } catch (e) {
               console.error("수신 메시지 파싱 실패:", e);
@@ -42,7 +41,7 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
         }
       },
       onDisconnect: () => {
-        console.warn("WebSocket 연결 해제");
+        console.warn("🛑 WebSocket 연결 해제");
         setIsConnected(false);
       },
       onStompError: (frame) => {
@@ -52,6 +51,7 @@ const useChatSocket = ({ userId, onMessageReceive }) => {
         console.error("WebSocket 오류:", event);
       },
     });
+
 
     client.activate();
     clientRef.current = client;

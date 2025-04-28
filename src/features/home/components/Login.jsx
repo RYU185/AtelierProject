@@ -20,7 +20,12 @@ const LeftSection = styled.div`
 
 const GradientBackground = styled.div`
   flex: 2;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,8 +61,7 @@ const FormWrapper = styled.div`
 `;
 
 const Logo = styled.div`
-height: 10.625rem;
-
+  height: 10.625rem;
 `;
 
 const Subtitle = styled.p`
@@ -68,11 +72,11 @@ const Subtitle = styled.p`
 
 const Input = styled.input`
   width: 100%;
-  padding: .75rem;
+  padding: 0.75rem;
   margin-bottom: 1rem;
-  border: .0625rem solid #ccc;
-  border-radius: .25rem;
-  font-size: .875rem;
+  border: 0.0625rem solid #ccc;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
 
   &:focus {
     border-color: #007aff;
@@ -83,22 +87,22 @@ const Input = styled.input`
 const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
-  font-size: .875rem;
+  font-size: 0.875rem;
   margin-bottom: 1rem;
 
   input {
-    margin-right: .375rem;
+    margin-right: 0.375rem;
   }
 `;
 
 const LoginButton = styled.button`
   width: 100%;
-  padding: .75rem;
+  padding: 0.75rem;
   background-color: #0038a8;
   color: white;
   font-size: 1rem;
   border: none;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   cursor: pointer;
 
   &:hover {
@@ -108,13 +112,13 @@ const LoginButton = styled.button`
 
 const Links = styled.div`
   margin-top: 1.25rem;
-  font-size: .875rem;
+  font-size: 0.875rem;
   color: #555;
 
   a {
     color: #e1e1e1;
     text-decoration: none;
-    margin: 0 .375rem;
+    margin: 0 0.375rem;
 
     &:hover {
       text-decoration: underline;
@@ -125,13 +129,13 @@ const Links = styled.div`
 
 const Divider = styled.span`
   color: #aaa;
-  margin: 0 .375rem;
+  margin: 0 0.375rem;
 `;
 
 const ErrorMessage = styled.p`
   color: red;
-  font-size: .875rem;
-  margin-top: .75rem;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
 `;
 
 const Login = () => {
@@ -141,6 +145,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [autoLogin, setAutoLogin] = useState(false);
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // ✅ 중복 클릭 방지
 
   const handleLogin = async () => {
     if (!userId.trim() || !password.trim()) {
@@ -149,23 +154,21 @@ const Login = () => {
     }
 
     try {
-      localStorage.removeItem("accessToken");
+      setIsLoading(true);
+
+      // 기존 토큰/정보 초기화
+      localStorage.removeItem("authToken");
       localStorage.removeItem("username");
       localStorage.removeItem("role");
 
-      const response = await axios.post("/user/login", {
-        userId,
-        password,
-      });
+      const response = await axios.post("/user/login", { userId, password });
 
-      const token = response.data.token;
-      const role = response.data.role;
-      const isArtist = response.data.isArtist;
-      const nickname = response.data.nickname;
+      const { token, role, isArtist, nickname } = response.data;
 
-      console.log("nickname 응답값:", response.data.nickname);
+      console.log("nickname 응답값:", nickname);
 
-      localStorage.setItem("accessToken", token);
+      // ✅ authToken으로 통일
+      localStorage.setItem("authToken", token);
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
       localStorage.setItem("nickname", nickname);
@@ -177,10 +180,6 @@ const Login = () => {
         nickname,
         authToken: token,
       };
-
-      if (typeof isArtist !== "undefined") {
-        loginPayload.isArtist = isArtist;
-      }
 
       login(loginPayload);
 
@@ -195,7 +194,13 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       console.error("로그인 에러:", err);
-      setError("아이디 또는 비밀번호를 다시 확인해주세요.");
+      if (err.response?.data?.message) {
+        setError(err.response.data.message); // ✅ 서버 메시지 보여주기
+      } else {
+        setError("아이디 또는 비밀번호를 다시 확인해주세요.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -209,7 +214,7 @@ const Login = () => {
     <Container>
       <LeftSection />
       <GradientBackground>
-        <HomeLink to="/">홈페이지로 이동 &#8594; </HomeLink>
+        <HomeLink to="/">홈페이지로 이동 ➡️</HomeLink>
         <RightSection>
           <FormWrapper>
             <Logo>
@@ -238,7 +243,9 @@ const Login = () => {
               />
               자동 로그인
             </CheckboxLabel>
-            <LoginButton onClick={handleLogin}>로그인</LoginButton>
+            <LoginButton onClick={handleLogin} disabled={isLoading}>
+              {isLoading ? "로그인 중..." : "로그인"}
+            </LoginButton>
             {error && <ErrorMessage>{error}</ErrorMessage>}
             <Links>
               <Link to="/find-id">아이디 찾기</Link>
