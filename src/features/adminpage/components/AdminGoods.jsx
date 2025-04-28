@@ -21,10 +21,6 @@ const getGoodsImageUrl = (filename) => {
 };
 
 const AdminGoodsWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  color: white;
 `;
 
 const TitleWrapper = styled.div`
@@ -37,7 +33,6 @@ const TitleWrapper = styled.div`
 
 const AdminGoodsMenubarWrapper = styled.div`
   margin-bottom: 24px;
-  padding-right: 260px;
 `;
 
 const Table = styled.table`
