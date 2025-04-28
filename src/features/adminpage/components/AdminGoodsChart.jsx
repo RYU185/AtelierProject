@@ -18,14 +18,13 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const AdminGoodsChartWrapper = styled.div`
   width: 100vw;
-  height: 600px;
 `;
 const AdminGoodsMenubarWrapper = styled.div`
-  margin-bottom: 80px;
   padding-right: 260px;
 `;
 
 const ChartWrapper = styled.div`
+  height: 500px;
   width: 100%;
 `;
 
@@ -35,10 +34,11 @@ const InnerChart = styled.div`
 
 const TitleWrapper = styled.div`
   text-align: start;
-  font-size: 25px;
+  font-size: 30px;
   font-weight: 500;
-  margin-top: 30px;
+  margin-top: 43px;
   margin-bottom: 24px;
+  color: #3da9fc;
 `;
 
 function AdminGoodsChart() {
