@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리
-const artImages = import.meta.glob("/images/ArtListIMG/*", {
+const artImages = import.meta.glob("/public/images/ArtListIMG/*", {
   eager: true,
 });
 
@@ -20,7 +20,7 @@ const getImageUrl = (filename) => {
     return matched[1].default;
   }
 
-  return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
+  return `192.168.0.77:81/uploads/${filename.replace(/^\/uploads\//, "")}`;
 };
 
 const PageContainer = styled.div`
