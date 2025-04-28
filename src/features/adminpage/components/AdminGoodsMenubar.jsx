@@ -39,7 +39,6 @@ const TabButton = styled.button`
 const AddButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
- 
 `;
 
 const AddButton = styled.button`

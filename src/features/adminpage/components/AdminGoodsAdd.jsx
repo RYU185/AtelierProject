@@ -9,6 +9,7 @@ const AdminGoodsAddWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
+
 `;
 const AdminContent = styled.div`
   flex: 1;

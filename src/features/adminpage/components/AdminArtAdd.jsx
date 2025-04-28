@@ -5,17 +5,12 @@ import { AdminContentLayout } from "./AdminContentLayout";
 import TitleWrapper from "./Titlewrapper";
 
 const AdminArtAddWrapper = styled.div`
-  flex: 1;
-  padding: 20px 40px;
   display: flex;
   flex-direction: column;
   color: white;
-  margin-top: -55px;
 `;
 
 const AdminContent = styled.div`
-  flex: 1;
-  padding-left: 20px;
   display: flex;
   flex-direction: column;
 `;
@@ -60,9 +55,8 @@ const FileInput = styled.input`
 `;
 
 const ButtonContainer = styled.div`
-  position: absolute;
-  bottom: 250px;
-  right: 500px;
+flex-direction: row-reverse;
+  position: relative;
   display: flex;
   gap: 10px;
 `;
@@ -100,8 +94,6 @@ const FlexContainer = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 50px;
-  margin-top: 100px;
-  margin-right: 400px;
 `;
 
 const ImagePreviewContainer = styled.div`
