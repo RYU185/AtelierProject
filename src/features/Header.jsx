@@ -52,7 +52,7 @@ const Left = styled.div`
     height: 80px;
     width: auto;
     scale: 1.5;
-    margin-top: -24px; 
+    margin-top: -24px;
   }
 `;
 
@@ -175,7 +175,8 @@ const Header = () => {
   const { user, logout } = useAuth();
   const username = user?.username;
   const role = user?.roles?.[0];
-  const { reservationAlarms, clearNotification, addNotification } = useNotification();
+  const { reservationAlarms, clearNotification, addNotification } =
+    useNotification();
 
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -303,7 +304,7 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem onClick={() => navigate("/mypage")}>
+              <RightNavItem>
                 {role === "ADMIN" ? "관리자 님" : `${username}님`}
               </RightNavItem>
               <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>
