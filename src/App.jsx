@@ -6,7 +6,7 @@ import CustomCursor from "./components/CustomCursor";
 import InquiryNotifications from "./features/adminpage/components/InquiryNotifications";
 import { InquiryProvider } from "./features/adminpage/components/InquiryContext";
 import { AuthProvider } from "./components/AuthContext.jsx";
-import NotificationComponent from "./NotificationComponent";
+import NotificationComponent from "./features/Notification/NotificationContext.jsx";
 import { NotificationProvider } from "./features/Notification/NotificationContext.jsx";
 import ReservationNotificationComponent from "./features/Notification/ReservationNotificationComponent.jsx";
 

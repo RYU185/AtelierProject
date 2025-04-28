@@ -58,7 +58,7 @@ const useWebSocket = () => {
           }
         });
       },
-      
+
       onDisconnect: () => {
         console.log("[WebSocket] 연결 해제");
         setSocketConnected(false);
@@ -104,7 +104,7 @@ const useWebSocket = () => {
 
     console.log("메세지 전송완료", payload);
   }, []);
-  return { sendMessage };
+  return { sendMessage, client: clientRef.current };
 };
 
 export default useWebSocket;
