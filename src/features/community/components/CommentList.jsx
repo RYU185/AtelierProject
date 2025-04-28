@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Comment from "./Comment";
 import axios from "axios";
 
-
 const CommentListContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,8 +48,6 @@ function CommentList({ postId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
-  const [editMode, setEditMode] = useState(null);
-const [editText, setEditText] = useState("");
 
   // 💡 여기로 옮긴다!
   const fetchComments = async () => {
@@ -58,14 +55,12 @@ const [editText, setEditText] = useState("");
     setError(null);
     try {
       const response = await axios.get(`/api/community/detail/id/${postId}`);
-      const fetchedComments = response.data.commentUser.map(
-        (user, index) => ({
-          userNickname: user,
-          text: response.data.commentText[index],
-          creationDate: response.data.creationDateList[index],
-          id: index,
-        })
-      );
+      const fetchedComments = response.data.commentUser.map((user, index) => ({
+        userNickname: user,
+        text: response.data.commentText[index],
+        creationDate: response.data.creationDateList[index],
+        id: index,
+      }));
       setComments(fetchedComments);
     } catch (error) {
       console.error("댓글 목록을 가져오는 중 오류 발생:", error);
@@ -106,7 +101,7 @@ const [editText, setEditText] = useState("");
       );
 
       if (response.status === 201) {
-        await fetchComments(); 
+        await fetchComments();
         setNewCommentText("");
       } else {
         alert("댓글 등록에 실패했습니다.");

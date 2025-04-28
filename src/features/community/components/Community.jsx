@@ -206,6 +206,7 @@ function Community({
   img,
   likes: initialLikes,
   commentCount = 0,
+  onCommentChange,
   onDelete,
   onOpenModal,
   isModal,
@@ -217,6 +218,7 @@ function Community({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentUser, setCurrentUser] = useState(propCurrentUser);
+  const [commentCnt, setCommentCnt] = useState(commentCount);
   const navigate = useNavigate();
   const hasImage = img && img.length > 0;
 
@@ -343,6 +345,7 @@ function Community({
         img,
         likes: likeCount,
         showComments: true,
+        onCommentChange: (newCount) => setCommentCnt(newCount),
       });
     }
   };
@@ -453,7 +456,7 @@ function Community({
           </ActionIcon>
           <ActionIcon onClick={handleChatClick}>
             <ChatIconStyled />
-            <span>{commentCount}</span>
+            <span>{commentCnt}</span>
           </ActionIcon>
         </Actions>
       </Container>
