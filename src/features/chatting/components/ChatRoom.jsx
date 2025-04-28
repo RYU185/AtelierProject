@@ -347,12 +347,20 @@ const ChatRoom = ({ room: propRoom }) => {
     }
   }, [chatMessages]);
 
+  const handleScroll = () => {
+    if (chatMessagesRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
+      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
+      setIsUserScrolled(!isScrolledToBottom);
+    }
+  };
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
     const tempId = `temp-${Date.now()}`;
 
-    if (!isConnected || !sendMessage) {
+    if (!isConnected || typeof sendMessage !== "function") {
       alert("서버 연결 안됨, 다시 시도해주세요.");
       return;
     }
@@ -419,7 +427,7 @@ const ChatRoom = ({ room: propRoom }) => {
                 ))}
               <div ref={messagesEndRef} />
             </ChatMessages>
-            
+
             <ChatFooter>
               <InputContainer>
                 <ClipButton htmlFor="file-upload">
