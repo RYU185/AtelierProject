@@ -26,7 +26,7 @@ export const InquiryProvider = ({ children }) => {
     return false;
   });
 
-  const { client } = useWebSocket();
+  const { client, isConnected } = useWebSocket();
 
   useEffect(() => {
     if (!client || !isConnected || !isLoggedIn) return;
