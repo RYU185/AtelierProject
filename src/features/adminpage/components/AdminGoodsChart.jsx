@@ -21,6 +21,7 @@ const AdminGoodsChartWrapper = styled.div`
 `;
 const AdminGoodsMenubarWrapper = styled.div`
   padding-right: 260px;
+  margin-bottom: 40px;
 `;
 
 const ChartWrapper = styled.div`
@@ -29,6 +30,7 @@ const ChartWrapper = styled.div`
 `;
 
 const InnerChart = styled.div`
+  height: 430px;
   width: 100%;
 `;
 
@@ -91,8 +93,13 @@ function AdminGoodsChart() {
       tooltip: { mode: "index", intersect: false },
     },
     scales: {
-      x: { grid: { display: false } },
-      y: { beginAtZero: true },
+      x: {
+        grid: { display: false },
+        barPercentage: 0.5,
+        categoryPercentage: 0.6,
+
+        y: { beginAtZero: true },
+      },
     },
   };
 

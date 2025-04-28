@@ -11,17 +11,14 @@ const goodsImages = import.meta.glob("/public/images/goods-images/*", {
 
 const getGoodsImageUrl = (filename) => {
   if (!filename) return "/default.jpg";
-  const matched = Object.entries(goodsImages).find(([path]) =>
-    path.endsWith(filename)
-  );
+  const matched = Object.entries(goodsImages).find(([path]) => path.endsWith(filename));
   if (matched) {
     return matched[1].default;
   }
   return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
 };
 
-const AdminGoodsWrapper = styled.div`
-`;
+const AdminGoodsWrapper = styled.div``;
 
 const TitleWrapper = styled.div`
   font-size: 30px;
@@ -45,7 +42,8 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  padding: 12px;
+  color: #e1e1e1;
+  padding: 9px 0;
   font-weight: bold;
   border-top: 3px solid #bbb;
   border-bottom: 2px solid #bbb;
@@ -53,7 +51,8 @@ const Th = styled.th`
 `;
 
 const ThLast = styled.th`
-  padding: 12px;
+  color: #e1e1e1;
+  padding: 9px 0;
   font-weight: bold;
   border-top: 3px solid #bbb;
   border-bottom: 2px solid #bbb;
@@ -145,14 +144,8 @@ function AdminGoods() {
           {goodsData.map((item) => (
             <ProductRow key={item.id}>
               <ProductCell>
-                <Link
-                  to={`/goods/${item.id}`}
-                  style={{ display: "inline-block" }}
-                >
-                  <ProductImage
-                    src={getGoodsImageUrl(item.imgUrlList?.[0])}
-                    alt={item.name}
-                  />
+                <Link to={`/goods/${item.id}`} style={{ display: "inline-block" }}>
+                  <ProductImage src={getGoodsImageUrl(item.imgUrlList?.[0])} alt={item.name} />
                 </Link>
                 <ProductInfo>
                   <strong style={{ fontSize: "16px" }}>{item.name}</strong>
