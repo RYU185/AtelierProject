@@ -577,7 +577,7 @@ const DrawingCanvas = () => {
     }
 
     try {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("authToken");
       if (!token) {
         alert("로그인이 필요합니다.");
         return;
@@ -648,7 +648,7 @@ const DrawingCanvas = () => {
 
     if (!id) return;
 
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
     if (!token) {
       navigate("/login");
       return;
