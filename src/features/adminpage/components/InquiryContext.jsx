@@ -1,7 +1,7 @@
 // src/InquiryContext.js
 import { createContext, useContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import useSocketStore from "../../../socket/socketStore";
+import { useSocketStore } from "../../../socket/socketStore";
 
 // Context 생성
 const InquiryContext = createContext();
