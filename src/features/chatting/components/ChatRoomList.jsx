@@ -68,6 +68,7 @@ const ChatRoomList = ({ onSelectRoom }) => {
   }, []);
 
   const handleRoomClick = (room) => {
+    console.log("선택된 채팅방 객체:", room);
     onSelectRoom(room);
   };
 

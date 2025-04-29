@@ -310,20 +310,13 @@ const SendButton = styled.button`
   }
 `;
 
-const ChatRoom = () => {
-  const location = useLocation();
-  const { artistId } = useParams();
+const ChatRoom = ({ room: incomingRoom }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const incomingRoom = location.state?.room;
   const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
 
-  const {
-    chatMessages = [],
-    setChatMessages,
-    sendMessage,
-    isSocketConnected: isConnected,
-  } = useSocketStore();
+  const { sendMessage, isSocketConnected: isConnected } = useSocketStore();
+  const [chatMessages, setChatMessages] = useState([]);
 
   const [room, setRoom] = useState(incomingRoom || null);
   const [newMessage, setNewMessage] = useState("");
@@ -334,41 +327,34 @@ const ChatRoom = () => {
   const lastMessage = chatMessages.length ? chatMessages[chatMessages.length - 1] : null;
 
   useEffect(() => {
-    if (!artistId) return;
-
-    const fetchRoomAndMessages = async () => {
+    if (!room?.id) return;
+    const fetchMessages = async () => {
       try {
-        let activeRoom = room;
-
-        // ❗ 만약 room 없으면 새로 생성 요청
-        if (!activeRoom) {
-          const res = await axiosInstance.post(`/chat-room/${artistId}`);
-          activeRoom = res.data;
-          setRoom(activeRoom);
-        }
-
-        const messagesRes = await axiosInstance.get(`/chat-room/${activeRoom.id}/messages`);
-        console.log("서버로부터 메시지 목록 수신:", messagesRes.data);
-
-        const loadedMessages = messagesRes.data.map((msg) => ({
-          id: msg.id,
+        const res = await axiosInstance.get(`/chat-room/${room.id}/messages`);
+        const loaded = res.data.map((msg, index) => ({
+          id: msg.tempId ?? `msg-${index}`,
           message: msg.content,
-          timestamp: msg.timestamp ?? null,
-          isArtist: msg.sender === activeRoom.artistId,
+          timestamp: msg.timestamp,
+          isArtist: msg.sender === room.artistId,
           nickname:
-            msg.senderNickname ??
-            (msg.sender === activeRoom.artistId ? activeRoom.artistName : activeRoom.userName) ??
+            msg.senderNickname ||
+            (msg.sender === room.artistId ? room.artistName : room.userName) ||
             "익명",
         }));
-
-        setChatMessages(loadedMessages);
+        setChatMessages(loaded);
       } catch (err) {
-        console.error("메시지 로딩 실패:", err.response?.data || err.message);
+        console.error("메시지 로딩 실패", err.response?.data || err.message);
       }
     };
+    fetchMessages();
+  }, [room]);
 
-    fetchRoomAndMessages();
-  }, [artistId, room]);
+  useEffect(() => {
+    console.log("🔴 [ChatRoom] chatMessages 업데이트:", {
+      length: chatMessages.length,
+      last: chatMessages[chatMessages.length - 1],
+    });
+  }, [chatMessages]);
 
   useEffect(() => {
     if (!isUserScrolled && messagesEndRef.current) {
@@ -388,13 +374,8 @@ const ChatRoom = () => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
 
-    if (!room) {
-      console.warn("채팅방 데이터가 없습니다. 메세지 전송 불가");
-      return;
-    }
-
-    if (!isConnected || typeof sendMessage !== "function") {
-      alert("서버 연결 안됨, 다시 시도해주세요.");
+    if (!isConnected) {
+      alert("서버 연결이 필요합니다.");
       return;
     }
 
@@ -403,31 +384,30 @@ const ChatRoom = () => {
     const nickname = nicknameRef.current;
     const tempId = `temp-${Date.now()}`;
 
-    const payload = {
+    const newMsgObj = {
+      id: tempId,
+      message: newMessage,
+      timestamp: new Date().toISOString(),
+      isArtist: user.username === room.artistId,
+      nickname,
+      isTemporary: true,
+      tempId,
+    };
+
+    setChatMessages((prev) => {
+      const updated = [...prev, newMsgObj];
+    });
+
+    sendMessage({
       type: "CHAT",
       sender: senderId,
       receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
-      senderNickname: nickname,
+      senderNickname: nicknameRef.current,
       tempId,
-    };
+    });
 
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        id: tempId,
-        message: newMessage,
-        timestamp: new Date().toISOString(),
-        isArtist: isArtistSender,
-        nickname,
-        isTemporary: true,
-        tempId,
-      },
-    ]);
-
-    sendMessage(payload);
     setNewMessage("");
-    setSelectedFile(null);
   };
 
   return (
@@ -503,7 +483,12 @@ const ChatRoom = () => {
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
+                    onKeyDown={(e) => {
+                      console.log("▶ keyDown:", e.key);
+                      if (e.key === "Enter") {
+                        handleSendMessage(e);
+                      }
+                    }}
                     placeholder="메시지를 입력하세요..."
                   />
                   <SendButton onClick={handleSendMessage}>전송</SendButton>

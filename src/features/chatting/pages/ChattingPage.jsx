@@ -43,6 +43,8 @@ const ChattingPage = () => {
   const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
   const { user } = useAuth();
 
+   console.log("🟢 [ChattingPage] selectedRoom:", selectedRoom);
+
   if (!user?.isArtist) {
     return <div>접근 권한이 없습니다.</div>;
   }
