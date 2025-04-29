@@ -502,6 +502,7 @@ function GoodsDetail() {
         },
       });
 
+      const onlyName = safeThumbnail.split("/").pop();
       setShowPurchaseModal(false);
       navigate("/purchase-complete", {
         state: {
@@ -510,7 +511,7 @@ function GoodsDetail() {
               goodsName: goods.name,
               price: goods.price,
               quantity: quantity,
-              thumbnailUrl: safeThumbnail,
+              thumbnailUrl: `/images/goods-images/${onlyName}`,
             },
           ],
           totalPrice: goods.price * quantity,
