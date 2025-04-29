@@ -234,9 +234,8 @@ const CartPage = () => {
   const handleConfirmPurchase = async () => {
     if (!cartListRef.current) return;
 
-    // 최신 상태의 모든 아이템을 가져온다
     const allItems = cartListRef.current.getAllItems();
-    const selectedItems = allItems.filter((item) => item.checked); // ✅ 체크된 것만 추려서 사용
+    const selectedItems = allItems.filter((item) => item.checked);
 
     if (selectedItems.length === 0) {
       alert("구매할 상품을 선택해주세요.");
@@ -249,6 +248,18 @@ const CartPage = () => {
       const response = await axiosInstance.post("/purchase/add", cartIds);
       const { data } = response;
 
+      // ✅ 총 가격 계산 추가
+      const totalPrice = selectedItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+
+      // ✅ 응답 확인 후 goods가 없으면 에러 처리
+      if (!data.goods || data.goods.length === 0) {
+        alert("선택한 상품 중 재고가 부족하거나 구매 처리에 실패했습니다.");
+        return;
+      }
+
       navigate("/purchase-complete", {
         state: {
           items: data.goods.map((item) => {
@@ -258,7 +269,7 @@ const CartPage = () => {
             return {
               ...item,
               thumbnailUrl: matched?.image ?? "",
-              quantity: matched?.quantity ?? 1, // ✅ 여기 matched에서 정확한 quantity
+              quantity: matched?.quantity ?? 1,
             };
           }),
           totalPrice,
@@ -273,6 +284,7 @@ const CartPage = () => {
       setShowModal(false);
     }
   };
+
 
   return (
     <GradientBackground>
