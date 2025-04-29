@@ -261,7 +261,7 @@ const CartPage = () => {
               quantity: matched?.quantity ?? 1, // ✅ 여기 matched에서 정확한 quantity
             };
           }),
-          totalPrice: data.totalPrice,
+          totalPrice,
           purchaseDate: data.purchaseDate,
           purchaseId: data.purchaseId,
         },
