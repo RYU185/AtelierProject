@@ -5,7 +5,7 @@ import ChatMessage from "./ChatMessage";
 import Header from "../../Header";
 import Footer from "../../Footer";
 import axiosInstance from "../../../api/axiosInstance";
-import useSocketStore from "../../../socket/socketStore";
+import useSocketStore from "../../../socket/useSocketStore";
 import { useAuth } from "../../../components/AuthContext";
 
 const PageWrapper = styled.div`
@@ -327,11 +327,17 @@ const ChatRoom = ({ room: propRoom }) => {
   };
   const [room, setRoom] = useState(propRoom || location.state?.room || null);
 
+  console.log("room:", room);
+  console.log("isConnected:", isConnected);
+  console.log("sendMessage 타입:", typeof sendMessage);
+
   useEffect(() => {
     if (!room) return;
     const fetchMessages = async () => {
       try {
+        console.log("메시지 가져오기 요청");
         const res = await axiosInstance.get(`/chat-room/${room.id}/messages`);
+        console.log("메시지 가져오기 결과:", res.data);
         const loadedMessages = res.data.map((msg) => ({
           id: msg.id,
           message: msg.content,
@@ -345,7 +351,7 @@ const ChatRoom = ({ room: propRoom }) => {
 
         setChatMessages(loadedMessages);
       } catch (err) {
-        console.error("메시지 로딩 실패:", err);
+        console.error("메시지 로딩 실패:", err.response?.data || err.message);
       }
     };
     fetchMessages();
@@ -395,7 +401,7 @@ const ChatRoom = ({ room: propRoom }) => {
         timestamp: new Date().toISOString(),
         isArtist: isArtistSender,
         nickname: nicknameRef.current,
-        isTemporary: true, 
+        isTemporary: true,
         tempId,
       },
     ]);

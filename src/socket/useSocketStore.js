@@ -33,7 +33,7 @@ export const useSocketStore = create((set) => ({
       const updatedMessages = state.chatMessages.map((msg) =>
         msg.tempId === tempId ? { ...msg, ...message, isTemporary: false } : msg
       );
-      console.log("updatedMessages:", updatedMessages); // 로그 추가
+      console.log("updatedMessages:", updatedMessages);
       return { chatMessages: updatedMessages };
     });
   },
