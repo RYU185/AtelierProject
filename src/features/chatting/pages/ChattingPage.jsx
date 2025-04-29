@@ -11,6 +11,7 @@ const GradientBackground = styled.div`
 
 const PageContainer = styled.div`
   min-height: 100vh;
+  background: rgba(255, 255, 255, 0.07);
 `;
 
 const BackButton = styled.button`
@@ -40,17 +41,19 @@ const ChattingPage = () => {
   const location = useLocation();
   const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
 
+  if (!user?.isArtist) {
+    return <div>접근 권한이 없습니다.</div>;
+  }
+
   return (
     <GradientBackground>
-      <PageContainer>
-        <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
+      <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
 
-        {!selectedRoom ? (
-          <ChatRoomList onSelectRoom={setSelectedRoom} />
-        ) : (
-          <ChatRoom room={selectedRoom} />
-        )}
-      </PageContainer>
+      {!selectedRoom ? (
+        <ChatRoomList onSelectRoom={setSelectedRoom} />
+      ) : (
+        <ChatRoom room={selectedRoom} />
+      )}
     </GradientBackground>
   );
 };

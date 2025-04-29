@@ -78,7 +78,6 @@ const ChatRoomList = ({ onSelectRoom }) => {
         <ChatListH2>CHAT ROOM LIST</ChatListH2>
         {rooms.map((room) => {
           const displayName = isArtist ? room.userName : room.artistName;
-
           return (
             <RoomItem key={`${room.id}-${room.artistId}`} onClick={() => handleRoomClick(room)}>
               <RoomTitle>{displayName}</RoomTitle>
