@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { AdminContentLayout } from "./AdminContentLayout";
 import TitleWrapper from "./Titlewrapper";
+import api from "../../../api/axiosInstance";
 
 const AdminArtAddWrapper = styled.div`
   display: flex;
@@ -153,7 +154,7 @@ function AdminArtAdd() {
       alert("로그인이 필요합니다.");
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("image", imageFile);
     formData.append("title", title);
@@ -161,19 +162,19 @@ function AdminArtAdd() {
     formData.append("completionDate", `${year}-01-01`);
     formData.append("uploadDate", uploadDate || new Date().toISOString().split("T")[0]);
     formData.append("artistId", artistId);
-
+  
     try {
-      const response = await axios.post("/api/art/add", formData, {
+      const response = await api.post("/art/add", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log('서버 응답:', response.data);
+  
+      console.log("✅ 서버 응답:", response.data);
       if (response.status === 201) {
         alert("작품 등록 완료!");
-
-        // 작품 등록 후 미리보기와 입력값 초기화
+  
         setImagePreview(null);
         setImageFile(null);
         setTitle("");
@@ -183,7 +184,7 @@ function AdminArtAdd() {
         setArtistId("");
       }
     } catch (err) {
-      console.error("업로드 실패:", err);
+      console.error("❌ 업로드 실패:", err);
       alert("작품 등록 실패. 관리자에게 문의해주세요.");
     }
   };
