@@ -475,31 +475,29 @@ function GoodsDetail() {
   const handlePurchase = () => setShowPurchaseModal(true);
 
   const handlePurchaseConfirm = async () => {
-    const { user, token } = useAuth(); // AuthContext에서 user, token 가져오기
     try {
-      if (!user) {
+      if (!authTokens?.user) {
         alert("로그인이 필요합니다.");
         navigate("/login");
         return;
       }
-  
+
       const dto = {
         quantity: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
-        userId: user.username, // user.username을 사용하여 아이디 전달
+        userId: authTokens.user.username,
       };
-  
+
       const safeThumbnail =
         currentProductImages?.[selectedImage] || currentProductImages?.[0];
-  
-      // 토큰을 헤더에 포함하여 요청
+
       await axiosInstance.post("/purchase/buy-now", dto, {
         headers: {
-          Authorization: `Bearer ${token}`, // Bearer 토큰 방식으로 인증
+          Authorization: `Bearer ${authTokens.token}`,
         },
       });
-  
+
       setShowPurchaseModal(false);
       navigate("/purchase-complete", {
         state: {
