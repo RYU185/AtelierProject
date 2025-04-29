@@ -451,15 +451,11 @@ function GoodsDetail() {
         return;
       }
 
-      const safeThumbnail =
-        currentProductImages?.[selectedImage] || currentProductImages?.[0];
-
       const dto = {
         amount: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
-        thumbnailUrl: safeThumbnail,
       };
 
       await axiosInstance.post("/cart", dto);
@@ -487,15 +483,18 @@ function GoodsDetail() {
         return;
       }
 
+      const safeThumbnail =
+        currentProductImages?.[selectedImage] || currentProductImages?.[0];
+      
       const dto = {
         quantity: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
-        userId: user.username, // 여기 수정됨! ✅
+        userId: user.username,
+        thumbnailUrl: safeThumbnail, // 여기 수정됨! ✅
       };
 
-      const safeThumbnail =
-        currentProductImages?.[selectedImage] || currentProductImages?.[0];
+      
 
       await axiosInstance.post("/purchase/buy-now", dto, {
         headers: {
