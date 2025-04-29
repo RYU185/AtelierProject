@@ -132,6 +132,9 @@ function CommunityList() {
     setIsAddModalOpen(false);
   };
 
+  const handleAddPostSubmit = (newPost) => {
+    setCommunityItems((prev) => [newPost, ...prev]); // Add the new post to the front of the list
+  };
   useEffect(() => {
     const fetchCurrentUser = async () => {
       const accessToken = localStorage.getItem("token");
@@ -261,27 +264,7 @@ function CommunityList() {
   const handleCloseModal = () => {
     setSelectedPost(null);
     setIsDetailModalOpen(false);
-    fetchCommunityData(); // 모달 닫을 때 커뮤니티 데이터 새로 가져오기
-  };
-
-  const handleAddPost = async (newPost) => {
-    const accessToken = localStorage.getItem("authToken");
-    try {
-      const response = await axios.post("/api/community/add", newPost, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      if (response.status === 201) {
-        setCommunityItems((prev) => [response.data, ...prev]);
-        navigate("/community");
-      } else {
-        alert("게시글 등록 실패");
-      }
-    } catch (error) {
-      console.error("게시글 등록 에러:", error);
-      alert("게시글 등록 중 오류 발생");
-    }
+    fetchCommunityData();
   };
 
   const handleSortChange = (type) => {
@@ -403,7 +386,7 @@ function CommunityList() {
                 onOpenModal={handleOpenModal}
                 currentUser={loggedInUser}
                 isLiked={post.isLiked}
-                openEditModal={openEditModal} // openEditModal prop 전달 확인
+                openEditModal={openEditModal}
               />
             ))
           ) : (
@@ -415,7 +398,6 @@ function CommunityList() {
         {isAddModalOpen && (
           <AddPostModal
             onClose={handleCloseAddModal}
-            onSubmit={handleAddPost}
             userNickname={localStorage.getItem("nickname")}
           />
         )}
@@ -425,7 +407,6 @@ function CommunityList() {
         <CommunityDetailModal post={selectedPost} onClose={handleCloseModal} />
       )}
 
-      {/* EditPostModal을 Container 바깥으로 이동 */}
       {isEditModalOpen && postToEdit && (
         <EditPostModal
           post={postToEdit}

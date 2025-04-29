@@ -172,7 +172,7 @@ const WarningText = styled.p`
   text-align: center;
 `;
 
-function AddPostModal({ onClose, onSubmit, userNickname }) {
+function AddPostModal({ onClose, userNickname }) {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -196,11 +196,6 @@ function AddPostModal({ onClose, onSubmit, userNickname }) {
     });
   };
 
-  const handleCancelImage = (index) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
-    setImagePreviews((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async () => {
     if (images.length > 4) {
       setUploadError("이미지는 최대 4장까지 업로드할 수 있습니다.");
@@ -208,26 +203,25 @@ function AddPostModal({ onClose, onSubmit, userNickname }) {
     }
 
     try {
-      // 👉 이미지 업로드 URL 리스트 받기 (가정: base64 → 서버 변환 API 존재)
-      const uploadedUrls = await Promise.all(
-        images.map(async (img) => {
-          const formData = new FormData();
-          formData.append("file", img);
-          const res = await axios.post("/api/upload", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          return res.data.url;
-        })
-      );
+      const formData = new FormData();
+      formData.append("text", content);
+      images.forEach((img) => {
+        formData.append("files", img);
+      });
 
-      const postData = {
-        text: content,
-        img: uploadedUrls,
-      };
+      const response = await axios.post("/api/community/add", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
 
-      await axios.post("/api/community/add", postData);
-      onSubmit(postData);
+      console.log("응답 데이터:", response); // ✅ 응답 확인
+      if (!response || !response.data) {
+        throw new Error("응답 데이터가 없습니다.");
+      }
+      alert("게시글이 등록되었습니다!");
       onClose();
+      window.location.reload();
     } catch (err) {
       console.error("게시글 등록 실패:", err);
       setUploadError("게시글 등록 중 오류가 발생했습니다.");
