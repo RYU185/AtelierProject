@@ -325,6 +325,30 @@ const ChatRoom = ({ room: incomingRoom }) => {
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
   const lastMessage = chatMessages.length ? chatMessages[chatMessages.length - 1] : null;
+  const { artistId } = useParams();
+
+  useEffect(() => {
+    if (!room && artistId) {
+      axiosInstance
+        .post(`/chat-room/${artistId}`)
+        .then((res) => {
+          setRoom(res.data);
+        })
+        .catch((err) => {
+          console.error("채팅방 생성/조회 실패:", err.response?.data || err.message);
+        });
+    }
+  }, [room, artistId]);
+
+  if (!room) {
+    return (
+      <GradientBackground>
+        <Header />
+        <div style={{ padding: "2rem", color: "#fff", textAlign: "center" }}>채팅방 로딩 중...</div>
+        <Footer />
+      </GradientBackground>
+    );
+  }
 
   useEffect(() => {
     if (!room?.id) return;
