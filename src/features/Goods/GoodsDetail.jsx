@@ -485,7 +485,7 @@ function GoodsDetail() {
 
       const safeThumbnail =
         currentProductImages?.[selectedImage] || currentProductImages?.[0];
-      
+
       const dto = {
         quantity: quantity,
         sum: goods.price * quantity,
@@ -494,15 +494,21 @@ function GoodsDetail() {
         thumbnailUrl: safeThumbnail, // 여기 수정됨! ✅
       };
 
-      
-
       await axiosInstance.post("/purchase/buy-now", dto, {
         headers: {
           Authorization: `Bearer ${token}`, // 여기 수정됨! ✅
         },
       });
+      const isAlreadyUrl =
+        safeThumbnail.startsWith("/uploads") ||
+        safeThumbnail.startsWith("/images") ||
+        safeThumbnail.startsWith("http");
 
       const onlyName = safeThumbnail.split("/").pop();
+      const finalThumbnailUrl = isAlreadyUrl
+        ? safeThumbnail
+        : `/images/goods-images/${onlyName}`;
+
       setShowPurchaseModal(false);
       navigate("/purchase-complete", {
         state: {
@@ -511,7 +517,7 @@ function GoodsDetail() {
               goodsName: goods.name,
               price: goods.price,
               quantity: quantity,
-              thumbnailUrl: `/images/goods-images/${onlyName}`,
+              thumbnailUrl: finalThumbnailUrl,
             },
           ],
           totalPrice: goods.price * quantity,
