@@ -205,7 +205,7 @@ function Community({
   text,
   img,
   likes: initialLikes,
-  commentCount = 0,
+  commentCount,
   onDelete,
   onOpenModal,
   isModal,

@@ -73,6 +73,14 @@ function CommunityDetailModal({ post, onClose }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [postToEdit, setPostToEdit] = useState(null);
 
+  const handleCommentAdded = () => {
+    setDetailData((prevData) =>
+      prevData
+        ? { ...prevData, commentCount: prevData.commentCount + 1 }
+        : prevData
+    );
+  };
+
   useEffect(() => {
     const fetchDetail = async () => {
       try {
@@ -106,7 +114,7 @@ function CommunityDetailModal({ post, onClose }) {
   };
 
   const handleEditSubmit = async (updatedPost) => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("authToken");
     try {
       const response = await axios.put(
         `/api/community/edit/${updatedPost.id}`,
@@ -146,17 +154,18 @@ function CommunityDetailModal({ post, onClose }) {
                 onOpenModal={() => {}}
                 onDelete={() => {}}
                 isModal={true}
-                openEditModal={openEditModal} // 수정 모달 열기 함수 전달
+                openEditModal={openEditModal}
               />
             </CommunityWrapper>
           )}
         </ContentWrapper>
         <CommentsWrapper>
-          {post && <CommentList postId={post.id} />}
+          {post && (
+            <CommentList postId={post.id} onCommentAdded={handleCommentAdded} />
+          )}
         </CommentsWrapper>
       </ModalContent>
 
-      {/* EditPostModal을 CommunityDetailModal 내에 렌더링 */}
       {isEditModalOpen && postToEdit && (
         <EditPostModal
           post={postToEdit}

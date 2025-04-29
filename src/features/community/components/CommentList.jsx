@@ -1,4 +1,4 @@
-import React, { useState, useEffect, editMode, editText } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Comment from "./Comment";
 import axios from "axios";
@@ -43,24 +43,27 @@ const CommentButton = styled.button`
   }
 `;
 
-function CommentList({ postId }) {
+function CommentList({ postId, onCommentAdded }) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newCommentText, setNewCommentText] = useState("");
 
-  // 💡 여기로 옮긴다!
   const fetchComments = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(`/api/community/detail/id/${postId}`);
-      const fetchedComments = response.data.commentUser.map((user, index) => ({
-        userNickname: user,
+
+      console.log("✅ 댓글 조회 응답:", response.data);
+
+      const fetchedComments = response.data.commentId.map((id, index) => ({
+        id: id,
+        userNickname: response.data.commentUser[index],
         text: response.data.commentText[index],
         creationDate: response.data.creationDateList[index],
-        id: index,
       }));
+
       setComments(fetchedComments);
     } catch (error) {
       console.error("댓글 목록을 가져오는 중 오류 발생:", error);
@@ -91,7 +94,7 @@ function CommentList({ postId }) {
         `/api/comment/add`,
         {
           text: newCommentText,
-          communityId: postId, // ✅ 꼭 포함
+          communityId: postId,
         },
         {
           headers: {
@@ -103,6 +106,9 @@ function CommentList({ postId }) {
       if (response.status === 201) {
         await fetchComments();
         setNewCommentText("");
+      }
+      if (onCommentAdded) {
+        onCommentAdded();
       } else {
         alert("댓글 등록에 실패했습니다.");
       }
@@ -137,6 +143,9 @@ function CommentList({ postId }) {
                 ? new Date(comment.creationDate).toLocaleString()
                 : ""
             }
+            commentId={comment.id} // ✅ 추가!
+            communityId={postId} // ✅ 추가!
+            onUpdate={fetchComments} // ✅ 수정 후 댓글 새로고침!
           />
         ))
       )}

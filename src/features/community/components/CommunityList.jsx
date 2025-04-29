@@ -203,7 +203,7 @@ function CommunityList() {
   };
 
   const handleViewMyPostsClick = async () => {
-    const accessToken = localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("authToken");
     if (!accessToken) {
       alert("로그인이 필요합니다.");
       return;
@@ -218,7 +218,7 @@ function CommunityList() {
       const updatedItems = await Promise.all(
         response.data.map(async (post) => {
           const isLiked = loggedInUser?.userId
-            ? await checkLikeStatus(post.id, localStorage.getItem("token"))
+            ? await checkLikeStatus(post.id, localStorage.getItem("authToken"))
             : false;
           return { ...post, isLiked };
         })
@@ -261,10 +261,11 @@ function CommunityList() {
   const handleCloseModal = () => {
     setSelectedPost(null);
     setIsDetailModalOpen(false);
+    fetchCommunityData(); // 모달 닫을 때 커뮤니티 데이터 새로 가져오기
   };
 
   const handleAddPost = async (newPost) => {
-    const accessToken = localStorage.getItem("token");
+    const accessToken = localStorage.getItem("authToken");
     try {
       const response = await axios.post("/api/community/add", newPost, {
         headers: {
