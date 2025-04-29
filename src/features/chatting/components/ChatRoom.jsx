@@ -325,7 +325,7 @@ const ChatRoom = ({ room: propRoom }) => {
     userId: "user-id",
     userName: "유저",
   };
-  const [room, setRoom] = useState(propRoom || location.state?.room || null);
+  const [room, setRoom] = useState(()=> propRoom || location.state?.room || null);
 
   console.log("room:", room);
   console.log("isConnected:", isConnected);
@@ -374,19 +374,20 @@ const ChatRoom = ({ room: propRoom }) => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
-    const tempId = `temp-${Date.now()}`;
-
+    
     if (!isConnected || typeof sendMessage !== "function") {
       alert("서버 연결 안됨, 다시 시도해주세요.");
       return;
     }
-
-    const isArtistSender = user?.userId === room?.artistId;
+    
+    const senderId = user?.username || localStorage.getItem("username");
+    const isArtistSender = senderId === room?.artistId;
     const nickname = nicknameRef.current;
+    const tempId = `temp-${Date.now()}`;
 
     const payload = {
       type: "CHAT",
-      sender: user?.userId,
+      sender: senderId,
       receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
       senderNickname: nickname,

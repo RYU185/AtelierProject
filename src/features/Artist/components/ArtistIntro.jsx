@@ -100,7 +100,7 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
         ...room,
         userId: localStorage.getItem("username"),
         artistId: userId,
-        userName: name,
+        userName: localStorage.getItem("nickname"),
         artistName: name,
       };
 
