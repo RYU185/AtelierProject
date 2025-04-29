@@ -374,7 +374,7 @@ const ModalButton = styled.button`
 function GoodsDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { authTokens } = useAuth(); // AuthContext 사용
+  const { user, token } = useAuth(); // AuthContext 사용
 
   const [quantity, setQuantity] = useState(1);
   const [stock, setStock] = useState(10);
@@ -476,27 +476,38 @@ function GoodsDetail() {
 
   const handlePurchaseConfirm = async () => {
     try {
-      if (!authTokens?.user) {
+      if (!user) {
+        // 여기 수정됨! ✅
         alert("로그인이 필요합니다.");
         navigate("/login");
         return;
       }
 
+      const safeThumbnail =
+        currentProductImages?.[selectedImage] || currentProductImages?.[0];
+
       const dto = {
         quantity: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
-        userId: authTokens.user.username,
+        userId: user.username,
+        thumbnailUrl: safeThumbnail, // 여기 수정됨! ✅
       };
-
-      const safeThumbnail =
-        currentProductImages?.[selectedImage] || currentProductImages?.[0];
 
       await axiosInstance.post("/purchase/buy-now", dto, {
         headers: {
-          Authorization: `Bearer ${authTokens.token}`,
+          Authorization: `Bearer ${token}`, // 여기 수정됨! ✅
         },
       });
+      const isAlreadyUrl =
+        safeThumbnail.startsWith("/uploads") ||
+        safeThumbnail.startsWith("/images") ||
+        safeThumbnail.startsWith("http");
+
+      const onlyName = safeThumbnail.split("/").pop();
+      const finalThumbnailUrl = isAlreadyUrl
+        ? safeThumbnail
+        : `/images/goods-images/${onlyName}`;
 
       setShowPurchaseModal(false);
       navigate("/purchase-complete", {
@@ -506,7 +517,7 @@ function GoodsDetail() {
               goodsName: goods.name,
               price: goods.price,
               quantity: quantity,
-              thumbnailUrl: safeThumbnail,
+              thumbnailUrl: finalThumbnailUrl,
             },
           ],
           totalPrice: goods.price * quantity,

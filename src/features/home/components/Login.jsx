@@ -20,12 +20,7 @@ const LeftSection = styled.div`
 
 const GradientBackground = styled.div`
   flex: 2;
-  background: radial-gradient(
-    ellipse at 0% 0%,
-    rgb(0, 0, 0),
-    rgb(1, 9, 26) 40%,
-    #000000 100%
-  );
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,8 +140,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [autoLogin, setAutoLogin] = useState(false);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // ✅ 중복 클릭 방지
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleLogin = async () => {
     if (!userId.trim() || !password.trim()) {
       setError("아이디와 비밀번호를 모두 입력해주세요.");
@@ -163,17 +157,20 @@ const Login = () => {
 
       const response = await axios.post("/user/login", { userId, password });
 
-      const { token, role, isArtist, nickname } = response.data;
+      const { token, role, isArtist, nickname, userId: responseUserId } = response.data;
 
       console.log("nickname 응답값:", nickname);
+      console.log("userId 응답값:", responseUserId);
 
       // ✅ authToken으로 통일
       localStorage.setItem("authToken", token);
+      localStorage.setItem("userId", responseUserId);
       localStorage.setItem("username", userId);
       localStorage.setItem("role", role);
       localStorage.setItem("nickname", nickname);
 
       const loginPayload = {
+        userId: responseUserId,
         username: userId,
         role,
         isArtist,
@@ -195,7 +192,7 @@ const Login = () => {
     } catch (err) {
       console.error("로그인 에러:", err);
       if (err.response?.data?.message) {
-        setError(err.response.data.message); // ✅ 서버 메시지 보여주기
+        setError(err.response.data.message); 
       } else {
         setError("아이디 또는 비밀번호를 다시 확인해주세요.");
       }

@@ -10,7 +10,8 @@ const images = import.meta.glob("/public/images/goods-images/*", {
 });
 
 const getGoodsImageUrl = (filename) => {
-  if (!filename || typeof filename !== "string") return "/images/goods-images/default.jpg";
+  if (!filename || typeof filename !== "string")
+    return "/images/goods-images/default.jpg";
 
   if (
     filename.startsWith("/uploads") ||
@@ -20,13 +21,20 @@ const getGoodsImageUrl = (filename) => {
     return filename;
   }
   const onlyName = filename.split("/").pop(); // goods3_1.png
-  const matched = Object.entries(images).find(([path]) => path.endsWith(onlyName));
+  const matched = Object.entries(images).find(([path]) =>
+    path.endsWith(onlyName)
+  );
   return matched ? matched[1] : `/images/goods-images/${onlyName}`;
 };
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const Wrapper = styled.div`
@@ -179,7 +187,9 @@ const PurchaseCompletePage = () => {
           <PageContainer>
             <Title>구매 내역이 없습니다.</Title>
             <ButtonContainer>
-              <Button onClick={() => navigate("/cartpage")}>장바구니로 돌아가기</Button>
+              <Button onClick={() => navigate("/cartpage")}>
+                장바구니로 돌아가기
+              </Button>
             </ButtonContainer>
           </PageContainer>
           <Footer />
@@ -200,14 +210,19 @@ const PurchaseCompletePage = () => {
               {items.map((item, idx) => (
                 <ItemRow key={idx}>
                   <ItemInfo>
-                    <ItemImage src={getGoodsImageUrl(item.thumbnailUrl)} alt={item.goodsName} />
+                    <ItemImage
+                      src={getGoodsImageUrl(item.thumbnailUrl)}
+                      alt={item.goodsName}
+                    />
 
                     <ItemDetails>
                       <ItemName>{item.goodsName}</ItemName>
                       <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
                     </ItemDetails>
                   </ItemInfo>
-                  <ItemPrice>{(item.price * item.quantity).toLocaleString()}원</ItemPrice>
+                  <ItemPrice>
+                    {(item.price * item.quantity).toLocaleString()}원
+                  </ItemPrice>
                 </ItemRow>
               ))}
             </ItemList>
@@ -220,7 +235,9 @@ const PurchaseCompletePage = () => {
             <Button onClick={() => navigate("/goods")}>계속 쇼핑하기</Button>
             <Button
               primary
-              onClick={() => navigate("/mypage", { state: { activeTab: "purchase" } })}
+              onClick={() =>
+                navigate("/mypage", { state: { activeTab: "purchase" } })
+              }
             >
               나의 굿즈 구매현황
             </Button>
