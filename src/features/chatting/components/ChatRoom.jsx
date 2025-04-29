@@ -8,22 +8,30 @@ import axiosInstance from "../../../api/axiosInstance";
 import useSocketStore from "../../../socket/useSocketStore";
 import { useAuth } from "../../../components/AuthContext";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`;
+
 const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  flex: 1;
 `;
 
 const ChatContainer = styled.div`
   max-width: 1200px;
   margin: 10px auto 0;
-  height: 100vh;
   width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  flex: 1;
+  background: none;
 `;
 
 const PageTitle = styled.div`
@@ -302,63 +310,70 @@ const SendButton = styled.button`
   }
 `;
 
-const ChatRoom = () => {
-  const location = useLocation();
-  const { artistId } = useParams();
+const ChatRoom = ({ room: incomingRoom }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
 
-  const {
-    chatMessages = [],
-    setChatMessages,
-    sendMessage,
-    isSocketConnected: isConnected,
-  } = useSocketStore();
+  const { sendMessage, isSocketConnected: isConnected } = useSocketStore();
+  const [chatMessages, setChatMessages] = useState([]);
 
-  const [room, setRoom] = useState(null);
+  const [room, setRoom] = useState(incomingRoom || null);
   const [newMessage, setNewMessage] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const messagesEndRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
+  const lastMessage = chatMessages.length ? chatMessages[chatMessages.length - 1] : null;
+  const { artistId } = useParams();
 
   useEffect(() => {
-    if (!artistId) return;
+    if (!room && artistId) {
+      axiosInstance
+        .post(`/chat-room/${artistId}`)
+        .then((res) => {
+          setRoom(res.data);
+        })
+        .catch((err) => {
+          console.error("채팅방 생성/조회 실패:", err.response?.data || err.message);
+        });
+    }
+  }, [room, artistId]);
 
-    const fetchRoom = async () => {
+  useEffect(() => {
+    if (!room?.id) return;
+    const fetchMessages = async () => {
       try {
-        const res = await axiosInstance.get(`/chat-room/${artistId}`);
-        console.log("메시지 가져오기 결과:", res.data);
-        setRoom(res.data);
-
-        const messagesRes = await axiosInstance.get(`/chat-room/${res.data.id}/messages`);
-        console.log("서버로부터 메시지 목록 수신:", messagesRes.data);
-
-        const loadedMessages = messagesRes.data.map((msg) => ({
-          id: msg.id,
+        const res = await axiosInstance.get(`/chat-room/${room.id}/messages`);
+        const loaded = res.data.map((msg, index) => ({
+          id: msg.tempId ?? `msg-${index}`,
           message: msg.content,
-          timestamp: msg.timestamp ?? null,
-          isArtist: msg.sender === res.data.artistId,
+          timestamp: msg.timestamp,
+          isArtist: msg.sender === room.artistId,
           nickname:
-            msg.senderNickname ??
-            (msg.sender === res.data.artistId ? res.data.artistName : res.data.userName) ??
+            msg.senderNickname ||
+            (msg.sender === room.artistId ? room.artistName : room.userName) ||
             "익명",
         }));
-
-        setChatMessages(loadedMessages);
+        setChatMessages(loaded);
       } catch (err) {
-        console.error("메시지 로딩 실패:", err.response?.data || err.message);
+        console.error("메시지 로딩 실패", err.response?.data || err.message);
       }
     };
-
-    fetchRoom();
-  }, [artistId]);
+    fetchMessages();
+  }, [room]);
 
   useEffect(() => {
     if (!isUserScrolled && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
+  }, [chatMessages]);
+
+  useEffect(() => {
+    console.log("🔴 [ChatRoom] chatMessages 업데이트:", {
+      length: chatMessages.length,
+      last: chatMessages[chatMessages.length - 1],
+    });
   }, [chatMessages]);
 
   const handleScroll = () => {
@@ -373,129 +388,143 @@ const ChatRoom = () => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
 
-    if (!isConnected || typeof sendMessage !== "function") {
-      alert("서버 연결 안됨, 다시 시도해주세요.");
+    if (!isConnected) {
+      alert("서버 연결이 필요합니다.");
       return;
     }
 
     const senderId = user?.username || localStorage.getItem("username");
-    const isArtistSender = senderId === room?.artistId;
+    const isArtistSender = senderId === room.artistId;
     const nickname = nicknameRef.current;
     const tempId = `temp-${Date.now()}`;
 
-    const payload = {
+    const newMsgObj = {
+      id: tempId,
+      message: newMessage,
+      timestamp: new Date().toISOString(),
+      isArtist: user.username === room.artistId,
+      nickname,
+      isTemporary: true,
+      tempId,
+    };
+
+    setChatMessages((prev) => {
+      const updated = [...prev, newMsgObj];
+      return updated;
+    });
+
+    sendMessage({
       type: "CHAT",
       sender: senderId,
       receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
-      senderNickname: nickname,
+      senderNickname: nicknameRef.current,
       tempId,
-    };
+    });
 
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        id: tempId,
-        message: newMessage,
-        timestamp: new Date().toISOString(),
-        isArtist: isArtistSender,
-        nickname,
-        isTemporary: true,
-        tempId,
-      },
-    ]);
-
-    sendMessage(payload);
     setNewMessage("");
-    setSelectedFile(null);
   };
 
-  return (
-    <PageWrapper>
-      <Header />
-      <ChatContainer>
-        <PageTitle>
-          <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
-          <Title>Chatting with ARTIST</Title>
-        </PageTitle>
+  if (!room) {
+    return (
+      <GradientBackground>
+        <Header />
+        <div style={{ padding: "2rem", color: "#fff", textAlign: "center" }}>채팅방 로딩 중...</div>
+        <Footer />
+      </GradientBackground>
+    );
+  }
 
-        <MainContent>
-          <ProfileSection>
-            <ProfileBox>
-              <ProfileItem>
-                <ProfileCircle $isArtist={true}>
-                  {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
-                </ProfileCircle>
-                <ProfileText>
-                  {room && (user?.isArtist ? room.artistName : room.userName)}
-                </ProfileText>
-              </ProfileItem>
-              <ProfileItem>
-                <ProfileCircle $isArtist={false}>
-                  {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
-                </ProfileCircle>
-                <ProfileText>
-                  {room && (!user?.isArtist ? room.artistName : room.userName)}
-                </ProfileText>
-              </ProfileItem>
-              <DateText>
-                {chatMessages.length
-                  ? new Date(chatMessages[chatMessages.length - 1].timestamp).toLocaleDateString(
-                      "ko-KR",
-                      {
+  return (
+    <GradientBackground>
+      <PageWrapper>
+        <Header />
+        <ChatContainer>
+          <PageTitle>
+            <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
+            <Title>Chatting with ARTIST</Title>
+          </PageTitle>
+
+          <MainContent>
+            <ProfileSection>
+              <ProfileBox>
+                <ProfileItem>
+                  <ProfileCircle $isArtist={true}>
+                    {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                  </ProfileCircle>
+                  <ProfileText>
+                    {room && (user?.isArtist ? room.artistName : room.userName)}
+                  </ProfileText>
+                </ProfileItem>
+                <ProfileItem>
+                  <ProfileCircle $isArtist={false}>
+                    {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                  </ProfileCircle>
+                  <ProfileText>
+                    {room && (!user?.isArtist ? room.artistName : room.userName)}
+                  </ProfileText>
+                </ProfileItem>
+                <DateText>
+                  {lastMessage && lastMessage.timestamp
+                    ? new Date(lastMessage.timestamp).toLocaleDateString("ko-KR", {
                         year: "numeric",
                         month: "2-digit",
                         day: "2-digit",
+                      })
+                    : "날짜 없음"}
+                </DateText>
+              </ProfileBox>
+            </ProfileSection>
+
+            <ChatSection>
+              <ChatHeader>
+                <ChatTitle>{user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}</ChatTitle>
+                <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
+              </ChatHeader>
+
+              <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
+                {Array.isArray(chatMessages) &&
+                  chatMessages.map((msg, index) => (
+                    <ChatMessage
+                      key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
+                      message={msg.message}
+                      timestamp={msg.timestamp}
+                      isArtist={msg.isArtist}
+                      file={msg.file}
+                      nickname={msg.nickname}
+                      isSender={msg.isArtist === user?.isArtist}
+                    />
+                  ))}
+                <div ref={messagesEndRef} />
+              </ChatMessages>
+
+              <ChatFooter>
+                <InputContainer>
+                  <ClipButton htmlFor="file-upload">
+                    📎
+                    <FileInput id="file-upload" type="file" onChange={() => {}} />
+                  </ClipButton>
+                  <ChatInput
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      console.log("▶ keyDown:", e.key);
+                      if (e.key === "Enter") {
+                        handleSendMessage(e);
                       }
-                    )
-                  : "????"}
-              </DateText>
-            </ProfileBox>
-          </ProfileSection>
-
-          <ChatSection>
-            <ChatHeader>
-              <ChatTitle>{user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}</ChatTitle>
-              <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
-            </ChatHeader>
-
-            <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
-              {Array.isArray(chatMessages) &&
-                chatMessages.map((msg, index) => (
-                  <ChatMessage
-                    key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
-                    message={msg.message}
-                    timestamp={msg.timestamp}
-                    isArtist={msg.isArtist}
-                    file={msg.file}
-                    nickname={msg.nickname}
-                    isSender={msg.isArtist === user?.isArtist}
+                    }}
+                    placeholder="메시지를 입력하세요..."
                   />
-                ))}
-              <div ref={messagesEndRef} />
-            </ChatMessages>
-
-            <ChatFooter>
-              <InputContainer>
-                <ClipButton htmlFor="file-upload">
-                  📎
-                  <FileInput id="file-upload" type="file" onChange={() => {}} />
-                </ClipButton>
-                <ChatInput
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSendMessage(e)}
-                  placeholder="메시지를 입력하세요..."
-                />
-                <SendButton onClick={handleSendMessage}>전송</SendButton>
-              </InputContainer>
-            </ChatFooter>
-          </ChatSection>
-        </MainContent>
-      </ChatContainer>
-      <Footer />
-    </PageWrapper>
+                  <SendButton onClick={handleSendMessage}>전송</SendButton>
+                </InputContainer>
+              </ChatFooter>
+            </ChatSection>
+          </MainContent>
+        </ChatContainer>
+        <Footer />
+      </PageWrapper>
+    </GradientBackground>
   );
 };
 

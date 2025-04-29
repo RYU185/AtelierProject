@@ -564,20 +564,23 @@ function GoodsDetail() {
   }
 
   // 정적 이미지 불러오기
-  const goodsImages = import.meta.glob("/public/images/goods-images/*", {
-    eager: true,
-  });
-
-  // 공통 이미지 처리 함수
   const getGoodsImageUrl = (filename) => {
-    if (!filename) return "/default.jpg";
-    const matched = Object.entries(goodsImages).find(([path]) =>
-      path.endsWith(filename)
-    );
-    if (matched) {
-      return matched[1].default;
+    if (!filename || typeof filename !== "string") {
+      return "/images/goods-images/default.jpg"; // 기본 이미지 경로
     }
-    return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
+
+    // 이미 절대경로인 경우 (백엔드에서 주는 경로거나 CDN 등)
+    if (
+      filename.startsWith("/uploads") ||
+      filename.startsWith("/images") ||
+      filename.startsWith("http")
+    ) {
+      return filename;
+    }
+
+    // 그냥 파일 이름만 있다면 public/images/goods-images에서 찾음
+    const onlyName = filename.split("/").pop();
+    return `/images/goods-images/${onlyName}`;
   };
 
   // 기존 currentProductImages 생성 부분 수정

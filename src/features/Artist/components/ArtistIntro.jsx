@@ -89,9 +89,18 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
     navigate(`/artist/${artistId}`);
   };
 
-  const handleChat = (e) => {
+  const handleChat = async (e) => {
     e.stopPropagation();
-    navigate(`/artist/${userId}/chat`);
+
+    try {
+      const res = await axiosInstance.post(`/chat-room/${artistId}`);
+      navigate(`/artist/${artistId}/chat`, {
+        state: { room: res.data },
+      
+      });
+    } catch (err) {
+      console.error("채팅방 생성 실패:", err.response?.data || err.message);
+    }
   };
 
   return (

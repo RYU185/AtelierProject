@@ -68,6 +68,7 @@ const ChatRoomList = ({ onSelectRoom }) => {
   }, []);
 
   const handleRoomClick = (room) => {
+    console.log("선택된 채팅방 객체:", room);
     onSelectRoom(room);
   };
 
@@ -78,7 +79,6 @@ const ChatRoomList = ({ onSelectRoom }) => {
         <ChatListH2>CHAT ROOM LIST</ChatListH2>
         {rooms.map((room) => {
           const displayName = isArtist ? room.userName : room.artistName;
-
           return (
             <RoomItem key={`${room.id}-${room.artistId}`} onClick={() => handleRoomClick(room)}>
               <RoomTitle>{displayName}</RoomTitle>

@@ -5,24 +5,23 @@ import TitleWrapper from "./Titlewrapper";
 import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
-// ✅ 정적 이미지 + 업로드 이미지 모두 처리
-const artImages = import.meta.glob("/public/images/ArtListIMG/*", {
-  eager: true,
-});
+const artImages = import.meta.glob("/public/images/ArtListIMG/*", { eager: true });
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getImageUrl = (filename) => {
   if (!filename) return "/path/to/default-image.png";
 
-  const matched = Object.entries(artImages).find(([path]) =>
-    path.endsWith(filename)
-  );
+  const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
   if (matched) {
     return matched[1].default;
   }
 
-  return `./uploads/${filename}`;
-};
+  if (filename.startsWith("/uploads/")) {
+    return `${API_URL}${filename}`;
+  }
 
+  return `${API_URL}/uploads/${filename}`;
+};
 const PageContainer = styled.div`
   min-height: 100vh;
 `;
@@ -39,10 +38,12 @@ const ArtListHeader = styled.div`
   align-items: center;
   margin-bottom: 20px;
 `;
+
 const SearchContainer = styled.div`
   display: flex;
   gap: 10px;
 `;
+
 const SearchInput = styled.input`
   width: 300px;
   padding: 8px 12px;
@@ -57,6 +58,7 @@ const SearchInput = styled.input`
     border-color: #3da9fc;
   }
 `;
+
 const SearchButton = styled.button`
   padding: 8px 16px;
   background: #3da9fc;
@@ -68,6 +70,7 @@ const SearchButton = styled.button`
     background: #3da0e5;
   }
 `;
+
 const AddButton = styled.button`
   border: none;
   background-color: rgba(255, 255, 255, 0.07);
@@ -78,7 +81,6 @@ const AddButton = styled.button`
   padding: 10px;
   cursor: pointer;
   transition: 0.3s ease-in-out;
-
   &:hover {
     background-color: #3da9fc;
   }
@@ -106,7 +108,7 @@ const ArtItem = styled.div`
 
 const ArtCardImageContainer = styled.div`
   width: 100%;
-  height: 200px; // 정사각형 고정
+  height: 200px;
   overflow: hidden;
   cursor: pointer;
 `;
@@ -247,6 +249,7 @@ const AdminArtList = () => {
   useEffect(() => {
     fetchArtList();
   }, []);
+
   useEffect(() => {
     const handleClickOutside = () => setMenuOpen({});
     window.addEventListener("click", handleClickOutside);
@@ -264,6 +267,7 @@ const AdminArtList = () => {
 
   const toggleMenu = (id) =>
     setMenuOpen((prev) => ({ ...prev, [id]: !prev[id] }));
+
   const openModal = (art) => setSelectedArt(art);
   const closeModal = () => setSelectedArt(null);
 
@@ -271,13 +275,14 @@ const AdminArtList = () => {
     try {
       await api.post(`/art/${id}/delete`);
       setMenuOpen({});
-      setArtList((prev) => prev.filter((art) => art.id !== id)); // UI에서 즉시 삭제 반영
+      setArtList((prev) => prev.filter((art) => art.id !== id));
     } catch (error) {
       console.error("삭제 중 오류 발생:", error);
     }
   };
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
+
   const filteredArtList = artList.filter((art) =>
     art.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -315,13 +320,8 @@ const AdminArtList = () => {
                   ⋮
                 </MoreOptions>
 
-                <OptionsMenu
-                  visible={menuOpen[art.id]}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <OptionButton danger onClick={() => handleDelete(art.id)}>
-                    삭제
-                  </OptionButton>
+                <OptionsMenu visible={menuOpen[art.id]} onClick={(e) => e.stopPropagation()}>
+                  <OptionButton danger onClick={() => handleDelete(art.id)}>삭제</OptionButton>
                 </OptionsMenu>
 
                 <ArtCardImageContainer onClick={() => openModal(art)}>
@@ -330,9 +330,7 @@ const AdminArtList = () => {
 
                 <ArtInfo>
                   <ArtTitle>{art.title}</ArtTitle>
-                  <ArtDetails>
-                    {art.artistName} · {art.completionDate}
-                  </ArtDetails>
+                  <ArtDetails>{art.artistName} · {art.completionDate}</ArtDetails>
                 </ArtInfo>
               </ArtItem>
             ))}
@@ -345,10 +343,7 @@ const AdminArtList = () => {
           <Modal onClick={(e) => e.stopPropagation()}>
             <CloseButton onClick={closeModal}>×</CloseButton>
             <ModalImageContainer>
-              <img
-                src={getImageUrl(selectedArt.imgUrl)}
-                alt={selectedArt.title}
-              />
+              <img src={getImageUrl(selectedArt.imgUrl)} alt={selectedArt.title} />
             </ModalImageContainer>
             <ModalDescriptionContainer>
               <h2>{selectedArt.title}</h2>

@@ -4,11 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 
-const images = import.meta.glob("/public/images/goods-images/*", {
-  eager: true,
-  as: "url",
-});
-
 const getGoodsImageUrl = (filename) => {
   if (!filename || typeof filename !== "string")
     return "/images/goods-images/default.jpg";
