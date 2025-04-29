@@ -16,12 +16,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "",
+        target: "http://locarhost:8081",
         changeOrigin: true,
         secure: false,
       },
       "/ws": {
-        target: "",
+        target: "http://locarhost:8081",
         changeOrigin: true,
         ws: true, // ✅ WebSocket proxy 옵션
         secure: false,
