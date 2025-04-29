@@ -96,9 +96,18 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
       const res = await axiosInstance.post(`/chat-room/${userId}`);
       const room = res.data;
 
+      const correctedRoom = {
+        ...room,
+        userId: room.user?.userId,
+        artistId: room.artist?.userId, 
+        userName: room.user?.nickName, 
+        artistName: room.artist?.name, 
+      };
+
       navigate(`/artist/${userId}/chat`, {
-        state: { room },
+        state: { room: correctedRoom },
       });
+
     } catch (err) {
       console.error("채팅방 생성 실패:", err);
     }
