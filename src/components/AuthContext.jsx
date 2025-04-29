@@ -4,25 +4,26 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
+    const userId = localStorage.getItem("userId");
     const username = localStorage.getItem("username");
     const role = localStorage.getItem("role");
     const isArtist = localStorage.getItem("isArtist") === "true";
     const nickname = localStorage.getItem("nickname");
 
-    return username && role
-      ? { username, roles: [role], isArtist, nickname }
-      : null;
+    return username && role ? { userId, username, roles: [role], isArtist, nickname } : null;
   });
 
   const [token, setToken] = useState(() => localStorage.getItem("authToken"));
 
-  const login = ({ username, role, isArtist = false, nickname, authToken }) => {
+  const login = ({ userId, username, role, isArtist = false, nickname, authToken }) => {
+    localStorage.setItem("userId", userId);
     localStorage.setItem("username", username);
     localStorage.setItem("role", role);
     localStorage.setItem("isArtist", isArtist);
     localStorage.setItem("nickname", nickname);
     localStorage.setItem("authToken", authToken);
-    setUser({ username, roles: [role], isArtist, nickname });
+
+    setUser({ userId, username, roles: [role], isArtist, nickname });
     setToken(authToken);
   };
 
@@ -33,9 +34,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user, token, login, logout }}>{children}</AuthContext.Provider>
   );
 };
 

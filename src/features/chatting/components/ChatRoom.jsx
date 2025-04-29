@@ -381,12 +381,12 @@ const ChatRoom = ({ room: propRoom }) => {
       return;
     }
 
-    const isArtistSender = user?.username === room?.artistId;
+    const isArtistSender = user?.userId === room?.artistId;
     const nickname = nicknameRef.current;
 
     const payload = {
       type: "CHAT",
-      sender: user?.username,
+      sender: user?.userId,
       receiver: isArtistSender ? room.userId : room.artistId,
       content: newMessage,
       senderNickname: nickname,
