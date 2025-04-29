@@ -21,22 +21,27 @@ export const useSocketStore = create((set) => ({
     })),
 
   addChatMessage: (message) =>
-    set((state) => ({
-      chatMessages: [...state.chatMessages, message],
-    })),
+    set((state) => {
+      const exists = state.chatMessages.some((m) => m.id === message.id);
+      if (exists) return state;
+
+      return {
+        chatMessages: [...state.chatMessages, message],
+      };
+    }),
 
   setChatMessages: (messages) => set({ chatMessages: messages }),
 
-  replaceTempMessage: (tempId, message) => {
-    console.log("tempId 교체 시도:", tempId);
+  replaceTempMessage: (tempId, patch) =>
     set((state) => {
-      const updatedMessages = state.chatMessages.map((msg) =>
-        msg.tempId === tempId ? { ...msg, ...message, isTemporary: false } : msg
+      const updated = state.chatMessages.map((m) =>
+        m.tempId === tempId ? { ...m, ...patch, isTemporary: false } : m
       );
-      console.log("updatedMessages:", updatedMessages);
-      return { chatMessages: updatedMessages };
-    });
-  },
+      const found = updated.some((m) => m.tempId === tempId);
+      return {
+        chatMessages: found ? updated : [...updated, { ...patch }],
+      };
+    }),
 
   clearAll: () =>
     set({

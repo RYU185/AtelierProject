@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import { useSocketStore } from "./useSocketStore";
+import useSocketStore from "./useSocketStore";
 import { useAuth } from "../components/AuthContext";
 
 export const useWebSocket = () => {
@@ -13,6 +13,7 @@ export const useWebSocket = () => {
     addNotification,
     addInquiry,
     addChatMessage,
+    replaceTempMessage,
     clearAll,
   } = useSocketStore();
 
@@ -69,14 +70,31 @@ export const useWebSocket = () => {
 
         client.subscribe("/user/queue/messages", (message) => {
           try {
-            const chatMessage = JSON.parse(message.body);
-            console.log("[Chat Message]", chatMessage);
-            addChatMessage(chatMessage);
+            const body = JSON.parse(message.body);
+            console.log("[Chat Message]", body);
+
+            if (body.tempId) {
+              replaceTempMessage(body.tempId, {
+                id: body.id,
+                timestamp: body.timestamp,
+                isTemporary: false,
+              });
+              return;
+            }
+
+            addChatMessage({
+              id: body.id,
+              message: body.content,
+              timestamp: body.timestamp,
+              isArtist: body.sender === body.receiver,
+              nickname: body.senderNickname,
+            });
           } catch (error) {
             console.error("[Chat Message Parsing Error]", error);
           }
         });
       },
+
       onDisconnect: () => {
         console.log("[WebSocket] 연결 해제");
         setSocketConnected(false);
@@ -106,6 +124,7 @@ export const useWebSocket = () => {
     addNotification,
     addInquiry,
     addChatMessage,
+    replaceTempMessage,
     clearAll,
   ]);
 };
