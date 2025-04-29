@@ -234,10 +234,9 @@ const CartPage = () => {
   const handleConfirmPurchase = async () => {
     if (!cartListRef.current) return;
 
-    // 구매 직전에 강제 최신 데이터 계산
-    cartListRef.current.forceUpdateTotal?.();
-
-    const selectedItems = cartListRef.current.getSelectedItems();
+    // 최신 상태의 모든 아이템을 가져온다
+    const allItems = cartListRef.current.getAllItems();
+    const selectedItems = allItems.filter((item) => item.checked); // ✅ 체크된 것만 추려서 사용
 
     if (selectedItems.length === 0) {
       alert("구매할 상품을 선택해주세요.");
@@ -259,7 +258,7 @@ const CartPage = () => {
             return {
               ...item,
               thumbnailUrl: matched?.image ?? "",
-              quantity: matched?.quantity ?? 1, // ✅ 수량 매칭
+              quantity: matched?.quantity ?? 1, // ✅ 여기 matched에서 정확한 quantity
             };
           }),
           totalPrice: data.totalPrice,
