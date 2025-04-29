@@ -182,7 +182,7 @@ const ExchangeRefundModal = ({ purchase, onClose, onSuccess }) => {
       return;
     }
 
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("authToken");
 
     try {
       await axios.post(
