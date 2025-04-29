@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import ChatRoom from "../components/ChatRoom";
 import ChatRoomList from "../components/ChatRoomList";
+import { useAuth } from "../../../components/AuthContext";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
@@ -40,6 +41,7 @@ const ChattingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
+  const { user } = useAuth();
 
   if (!user?.isArtist) {
     return <div>접근 권한이 없습니다.</div>;
