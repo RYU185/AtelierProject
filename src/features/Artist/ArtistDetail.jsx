@@ -5,15 +5,23 @@ import Header from "../Header";
 import Footer from "../Footer";
 import axiosInstance from "../../api/axiosInstance";
 
-// ✅ 추가: 작품 이미지 경로 처리 함수
-const getWorkImageUrl = (imgUrl) => {
-  if (!imgUrl) return "/path/to/default-image.png"; // 기본 대체 이미지
+// import.meta.glob 사용하여 정적 이미지 처리
+const importImages = import.meta.glob("/src/assets/ArtListIMG/*");
 
-  if (imgUrl.startsWith("/uploads/")) {
-    return `http://localhost:8081${imgUrl}`; // 서버 업로드 이미지
+const getImageUrl = (filename) => {
+  if (!filename) return "/path/to/default-image.png"; // 기본 이미지 처리
+
+  // 정적 이미지 처리
+  if (filename.startsWith("images/") || filename.startsWith("src/assets/")) {
+    return importImages[`/src/assets/ArtListIMG/${filename}`];
   }
 
-  return `/images/ArtListIMG/${imgUrl}`; // 정적 폴더
+  // 업로드된 이미지 처리 (서버 경로에 있는 이미지들)
+  if (filename.startsWith("/uploads/")) {
+    return `http://localhost:8081${filename}`; // 서버의 업로드 이미지 경로
+  }
+
+  return filename;
 };
 
 const GradientBackground = styled.div`
@@ -45,8 +53,8 @@ const DescriptionContainer = styled.div`
   gap: 15px;
   padding: 20px;
   max-width: 50%;
-  
-  & > p {
+
+  & > p{
     font-size: 15px;
     color: #e0e0e0;
   }
@@ -119,22 +127,25 @@ const WorkImage = styled.img`
   display: block;
 `;
 
+/* 모달 오버레이 */
 const Overlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7); /* 반투명 배경 */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 1000; /* 다른 요소 위에 표시 */
 `;
 
+/* 모달 컨테이너 */
 const Modal = styled.div`
   display: grid;
   grid-template-columns: 3fr 2fr;
+  grid-template-rows: 1fr;
   gap: 20px;
   background-color: white;
   max-width: 900px;
@@ -143,6 +154,7 @@ const Modal = styled.div`
   position: relative;
 `;
 
+/* 닫기 버튼 */
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
@@ -152,7 +164,6 @@ const CloseButton = styled.button`
   font-size: 20px;
   cursor: pointer;
   color: #333;
-  
   &:hover {
     color: #303030;
   }
@@ -221,9 +232,10 @@ const ArtistDetail = () => {
   }, [id]);
 
   const handleOverlayClick = () => {
-    setModalOpen(false);
+    setModalOpen(false); // 모달 닫기
   };
 
+  // 모달 열림 상태에 따라 body 스크롤 잠금
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
     if (modalOpen) {
@@ -251,7 +263,7 @@ const ArtistDetail = () => {
       <DetailWrapper>
         <DetailContainer>
           <ImageContainer>
-            <ArtistImage src={`/images/ArtistIMG/${artist.profile_img}`} alt={artist.name} />
+            <ArtistImage src={getImageUrl(artist.profile_img)} alt={artist.name} />
           </ImageContainer>
           <DescriptionContainer>
             <p>{artist.description}</p>
@@ -288,7 +300,7 @@ const ArtistDetail = () => {
                 };
                 return (
                   <WorkCard key={art.id} onClick={handleWorkClick}>
-                    <WorkImage src={getWorkImageUrl(art.imgUrl)} alt={art.title} />
+                    <WorkImage src={getImageUrl(art.imgUrl)} alt={art.title} />
                   </WorkCard>
                 );
               })
@@ -299,17 +311,18 @@ const ArtistDetail = () => {
         </WorksContainer>
       </DetailWrapper>
 
+      {/* 모달 표시 */}
       {modalOpen && selectedWork && (
         <Overlay onClick={handleOverlayClick}>
           <Modal onClick={(e) => e.stopPropagation()}>
-            <CloseButton onClick={() => setModalOpen(false)}>×</CloseButton>
             <ArtDetailImageContainer>
-              <img src={getWorkImageUrl(selectedWork.imgUrl)} alt={selectedWork.title} />
+              <img src={getImageUrl(selectedWork.imgUrl)} alt={selectedWork.title} />
             </ArtDetailImageContainer>
             <ArtDetailDescriptionContainer>
               <h2>{selectedWork.title}</h2>
               <p>{selectedWork.description}</p>
             </ArtDetailDescriptionContainer>
+            <CloseButton onClick={() => setModalOpen(false)}>×</CloseButton>
           </Modal>
         </Overlay>
       )}

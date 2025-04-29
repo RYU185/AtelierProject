@@ -55,7 +55,7 @@ const FileInput = styled.input`
 `;
 
 const ButtonContainer = styled.div`
-  flex-direction: row-reverse;
+flex-direction: row-reverse;
   position: relative;
   display: flex;
   gap: 10px;
@@ -159,10 +159,7 @@ function AdminArtAdd() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("completionDate", `${year}-01-01`);
-    formData.append(
-      "uploadDate",
-      uploadDate || new Date().toISOString().split("T")[0]
-    );
+    formData.append("uploadDate", uploadDate || new Date().toISOString().split("T")[0]);
     formData.append("artistId", artistId);
 
     try {
@@ -172,7 +169,7 @@ function AdminArtAdd() {
           "Content-Type": "multipart/form-data",
         },
       });
-
+      console.log('서버 응답:', response.data);
       if (response.status === 201) {
         alert("작품 등록 완료!");
 
@@ -264,12 +261,7 @@ function AdminArtAdd() {
           </SubmitButton>
         </ButtonContainer>
 
-        <FileInput
-          type="file"
-          id="file-input"
-          accept="image/*"
-          onChange={handleImageUpload}
-        />
+        <FileInput type="file" id="file-input" accept="image/*" onChange={handleImageUpload} />
       </AdminArtAddWrapper>
     </>
   );
