@@ -208,13 +208,12 @@ const CartPage = () => {
 
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
-
-    setIsEmpty(!newTotal.hasItems); // ✅ 그냥 newTotal 기준으로 간단하게
+    setIsEmpty(!newTotal.hasItems);
 
     if (cartListRef.current) {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
-
+      setIsEmpty(newTotal.hasItems === false);
       const isAllSelected =
         selectedItems.length > 0 && selectedItems.length === allItems.length;
       setIsAllSelected(isAllSelected);
@@ -235,7 +234,16 @@ const CartPage = () => {
   const handleConfirmPurchase = async () => {
     if (!cartListRef.current) return;
 
+    // 구매 직전에 강제 최신 데이터 계산
+    cartListRef.current.forceUpdateTotal?.();
+
     const selectedItems = cartListRef.current.getSelectedItems();
+
+    if (selectedItems.length === 0) {
+      alert("구매할 상품을 선택해주세요.");
+      return;
+    }
+
     const cartIds = selectedItems.map((item) => item.id);
 
     try {
@@ -250,7 +258,8 @@ const CartPage = () => {
             );
             return {
               ...item,
-              thumbnailUrl: matched?.image ?? "", // 여기서 변환 X!
+              thumbnailUrl: matched?.image ?? "",
+              quantity: matched?.quantity ?? 1, // ✅ 수량 매칭
             };
           }),
           totalPrice: data.totalPrice,

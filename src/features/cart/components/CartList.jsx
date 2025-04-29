@@ -274,18 +274,20 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
             <QuantityControl>
               <QuantityButton
                 onClick={() =>
+                  item.checked &&
                   handleQuantityChange(
                     items.indexOf(item),
                     Math.max(1, item.quantity - 1)
                   )
                 }
-                disabled={item.quantity <= 1} // 체크 여부 상관없이 작동
+                disabled={item.quantity <= 1 || !item.checked}
               >
                 -
               </QuantityButton>
               <QuantityInput type="text" value={item.quantity} readOnly />
               <QuantityButton
                 onClick={() =>
+                  item.checked &&
                   handleQuantityChange(items.indexOf(item), item.quantity + 1)
                 }
               >
