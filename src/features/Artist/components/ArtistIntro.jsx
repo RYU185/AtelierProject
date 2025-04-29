@@ -98,8 +98,8 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
 
       const correctedRoom = {
         ...room,
-        userId: room.userId,
-        artistId: room.artistId,
+        userId: localStorage.getItem("username"),
+        artistId: userId,
         userName: name,
         artistName: name,
       };
