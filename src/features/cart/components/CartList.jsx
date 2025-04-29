@@ -183,6 +183,9 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
       return items.filter((item) => item.checked);
     },
     getAllItems: () => [...items],
+    forceUpdateTotal: () => {
+      calculateTotal(items);
+    },
   }));
 
   const handleQuantityChange = (index, newQuantity) => {
