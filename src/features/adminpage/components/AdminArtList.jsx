@@ -5,8 +5,8 @@ import TitleWrapper from "./Titlewrapper";
 import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
 
-// ✅ 정적 이미지 + 업로드 이미지 모두 처리
 const artImages = import.meta.glob("/public/images/ArtListIMG/*", { eager: true });
+const API_URL = import.meta.env.VITE_API_URL;
 
 const getImageUrl = (filename) => {
   if (!filename) return "/path/to/default-image.png";
@@ -16,15 +16,12 @@ const getImageUrl = (filename) => {
     return matched[1].default;
   }
 
-  // 파일명이 '/uploads/'로 시작하면 그대로 사용
   if (filename.startsWith("/uploads/")) {
-    return `http://localhost:8081${filename}`;
+    return `${API_URL}${filename}`;
   }
 
-  // 파일명에 uploads 없으면 정상적으로 붙이기
-  return `http://localhost:8081/artgallery/uploads/${filename}`;
+  return `${API_URL}/uploads/${filename}`;
 };
-
 const PageContainer = styled.div`
   min-height: 100vh;
 `;
