@@ -374,7 +374,7 @@ const ModalButton = styled.button`
 function GoodsDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { authTokens } = useAuth(); // AuthContext 사용
+  const { user, token } = useAuth(); // AuthContext 사용
 
   const [quantity, setQuantity] = useState(1);
   const [stock, setStock] = useState(10);
@@ -476,7 +476,8 @@ function GoodsDetail() {
 
   const handlePurchaseConfirm = async () => {
     try {
-      if (!authTokens?.user) {
+      if (!user) {
+        // 여기 수정됨! ✅
         alert("로그인이 필요합니다.");
         navigate("/login");
         return;
@@ -486,7 +487,7 @@ function GoodsDetail() {
         quantity: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
-        userId: authTokens.user.username,
+        userId: user.username, // 여기 수정됨! ✅
       };
 
       const safeThumbnail =
@@ -494,7 +495,7 @@ function GoodsDetail() {
 
       await axiosInstance.post("/purchase/buy-now", dto, {
         headers: {
-          Authorization: `Bearer ${authTokens.token}`,
+          Authorization: `Bearer ${token}`, // 여기 수정됨! ✅
         },
       });
 
