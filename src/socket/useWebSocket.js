@@ -5,7 +5,10 @@ import useSocketStore from "./useSocketStore";
 import { useAuth } from "../components/AuthContext";
 
 export const useWebSocket = () => {
+  console.log("[WebSocket 훅] 마운트");
   const { token } = useAuth();
+  console.log("[WebSocket 훅] 토큰:", token);
+
   const clientRef = useRef(null);
   const {
     setSocketConnected,
@@ -18,10 +21,13 @@ export const useWebSocket = () => {
   } = useSocketStore();
 
   const sendMessage = useCallback((payload) => {
+
     if (!clientRef.current || !clientRef.current.connected) {
-      console.log("웹소켓 연결 안됨 → 메세지 전송 실패");
       return;
     }
+
+    console.log("PUBLISH 수행 직전", payload);
+
     clientRef.current.publish({
       destination: "/app/chat.send",
       body: JSON.stringify(payload),
@@ -30,6 +36,7 @@ export const useWebSocket = () => {
   }, []);
 
   useEffect(() => {
+    console.log("[WebSocket] useEffect 진입");
     if (!token) {
       console.warn("[WebSocket] 토큰 없음, 연결 안함");
       return;
@@ -46,7 +53,7 @@ export const useWebSocket = () => {
       onConnect: () => {
         console.log("[WebSocket] 연결 성공");
         setSocketConnected(true);
-        setSendMessage(() => sendMessage);
+        setSendMessage(sendMessage);
 
         client.subscribe("/user/queue/notifications", (message) => {
           try {
