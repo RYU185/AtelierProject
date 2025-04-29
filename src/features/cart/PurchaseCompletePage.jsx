@@ -200,14 +200,16 @@ const PurchaseCompletePage = () => {
               {items.map((item, idx) => (
                 <ItemRow key={idx}>
                   <ItemInfo>
-                    <ItemImage src={getGoodsImageUrl(item.thumbnailUrl)} alt={item.goodsName} />
+                    <ItemImage src={item.thumbnailUrl} alt={item.goodsName} />
 
                     <ItemDetails>
                       <ItemName>{item.goodsName}</ItemName>
                       <ItemQuantity>수량: {item.quantity}개</ItemQuantity>
                     </ItemDetails>
                   </ItemInfo>
-                  <ItemPrice>{(item.price * item.quantity).toLocaleString()}원</ItemPrice>
+                  <ItemPrice>
+                    {(item.price * item.quantity).toLocaleString()}원
+                  </ItemPrice>
                 </ItemRow>
               ))}
             </ItemList>
@@ -220,7 +222,9 @@ const PurchaseCompletePage = () => {
             <Button onClick={() => navigate("/goods")}>계속 쇼핑하기</Button>
             <Button
               primary
-              onClick={() => navigate("/mypage", { state: { activeTab: "purchase" } })}
+              onClick={() =>
+                navigate("/mypage", { state: { activeTab: "purchase" } })
+              }
             >
               나의 굿즈 구매현황
             </Button>
