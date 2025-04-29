@@ -8,10 +8,14 @@ import Header from "../Header";
 import Footer from "../Footer";
 import { getGoodsImageUrl } from "../../utils/getGoodsImageUrl";
 
-
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const Wrapper = styled.div`
@@ -185,7 +189,10 @@ const CartPage = () => {
       const selectedItems = cartListRef.current.getSelectedItems();
       const newTotal = {
         quantity: selectedItems.reduce((sum, item) => sum + item.quantity, 0),
-        price: selectedItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
+        price: selectedItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        ),
         selectedItems: selectedItems,
         hasItems: selectedItems.length > 0,
       };
@@ -207,7 +214,8 @@ const CartPage = () => {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
       setIsEmpty(newTotal.hasItems === false);
-      const isAllSelected = selectedItems.length > 0 && selectedItems.length === allItems.length;
+      const isAllSelected =
+        selectedItems.length > 0 && selectedItems.length === allItems.length;
       setIsAllSelected(isAllSelected);
     }
   };
@@ -226,7 +234,16 @@ const CartPage = () => {
   const handleConfirmPurchase = async () => {
     if (!cartListRef.current) return;
 
+    // 구매 직전에 강제 최신 데이터 계산
+    cartListRef.current.forceUpdateTotal?.();
+
     const selectedItems = cartListRef.current.getSelectedItems();
+
+    if (selectedItems.length === 0) {
+      alert("구매할 상품을 선택해주세요.");
+      return;
+    }
+
     const cartIds = selectedItems.map((item) => item.id);
 
     try {
@@ -236,16 +253,18 @@ const CartPage = () => {
       navigate("/purchase-complete", {
         state: {
           items: data.goods.map((item) => {
-            const matched = selectedItems.find((s) => s.name === item.goodsName);
+            const matched = selectedItems.find(
+              (s) => s.name === item.goodsName
+            );
             return {
               ...item,
-              thumbnailUrl: matched?.image ?? '', // 여기서 변환 X!
+              thumbnailUrl: matched?.image ?? "",
+              quantity: matched?.quantity ?? 1, // ✅ 수량 매칭
             };
           }),
           totalPrice: data.totalPrice,
           purchaseDate: data.purchaseDate,
           purchaseId: data.purchaseId,
-
         },
       });
     } catch (err) {
@@ -283,9 +302,14 @@ const CartPage = () => {
                       onChange={handleSelectAll}
                     />
                     <SelectAllText>전체 선택</SelectAllText>
-                    <DeleteButton onClick={handleDeleteSelected}>선택상품 삭제</DeleteButton>
+                    <DeleteButton onClick={handleDeleteSelected}>
+                      선택상품 삭제
+                    </DeleteButton>
                   </SelectAllBar>
-                  <CartList ref={cartListRef} onUpdateTotal={handleUpdateTotal} />
+                  <CartList
+                    ref={cartListRef}
+                    onUpdateTotal={handleUpdateTotal}
+                  />
                 </>
               )}
             </CartContent>
