@@ -394,7 +394,7 @@ const ChatRoom = ({ room: propRoom }) => {
       tempId,
     };
 
-    setChatMessages((prev = []) => [
+    setChatMessages((prev) => [
       ...prev,
       {
         id: tempId,
