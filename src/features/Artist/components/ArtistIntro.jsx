@@ -98,10 +98,10 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
 
       const correctedRoom = {
         ...room,
-        userId: room.user?.userId,
-        artistId: room.artist?.userId, 
-        userName: room.user?.nickName, 
-        artistName: room.artist?.name, 
+        userId: room.userId,
+        artistId: room.artistId,
+        userName: name,
+        artistName: name,
       };
 
       navigate(`/artist/${userId}/chat`, {
