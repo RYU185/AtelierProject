@@ -201,13 +201,13 @@ const CartPage = () => {
 
   const handleUpdateTotal = (newTotal) => {
     setTotal(newTotal);
-    setIsEmpty(!newTotal.hasItems);
 
     if (cartListRef.current) {
       const selectedItems = cartListRef.current.getSelectedItems();
       const allItems = cartListRef.current.getAllItems();
-      setIsEmpty(newTotal.hasItems === false);
-      const isAllSelected = selectedItems.length > 0 && selectedItems.length === allItems.length;
+      setIsEmpty(allItems.length === 0);
+      const isAllSelected =
+        selectedItems.length > 0 && selectedItems.length === allItems.length;
       setIsAllSelected(isAllSelected);
     }
   };
