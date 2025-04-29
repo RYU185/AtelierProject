@@ -176,7 +176,9 @@ const GoodsPurchase = () => {
     const formatted = {
       id: purchase.purchaseId,
       title: purchase.goodsName,
-      image: `/public/images/goods-images/${purchase.thumbnailUrl}`,
+      image: purchase.thumbnailUrl?.startsWith("/uploads")
+        ? `${purchase.thumbnailUrl}`
+        : `/images/goods-images/${purchase.thumbnailUrl}`,
       price: `환불금액: ${(
         purchase.price * purchase.quantity
       ).toLocaleString()}원 · ${purchase.quantity}개

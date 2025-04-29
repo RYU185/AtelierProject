@@ -451,11 +451,15 @@ function GoodsDetail() {
         return;
       }
 
+      const safeThumbnail =
+        currentProductImages?.[selectedImage] || currentProductImages?.[0];
+
       const dto = {
         amount: quantity,
         sum: goods.price * quantity,
         goodsId: goods.id,
         userId: userId,
+        thumbnailUrl: safeThumbnail,
       };
 
       await axiosInstance.post("/cart", dto);
