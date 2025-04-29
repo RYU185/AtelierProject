@@ -340,16 +340,6 @@ const ChatRoom = ({ room: incomingRoom }) => {
     }
   }, [room, artistId]);
 
-  if (!room) {
-    return (
-      <GradientBackground>
-        <Header />
-        <div style={{ padding: "2rem", color: "#fff", textAlign: "center" }}>채팅방 로딩 중...</div>
-        <Footer />
-      </GradientBackground>
-    );
-  }
-
   useEffect(() => {
     if (!room?.id) return;
     const fetchMessages = async () => {
@@ -374,16 +364,16 @@ const ChatRoom = ({ room: incomingRoom }) => {
   }, [room]);
 
   useEffect(() => {
+    if (!isUserScrolled && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatMessages]);
+
+  useEffect(() => {
     console.log("🔴 [ChatRoom] chatMessages 업데이트:", {
       length: chatMessages.length,
       last: chatMessages[chatMessages.length - 1],
     });
-  }, [chatMessages]);
-
-  useEffect(() => {
-    if (!isUserScrolled && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
   }, [chatMessages]);
 
   const handleScroll = () => {
@@ -420,6 +410,7 @@ const ChatRoom = ({ room: incomingRoom }) => {
 
     setChatMessages((prev) => {
       const updated = [...prev, newMsgObj];
+      return updated;
     });
 
     sendMessage({
@@ -433,6 +424,16 @@ const ChatRoom = ({ room: incomingRoom }) => {
 
     setNewMessage("");
   };
+
+  if (!room) {
+    return (
+      <GradientBackground>
+        <Header />
+        <div style={{ padding: "2rem", color: "#fff", textAlign: "center" }}>채팅방 로딩 중...</div>
+        <Footer />
+      </GradientBackground>
+    );
+  }
 
   return (
     <GradientBackground>
