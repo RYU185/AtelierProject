@@ -243,12 +243,12 @@ const CartPage = () => {
     }
 
     const cartItems = selectedItems.map((item) => ({
-      id: item.id,
+      cartId: item.id,
       quantity: item.quantity,
     }));
 
     try {
-      const response = await axiosInstance.post("/purchase/add", cartIds);
+      const response = await axiosInstance.post("/purchase/add", cartItems);
       const { data } = response;
 
       // ✅ 총 가격 계산 추가
