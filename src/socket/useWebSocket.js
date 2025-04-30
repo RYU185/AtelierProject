@@ -75,7 +75,7 @@ export const useWebSocket = () => {
         client.subscribe("/user/queue/messages", (message) => {
           try {
             const body = JSON.parse(message.body);
-            console.log("[Chat Message]", body);
+            console.log("🔥 WebSocket 수신:", body.sender, "→", body.content);
 
             if (body.tempId) {
               replaceTempMessage(body.tempId, {
@@ -87,13 +87,15 @@ export const useWebSocket = () => {
                 isArtist: body.sender === body.receiver,
                 nickname: body.senderNickname || "익명",
                 isTemporary: false,
+                sender: body.sender,
               });
+
               return;
             }
 
             addChatMessage({
               id: body.id,
-
+              sender: body.sender,
               message: body.content,
               timestamp: body.timestamp,
               nickname: body.senderNickname || "익명",
