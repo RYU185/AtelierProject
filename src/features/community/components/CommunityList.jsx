@@ -133,7 +133,7 @@ function CommunityList() {
   };
 
   const handleAddPostSubmit = (newPost) => {
-    setCommunityItems((prev) => [newPost, ...prev]); // Add the new post to the front of the list
+    setCommunityItems((prev) => [newPost, ...prev]);
   };
   useEffect(() => {
     const fetchCurrentUser = async () => {

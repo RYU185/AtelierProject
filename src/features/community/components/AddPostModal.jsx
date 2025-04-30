@@ -195,6 +195,12 @@ function AddPostModal({ onClose, userNickname }) {
       reader.readAsDataURL(file);
     });
   };
+  const handleCancelImage = (indexToRemove) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== indexToRemove));
+    setImagePreviews((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== indexToRemove)
+    );
+  };
 
   const handleSubmit = async () => {
     if (images.length > 4) {
