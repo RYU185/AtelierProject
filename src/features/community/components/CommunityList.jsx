@@ -13,8 +13,7 @@ const borderColor = "#dce3eb";
 const shadow = "0 4px 20px rgba(0,0,0,0.06)";
 const buttonGradient = "linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%)";
 const drawButtonGradient = "linear-gradient(135deg, #b3e5fc 0%, #4fc3f7 100%)";
-const drawButtonHoverGradient =
-  "linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%)";
+const drawButtonHoverGradient = "linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%)";
 
 const NoPostsMessage = styled.div`
   padding: 20px;
@@ -24,7 +23,7 @@ const NoPostsMessage = styled.div`
 `;
 const Container = styled.div`
   width: 70%;
-  background-color: #f0f4f8;
+  background-color: rgba(255, 255, 255, 0.151);
   border-radius: 16px;
   margin: 0 auto 80px;
   padding-top: 20px;
@@ -38,13 +37,13 @@ const ButtonBox = styled.div`
 `;
 
 const StyledButton = styled.button`
-  padding: 14px 28px;
+  padding: 14px 90px;
   border-radius: 8px;
   font-weight: 600;
   font-size: 16px;
-  background-color: white;
-  border: 1.5px solid #dce3eb;
-  color: #2e3a59;
+  background-color: rgba(255, 255, 255, 0.151);
+  border: 1px solid #dce3eb1a;
+  color: #e1e1e1;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -64,14 +63,13 @@ const StyledButton = styled.button`
 `;
 
 const StyledDrawwButton = styled(StyledButton)`
-  background: linear-gradient(135deg, #b3e5fc 0%, #4fc3f7 100%);
+  background: rgba(255, 255, 255, 0.151);
   color: white;
   border: none;
   box-shadow: 0 2px 5px rgba(179, 229, 252, 0.3);
 
   &:hover {
     background: linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%);
-    box-shadow: 0 4px 10px rgba(179, 229, 252, 0.4);
     transform: translateY(-3px);
   }
 `;
@@ -189,14 +187,11 @@ function CommunityList() {
   const checkLikeStatus = async (communityId, token) => {
     if (!token) return false;
     try {
-      const response = await axios.get(
-        `/api/community/like/check/${communityId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`/api/community/like/check/${communityId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data;
     } catch (error) {
       console.error("좋아요 상태 확인 실패:", error);
@@ -295,9 +290,7 @@ function CommunityList() {
       if (response.status === 200) {
         setCommunityItems((prev) =>
           prev.map((post) =>
-            post.id === updatedPost.id
-              ? { ...post, text: updatedPost.text }
-              : post
+            post.id === updatedPost.id ? { ...post, text: updatedPost.text } : post
           )
         );
         closeEditModal();
@@ -314,26 +307,8 @@ function CommunityList() {
     <div>
       <Container>
         <ButtonBox>
-          <StyledButton
-            onClick={handleViewAllPostsClick}
-            style={{
-              background: !isMyPostsView ? buttonGradient : "white",
-              color: !isMyPostsView ? "white" : textColor,
-              borderColor: !isMyPostsView ? "transparent" : borderColor,
-            }}
-          >
-            전체 보기
-          </StyledButton>
-          <StyledButton
-            onClick={handleViewMyPostsClick}
-            style={{
-              background: isMyPostsView ? buttonGradient : "white",
-              color: isMyPostsView ? "white" : textColor,
-              borderColor: isMyPostsView ? "transparent" : borderColor,
-            }}
-          >
-            나의 글 보기
-          </StyledButton>
+          <StyledButton onClick={handleViewAllPostsClick}>전체 보기</StyledButton>
+          <StyledButton onClick={handleViewMyPostsClick}>나의 글 보기</StyledButton>
           <StyledButton onClick={handleAddPostClick}>게시글 등록</StyledButton>
           <StyledDrawwButton onClick={() => navigate("/drawingcanvas")}>
             작품 그리기
@@ -407,11 +382,7 @@ function CommunityList() {
       )}
 
       {isEditModalOpen && postToEdit && (
-        <EditPostModal
-          post={postToEdit}
-          onClose={closeEditModal}
-          onSubmit={handleEditSubmit}
-        />
+        <EditPostModal post={postToEdit} onClose={closeEditModal} onSubmit={handleEditSubmit} />
       )}
     </div>
   );
