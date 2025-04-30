@@ -429,7 +429,7 @@ function Community({
             {img.map((image, index) => (
               <PostImage
                 key={index}
-                src={`${process.env.REACT_APP_API_URL}${image}`}
+                src={`${import.meta.env.VITE_API_URL}${image}`}
                 alt={`첨부된 이미지 ${index + 1}`}
                 $active={index === currentImageIndex}
               />
