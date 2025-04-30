@@ -6,7 +6,6 @@ import TitleWrapper from "./Titlewrapper";
 import api from "../../../api/axiosInstance";
 
 const AdminArtAddWrapper = styled.div`
-  display: flex;
   flex-direction: column;
   color: white;
 `;
@@ -60,6 +59,7 @@ const ButtonContainer = styled.div`
   position: relative;
   display: flex;
   gap: 10px;
+  margin-top: 30px;
 `;
 
 const UploadButton = styled.label`
