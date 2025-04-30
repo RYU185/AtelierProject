@@ -6,9 +6,14 @@ import { Link, useNavigate } from "react-router-dom";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 const getImageUrl = (filename) => {
-  if (!filename) return "/path/to/default-image.png";
-  if (filename.startsWith("/uploads/")) return `${VITE_API_URL}${filename}`;
-  return `${VITE_API_URL}/uploads/Artist/${filename}`;
+  if (!filename) return "/default.png";
+
+  if (filename.startsWith("/uploads/")) {
+    return `${VITE_API_URL}${filename}`;
+  }
+
+  // 정적 이미지 경로 (public 폴더)
+  return `/images/ArtistIMG/${filename}`;
 };
 
 const Wrapper = styled.div`
