@@ -4,7 +4,6 @@ import Community from "./Community";
 import CommentList from "./CommentList";
 import { IoClose } from "react-icons/io5";
 import axios from "axios";
-import EditPostModal from "./EditPostModal"; // EditPostModal import
 
 const ModalOverlay = styled.div`
   position: fixed;
