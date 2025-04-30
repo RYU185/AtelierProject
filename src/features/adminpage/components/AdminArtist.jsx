@@ -3,10 +3,19 @@ import styled from "styled-components";
 import axiosInstance from "../../../api/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+const getImageUrl = (filename) => {
+  if (!filename) return "/path/to/default-image.png";
+  if (filename.startsWith("/uploads/")) return `${VITE_API_URL}${filename}`;
+  return `${VITE_API_URL}/uploads/Artist/${filename}`;
+};
+
 const Wrapper = styled.div`
   width: 1300px;
   margin-bottom: 50px;
 `;
+
 const Title = styled.h2`
   font-size: 30px;
   color: #3da9fc;
@@ -35,6 +44,7 @@ const AddButton = styled.button`
     background-color: #3da9fc;
   }
 `;
+
 const SearchBar = styled.input`
   width: 300px;
   padding: 8px 12px;
@@ -43,6 +53,7 @@ const SearchBar = styled.input`
   color: #e1e1e1;
   background-color: rgba(255, 255, 255, 0.07);
   transition: 0.3s ease-in-out;
+
   &:focus {
     outline: none;
     border-color: #3da9fc;
@@ -55,6 +66,7 @@ const ListContainer = styled.div`
   gap: 30px;
   padding-top: 30px;
 `;
+
 const ArtistContainer = styled.div`
   width: 100%;
   height: 320px;
@@ -180,12 +192,20 @@ const AdminArtist = () => {
         />
         <AddButton onClick={handleAddArtist}>작가 등록</AddButton>
       </ControllerContainer>
+
       <ListContainer>
         {paginatedData.map((artist, idx) => (
-          <Link to={`/artist/${artist.id}`} style={{ textDecoration: "none" }}>
-            <ArtistContainer key={idx}>
+          <Link
+            key={artist.id}
+            to={`/artist/${artist.id}`}
+            style={{ textDecoration: "none" }}
+          >
+            <ArtistContainer>
               <ImageContainer>
-                <ProfileIMG src={`/images/ArtistIMG/${artist.profile_img}`} />
+                <ProfileIMG
+                  src={getImageUrl(artist.profile_img)}
+                  alt={artist.name}
+                />
               </ImageContainer>
               <ArtistInfoContainer>
                 <ArtistName>{artist.name}</ArtistName>
