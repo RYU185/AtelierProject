@@ -194,7 +194,7 @@ const AdminArtist = () => {
       </ControllerContainer>
 
       <ListContainer>
-        {paginatedData.map((artist, idx) => (
+        {paginatedData.map((artist) => (
           <Link
             key={artist.id}
             to={`/artist/${artist.id}`}
