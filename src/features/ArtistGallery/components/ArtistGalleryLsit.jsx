@@ -23,9 +23,6 @@ function ArtistGalleryLsit({ filteredItems }) {
   const navigate = useNavigate();
   const [galleryItems, setGalleryItems] = useState([]);
 
-  const getImageUrl = (filename) =>
-    filename ? `/images/ArtistGalleryIMG/${filename}` : "";
-
   useEffect(() => {
     fetchGalleryData("/artistgallery");
   }, []);
@@ -34,7 +31,7 @@ function ArtistGalleryLsit({ filteredItems }) {
     if (filteredItems && filteredItems.length > 0) {
       const transformed = filteredItems.map((item) => ({
         id: item.id,
-        imageUrl: getImageUrl(item.posterUrl),
+        imageUrl: item.posterUrl,
         title: item.title,
         date: `${item.startDate} ~ ${item.endDate}`,
         description: item.description,
@@ -50,7 +47,7 @@ function ArtistGalleryLsit({ filteredItems }) {
       const res = await axiosInstance.get(apiUrl);
       const transformed = res.data.map((item) => ({
         id: item.id,
-        imageUrl: getImageUrl(item.posterUrl),
+        imageUrl: item.posterUrl,
         title: item.title,
         date: `${item.startDate} ~ ${item.endDate}`,
         description: item.description,

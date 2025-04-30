@@ -16,5 +16,4 @@ function ArtistGalleryPoster({ url }) {
   );
 }
 
-
 export default ArtistGalleryPoster;

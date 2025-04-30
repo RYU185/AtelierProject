@@ -7,7 +7,7 @@ const Container = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   display: flex;
-  align-items: center; 
+  align-items: center;
   cursor: pointer;
   border: 1px solid #53535334;
   border-radius: 10px;
@@ -49,7 +49,7 @@ const ArtistGalleryIntro = styled.div`
   & h3 {
     font-size: 16px;
     color: #cfcfcf;
-    margin-top: 10px; 
+    margin-top: 10px;
   }
 
   & p {
@@ -57,7 +57,6 @@ const ArtistGalleryIntro = styled.div`
     color: #dadada;
     overflow: hidden;
     text-overflow: ellipsis;
-    
   }
 `;
 
@@ -69,7 +68,7 @@ function ArtistGallerys({ id, imageUrl, title, date, artists, description }) {
 
   return (
     <Container onClick={handleClick}>
-      <Img src={imageUrl} alt={title} />
+      <Img src={`${import.meta.env.VITE_API_URL}${imageUrl}`} alt={title} />
       <ArtistGalleryIntro>
         <h1>{title}</h1>
         <h2>{date}</h2>

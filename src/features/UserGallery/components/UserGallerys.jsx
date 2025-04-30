@@ -67,7 +67,7 @@ function UserGallerys({ id, imageUrl, title, date, artists, description }) {
 
   return (
     <Container onClick={handleClick}>
-      <Img src={imageUrl} alt={title} />
+      <Img src={`${import.meta.env.VITE_API_URL}${imageUrl}`} alt={title} />
       <ArtistGalleryIntro>
         <h1>{title}</h1>
         <h2>{date}</h2>

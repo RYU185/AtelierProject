@@ -12,8 +12,8 @@ const WhatsOnSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; 
-  padding-top: 80px;            
+  justify-content: flex-start;
+  padding-top: 80px;
   perspective: 2500px;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -40,11 +40,10 @@ const SliderContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 500px;  
+  height: 500px;
   perspective: 2000px;
   perspective-origin: center 100%;
   margin-top: -220px;
-
 `;
 
 const SlideWrapper = styled.div`
@@ -75,7 +74,7 @@ const Slide = styled.div`
 `;
 
 const EventInfo = styled.div`
-  position: absolute;/* 이미지와 간격 조절 */
+  position: absolute; /* 이미지와 간격 조절 */
   width: 100%;
   text-align: center;
   opacity: 0.8;
@@ -84,7 +83,7 @@ const EventInfo = styled.div`
 `;
 
 const EventTitle = styled.div`
-  font-size: 50px; 
+  font-size: 50px;
   font-weight: 600;
   margin-top: 50px;
   margin-bottom: 12px; /* 제목과 날짜 간 간격 조절 */
@@ -186,7 +185,12 @@ export default function WhatsOn() {
                 }}
                 onClick={() => handleGalleryClick(gallery.id)}
               >
-                {imageUrl && <img src={imageUrl} alt={gallery.title} />}
+                {imageUrl && (
+                  <img
+                    src={`${import.meta.env.VITE_API_URL}${gallery.posterUrl}`}
+                    alt={gallery.title}
+                  />
+                )}
                 {offset === 0 && (
                   <EventInfo onClick={() => handleGalleryClick(gallery.id)}>
                     <EventTitle>{gallery.title}</EventTitle>

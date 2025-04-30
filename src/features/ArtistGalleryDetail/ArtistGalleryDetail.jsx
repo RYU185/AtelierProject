@@ -9,7 +9,12 @@ import axiosInstance from "../../api/axiosInstance";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const TitleContainer = styled.div`
@@ -18,7 +23,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 7.25rem ;
+  padding-top: 7.25rem;
   padding-bottom: 4.25rem;
 `;
 
@@ -82,17 +87,15 @@ const Info = styled.h1`
   text-align: center;
   margin-bottom: 150px;
   color: #e0e0e0;
-
 `;
 
 function ArtistGalleryDetail() {
-  const { id } = useParams(); // URL에서 id 추출
+  const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
-  const getImageUrl = (filename) => (filename ? `/images/ArtistGalleryIMG/${filename}` : "");
-
-  const getArtImageUrl = (filename) => (filename ? `/images/ArtListIMG/${filename}` : "");
+  const getArtImageUrl = (filename) =>
+    filename ? `/images/ArtListIMG/${filename}` : "";
 
   useEffect(() => {
     const fetchGalleryDetail = async () => {
@@ -115,11 +118,17 @@ function ArtistGalleryDetail() {
           <Title>ARTIST GALLERY</Title>
         </TitleContainer>
         <ButtonDiv>
-          <Button onClick={() => navigate("/gallery/artistgallery")}>전시회 목록</Button>
+          <Button onClick={() => navigate("/gallery/artistgallery")}>
+            전시회 목록
+          </Button>
         </ButtonDiv>
         <Container>
           <PosterBox>
-            {data && <ArtistGalleryPoster url={getImageUrl(data.posterUrl)} />}
+            {data && (
+              <ArtistGalleryPoster
+                url={`${import.meta.env.VITE_API_URL}${data.posterUrl}`}
+              />
+            )}
             {data && <TicketButton galleryId={id} />}
           </PosterBox>
           <InfoBox>

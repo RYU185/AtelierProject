@@ -7,16 +7,18 @@ import styled from "styled-components";
 import axios from "axios";
 import TicketButton from "../ArtistGalleryDetail/components/TicketButton";
 
-const images = import.meta.glob("/public/images/UserGalleryIMG/*", {
-  eager: true,
-});
 const dImages = import.meta.glob("/public/images/DrawingIMG/*", {
   eager: true,
 });
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const TitleContainer = styled.div`
@@ -96,13 +98,10 @@ function UserGalleryDetail() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
-  const getImageUrl = (filename) => {
-    const matched = Object.entries(images).find(([path]) => path.endsWith(filename));
-    return matched ? matched[1].default : "";
-  };
-
   const getdImageUrl = (filename) => {
-    const matched = Object.entries(dImages).find(([path]) => path.endsWith(filename));
+    const matched = Object.entries(dImages).find(([path]) =>
+      path.endsWith(filename)
+    );
     return matched ? matched[1].default : "";
   };
 
@@ -124,11 +123,17 @@ function UserGalleryDetail() {
         <Title>USER GALLERY</Title>
       </TitleContainer>
       <ButtonDiv>
-        <Button onClick={() => navigate("/gallery/Usergallery")}>&lt; 목록 보기</Button>
+        <Button onClick={() => navigate("/gallery/Usergallery")}>
+          &lt; 목록 보기
+        </Button>
       </ButtonDiv>
       <Container>
         <PosterBox>
-          {data && <UserGalleryPoster url={getImageUrl(data.posterUrl)} />}
+          {data && (
+            <UserGalleryPoster
+              url={`${import.meta.env.VITE_API_URL}${data.posterUrl}`}
+            />
+          )}
           <TicketButton />
         </PosterBox>
         <InfoBox>
