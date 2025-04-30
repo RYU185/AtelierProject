@@ -87,14 +87,13 @@ export const useWebSocket = () => {
                 isArtist: body.sender === body.receiver,
                 nickname: body.senderNickname || "익명",
                 isTemporary: false,
-                sender: body.sender,
               });
               return;
             }
 
             addChatMessage({
               id: body.id,
-              sender: body.sender,
+
               message: body.content,
               timestamp: body.timestamp,
               nickname: body.senderNickname || "익명",

@@ -351,7 +351,6 @@ const ChatRoom = ({ room: incomingRoom }) => {
         const res = await axiosInstance.get(`/chat-room/${room.id}/messages`);
         const loaded = res.data.map((msg, index) => ({
           id: msg.tempId ?? `msg-${index}`,
-          sender: msg.sender,
           message: msg.content,
           timestamp: msg.timestamp,
           isArtist: msg.sender === room.artistId,
@@ -496,22 +495,17 @@ const ChatRoom = ({ room: incomingRoom }) => {
 
               <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
                 {Array.isArray(chatMessages) &&
-                  chatMessages.map((msg, index) => {
-                    console.log("🟡 msg.sender:", msg.sender);
-                    console.log("🟢 user.username:", user?.username);
-                    console.log("🧭 isSender:", msg.sender === user?.username);
-                    return (
-                      <ChatMessage
-                        key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
-                        message={msg.message}
-                        timestamp={msg.timestamp}
-                        isArtist={msg.isArtist}
-                        file={msg.file}
-                        nickname={msg.nickname}
-                        isSender={msg.sender === user?.username}
-                      />
-                    );
-                  })}
+                  chatMessages.map((msg, index) => (
+                    <ChatMessage
+                      key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
+                      message={msg.message}
+                      timestamp={msg.timestamp}
+                      isArtist={msg.isArtist}
+                      file={msg.file}
+                      nickname={msg.nickname}
+                      isSender={msg.isArtist === user?.isArtist}
+                    />
+                  ))}
                 <div ref={messagesEndRef} />
               </ChatMessages>
 
