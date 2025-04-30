@@ -85,17 +85,19 @@ export const useWebSocket = () => {
                 timestamp: body.timestamp,
                 isTemporary: false,
                 isArtist: body.sender === body.receiver,
+                nickname: body.senderNickname || "익명",
                 isTemporary: false,
+                sender: body.sender,
               });
               return;
             }
 
             addChatMessage({
               id: body.id,
+              sender: body.sender,
               message: body.content,
               timestamp: body.timestamp,
-              isArtist: body.sender === body.receiver,
-              nickname: body.senderNickname,
+              nickname: body.senderNickname || "익명",
             });
           } catch (error) {
             console.error("[Chat Message Parsing Error]", error);
