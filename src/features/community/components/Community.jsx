@@ -416,7 +416,6 @@ function Community({
             <MenuIcon />
             {isMenuOpen && (
               <MenuDropdown onClick={(e) => e.stopPropagation()}>
-                <MenuItemM onClick={handleEditClick}>수정</MenuItemM>
                 <MenuItemD onClick={handleDeleteClick}>삭제</MenuItemD>
               </MenuDropdown>
             )}
