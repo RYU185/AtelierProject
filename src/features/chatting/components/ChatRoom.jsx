@@ -351,6 +351,7 @@ const ChatRoom = ({ room: incomingRoom }) => {
         const res = await axiosInstance.get(`/chat-room/${room.id}/messages`);
         const loaded = res.data.map((msg, index) => ({
           id: msg.tempId ?? `msg-${index}`,
+          sender: msg.sender,
           message: msg.content,
           timestamp: msg.timestamp,
           isArtist: msg.sender === room.artistId,
@@ -495,17 +496,26 @@ const ChatRoom = ({ room: incomingRoom }) => {
 
               <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
                 {Array.isArray(chatMessages) &&
-                  chatMessages.map((msg, index) => (
-                    <ChatMessage
-                      key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
-                      message={msg.message}
-                      timestamp={msg.timestamp}
-                      isArtist={msg.isArtist}
-                      file={msg.file}
-                      nickname={msg.nickname}
-                      isSender={msg.isArtist === user?.isArtist}
-                    />
-                  ))}
+                  chatMessages.map((msg, index) => {
+                    console.log("🔎 sender:", msg.sender);
+                    console.log("🔎 currentUser:", user?.username);
+                    console.log("🧭 isSender:", msg.sender === user?.username);
+
+                    return (
+                      <ChatMessage
+                        key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
+                        message={msg.message}
+                        timestamp={msg.timestamp}
+                        isArtist={msg.isArtist}
+                        file={msg.file}
+                        nickname={msg.nickname}
+                        isSender={
+                          msg.sender === user.username ||
+                          (!msg.sender && msg.nickname === user.nickname)
+                        }
+                      />
+                    );
+                  })}
                 <div ref={messagesEndRef} />
               </ChatMessages>
 
