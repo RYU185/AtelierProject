@@ -242,7 +242,10 @@ const CartPage = () => {
       return;
     }
 
-    const cartIds = selectedItems.map((item) => item.id);
+    const cartItems = selectedItems.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    }));
 
     try {
       const response = await axiosInstance.post("/purchase/add", cartIds);
@@ -284,7 +287,6 @@ const CartPage = () => {
       setShowModal(false);
     }
   };
-
 
   return (
     <GradientBackground>
