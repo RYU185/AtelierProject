@@ -62,7 +62,7 @@ export const useWebSocket = () => {
           }
         });
 
-        client.subscribe("/topic/inquiry", (message) => {
+        client.subscribe("/user/queue/inquiry", (message) => {
           try {
             const inquiry = JSON.parse(message.body);
             console.log("[Inquiry]", inquiry);
