@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import LogoIconFinal from "../../LogoIconFinal";
 
 const MenuOverlay = styled.div`
   position: fixed;
@@ -119,6 +120,12 @@ const Logo = styled.div`
   &:hover {
     color: #60d2ff;
   }
+  svg {
+    height: 80px;
+    width: auto;
+    scale: 1.5;
+    margin-top: -24px;
+  }
 `;
 
 const LogoNumber = styled.div`
@@ -223,7 +230,9 @@ const Menu = ({ isOpen, onClose }) => {
   return (
     <MenuOverlay $isOpen={isOpen}>
       <LogoContainer $isOpen={isOpen}>
-        <Logo onClick={() => handleNavigate("/")}>LOGO</Logo>
+        <Logo onClick={() => handleNavigate("/")}>
+          <LogoIconFinal width={160} height={80} />
+        </Logo>
       </LogoContainer>
       <CloseButton onClick={onClose} $isOpen={isOpen}>
         ×
