@@ -22,11 +22,12 @@ export const useSocketStore = create((set) => ({
 
   addChatMessage: (message) =>
     set((state) => {
-      const exists = state.chatMessages.some((m) => m.id === message.id);
+      const messages = Array.isArray(state.chatMessages) ? state.chatMessages : [];
+      const exists = messages.some((m) => m.id === message.id);
       if (exists) return state;
 
       return {
-        chatMessages: [...state.chatMessages, message],
+        chatMessages: [...messages, message],
       };
     }),
 
@@ -34,12 +35,13 @@ export const useSocketStore = create((set) => ({
 
   replaceTempMessage: (tempId, patch) =>
     set((state) => {
+      const safePatch = { ...patch, tempId };
       const updated = state.chatMessages.map((m) =>
-        m.tempId === tempId ? { ...m, ...patch, isTemporary: false } : m
+        m.tempId === tempId ? { ...m, ...safePatch, isTemporary: false } : m
       );
       const found = updated.some((m) => m.tempId === tempId);
       return {
-        chatMessages: found ? updated : [...updated, { ...patch }],
+        chatMessages: found ? updated : [...updated, { ...safePatch }],
       };
     }),
 

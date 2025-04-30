@@ -5,9 +5,7 @@ import useSocketStore from "./useSocketStore";
 import { useAuth } from "../components/AuthContext";
 
 export const useWebSocket = () => {
-  console.log("[WebSocket 훅] 마운트");
   const { token } = useAuth();
-  console.log("[WebSocket 훅] 토큰:", token);
 
   const clientRef = useRef(null);
   const {
@@ -21,7 +19,6 @@ export const useWebSocket = () => {
   } = useSocketStore();
 
   const sendMessage = useCallback((payload) => {
-
     if (!clientRef.current || !clientRef.current.connected) {
       return;
     }
@@ -83,7 +80,11 @@ export const useWebSocket = () => {
             if (body.tempId) {
               replaceTempMessage(body.tempId, {
                 id: body.id,
+                tempId: body.tempId,
+                message: body.content,
                 timestamp: body.timestamp,
+                isTemporary: false,
+                isArtist: body.sender === body.receiver,
                 isTemporary: false,
               });
               return;
