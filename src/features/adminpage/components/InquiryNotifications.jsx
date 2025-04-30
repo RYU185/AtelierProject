@@ -34,11 +34,13 @@ const InquiryNotifications = () => {
     };
   }, []);
 
-  const handleClick = () => {
+  const handleClick = (inquiry) => {
     if (unreadCount > 0) {
       setInquiries([]);
       setShowList(false);
-      navigate("/AdminContact");
+      navigate("/AdminContact", {
+        state: {selectedInquiry: inquiry }
+      });
     }
   };
 
@@ -83,14 +85,17 @@ const InquiryNotifications = () => {
             boxShadow: "0px 4px 10px rgba(0,0,0,0.1)",
             borderRadius: "5px",
             padding: "10px",
-            width: "200px",
+            width: "230px",
             zIndex: 1001,
           }}
         >
-          <h4>📩 새로운 문의</h4>
+          <h4>문의 목록</h4>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {inquiries.map((inquiry, index) => (
-              <li key={index} onClick={handleClick} style={{ padding: "5px 0", cursor: "pointer" }}>
+              <li key={index}
+              onClick={()=>handleClick(inquiry)} 
+              style={{ padding: "5px 0", cursor: "pointer" }}
+              > 새로운 문의가 도착했습니다!
                 {inquiry.subject}
               </li>
             ))}

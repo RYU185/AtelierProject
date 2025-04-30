@@ -4,6 +4,7 @@ export const useSocketStore = create((set) => ({
   isSocketConnected: false,
   notifications: [],
   inquiries: [],
+  setInquiries: (inquiries) => set({ inquiries }),
   chatMessages: [],
   sendMessage: () => {},
 

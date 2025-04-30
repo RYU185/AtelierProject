@@ -1,9 +1,9 @@
 // AdminTicketChart.jsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import AdminTicketMenubar from './AdminTicketMenubar';
-import { Bar } from 'react-chartjs-2';
+import AdminTicketMenubar from "./AdminTicketMenubar";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,11 +14,11 @@ import {
   PointElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
-import styled from 'styled-components';
-import axios from 'axios';
-import { addDays, subDays, startOfMonth } from 'date-fns';
+  Legend,
+} from "chart.js";
+import styled from "styled-components";
+import axios from "axios";
+import { addDays, subDays, startOfMonth } from "date-fns";
 
 ChartJS.register(
   CategoryScale,
@@ -34,39 +34,35 @@ ChartJS.register(
 
 const AdminTicketChartWrapper = styled.div`
   flex: 1;
-  padding: 20px 40px;
   display: flex;
   flex-direction: column;
   color: white;
- margin-top: -60px;
 `;
 
-
 const AdminGoodsMenubarWrapper = styled.div`
-
+  margin-bottom: 60px;
 `;
 
 const ChartWrapper = styled.div`
   width: 100%;
   margin-left: -100px;
-  padding: 40px;
   margin-top: -50px;
 `;
 
 const InnerChart = styled.div`
   width: 100%;
+  height: 400px;
+  position: relative;
 `;
 
 const TitleWrapper = styled.div`
-  text-align: center;
-  font-size: 25px;
-  font-weight: bold;
-  margin-top: 30px;
-  margin-bottom: 10px;
+  text-align: start;
+  font-size: 30px;
+  color: #3da9fc;
+  margin-top: 43px;
+  margin-bottom: 24px;
+  font-weight: 500;
 `;
-
-
-
 
 const FilterSelect = styled.select`
   top: 30px;
@@ -106,7 +102,7 @@ const NavButton = styled.button`
 `;
 
 function AdminTicketChart() {
-  const [filterType, setFilterType] = useState('daily');
+  const [filterType, setFilterType] = useState("daily");
   const [fullData, setFullData] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const visibleRange = 7;
@@ -116,9 +112,9 @@ function AdminTicketChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (filterType === 'daily') {
-          const countRes = await axios.get('api/reservation/admin/statistics/count/by-date');
-          const trendRes = await axios.get('api/reservation/admin/statistics/trend/by-date');
+        if (filterType === "daily") {
+          const countRes = await axios.get("api/reservation/admin/statistics/count/by-date");
+          const trendRes = await axios.get("api/reservation/admin/statistics/trend/by-date");
 
           const countRaw = Array.isArray(countRes.data) ? countRes.data : countRes.data?.data || [];
           const trendRaw = Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.data || [];
@@ -139,20 +135,20 @@ function AdminTicketChart() {
 
           let current = new Date(start);
           while (current <= end) {
-            const label = current.toISOString().split('T')[0];
+            const label = current.toISOString().split("T")[0];
             range.push({
               label,
               totalHeadcount: countMap[label] || 0,
-              trend: trendMap[label] || 0
+              trend: trendMap[label] || 0,
             });
             current.setDate(current.getDate() + 1);
           }
 
           setFullData(range);
           setStartIndex(0);
-        } else if (filterType === 'weekly') {
-          const countRes = await axios.get('api/reservation/admin/statistics/count/by-week');
-          const trendRes = await axios.get('api/reservation/admin/statistics/trend/by-week');
+        } else if (filterType === "weekly") {
+          const countRes = await axios.get("api/reservation/admin/statistics/count/by-week");
+          const trendRes = await axios.get("api/reservation/admin/statistics/trend/by-week");
 
           const countRaw = Array.isArray(countRes.data) ? countRes.data : countRes.data?.data || [];
           const trendRaw = Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.data || [];
@@ -185,25 +181,25 @@ function AdminTicketChart() {
             labels,
             datasets: [
               {
-                type: 'bar',
-                label: '주별 티켓 판매량',
+                type: "bar",
+                label: "주별 티켓 판매량",
                 data: countData,
-                backgroundColor: 'rgba(128, 128, 255, 0.5)',
+                backgroundColor: "rgba(128, 128, 255, 0.5)",
               },
               {
-                type: 'line',
-                label: '판매 추세',
+                type: "line",
+                label: "판매 추세",
                 data: trendData,
-                borderColor: '#E24A4A',
-                backgroundColor: '#E24A4A',
+                borderColor: "#E24A4A",
+                backgroundColor: "#E24A4A",
                 tension: 0.3,
-                fill: false
-              }
-            ]
+                fill: false,
+              },
+            ],
           });
-        } else if (filterType === 'monthly') {
-          const countRes = await axios.get('api/reservation/admin/statistics/count/by-month');
-          const trendRes = await axios.get('api/reservation/admin/statistics/trend/by-month');
+        } else if (filterType === "monthly") {
+          const countRes = await axios.get("api/reservation/admin/statistics/count/by-month");
+          const trendRes = await axios.get("api/reservation/admin/statistics/trend/by-month");
 
           const countRaw = Array.isArray(countRes.data) ? countRes.data : countRes.data?.data || [];
           const trendRaw = Array.isArray(trendRes.data) ? trendRes.data : trendRes.data?.data || [];
@@ -232,25 +228,25 @@ function AdminTicketChart() {
             labels,
             datasets: [
               {
-                type: 'bar',
-                label: '월별 티켓 판매량',
+                type: "bar",
+                label: "월별 티켓 판매량",
                 data: countData,
-                backgroundColor: 'rgba(128, 128, 255, 0.5)',
+                backgroundColor: "rgba(128, 128, 255, 0.5)",
               },
               {
-                type: 'line',
-                label: '판매 추세',
+                type: "line",
+                label: "판매 추세",
                 data: trendData,
-                borderColor: '#E24A4A',
-                backgroundColor: '#E24A4A',
+                borderColor: "#E24A4A",
+                backgroundColor: "#E24A4A",
                 tension: 0.3,
-                fill: false
-              }
-            ]
+                fill: false,
+              },
+            ],
           });
         }
       } catch (err) {
-        console.error('데이터 오류:', err);
+        console.error("데이터 오류:", err);
       }
     };
 
@@ -258,55 +254,54 @@ function AdminTicketChart() {
   }, [filterType]);
 
   useEffect(() => {
-    if (filterType === 'daily') {
+    if (filterType === "daily") {
       const slice = fullData.slice(startIndex, startIndex + visibleRange);
-      const labels = slice.map(i => i.label);
-      const count = slice.map(i => i.totalHeadcount);
-      const trend = slice.map(i => i.trend);
+      const labels = slice.map((i) => i.label);
+      const count = slice.map((i) => i.totalHeadcount);
+      const trend = slice.map((i) => i.trend);
 
       setChartData({
         labels,
         datasets: [
           {
-            type: 'bar',
-            label: '티켓 판매량',
+            type: "bar",
+            label: "티켓 판매량",
             data: count,
-            backgroundColor: 'rgba(128, 128, 255, 0.5)'
+            backgroundColor: "rgba(128, 128, 255, 0.5)",
           },
           {
-            type: 'line',
-            label: '판매 추세',
+            type: "line",
+            label: "판매 추세",
             data: trend,
-            borderColor: '#E24A4A',
-            backgroundColor: '#E24A4A',
+            borderColor: "#E24A4A",
+            backgroundColor: "#E24A4A",
             tension: 0.3,
-            fill: false
-          }
-        ]
+            fill: false,
+          },
+        ],
       });
     }
   }, [fullData, startIndex]);
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'top' },
-      tooltip: { mode: 'index', intersect: false },
+      legend: { position: "top" },
+      tooltip: { mode: "index", intersect: false },
     },
     scales: {
       x: { grid: { display: false } },
-      y: { beginAtZero: true }
-    }
+      y: { beginAtZero: true },
+    },
   };
-
-
 
   return (
     <>
       <AdminTicketChartWrapper>
-
         <TitleWrapper>
-          {filterType === 'daily' ? '날짜별' : filterType === 'weekly' ? '주별' : '월별'} 티켓 판매량
+          {filterType === "daily" ? "날짜별" : filterType === "weekly" ? "주별" : "월별"} 티켓
+          판매량
         </TitleWrapper>
         <AdminGoodsMenubarWrapper>
           <AdminTicketMenubar />
@@ -317,15 +312,13 @@ function AdminTicketChart() {
           <option value="monthly">월별</option>
         </FilterSelect>
 
-       
-
-
-
-
         <ChartWrapper>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            {filterType === 'daily' && (
-              <NavButton onClick={() => setStartIndex(prev => Math.max(prev - 1, 0))} disabled={startIndex === 0}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {filterType === "daily" && (
+              <NavButton
+                onClick={() => setStartIndex((prev) => Math.max(prev - 1, 0))}
+                disabled={startIndex === 0}
+              >
                 ←
               </NavButton>
             )}
@@ -334,9 +327,11 @@ function AdminTicketChart() {
               <Bar data={chartData} options={options} />
             </InnerChart>
 
-            {filterType === 'daily' && (
+            {filterType === "daily" && (
               <NavButton
-                onClick={() => setStartIndex(prev => Math.min(prev + 1, fullData.length - visibleRange))}
+                onClick={() =>
+                  setStartIndex((prev) => Math.min(prev + 1, fullData.length - visibleRange))
+                }
                 disabled={startIndex + visibleRange >= fullData.length}
               >
                 →
@@ -344,9 +339,7 @@ function AdminTicketChart() {
             )}
           </div>
         </ChartWrapper>
-
       </AdminTicketChartWrapper>
-
     </>
   );
 }

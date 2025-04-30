@@ -10,16 +10,16 @@ import AdminTicketMenubar from "./AdminTicketMenubar";
 const GradientBackground = styled.div`
   min-height: 100vh;
   background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`; 
-
+`;
 
 const Container = styled.div`
   display: flex;
   justify-content: flex-start;
+  margin-bottom: 60px;
 `;
 
 const AdminMenuWrapper = styled.div`
-
+  margin-bottom: 60px;
 `;
 
 const MainContent = styled.div`
@@ -28,21 +28,25 @@ const MainContent = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 40px;
+  text-align: start;
+  font-size: 30px;
+  color: #3da9fc;
+  margin-top: 43px;
+  margin-bottom: 24px;
+  font-weight: 500;
 `;
 
 const FlexRow = styled.div`
   display: flex;
   gap: 40px;
   align-items: flex-start;
+  margin-top: 30px;
 `;
 
 const ImageBox = styled.div`
   width: 300px;
   height: 300px;
-  background-color: #f5f5f5;
+  background-color: rgba(255, 255, 255, 0.07);
   border: 2px dashed #ccc;
   border-radius: 8px;
   display: flex;
@@ -65,16 +69,17 @@ const FormWrapper = styled.form`
 `;
 
 const CardSection = styled.div`
-  background: #f9f9f9;
+  background: rgba(255, 255, 255, 0.07);
   padding: 24px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 `;
 
 const Label = styled.label`
   font-weight: bold;
   margin-bottom: 6px;
+  color: #e1e1e1;
 `;
 
 const Input = styled.input`
@@ -83,6 +88,7 @@ const Input = styled.input`
   border-radius: 6px;
   font-size: 14px;
   width: 100%;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
@@ -99,6 +105,10 @@ const Button = styled.button`
   &:hover {
     background-color: #4a90e2;
   }
+`;
+
+const ChartBlock = styled.div`
+  margin-bottom: 10px;
 `;
 
 const AdminTicketAdd = () => {
@@ -139,9 +149,7 @@ const AdminTicketAdd = () => {
     const { name, value } = e.target;
 
     // 💡 숫자형 필드는 숫자로 변환
-    const parsedValue = ["capacity", "price"].includes(name)
-      ? Number(value)
-      : value;
+    const parsedValue = ["capacity", "price"].includes(name) ? Number(value) : value;
 
     setForm((prev) => ({
       ...prev,
@@ -179,9 +187,7 @@ const AdminTicketAdd = () => {
         console.log("✅ artistOptions:", artistOptions);
 
         // 💡 정확하게 타입 맞춰서 필터
-        const autoSelected = artistOptions.filter((opt) =>
-          artistIds.includes(Number(opt.value))
-        );
+        const autoSelected = artistOptions.filter((opt) => artistIds.includes(Number(opt.value)));
 
         console.log("🎯 자동 선택된 작가:", autoSelected);
 
@@ -234,7 +240,7 @@ const AdminTicketAdd = () => {
         </AdminMenuWrapper>
         <MainContent>
           <Title>전시 티켓 추가</Title>
-      <AdminTicketMenubar />
+          <AdminTicketMenubar />
           <FlexRow>
             <ImageBox>
               {previewImage ? (
@@ -247,12 +253,7 @@ const AdminTicketAdd = () => {
             <FormWrapper onSubmit={handleSubmit}>
               <CardSection>
                 <Label>전시명</Label>
-                <Input
-                  name="title"
-                  value={form.title}
-                  onChange={handleChange}
-                  required
-                />
+                <Input name="title" value={form.title} onChange={handleChange} required />
                 <Label>전시 설명</Label>
                 <Input
                   name="description"
@@ -304,20 +305,18 @@ const AdminTicketAdd = () => {
 
               <CardSection>
                 <Label>작가 선택</Label>
-                <Select
-                  isMulti
-                  options={artistOptions}
-                  value={selectedArtists}
-                  onChange={handleSelectChange}
-                  placeholder="작가를 선택하세요"
-                />
+                <ChartBlock>
+                  <Select
+                    isMulti
+                    options={artistOptions}
+                    value={selectedArtists}
+                    onChange={handleSelectChange}
+                    placeholder="작가를 선택하세요"
+                  />
+                </ChartBlock>
 
                 <Label>포스터 이미지 업로드</Label>
-                <Input
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePosterChange}
-                />
+                <Input type="file" accept="image/*" onChange={handlePosterChange} />
 
                 <Button type="submit">티켓 추가</Button>
               </CardSection>

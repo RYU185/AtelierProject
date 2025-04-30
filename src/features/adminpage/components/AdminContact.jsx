@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 
@@ -35,8 +36,7 @@ const InquiryList = styled.ul`
 const InquiryItem = styled.li`
   padding: 12px 15px;
   border-bottom: 1px solid rgb(76, 76, 76);
-  background: ${(props) =>
-    props.replied ? "#f2f2f2" : "rgba(255, 255, 255, 0.07)"};
+  background: ${(props) => (props.replied ? "#f2f2f2" : "rgba(255, 255, 255, 0.07)")};
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: flex;
@@ -52,14 +52,26 @@ const InquiryItem = styled.li`
 
 const InquiryDetail = styled.div`
   position: relative;
-  margin-top: -416px;
-  margin-right: 30px;
-  padding: 30px;
+  margin-top: -31.25rem;
+  margin-right: 1.875rem;
+  padding: 1.875rem;
   height: 500px;
   background: rgba(255, 255, 255, 0.07);
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-left: 690px;
+  margin-left: 43.125rem;
+`;
+
+const Paragraph = styled.p`
+  font-size: 16px;
+  color: #f0f0f0;
+  margin-bottom: 12px;
+
+  strong {
+    font-weight: 600;
+    color: #ffffff;
+    margin-right: 6px;
+  }
 `;
 
 const StatusIcon = styled.span`
@@ -85,23 +97,33 @@ const Avatar = styled.img`
 let stompClient = null;
 
 function AdminContact() {
+  const location = useLocation();
+  const preSelectedInquiry = location.state?.selectedInquiry || null;
+
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [reply, setReply] = useState("");
   const [inquiries, setInquiries] = useState([]);
   const [filter, setFilter] = useState("all");
   const [isAdmin, setIsAdmin] = useState(false); // 관리자인지 확인하는 상태
 
-  // 🔌 WebSocket 연결, 관리자일 때만 실행
+  useEffect(() => {
+    if (preSelectedInquiry && inquiries.length > 0) {
+      const matched = inquiries.find((q) => q.id === preSelectedInquiry.id);
+      if (matched) {
+        setSelectedInquiry(matched);
+      }
+    }
+  }, [inquiries, preSelectedInquiry]);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const decodedToken = JSON.parse(atob(token.split(".")[1])); // JWT 토큰 디코딩 예시
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
       if (decodedToken.isAdmin) {
-        setIsAdmin(true); // 관리자가 맞으면 상태 업데이트
+        setIsAdmin(true);
       }
     }
 
-    // WebSocket 연결, 이미 연결된 상태에서 추가 연결되지 않도록
     if (isAdmin && !stompClient) {
       const socket = new SockJS("/ws");
       stompClient = over(socket);
@@ -188,6 +210,17 @@ function AdminContact() {
     }
   };
 
+  const formatDateTime = (isoString) => {
+    const date = new Date(isoString);
+    return new Intl.DateTimeFormat("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  };
+
   return (
     <>
       <AdminContactWrapper>
@@ -221,18 +254,18 @@ function AdminContact() {
                 />
                 <h3>{selectedInquiry.title}</h3>
               </div>
-              <p>
-                <strong>이름: </strong> {selectedInquiry.name}
-              </p>
-              <p>
-                <strong>이메일: </strong> {selectedInquiry.email}
-              </p>
-              <p>
-                <strong>문의 날짜: </strong> {selectedInquiry.createdAt}
-              </p>
-              <p>
-                <strong>내용: </strong> {selectedInquiry.content}
-              </p>
+              <Paragraph>
+                <strong>이름:</strong> {selectedInquiry.name}
+              </Paragraph>
+              <Paragraph>
+                <strong>이메일:</strong> {selectedInquiry.email}
+              </Paragraph>
+              <Paragraph>
+                <strong>문의 날짜:</strong> {formatDateTime(selectedInquiry.createdAt)}
+              </Paragraph>
+              <Paragraph>
+                <strong>내용:</strong> {selectedInquiry.content}
+              </Paragraph>
             </InquiryDetail>
           )}
         </div>
