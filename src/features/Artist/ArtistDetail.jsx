@@ -8,7 +8,7 @@ import axiosInstance from "../../api/axiosInstance";
 // import.meta.glob 사용하여 정적 이미지 처리
 const importImages = import.meta.glob("/src/assets/ArtListIMG/*");
 
-const getImageUrl = (filename) => {
+const   getImageUrl = (filename) => {
   if (!filename) return "/path/to/default-image.png"; // 기본 이미지 처리
 
   // 정적 이미지 처리
