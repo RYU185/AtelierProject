@@ -429,9 +429,7 @@ function Community({
             {img.map((image, index) => (
               <PostImage
                 key={index}
-                src={
-                  image.startsWith("/") ? image : `/images/DrawingIMG/${image}`
-                }
+                src={`${process.env.REACT_APP_API_URL}${image}`}
                 alt={`첨부된 이미지 ${index + 1}`}
                 $active={index === currentImageIndex}
               />
