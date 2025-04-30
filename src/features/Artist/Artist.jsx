@@ -1,11 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
 import Footer from "../Footer";
 import styled from "styled-components";
 import ArtistIntro from "./components/ArtistIntro";
 import axiosInstance from "../../api/axiosInstance";
-import { useState } from "react";
+
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+const getImageUrl = (filename) => {
+  if (!filename) return "/path/to/default-image.png";
+  if (filename.startsWith("/uploads/")) return `${VITE_API_URL}${filename}`;
+  return `/images/ArtistIMG/${filename}`;
+};
 
 const GradientBackground = styled.div`
   min-height: 100vh;
@@ -18,7 +25,7 @@ const TitleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top: 7.25rem ;
+  padding-top: 7.25rem;
   padding-bottom: 7.25rem;
 `;
 
@@ -78,11 +85,11 @@ const Artist = () => {
       <ArtistContainer>
         {artist.map((a) => (
           <ArtistIntro
-            key={a.userId}
-            artistId={a.userId}
+            key={a.id || a.userId}
+            artistId={a.id}
             userId={a.userId}
             name={a.name}
-            imageUrl={`/images/ArtistIMG/${a.profile_img}`}
+            imageUrl={getImageUrl(a.profile_img)}
           />
         ))}
       </ArtistContainer>
