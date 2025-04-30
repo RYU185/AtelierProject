@@ -11,9 +11,10 @@ const cardBackground = "#ffffff";
 const textColor = "#2e3a59";
 const borderColor = "#dce3eb";
 const shadow = "0 4px 20px rgba(0,0,0,0.06)";
-const buttonGradient = "linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%)";
+const buttonGradient = "rgb(0, 191, 255)";
 const drawButtonGradient = "linear-gradient(135deg, #b3e5fc 0%, #4fc3f7 100%)";
-const drawButtonHoverGradient = "linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%)";
+const drawButtonHoverGradient =
+  "linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%)";
 
 const NoPostsMessage = styled.div`
   padding: 20px;
@@ -49,7 +50,7 @@ const StyledButton = styled.button`
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
   &:hover {
-    background: linear-gradient(135deg, #81d4fa 0%, #4fc3f7 100%);
+    background-color: rgb(0, 191, 255);
     border-color: transparent;
     color: white;
     transform: translateY(-3px);
@@ -63,13 +64,12 @@ const StyledButton = styled.button`
 `;
 
 const StyledDrawwButton = styled(StyledButton)`
-  background: rgba(255, 255, 255, 0.151);
+  background-color: rgba(255, 255, 255, 0.151);
   color: white;
   border: none;
-  box-shadow: 0 2px 5px rgba(179, 229, 252, 0.3);
 
   &:hover {
-    background: linear-gradient(135deg, #81d4fa 0%, #b3e5fc 100%);
+    background-color: rgb(0, 191, 255);
     transform: translateY(-3px);
   }
 `;
@@ -94,7 +94,7 @@ const Grid = styled.div`
   padding: 24px;
 
   & > div {
-    background: #ffffff;
+    background:rgb(23, 27, 37);
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -187,11 +187,14 @@ function CommunityList() {
   const checkLikeStatus = async (communityId, token) => {
     if (!token) return false;
     try {
-      const response = await axios.get(`/api/community/like/check/${communityId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `/api/community/like/check/${communityId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("좋아요 상태 확인 실패:", error);
@@ -290,7 +293,9 @@ function CommunityList() {
       if (response.status === 200) {
         setCommunityItems((prev) =>
           prev.map((post) =>
-            post.id === updatedPost.id ? { ...post, text: updatedPost.text } : post
+            post.id === updatedPost.id
+              ? { ...post, text: updatedPost.text }
+              : post
           )
         );
         closeEditModal();
@@ -307,8 +312,12 @@ function CommunityList() {
     <div>
       <Container>
         <ButtonBox>
-          <StyledButton onClick={handleViewAllPostsClick}>전체 보기</StyledButton>
-          <StyledButton onClick={handleViewMyPostsClick}>나의 글 보기</StyledButton>
+          <StyledButton onClick={handleViewAllPostsClick}>
+            전체 보기
+          </StyledButton>
+          <StyledButton onClick={handleViewMyPostsClick}>
+            나의 글 보기
+          </StyledButton>
           <StyledButton onClick={handleAddPostClick}>게시글 등록</StyledButton>
           <StyledDrawwButton onClick={() => navigate("/drawingcanvas")}>
             작품 그리기
@@ -382,7 +391,11 @@ function CommunityList() {
       )}
 
       {isEditModalOpen && postToEdit && (
-        <EditPostModal post={postToEdit} onClose={closeEditModal} onSubmit={handleEditSubmit} />
+        <EditPostModal
+          post={postToEdit}
+          onClose={closeEditModal}
+          onSubmit={handleEditSubmit}
+        />
       )}
     </div>
   );
