@@ -5,7 +5,6 @@ import axios from "axios";
 import Community from "./Community";
 import CommunityDetailModal from "./CommunityDetailModal";
 import AddPostModal from "./AddPostModal";
-import EditPostModal from "./EditPostModal"; // EditPostModal import 추가
 
 const backgroundColor = "#f0f4f8";
 const cardBackground = "#ffffff";
