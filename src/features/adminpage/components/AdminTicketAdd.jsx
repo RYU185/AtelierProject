@@ -7,14 +7,19 @@ import Footer from "../../Footer";
 import AdminMenu from "./AdminMenu";
 import AdminTicketMenubar from "./AdminTicketMenubar";
 
+const GradientBackground = styled.div`
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+`; 
+
+
 const Container = styled.div`
   display: flex;
-  padding: 40px 20px;
-  justify-content: center;
+  justify-content: flex-start;
 `;
 
 const AdminMenuWrapper = styled.div`
-  margin-right: 40px;
+
 `;
 
 const MainContent = styled.div`
@@ -221,15 +226,15 @@ const AdminTicketAdd = () => {
   };
 
   return (
-    <>
+    <GradientBackground>
       <Header />
-      <AdminTicketMenubar />
       <Container>
         <AdminMenuWrapper>
           <AdminMenu />
         </AdminMenuWrapper>
         <MainContent>
           <Title>전시 티켓 추가</Title>
+      <AdminTicketMenubar />
           <FlexRow>
             <ImageBox>
               {previewImage ? (
@@ -321,7 +326,7 @@ const AdminTicketAdd = () => {
         </MainContent>
       </Container>
       <Footer />
-    </>
+    </GradientBackground>
   );
 };
 

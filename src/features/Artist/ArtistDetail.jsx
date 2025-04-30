@@ -210,7 +210,7 @@ const ArtistDetail = () => {
   useEffect(() => {
     const fetchArtistDetail = async () => {
       try {
-        const res = await axiosInstance.get(`/artist/id/${id}`);
+        const res = await axiosInstance.get(`/artist/user-id/${id}`);
         setArtist(res.data);
       } catch (err) {
         console.error("작가 상세정보 불러오기 실패:", err);
