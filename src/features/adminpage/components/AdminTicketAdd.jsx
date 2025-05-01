@@ -138,7 +138,9 @@ const AdminTicketAdd = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue = ["capacity", "price"].includes(name) ? Number(value) : value;
+    const parsedValue = ["capacity", "price"].includes(name)
+      ? Number(value)
+      : value;
 
     setForm((prev) => ({
       ...prev,
@@ -166,7 +168,6 @@ const AdminTicketAdd = () => {
   };
 
   const handleSelectChange = async (selected) => {
-    
     setSelectedArtists(selected);
     const artistIds = selected.map((s) => s.value);
     console.log("artistIds", artistIds);
@@ -178,7 +179,7 @@ const AdminTicketAdd = () => {
     }));
 
     try {
-      const res = await axiosInstance.get("/art", {
+      const res = await axiosInstance.get("/art/art-list", {
         params: { artistIds: artistIds.join(",") },
       });
 
@@ -259,9 +260,19 @@ const AdminTicketAdd = () => {
           <FormWrapper onSubmit={handleSubmit}>
             <CardSection>
               <Label>전시명</Label>
-              <Input name="title" value={form.title} onChange={handleChange} required />
+              <Input
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                required
+              />
               <Label>전시 설명</Label>
-              <Input name="description" value={form.description} onChange={handleChange} required />
+              <Input
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                required
+              />
               <Label>시작일</Label>
               <Input
                 type="date"
@@ -345,7 +356,11 @@ const AdminTicketAdd = () => {
                   </ul>
                 </CardSection>
               )}
-              <Input type="file" accept="image/*" onChange={handlePosterChange} />
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handlePosterChange}
+              />
 
               <Button type="submit">티켓 추가</Button>
             </CardSection>
