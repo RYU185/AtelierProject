@@ -212,7 +212,10 @@ const ExchangeRefundModal = ({ purchase, onClose, onSuccess }) => {
 
         <PurchaseInfo>
           <ProductSection>
-            <ProductImage src={purchase.image} alt={purchase.title} />
+            <ProductImage
+              src={`${import.meta.env.VITE_API_URL}${purchase.image}`}
+              alt={purchase.title}
+            />
             <ProductDetails>
               <ProductTitle>{purchase.title}</ProductTitle>
               <ProductSubInfo>{purchase.description}</ProductSubInfo>

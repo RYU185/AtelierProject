@@ -49,7 +49,7 @@ const QuantityButton = styled.button`
   justify-content: center;
   cursor: pointer;
   font-size: 16px;
-  
+
   &:hover {
     background-color: #f8f9fa;
   }
@@ -95,7 +95,10 @@ const CartItem = ({ item }) => {
   return (
     <Container>
       <Checkbox type="checkbox" />
-      <ProductImage src={item.image} alt={item.name} />
+      <ProductImage
+        src={`${import.meta.env.VITE_API_URL}${item.image}`}
+        alt={item.name}
+      />
       <ProductInfo>
         <ProductName>{item.name}</ProductName>
         <QuantityControl>

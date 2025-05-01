@@ -206,7 +206,9 @@ const PurchaseCompletePage = () => {
                 <ItemRow key={idx}>
                   <ItemInfo>
                     <ItemImage
-                      src={getGoodsImageUrl(item.thumbnailUrl)}
+                      src={`${import.meta.env.VITE_API_URL}${getGoodsImageUrl(
+                        item.thumbnailUrl
+                      )}`}
                       alt={item.goodsName}
                     />
 

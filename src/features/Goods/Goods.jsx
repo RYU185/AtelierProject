@@ -176,26 +176,6 @@ const ProductCard = styled.div`
     }
   }
 `;
-// 이미지 처리 함수 (정적 or 업로드)
-const goodsImages = import.meta.glob("/public/images/goods-images/*", {
-  eager: true, // 즉시 이미지를 불러옵니다.
-});
-
-// 이미지 경로 처리 함수
-const getGoodsImageUrl = (filename) => {
-  if (!filename) return "/default.jpg";
-
-  // 정적 이미지 경로 처리
-  const matched = Object.entries(goodsImages).find(([path]) =>
-    path.endsWith(filename)
-  );
-  if (matched) {
-    return matched[1].default; // 정적 이미지 경로 반환
-  }
-
-  // 업로드된 이미지 경로 처리
-  return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
-};
 
 const Goods = () => {
   const navigate = useNavigate();
@@ -240,6 +220,11 @@ const Goods = () => {
           return 0;
       }
     });
+  const getGoodsImageUrl = (path) => {
+    const baseUrl = import.meta.env.VITE_API_URL.replace(/\/+$/, "");
+    const cleanPath = path?.replace(/^\/+/, "");
+    return cleanPath ? `${baseUrl}/${cleanPath}` : "";
+  };
 
   return (
     <GradientBackground>

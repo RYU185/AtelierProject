@@ -598,7 +598,9 @@ function GoodsDetail() {
         <ProductContainer>
           <ImageSection>
             <MainImage
-              src={currentProductImages[selectedImage]}
+              src={`${import.meta.env.VITE_API_URL}${
+                currentProductImages[selectedImage]
+              }`}
               alt={goods.name}
               onMouseMove={handleMouseMove}
               onMouseEnter={handleMouseEnter}
@@ -608,7 +610,7 @@ function GoodsDetail() {
               {currentProductImages.map((image, index) => (
                 <ThumbnailImage
                   key={index}
-                  src={image}
+                  src={`${import.meta.env.VITE_API_URL}${image}`}
                   alt={`썸네일 ${index + 1}`}
                   $active={selectedImage === index}
                   onClick={() => setSelectedImage(index)}
@@ -617,7 +619,9 @@ function GoodsDetail() {
             </ThumbnailContainer>
             <ZoomedImage $isVisible={isZoomed}>
               <ZoomedImageContent
-                src={currentProductImages[selectedImage]}
+                src={`${import.meta.env.VITE_API_URL}${
+                  currentProductImages[selectedImage]
+                }`}
                 style={{
                   transform: `scale(2) translate(${-mousePosition.x * 4}px, ${
                     -mousePosition.y * 4
