@@ -11,12 +11,7 @@ import { useAuth } from "../../components/AuthContext";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(
-    ellipse at 0% 0%,
-    rgb(0, 0, 0),
-    rgb(1, 9, 26) 40%,
-    #000000 100%
-  );
+  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
 `;
 
 const PageContainer = styled.div`
@@ -90,6 +85,7 @@ function TicketPage() {
   const [reserveDateList, setReserveDateList] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [activeDates, setActiveDates] = useState([]);
 
   const handleCloseTimeOverlay = () => {
     setSelectedDate(null);
@@ -116,9 +112,7 @@ function TicketPage() {
 
     const fetchReserveDates = async () => {
       try {
-        const res = await axiosInstance.get(
-          `/reservation/reserve-date?galleryId=${galleryId}`
-        );
+        const res = await axiosInstance.get(`/reservation/reserve-date?galleryId=${galleryId}`);
         setReserveDateList(res.data);
       } catch (error) {
         console.error("예약 가능 날짜 조회 실패:", error);
@@ -139,9 +133,7 @@ function TicketPage() {
 
       try {
         const res = await axiosInstance.get(
-          `/reservation/available-times?date=${formatDateForServer(
-            selectedDate
-          )}`
+          `/reservation/available-times?date=${formatDateForServer(selectedDate)}`
         );
 
         setAvailableTimes(res.data);
@@ -152,6 +144,26 @@ function TicketPage() {
 
     fetchReserveTimes();
   }, [selectedDate, reserveDateList]);
+
+  useEffect(() => {
+    if (!galleryInfo?.startDate || !galleryInfo?.endDate || reserveDateList.length === 0) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const start = new Date(galleryInfo.startDate);
+    const end = new Date(galleryInfo.deadline);
+
+    const filtered = reserveDateList
+      .map((d) => d.date)
+      .filter((dateStr) => {
+        const date = new Date(dateStr);
+        return date >= tomorrow && date >= start && date <= end;
+      });
+    setActiveDates(filtered);
+  }, [galleryInfo, reserveDateList]);
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
@@ -212,6 +224,7 @@ function TicketPage() {
   {
     `${import.meta.env.VITE_API_URL}${galleryInfo?.posterUrl}`;
   }
+
   return (
     <GradientBackground>
       <Header />
@@ -226,9 +239,7 @@ function TicketPage() {
             <ExhibitionTitle>{galleryInfo?.title}</ExhibitionTitle>
 
             {galleryInfo?.artistList?.length > 0 && (
-              <ExhibitionDate>
-                {galleryInfo.artistList.join(", ")}
-              </ExhibitionDate>
+              <ExhibitionDate>{galleryInfo.artistList.join(", ")}</ExhibitionDate>
             )}
             <ExhibitionCapacity>
               {galleryInfo?.startDate}
@@ -241,7 +252,7 @@ function TicketPage() {
             <TicketCalendar
               selectedDate={selectedDate}
               onDateSelect={handleDateSelect}
-              activeDates={getActiveDates()}
+              activeDates={activeDates}
               exhibitionStartDate={galleryInfo.startDate}
               exhibitionEndDate={galleryInfo.deadline}
             />
@@ -308,15 +319,10 @@ function TicketPage() {
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         width: "100%",
-                        backgroundColor:
-                          selectedTime?.id === time.id ? "#003f9e" : "#ffffff",
+                        backgroundColor: selectedTime?.id === time.id ? "#003f9e" : "#ffffff",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
-                        transition:
-                          "background-color 0.3s ease, color 0.3s ease",
-                        border:
-                          selectedTime?.id === time.id
-                            ? "#0066ff"
-                            : "1px solid #b9b9b9",
+                        transition: "background-color 0.3s ease, color 0.3s ease",
+                        border: selectedTime?.id === time.id ? "#0066ff" : "1px solid #b9b9b9",
                         cursor: "pointer",
                       }}
                     >
