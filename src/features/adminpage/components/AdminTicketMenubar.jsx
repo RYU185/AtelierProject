@@ -75,8 +75,8 @@ function AdminTicketMenubar({ className }) {
 
       {/* ✅ 티켓 추가 버튼은 조건 없이 항상 보이도록 마지막에 추가 */}
       <TabButton
-        active={location.pathname === "/admin/tickets/add"}
-        onClick={() => navigate("/admin/tickets/add")}
+        active={location.pathname === "/AdminTicketAdd"}
+        onClick={() => navigate("/AdminTicketAdd")}
       >
         티켓 추가
       </TabButton>

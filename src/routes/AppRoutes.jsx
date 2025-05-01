@@ -40,7 +40,7 @@ import EditProfile from "../features/mypage/components/EditProfile";
 import Review from "../features/Goods/components/Review";
 import DrawingCanvas from "../features/Drawing/DrawingCanvas";
 import CommunityDetailModal from "../features/community/components/CommunityDetailModal";
-import AdminTicketAdd from "../features/adminpage/components/AdminTicketAdd";
+
 import ChatRoom from "../features/chatting/components/ChatRoom";
 
 function AppRoutes() {
@@ -70,6 +70,7 @@ function AppRoutes() {
         path="/AdminTicketChart"
         element={<Navigate to="/adminpage?tab=ticketChart" replace />}
       />
+      <Route path="/AdminTicketAdd" element={<Navigate to="/adminpage?tab=ticketAdd" replace />} />
       <Route path="/AdminContact" element={<Navigate to="/adminpage?tab=contact" replace />} />
       <Route path="/AdminUser" element={<Navigate to="/adminpage?tab=user" replace />} />
       <Route path="/AdminArtAdd" element={<Navigate to="/adminpage?tab=artAdd" replace />} />
@@ -108,7 +109,7 @@ function AppRoutes() {
       <Route path="/chat" element={<ChattingPage />} />
       <Route path="/chatting" element={<ChattingPage />} />
       <Route path="/artist/:artistId/chat" element={<ChatRoom />} />
-      <Route path="/admin/tickets/add" element={<AdminTicketAdd />} />
+      
     </Routes>
   );
 }
