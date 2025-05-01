@@ -7,7 +7,7 @@ const Container = styled.div`
 `;
 
 const TicketCount = styled.div`
-  background-color:rgba(255, 255, 255, 0.07);
+  background-color: rgba(255, 255, 255, 0.07);
   padding: 14px 20px;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -27,8 +27,8 @@ const TicketList = styled.div`
 `;
 
 const TicketCard = styled.div`
-  display: flex; 
-  background-color:rgba(255, 255, 255, 0.07);
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.07);
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -64,14 +64,14 @@ const TicketDetails = styled.div`
 
   h3 {
     font-size: 23px;
-    color:#e1e1e1;
+    color: #e1e1e1;
     margin: 25px 0 15px 0;
     font-weight: 500;
   }
 
   p {
     font-size: 16px;
-    color:#e1e1e1;
+    color: #e1e1e1;
     font-weight: 300;
   }
 `;
@@ -95,7 +95,7 @@ const ActionButton = styled.button`
 
   &:hover {
     background-color: #0077ff;
-    color: #e1e1e1
+    color: #e1e1e1;
   }
 `;
 
@@ -138,7 +138,9 @@ const MyTickets = ({ onTicketClick }) => {
     if (!confirmed) return;
 
     try {
-      const res = await axiosInstance.delete(`/reservation/${reservation.reservationId}`);
+      const res = await axiosInstance.delete(
+        `/reservation/${reservation.reservationId}`
+      );
       alert("예약이 성공적으로 취소되었습니다.");
       fetchMyReservations();
     } catch (err) {
@@ -149,7 +151,9 @@ const MyTickets = ({ onTicketClick }) => {
 
   return (
     <Container>
-      <TicketCount>총 {activeReservations.length}개의 전시가 예약되어 있습니다.</TicketCount>
+      <TicketCount>
+        총 {activeReservations.length}개의 전시가 예약되어 있습니다.
+      </TicketCount>
 
       <TicketList>
         {loading ? (
@@ -162,7 +166,7 @@ const MyTickets = ({ onTicketClick }) => {
               <MoreButton>⋮</MoreButton>
               <TicketInfo>
                 <TicketImage
-                  src={`/images/ArtistGalleryIMG/${rv.posterImg}`}
+                  src={`${import.meta.env.VITE_API_URL}${rv.posterImg}`}
                   alt={rv.galleryTitle}
                 />
                 <TicketDetails>
@@ -187,8 +191,12 @@ const MyTickets = ({ onTicketClick }) => {
                 </TicketDetails>
               </TicketInfo>
               <TicketActions>
-                <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
-                <ActionButton onClick={() => onRefundClick(rv)}>티켓 취소하기</ActionButton>
+                <ActionButton onClick={() => onTicketClick(rv)}>
+                  티켓 확인하기
+                </ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>
+                  티켓 취소하기
+                </ActionButton>
               </TicketActions>
             </TicketCard>
           ))
