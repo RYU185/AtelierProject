@@ -98,11 +98,8 @@ function UserGalleryDetail() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
-  const getdImageUrl = (filename) => {
-    const matched = Object.entries(dImages).find(([path]) =>
-      path.endsWith(filename)
-    );
-    return matched ? matched[1].default : "";
+  const getdImageUrl = (path) => {
+    return `${import.meta.env.VITE_API_URL}${path}`;
   };
 
   useEffect(() => {
