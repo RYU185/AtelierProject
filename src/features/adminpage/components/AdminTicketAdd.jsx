@@ -166,9 +166,10 @@ const AdminTicketAdd = () => {
   };
 
   const handleSelectChange = async (selected) => {
+    
     setSelectedArtists(selected);
-
     const artistIds = selected.map((s) => s.value);
+    console.log("artistIds", artistIds);
 
     setForm((prev) => ({
       ...prev,
@@ -185,6 +186,7 @@ const AdminTicketAdd = () => {
         value: art.id,
         label: art.title,
       }));
+      console.log("art response", res.data);
 
       setArtOptions(formatted);
       setSelectedArts([]); // UI 초기화
@@ -313,7 +315,7 @@ const AdminTicketAdd = () => {
                   placeholder="작가를 선택하세요"
                 />
               </ChartBlock>
-              
+
               <Label>작품 선택</Label>
               <ChartBlock>
                 <Select
@@ -333,6 +335,16 @@ const AdminTicketAdd = () => {
               </ChartBlock>
 
               <Label>포스터 이미지 업로드</Label>
+              {selectedArts.length > 0 && (
+                <CardSection>
+                  <Label>선택된 작품 미리보기</Label>
+                  <ul style={{ paddingLeft: "1rem", color: "#fff" }}>
+                    {selectedArts.map((art) => (
+                      <li key={art.value}>• {art.label}</li>
+                    ))}
+                  </ul>
+                </CardSection>
+              )}
               <Input type="file" accept="image/*" onChange={handlePosterChange} />
 
               <Button type="submit">티켓 추가</Button>
