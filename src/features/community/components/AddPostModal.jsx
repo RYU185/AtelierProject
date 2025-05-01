@@ -221,7 +221,6 @@ function AddPostModal({ onClose, userNickname }) {
         },
       });
 
-      console.log("응답 데이터:", response); // ✅ 응답 확인
       if (!response || !response.data) {
         throw new Error("응답 데이터가 없습니다.");
       }

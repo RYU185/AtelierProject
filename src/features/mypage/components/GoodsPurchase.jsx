@@ -199,7 +199,6 @@ const GoodsPurchase = () => {
 
   // 리뷰 작성하기 버튼 클릭 핸들러
   const handleWriteReview = (goodsId) => {
-    console.log("이동할 goodsId:", goodsId);
     navigate(`/goods/${goodsId}`); // 해당 goodsId를 파라미터로 상세 페이지로 이동
   };
 

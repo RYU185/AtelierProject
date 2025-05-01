@@ -11,7 +11,12 @@ import { useAuth } from "../../components/AuthContext";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const PageContainer = styled.div`
@@ -112,7 +117,9 @@ function TicketPage() {
 
     const fetchReserveDates = async () => {
       try {
-        const res = await axiosInstance.get(`/reservation/reserve-date?galleryId=${galleryId}`);
+        const res = await axiosInstance.get(
+          `/reservation/reserve-date?galleryId=${galleryId}`
+        );
         setReserveDateList(res.data);
       } catch (error) {
         console.error("예약 가능 날짜 조회 실패:", error);
@@ -133,7 +140,9 @@ function TicketPage() {
 
       try {
         const res = await axiosInstance.get(
-          `/reservation/available-times?date=${formatDateForServer(selectedDate)}`
+          `/reservation/available-times?date=${formatDateForServer(
+            selectedDate
+          )}`
         );
 
         setAvailableTimes(res.data);
@@ -146,7 +155,12 @@ function TicketPage() {
   }, [selectedDate, reserveDateList]);
 
   useEffect(() => {
-    if (!galleryInfo?.startDate || !galleryInfo?.endDate || reserveDateList.length === 0) return;
+    if (
+      !galleryInfo?.startDate ||
+      !galleryInfo?.endDate ||
+      reserveDateList.length === 0
+    )
+      return;
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -217,10 +231,6 @@ function TicketPage() {
   if (!galleryInfo) return null;
   if (!galleryInfo?.startDate || !galleryInfo?.endDate) return null;
 
-  console.log("Calendar에 넘기기:", {
-    start: galleryInfo?.startDate,
-    end: galleryInfo?.endDate,
-  });
   {
     `${import.meta.env.VITE_API_URL}${galleryInfo?.posterUrl}`;
   }
@@ -239,7 +249,9 @@ function TicketPage() {
             <ExhibitionTitle>{galleryInfo?.title}</ExhibitionTitle>
 
             {galleryInfo?.artistList?.length > 0 && (
-              <ExhibitionDate>{galleryInfo.artistList.join(", ")}</ExhibitionDate>
+              <ExhibitionDate>
+                {galleryInfo.artistList.join(", ")}
+              </ExhibitionDate>
             )}
             <ExhibitionCapacity>
               {galleryInfo?.startDate}
@@ -319,10 +331,15 @@ function TicketPage() {
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         width: "100%",
-                        backgroundColor: selectedTime?.id === time.id ? "#003f9e" : "#ffffff",
+                        backgroundColor:
+                          selectedTime?.id === time.id ? "#003f9e" : "#ffffff",
                         color: selectedTime?.id === time.id ? "#fff" : "#333",
-                        transition: "background-color 0.3s ease, color 0.3s ease",
-                        border: selectedTime?.id === time.id ? "#0066ff" : "1px solid #b9b9b9",
+                        transition:
+                          "background-color 0.3s ease, color 0.3s ease",
+                        border:
+                          selectedTime?.id === time.id
+                            ? "#0066ff"
+                            : "1px solid #b9b9b9",
                         cursor: "pointer",
                       }}
                     >

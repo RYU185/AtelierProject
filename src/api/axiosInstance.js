@@ -22,8 +22,6 @@ const axiosInstance = axios.create({
 // 🔹 요청 인터셉터
 axiosInstance.interceptors.request.use(
   (config) => {
-    console.log("📤 요청 URL:", config.url);
-
     // 🔸 토큰 제외 대상이 아니라면 Authorization 헤더 추가
     const isPublic = PUBLIC_PATHS.some((path) => config.url.startsWith(path));
 
@@ -31,10 +29,8 @@ axiosInstance.interceptors.request.use(
       const token = localStorage.getItem("authToken");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log("🔐 토큰 포함됨:", token);
       }
     } else {
-      console.log("⚠️ 인증 제외 API → 토큰 미포함");
     }
 
     return config;
@@ -48,7 +44,6 @@ axiosInstance.interceptors.request.use(
 // 🔹 응답 인터셉터
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("✅ 응답 데이터:", response.data);
     return response;
   },
   (error) => {

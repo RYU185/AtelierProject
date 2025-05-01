@@ -73,7 +73,6 @@ const ContactusPage = () => {
     if (token) {
       try {
         const decoded = jwtDecode(token); // JWT 디코딩
-        console.log(decoded); // 디코딩된 JWT 내용 확인
         userId = decoded.userId || decoded.id; // 키 이름이 'userId' 또는 'id'일 수 있음
         isMember = decoded.isMember !== undefined ? decoded.isMember : false; // 'isMember'의 값 확인
       } catch (err) {
@@ -102,7 +101,6 @@ const ContactusPage = () => {
 
       if (!res.ok) throw new Error("문의 등록 실패");
 
-      console.log("✅ 문의 전송 성공");
       navigate("/support");
     } catch (err) {
       console.error("❌ 오류 발생:", err);

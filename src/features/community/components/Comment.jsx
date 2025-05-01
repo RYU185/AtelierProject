@@ -135,7 +135,6 @@ function Comment({ user, text, date, commentId, communityId, onUpdate }) {
       );
 
       if (response.status === 200) {
-        console.log("✅ 댓글 수정 완료:", response.data);
         setIsEditing(false);
         alert("댓글이 수정되었습니다.");
         if (onUpdate) {
@@ -176,7 +175,6 @@ function Comment({ user, text, date, commentId, communityId, onUpdate }) {
           );
 
           if (response.status === 200) {
-            console.log("✅ 댓글 삭제 완료:", response.data);
             alert("댓글이 삭제되었습니다.");
 
             // 댓글 삭제 후 부모 컴포넌트에 알리기 (댓글 목록 새로고침)

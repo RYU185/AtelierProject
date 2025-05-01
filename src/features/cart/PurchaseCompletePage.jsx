@@ -172,8 +172,6 @@ const PurchaseCompletePage = () => {
   const location = useLocation();
   const { items = [], totalPrice = 0 } = location.state || {};
 
-  console.log("썸네일 경로 확인:", items.thumbnailUrl);
-
   if (!items || items.length === 0) {
     return (
       <GradientBackground>

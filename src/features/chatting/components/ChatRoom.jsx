@@ -11,7 +11,12 @@ import { useWebSocket } from "../../../socket/useWebSocket";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const PageWrapper = styled.div`
@@ -137,7 +142,8 @@ const ProfileCircle = styled.div`
   justify-content: center;
   font-weight: 600;
   font-size: 14px;
-  box-shadow: ${(props) => (props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none")};
+  box-shadow: ${(props) =>
+    props.$isArtist ? "0 2px 8px rgba(0, 149, 225, 0.25)" : "none"};
 `;
 
 const ProfileText = styled.div`
@@ -315,7 +321,9 @@ const ChatRoom = ({ room: incomingRoom }) => {
   useWebSocket();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const nicknameRef = useRef(user?.nickname ?? localStorage.getItem("nickname") ?? "익명");
+  const nicknameRef = useRef(
+    user?.nickname ?? localStorage.getItem("nickname") ?? "익명"
+  );
 
   const { sendMessage, isSocketConnected: isConnected } = useSocketStore();
   const chatMessages = useSocketStore((state) => state.chatMessages);
@@ -328,7 +336,9 @@ const ChatRoom = ({ room: incomingRoom }) => {
   const messagesEndRef = useRef(null);
   const chatMessagesRef = useRef(null);
   const [isUserScrolled, setIsUserScrolled] = useState(false);
-  const lastMessage = chatMessages.length ? chatMessages[chatMessages.length - 1] : null;
+  const lastMessage = chatMessages.length
+    ? chatMessages[chatMessages.length - 1]
+    : null;
   const { artistId } = useParams();
 
   useEffect(() => {
@@ -339,7 +349,10 @@ const ChatRoom = ({ room: incomingRoom }) => {
           setRoom(res.data);
         })
         .catch((err) => {
-          console.error("채팅방 생성/조회 실패:", err.response?.data || err.message);
+          console.error(
+            "채팅방 생성/조회 실패:",
+            err.response?.data || err.message
+          );
         });
     }
   }, [room, artistId]);
@@ -374,24 +387,19 @@ const ChatRoom = ({ room: incomingRoom }) => {
     }
   }, [chatMessages]);
 
-  useEffect(() => {
-    console.log("[ChatRoom] chatMessages 업데이트:", {
-      length: chatMessages.length,
-      last: chatMessages[chatMessages.length - 1],
-    });
-  }, [chatMessages]);
+  useEffect(() => {}, [chatMessages]);
 
   const handleScroll = () => {
     if (chatMessagesRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatMessagesRef.current;
-      const isScrolledToBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
+      const isScrolledToBottom =
+        Math.abs(scrollHeight - clientHeight - scrollTop) < 50;
       setIsUserScrolled(!isScrolledToBottom);
     }
   };
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    console.log("handleSendMessage 호출됨, newMessage:", newMessage);
     if (newMessage.trim() === "") return;
 
     if (!isConnected) {
@@ -417,8 +425,6 @@ const ChatRoom = ({ room: incomingRoom }) => {
     addChatMessage(newMsgObj);
 
     if (typeof sendMessage === "function" && sendMessage !== (() => {})) {
-      console.log("sendMessage 실행 직전", typeof sendMessage, sendMessage);
-
       const payload = {
         type: "CHAT",
         sender: senderId.toString(),
@@ -429,7 +435,6 @@ const ChatRoom = ({ room: incomingRoom }) => {
       };
 
       sendMessage(payload);
-      console.log("메세지 전송완료", payload);
     } else {
       alert("메시지를 보낼 수 없습니다. 서버 연결 상태를 확인해주세요.");
     }
@@ -441,7 +446,9 @@ const ChatRoom = ({ room: incomingRoom }) => {
     return (
       <GradientBackground>
         <Header />
-        <div style={{ padding: "2rem", color: "#fff", textAlign: "center" }}>채팅방 로딩 중...</div>
+        <div style={{ padding: "2rem", color: "#fff", textAlign: "center" }}>
+          채팅방 로딩 중...
+        </div>
         <Footer />
       </GradientBackground>
     );
@@ -453,7 +460,9 @@ const ChatRoom = ({ room: incomingRoom }) => {
         <Header />
         <ChatContainer>
           <PageTitle>
-            <BackButton onClick={() => navigate("/artist")}>Artist List</BackButton>
+            <BackButton onClick={() => navigate("/artist")}>
+              Artist List
+            </BackButton>
             <Title>Chatting with ARTIST</Title>
           </PageTitle>
 
@@ -462,7 +471,10 @@ const ChatRoom = ({ room: incomingRoom }) => {
               <ProfileBox>
                 <ProfileItem>
                   <ProfileCircle $isArtist={true}>
-                    {(room && (user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                    {(room &&
+                      (user?.isArtist
+                        ? room.artistName
+                        : room.userName))?.[0] ?? "?"}
                   </ProfileCircle>
                   <ProfileText>
                     {room && (user?.isArtist ? room.artistName : room.userName)}
@@ -470,19 +482,26 @@ const ChatRoom = ({ room: incomingRoom }) => {
                 </ProfileItem>
                 <ProfileItem>
                   <ProfileCircle $isArtist={false}>
-                    {(room && (!user?.isArtist ? room.artistName : room.userName))?.[0] ?? "?"}
+                    {(room &&
+                      (!user?.isArtist
+                        ? room.artistName
+                        : room.userName))?.[0] ?? "?"}
                   </ProfileCircle>
                   <ProfileText>
-                    {room && (!user?.isArtist ? room.artistName : room.userName)}
+                    {room &&
+                      (!user?.isArtist ? room.artistName : room.userName)}
                   </ProfileText>
                 </ProfileItem>
                 <DateText>
                   {lastMessage && lastMessage.timestamp
-                    ? new Date(lastMessage.timestamp).toLocaleDateString("ko-KR", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                      })
+                    ? new Date(lastMessage.timestamp).toLocaleDateString(
+                        "ko-KR",
+                        {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        }
+                      )
                     : "날짜 없음"}
                 </DateText>
               </ProfileBox>
@@ -490,17 +509,17 @@ const ChatRoom = ({ room: incomingRoom }) => {
 
             <ChatSection>
               <ChatHeader>
-                <ChatTitle>{user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}</ChatTitle>
-                <OnlineStatus>{isConnected ? "온라인" : "오프라인"}</OnlineStatus>
+                <ChatTitle>
+                  {user?.isArtist ? "USER와의 대화" : "ARTIST와의 대화"}
+                </ChatTitle>
+                <OnlineStatus>
+                  {isConnected ? "온라인" : "오프라인"}
+                </OnlineStatus>
               </ChatHeader>
 
               <ChatMessages ref={chatMessagesRef} onScroll={handleScroll}>
                 {Array.isArray(chatMessages) &&
                   chatMessages.map((msg, index) => {
-                    console.log("🔎 sender:", msg.sender);
-                    console.log("🔎 currentUser:", user?.username);
-                    console.log("🧭 isSender:", msg.sender === user?.username);
-
                     return (
                       <ChatMessage
                         key={msg.id || `${msg.timestamp}-${index}`} // 고유 키
@@ -523,14 +542,17 @@ const ChatRoom = ({ room: incomingRoom }) => {
                 <InputContainer>
                   <ClipButton htmlFor="file-upload">
                     📎
-                    <FileInput id="file-upload" type="file" onChange={() => {}} />
+                    <FileInput
+                      id="file-upload"
+                      type="file"
+                      onChange={() => {}}
+                    />
                   </ClipButton>
                   <ChatInput
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => {
-                      console.log("▶ keyDown:", e.key);
                       if (e.key === "Enter") {
                         handleSendMessage(e);
                       }

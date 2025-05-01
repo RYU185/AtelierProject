@@ -6,7 +6,6 @@ export const NotificationProvider = ({ children }) => {
   const [reservationAlarms, setReservationAlarms] = useState([]);
 
   const addNotification = (notification) => {
-    console.log("알림 추가됨:", notification);
     setReservationAlarms((prev) => [...prev, notification]);
   };
 
@@ -15,7 +14,9 @@ export const NotificationProvider = ({ children }) => {
   };
 
   return (
-    <NotificationContext.Provider value={{ reservationAlarms, addNotification, clearNotification }}>
+    <NotificationContext.Provider
+      value={{ reservationAlarms, addNotification, clearNotification }}
+    >
       {children}
     </NotificationContext.Provider>
   );

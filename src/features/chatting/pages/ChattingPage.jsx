@@ -7,7 +7,12 @@ import { useAuth } from "../../../components/AuthContext";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const PageContainer = styled.div`
@@ -40,10 +45,10 @@ const BackButton = styled.button`
 const ChattingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedRoom, setSelectedRoom] = useState(location.state?.room ?? null);
+  const [selectedRoom, setSelectedRoom] = useState(
+    location.state?.room ?? null
+  );
   const { user } = useAuth();
-
-   console.log("🟢 [ChattingPage] selectedRoom:", selectedRoom);
 
   if (!user?.isArtist) {
     return <div>접근 권한이 없습니다.</div>;

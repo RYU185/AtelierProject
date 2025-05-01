@@ -58,7 +58,9 @@ const ChatRoomList = ({ onSelectRoom }) => {
     const fetchRooms = async () => {
       try {
         const res = await axiosInstance.get("/chat-room/my");
-        const filtered = res.data.filter((room) => room.userId !== room.artistId);
+        const filtered = res.data.filter(
+          (room) => room.userId !== room.artistId
+        );
         setRooms(filtered);
       } catch (err) {
         console.error("채팅방 목록 불러오기 실패:", err);
@@ -68,7 +70,6 @@ const ChatRoomList = ({ onSelectRoom }) => {
   }, []);
 
   const handleRoomClick = (room) => {
-    console.log("선택된 채팅방 객체:", room);
     onSelectRoom(room);
   };
 
@@ -80,9 +81,14 @@ const ChatRoomList = ({ onSelectRoom }) => {
         {rooms.map((room) => {
           const displayName = isArtist ? room.userName : room.artistName;
           return (
-            <RoomItem key={`${room.id}-${room.artistId}`} onClick={() => handleRoomClick(room)}>
+            <RoomItem
+              key={`${room.id}-${room.artistId}`}
+              onClick={() => handleRoomClick(room)}
+            >
               <RoomTitle>{displayName}</RoomTitle>
-              <LastMessage>{room.lastMessage || "채팅을 시작해보세요."}</LastMessage>
+              <LastMessage>
+                {room.lastMessage || "채팅을 시작해보세요."}
+              </LastMessage>
             </RoomItem>
           );
         })}

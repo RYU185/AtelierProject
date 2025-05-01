@@ -105,8 +105,6 @@ const TicketCalendar = ({
   exhibitionStartDate,
   exhibitionEndDate,
 }) => {
-  console.log(exhibitionStartDate, "~", exhibitionEndDate);
-
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarDays, setCalendarDays] = useState([]);
 
@@ -164,7 +162,7 @@ const TicketCalendar = ({
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const isAfterToday = date >= today;
-  
+
     const target = formatDate(date);
     return activeDates.includes(target) && isAfterToday;
   };
@@ -196,16 +194,6 @@ const TicketCalendar = ({
       <DaysGrid>
         {calendarDays.map(({ date, isCurrentMonth }, index) => {
           const inRange = isInExhibitionPeriod(date);
-          console.log(
-            "날짜:",
-            formatDate(date),
-            "전시:",
-            exhibitionStartDate,
-            "~",
-            exhibitionEndDate,
-            "→ inRange:",
-            inRange
-          );
 
           return (
             <DayCell

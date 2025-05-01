@@ -94,7 +94,6 @@ const NoticeDetail = () => {
   const { id } = useParams();
   const [noticeData, setNoticeData] = useState(null);
   const { user } = useAuth();
-  console.log("현재 유저 정보:", user); // 🔍 디버그 로그
   const isAdmin = user?.roles?.includes("ADMIN");
 
   useEffect(() => {
@@ -131,7 +130,6 @@ const NoticeDetail = () => {
 
   return (
     <Container>
-
       <NoticeContainer>
         <NoticeHeader>
           <NoticeTitle>{noticeData.title}</NoticeTitle>

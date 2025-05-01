@@ -36,7 +36,8 @@ const InquiryList = styled.ul`
 const InquiryItem = styled.li`
   padding: 12px 15px;
   border-bottom: 1px solid rgb(76, 76, 76);
-  background: ${(props) => (props.replied ? "#f2f2f2" : "rgba(255, 255, 255, 0.07)")};
+  background: ${(props) =>
+    props.replied ? "#f2f2f2" : "rgba(255, 255, 255, 0.07)"};
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: flex;
@@ -132,8 +133,6 @@ function AdminContact() {
       stompClient.connect(
         {},
         () => {
-          console.log("🟢 AdminContact WebSocket 연결 성공");
-
           stompClient.subscribe("/topic/inquiry", (message) => {
             const data = JSON.parse(message.body);
 
@@ -157,7 +156,6 @@ function AdminContact() {
       // 컴포넌트 언마운트 시 WebSocket 연결 종료
       return () => {
         if (stompClient) stompClient.disconnect();
-        console.log("WebSocket 연결 종료");
       };
     }
 
@@ -262,7 +260,8 @@ function AdminContact() {
                 <strong>이메일:</strong> {selectedInquiry.email}
               </Paragraph>
               <Paragraph>
-                <strong>문의 날짜:</strong> {formatDateTime(selectedInquiry.createdAt)}
+                <strong>문의 날짜:</strong>{" "}
+                {formatDateTime(selectedInquiry.createdAt)}
               </Paragraph>
               <Paragraph>
                 <strong>내용:</strong> {selectedInquiry.content}

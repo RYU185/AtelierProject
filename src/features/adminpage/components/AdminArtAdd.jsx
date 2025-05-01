@@ -173,7 +173,6 @@ function AdminArtAdd({ setTab }) {
         },
       });
 
-      console.log("✅ 서버 응답:", response.data);
       if (response.status === 201) {
         alert("작품 등록 완료!");
         setImagePreview(null);

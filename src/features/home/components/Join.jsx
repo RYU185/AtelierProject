@@ -140,8 +140,6 @@ const Join = () => {
     setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
 
-  
-
   const handleCheckAll = (e) => {
     const checked = e.target.checked;
     setTerms({
@@ -170,7 +168,6 @@ const Join = () => {
       const res = await axiosInstance.get(
         `/user/check-id?userId=${formData.userId}`
       );
-      console.log("📤 요청 URL:", `/user/check-id?userId=${formData.userId}`);
       if (res.data.exists) {
         alert("이미 사용 중인 아이디입니다.");
         setIdChecked(false);

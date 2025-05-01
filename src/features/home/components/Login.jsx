@@ -20,7 +20,12 @@ const LeftSection = styled.div`
 
 const GradientBackground = styled.div`
   flex: 2;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,10 +162,13 @@ const Login = () => {
 
       const response = await axios.post("/user/login", { userId, password });
 
-      const { token, role, isArtist, nickname, userId: responseUserId } = response.data;
-
-      console.log("nickname 응답값:", nickname);
-      console.log("userId 응답값:", responseUserId);
+      const {
+        token,
+        role,
+        isArtist,
+        nickname,
+        userId: responseUserId,
+      } = response.data;
 
       // ✅ authToken으로 통일
       localStorage.setItem("authToken", token);
@@ -192,7 +200,7 @@ const Login = () => {
     } catch (err) {
       console.error("로그인 에러:", err);
       if (err.response?.data?.message) {
-        setError(err.response.data.message); 
+        setError(err.response.data.message);
       } else {
         setError("아이디 또는 비밀번호를 다시 확인해주세요.");
       }

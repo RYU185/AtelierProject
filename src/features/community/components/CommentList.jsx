@@ -55,8 +55,6 @@ function CommentList({ postId, onCommentAdded }) {
     try {
       const response = await axios.get(`/api/community/detail/id/${postId}`);
 
-      console.log("✅ 댓글 조회 응답:", response.data);
-
       const fetchedComments = response.data.commentId.map((id, index) => ({
         id: id,
         userNickname: response.data.commentUser[index],

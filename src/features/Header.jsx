@@ -182,14 +182,10 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = useRef(null);
 
-  useEffect(() => {
-    console.log("[Header] 알림 수신 상태:", reservationAlarms);
-  }, [reservationAlarms]);
+  useEffect(() => {}, [reservationAlarms]);
 
   useEffect(() => {
-    console.log("reservationAlarms 변경 감지됨:", reservationAlarms);
     if (reservationAlarms.length > 0) {
-      console.log("알림이 정상적으로 도착했습니다!");
     }
   }, [reservationAlarms]);
 
