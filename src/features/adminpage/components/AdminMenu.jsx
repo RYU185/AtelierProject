@@ -44,8 +44,8 @@ const MenuList = styled.ul`
 const MenuItem = styled.li`
   padding: 10px 12px;
   margin: 6px 0;
-  background: ${({ active }) => (active ? "#949494" : "transparent")};
-  color: ${({ active }) => (active ? "#161616ff" : "#e1e1e1")};
+  background: ${({ active }) => (active ? "#238cdd" : "transparent")};
+  color: ${({ active }) => (active ? "#ffffff" : "#e1e1e1")};
   font-weight: bold;
   border-radius: 6px;
   cursor: pointer;
