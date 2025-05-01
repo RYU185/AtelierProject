@@ -86,7 +86,7 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/artist/${artistId}`);
+    navigate(`/artist/${userId}`);
   };
 
   const handleChat = async (e) => {
