@@ -321,7 +321,9 @@ function TicketPage() {
                     gap: "20px",
                   }}
                 >
-                  {availableTimes.map((time) => (
+                  {Array.from(
+                    new Map(availableTimes.map((t) => [t.id, t])).values()
+                  ).map((time) => (
                     <button
                       key={time.id}
                       onClick={() => setSelectedTime(time)}
