@@ -51,6 +51,7 @@ const ExhibitionCard = styled.div`
 const ExhibitionImage = styled.img`
   width: 100%;
   height: auto;
+  max-height: 367px;
   border-radius: 8px;
   margin-bottom: 20px;
 `;
