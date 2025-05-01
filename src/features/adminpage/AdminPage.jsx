@@ -15,6 +15,7 @@ import AdminUser from "./components/AdminUser";
 import AdminArtAdd from "./components/AdminArtAdd";
 import AdminArtist from "./components/AdminArtist";
 import AdminArtistAdd from "./components/AdminArtistAdd";
+import AdminTicketAdd from "./components/AdminTicketAdd";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
@@ -66,6 +67,8 @@ const AdminPage = () => {
         return <AdminTicketManagement />;
       case "ticketChart":
         return <AdminTicketChart />;
+        case "ticketAdd":
+          return <AdminTicketAdd />;
       case "contact":
         return <AdminContact />;
       case "user":

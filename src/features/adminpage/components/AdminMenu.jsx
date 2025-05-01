@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   margin: 40px 90px;
@@ -57,9 +57,15 @@ const MenuItem = styled.li`
   }
 `;
 
-const AdminMenu = () => {
-  const location = useLocation();
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+  height: 100%;
+`;
 
+const AdminMenu = ({ tab }) => {
   return (
     <Container>
       <Title>관리자 페이지</Title>
@@ -68,96 +74,23 @@ const AdminMenu = () => {
           관리자님 <br /> 어서오세요
         </AdminInfo>
         <MenuList>
-          {/* '/AdminPage' 또는 '/AdminArtAdd'일 때 작품 조회 버튼 활성화 */}
-          <MenuItem
-            active={
-              location.pathname.includes("/AdminArtList") ||
-              location.pathname.includes("/AdminArtAdd")
-            }
-          >
-            <Link
-              to="/AdminArtList"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              작품 조회
-            </Link>
+          <MenuItem active={["art", "artAdd"].includes(tab)}>
+            <StyledLink to="/AdminPage?tab=art">작품 조회</StyledLink>
           </MenuItem>
-          <MenuItem active={location.pathname.includes("/AdminGoods")}>
-            <Link
-              to="/AdminGoods"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              굿즈 판매 내역
-            </Link>
+          <MenuItem active={["goods", "goodsAdd", "goodsChart"].includes(tab)}>
+            <StyledLink to="/AdminPage?tab=goods">굿즈 판매 내역</StyledLink>
           </MenuItem>
-          <MenuItem active={location.pathname === "/AdminTicketManagement"}>
-            <Link
-              to="/AdminTicketManagement"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              티켓 관리
-            </Link>
+          <MenuItem active={["ticket", "ticketAdd", "ticketChart"].includes(tab)}>
+            <StyledLink to="/AdminPage?tab=ticket">티켓 관리</StyledLink>
           </MenuItem>
-          <MenuItem active={location.pathname.includes("/AdminContact")}>
-            <Link
-              to="/AdminContact"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              문의 관리
-            </Link>
+          <MenuItem active={tab === "contact"}>
+            <StyledLink to="/AdminPage?tab=contact">문의 관리</StyledLink>
           </MenuItem>
-          <MenuItem active={location.pathname === "/AdminUser"}>
-            <Link
-              to="/AdminUser"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              유저 관리
-            </Link>
+          <MenuItem active={tab === "user"}>
+            <StyledLink to="/AdminPage?tab=user">유저 관리</StyledLink>
           </MenuItem>
-
-          <MenuItem active={location.pathname === "/AdminArtist"}>
-            <Link
-              to="/AdminArtist"
-              style={{
-                textDecoration: "none",
-                color: "inherit",
-                display: "block",
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              작가 관리
-            </Link>
+          <MenuItem active={["artist", "artistAdd"].includes(tab)}>
+            <StyledLink to="/AdminPage?tab=artist">작가 관리</StyledLink>
           </MenuItem>
         </MenuList>
       </Sidebar>

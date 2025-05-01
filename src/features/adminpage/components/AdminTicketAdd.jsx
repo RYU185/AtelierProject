@@ -2,15 +2,9 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../api/axiosInstance";
 import styled from "styled-components";
 import Select from "react-select"; // 🔥 react-select import
-import Header from "../../Header";
-import Footer from "../../Footer";
-import AdminMenu from "./AdminMenu";
-import AdminTicketMenubar from "./AdminTicketMenubar";
 
-const GradientBackground = styled.div`
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
-`;
+
+
 
 const Container = styled.div`
   display: flex;
@@ -18,9 +12,7 @@ const Container = styled.div`
   margin-bottom: 60px;
 `;
 
-const AdminMenuWrapper = styled.div`
-  margin-bottom: 60px;
-`;
+
 
 const MainContent = styled.div`
   flex: 1;
@@ -232,15 +224,12 @@ const AdminTicketAdd = () => {
   };
 
   return (
-    <GradientBackground>
-      <Header />
+
       <Container>
-        <AdminMenuWrapper>
-          <AdminMenu />
-        </AdminMenuWrapper>
+      
         <MainContent>
           <Title>전시 티켓 추가</Title>
-          <AdminTicketMenubar />
+     
           <FlexRow>
             <ImageBox>
               {previewImage ? (
@@ -324,8 +313,8 @@ const AdminTicketAdd = () => {
           </FlexRow>
         </MainContent>
       </Container>
-      <Footer />
-    </GradientBackground>
+ 
+   
   );
 };
 
