@@ -116,6 +116,8 @@ const AdminTicketAdd = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [artistOptions, setArtistOptions] = useState([]);
   const [selectedArtists, setSelectedArtists] = useState([]);
+  const [artOptions, setArtOptions] = useState([]);
+  const [selectedArts, setSelectedArts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -163,12 +165,32 @@ const AdminTicketAdd = () => {
     reader.readAsDataURL(file);
   };
 
-  const handleSelectChange = (selected) => {
+  const handleSelectChange = async (selected) => {
     setSelectedArtists(selected);
+
+    const artistIds = selected.map((s) => s.value);
+
     setForm((prev) => ({
       ...prev,
-      artistIdList: selected.map((s) => s.value),
+      artistIdList: artistIds,
+      artIdList: [],
     }));
+
+    try {
+      const res = await axiosInstance.get("/art", {
+        params: { artistIds: artistIds.join(",") },
+      });
+
+      const formatted = res.data.map((art) => ({
+        value: art.id,
+        label: art.title,
+      }));
+
+      setArtOptions(formatted);
+      setSelectedArts([]); // UI 초기화
+    } catch (error) {
+      console.error("작품 불러오기 실패:", error);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -212,7 +234,6 @@ const AdminTicketAdd = () => {
 
       alert("전시 티켓이 등록되었습니다!");
       navigate("/AdminPage?tab=ticket");
-
     } catch (error) {
       console.error("등록 실패:", error);
       alert("등록 중 오류 발생");
@@ -240,15 +261,45 @@ const AdminTicketAdd = () => {
               <Label>전시 설명</Label>
               <Input name="description" value={form.description} onChange={handleChange} required />
               <Label>시작일</Label>
-              <Input type="date" name="startDate" value={form.startDate} onChange={handleChange} required />
+              <Input
+                type="date"
+                name="startDate"
+                value={form.startDate}
+                onChange={handleChange}
+                required
+              />
               <Label>종료일</Label>
-              <Input type="date" name="endDate" value={form.endDate} onChange={handleChange} required />
+              <Input
+                type="date"
+                name="endDate"
+                value={form.endDate}
+                onChange={handleChange}
+                required
+              />
               <Label>예약 마감일</Label>
-              <Input type="date" name="deadline" value={form.deadline} onChange={handleChange} required />
+              <Input
+                type="date"
+                name="deadline"
+                value={form.deadline}
+                onChange={handleChange}
+                required
+              />
               <Label>정원</Label>
-              <Input type="number" name="capacity" value={form.capacity} onChange={handleChange} required />
+              <Input
+                type="number"
+                name="capacity"
+                value={form.capacity}
+                onChange={handleChange}
+                required
+              />
               <Label>티켓 가격</Label>
-              <Input type="number" name="price" value={form.price} onChange={handleChange} required />
+              <Input
+                type="number"
+                name="price"
+                value={form.price}
+                onChange={handleChange}
+                required
+              />
             </CardSection>
 
             <CardSection>
@@ -260,6 +311,24 @@ const AdminTicketAdd = () => {
                   value={selectedArtists}
                   onChange={handleSelectChange}
                   placeholder="작가를 선택하세요"
+                />
+              </ChartBlock>
+              
+              <Label>작품 선택</Label>
+              <ChartBlock>
+                <Select
+                  isMulti
+                  options={artOptions}
+                  value={selectedArts}
+                  onChange={(selected) => {
+                    setSelectedArts(selected);
+                    setForm((prev) => ({
+                      ...prev,
+                      artIdList: selected.map((s) => s.value),
+                    }));
+                  }}
+                  placeholder="작품을 선택하세요"
+                  isDisabled={artOptions.length === 0}
                 />
               </ChartBlock>
 
