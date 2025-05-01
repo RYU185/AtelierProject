@@ -313,7 +313,7 @@ const ArtistDetail = () => {
           <Modal onClick={(e) => e.stopPropagation()}>
             <ArtDetailImageContainer>
               <img
-                src={getImageUrl(selectedWork.imgUrl)}
+                src={`${import.meta.env.VITE_API_URL}${selectedWork.imgUrl}`}
                 alt={selectedWork.title}
               />
             </ArtDetailImageContainer>
