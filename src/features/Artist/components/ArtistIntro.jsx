@@ -86,17 +86,16 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/artist/${userId}`);
+    navigate(`/artist/${userId}`, { state: { artistId } });
   };
 
   const handleChat = async (e) => {
     e.stopPropagation();
 
     try {
-      const res = await axiosInstance.post(`/chat-room/${artistId}`);
-      navigate(`/artist/${artistId}/chat`, {
+      const res = await axiosInstance.post(`/chat-room/${userId}`);
+      navigate(`/artist/${userId}/chat`, {
         state: { room: res.data },
-      
       });
     } catch (err) {
       console.error("채팅방 생성 실패:", err.response?.data || err.message);

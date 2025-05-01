@@ -57,6 +57,9 @@ const ArtistGalleryIntro = styled.div`
     color: #dadada;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
 `;
 
