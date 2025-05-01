@@ -78,6 +78,7 @@ const SortButtonBox = styled.div`
   display: flex;
   justify-content: flex-end;
   padding: 10px 20px;
+  margin-right: 35px;
 `;
 
 const SortButton = styled(StyledButton)`
