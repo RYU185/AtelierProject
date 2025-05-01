@@ -94,8 +94,9 @@ function ArtistGalleryDetail() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
 
-  const getArtImageUrl = (filename) =>
-    filename ? `/images/ArtListIMG/${filename}` : "";
+  const getArtImageUrl = (path) => {
+    return `${import.meta.env.VITE_API_URL}${path}`;
+  };
 
   useEffect(() => {
     const fetchGalleryDetail = async () => {
