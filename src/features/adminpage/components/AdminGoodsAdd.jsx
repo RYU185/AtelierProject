@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
 import axios from "axios";
 
 const AdminGoodsAddWrapper = styled.div`
@@ -9,8 +8,8 @@ const AdminGoodsAddWrapper = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
-
 `;
+
 const AdminContent = styled.div`
   flex: 1;
   padding-left: 20px;
@@ -24,7 +23,7 @@ const Title = styled.h2`
   text-align: center;
   margin-bottom: 20px;
   font-size: 24px;
-  color: #333;
+  color: #ffffff;
 `;
 
 const InputContainer = styled.div`
@@ -124,7 +123,7 @@ const PlaceholderText = styled.div`
   text-align: center;
 `;
 
-function AdminGoodsAdd() {
+function AdminGoodsAdd({ setTab }) {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [imageFiles, setImageFiles] = useState([]);
   const [name, setName] = useState("");
@@ -173,6 +172,9 @@ function AdminGoodsAdd() {
         setPrice("");
         setStock("");
         setDescription("");
+
+        // ✅ 굿즈 목록 탭으로 이동
+        setTab("goods");
       }
     } catch (err) {
       console.error("굿즈 등록 실패:", err);

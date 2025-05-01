@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../api/axiosInstance";
 import styled from "styled-components";
-import Select from "react-select"; // 🔥 react-select import
+import Select from "react-select";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
@@ -106,11 +106,11 @@ const AdminTicketAdd = () => {
     startDate: "",
     endDate: "",
     deadline: "",
-    capacity: 0, // ✅ 이거 숫자로!
+    capacity: 0,
     price: 0,
     poster: "",
     artistIdList: [],
-    artIdList: [], // ✅ 꼭 넣어야 함!
+    artIdList: [],
   });
 
   const [previewImage, setPreviewImage] = useState("");
@@ -136,8 +136,6 @@ const AdminTicketAdd = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // 💡 숫자형 필드는 숫자로 변환
     const parsedValue = ["capacity", "price"].includes(name) ? Number(value) : value;
 
     setForm((prev) => ({
@@ -173,53 +171,53 @@ const AdminTicketAdd = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    const dtoBlob = new Blob(
-      [
-        JSON.stringify({
-          title: form.title,
-          description: form.description,
-          startDate: form.startDate,
-          endDate: form.endDate,
-          deadline: form.deadline,
-          capacity: form.capacity,
-          price: form.price,
-          artistIdList: form.artistIdList,
-          artIdList: form.artIdList,
-        }),
-      ],
-      { type: "application/json" }
-    );
+      const dtoBlob = new Blob(
+        [
+          JSON.stringify({
+            title: form.title,
+            description: form.description,
+            startDate: form.startDate,
+            endDate: form.endDate,
+            deadline: form.deadline,
+            capacity: form.capacity,
+            price: form.price,
+            artistIdList: form.artistIdList,
+            artIdList: form.artIdList,
+          }),
+        ],
+        { type: "application/json" }
+      );
 
-    formData.append("dto", dtoBlob);
+      formData.append("dto", dtoBlob);
 
-    const posterInput = document.querySelector('input[type="file"]');
-    if (posterInput.files.length > 0) {
-      formData.append("poster", posterInput.files[0]);
-    } else {
-      alert("포스터 이미지를 업로드해주세요.");
-      return;
+      const posterInput = document.querySelector('input[type="file"]');
+      if (posterInput.files.length > 0) {
+        formData.append("poster", posterInput.files[0]);
+      } else {
+        alert("포스터 이미지를 업로드해주세요.");
+        return;
+      }
+
+      await axiosInstance.post("/artistgallery/add", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      alert("전시 티켓이 등록되었습니다!");
+      navigate("/AdminPage?tab=ticket");
+
+    } catch (error) {
+      console.error("등록 실패:", error);
+      alert("등록 중 오류 발생");
     }
-
-    await axiosInstance.post("/artistgallery/add", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    alert("전시 티켓이 등록되었습니다!");
-    navigate("/AdminPage?tab=ticket");
-
-  } catch (error) {
-    console.error("등록 실패:", error);
-    alert("등록 중 오류 발생");
-  }
-};
+  };
 
   return (
     <Container>
@@ -242,45 +240,15 @@ const handleSubmit = async (e) => {
               <Label>전시 설명</Label>
               <Input name="description" value={form.description} onChange={handleChange} required />
               <Label>시작일</Label>
-              <Input
-                type="date"
-                name="startDate"
-                value={form.startDate}
-                onChange={handleChange}
-                required
-              />
+              <Input type="date" name="startDate" value={form.startDate} onChange={handleChange} required />
               <Label>종료일</Label>
-              <Input
-                type="date"
-                name="endDate"
-                value={form.endDate}
-                onChange={handleChange}
-                required
-              />
+              <Input type="date" name="endDate" value={form.endDate} onChange={handleChange} required />
               <Label>예약 마감일</Label>
-              <Input
-                type="date"
-                name="deadline"
-                value={form.deadline}
-                onChange={handleChange}
-                required
-              />
+              <Input type="date" name="deadline" value={form.deadline} onChange={handleChange} required />
               <Label>정원</Label>
-              <Input
-                type="number"
-                name="capacity"
-                value={form.capacity}
-                onChange={handleChange}
-                required
-              />
+              <Input type="number" name="capacity" value={form.capacity} onChange={handleChange} required />
               <Label>티켓 가격</Label>
-              <Input
-                type="number"
-                name="price"
-                value={form.price}
-                onChange={handleChange}
-                required
-              />
+              <Input type="number" name="price" value={form.price} onChange={handleChange} required />
             </CardSection>
 
             <CardSection>

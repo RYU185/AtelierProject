@@ -49,14 +49,16 @@ const AdminPage = () => {
     const query = new URLSearchParams(location.search);
     const newTab = query.get("tab") || "art";
     setTab(newTab);
-  }, [location.search]); 
+  }, [location.search]);
 
   const renderComponent = () => {
     switch (tab) {
+      case "goodsAdd":
+  return <AdminGoodsAdd setTab={setTab} />;
       case "art":
         return <AdminArtList />;
       case "artAdd":
-        return <AdminArtAdd />;
+        return <AdminArtAdd setTab={setTab} />;
       case "goods":
         return <AdminGoods />;
       case "goodsChart":
@@ -67,8 +69,8 @@ const AdminPage = () => {
         return <AdminTicketManagement />;
       case "ticketChart":
         return <AdminTicketChart />;
-        case "ticketAdd":
-          return <AdminTicketAdd />;
+      case "ticketAdd":
+        return <AdminTicketAdd />;
       case "contact":
         return <AdminContact />;
       case "user":
@@ -77,7 +79,6 @@ const AdminPage = () => {
         return <AdminArtist />;
       case "artistAdd":
         return <AdminArtistAdd />;
-
       default:
         return <div>선택된 탭이 없습니다</div>;
     }
