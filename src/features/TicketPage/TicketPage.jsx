@@ -323,7 +323,7 @@ function TicketPage() {
                   }}
                 >
                   {Array.from(
-                    new Map(availableTimes.map((t) => [t.id, t])).values()
+                    new Map(availableTimes.map((t) => [t.time, t])).values()
                   ).map((time) => (
                     <button
                       key={time.id}
