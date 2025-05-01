@@ -228,7 +228,7 @@ const GoodsPurchase = () => {
               <GoodsImage
                 src={
                   purchase.thumbnailUrl?.startsWith("/uploads")
-                    ? `${purchase.thumbnailUrl}`
+                    ? `${import.meta.env.VITE_API_URL}${purchase.thumbnailUrl}`
                     : `/images/goods-images/${purchase.thumbnailUrl}`
                 }
                 alt={purchase.goodsName}

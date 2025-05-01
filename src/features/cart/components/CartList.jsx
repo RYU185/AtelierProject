@@ -268,7 +268,10 @@ const CartList = forwardRef(({ onUpdateTotal }, ref) => {
             checked={item.checked}
             onChange={() => handleCheckItem(item.id)}
           />
-          <ProductImage src={item.image} alt={item.name} />
+          <ProductImage
+            src={`${import.meta.env.VITE_API_URL}${item.image}`}
+            alt={item.name}
+          />
           <ProductInfo>
             <ProductDetails>
               <ProductName>{item.name}</ProductName>
