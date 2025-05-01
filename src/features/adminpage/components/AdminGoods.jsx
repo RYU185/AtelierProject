@@ -60,6 +60,7 @@ const ThLast = styled.th`
 `;
 
 const Td = styled.td`
+  color: #e1e1e1;
   font-size: 16px;
   vertical-align: middle;
   border-right: 1px solid #686868;
@@ -67,6 +68,7 @@ const Td = styled.td`
 `;
 
 const TdLast = styled.td`
+color: #e1e1e1;
   font-size: 16px;
   vertical-align: middle;
   border-right: none;
@@ -131,7 +133,7 @@ function AdminGoods() {
 
       <Table>
         <thead>
-          <tr>
+          <tr>    
             <Th>상품정보</Th>
             <Th>재고량</Th>
             <ThLast>누적 판매량</ThLast>

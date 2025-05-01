@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styled from "styled-components";
-import AdminTicketMenubar from "./AdminTicketMenubar";
+
 
 // ✅ 정적 이미지 + 업로드 이미지 모두 처리 (현재는 정적만 사용)
 const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", {
