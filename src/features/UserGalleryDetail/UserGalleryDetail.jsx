@@ -5,11 +5,6 @@ import UserGalleryInformation from "./components/UserGalleryInformation";
 import DrawingList from "./components/DrawingList";
 import styled from "styled-components";
 import axios from "axios";
-import TicketButton from "../ArtistGalleryDetail/components/TicketButton";
-
-const dImages = import.meta.glob("/public/images/DrawingIMG/*", {
-  eager: true,
-});
 
 const GradientBackground = styled.div`
   min-height: 100vh;
@@ -131,7 +126,6 @@ function UserGalleryDetail() {
               url={`${import.meta.env.VITE_API_URL}${data.posterUrl}`}
             />
           )}
-          <TicketButton />
         </PosterBox>
         <InfoBox>
           <UserGalleryInformation data={data} />
