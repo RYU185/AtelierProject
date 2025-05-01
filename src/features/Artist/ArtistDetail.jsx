@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -8,7 +8,7 @@ import axiosInstance from "../../api/axiosInstance";
 // import.meta.glob 사용하여 정적 이미지 처리
 const importImages = import.meta.glob("/src/assets/ArtListIMG/*");
 
-const   getImageUrl = (filename) => {
+const getImageUrl = (filename) => {
   if (!filename) return "/path/to/default-image.png"; // 기본 이미지 처리
 
   // 정적 이미지 처리
@@ -54,7 +54,7 @@ const DescriptionContainer = styled.div`
   padding: 20px;
   max-width: 50%;
 
-  & > p{
+  & > p {
     font-size: 15px;
     color: #e0e0e0;
   }
@@ -202,10 +202,12 @@ const ArtDetailDescriptionContainer = styled.div`
 
 const ArtistDetail = () => {
   const { id } = useParams();
+  const location = useLocation();
   const [artist, setArtist] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedWork, setSelectedWork] = useState(null);
   const [arts, setArts] = useState([]);
+  const artistId = location.state?.artistId || id;
 
   useEffect(() => {
     const fetchArtistDetail = async () => {
@@ -220,6 +222,8 @@ const ArtistDetail = () => {
   }, [id]);
 
   useEffect(() => {
+    if (!artistId) return;
+
     const fetchArt = async () => {
       try {
         const res = await axiosInstance.get(`/art/artist/${id}`);
@@ -229,7 +233,7 @@ const ArtistDetail = () => {
       }
     };
     fetchArt();
-  }, [id]);
+  }, [artistId]);
 
   const handleOverlayClick = () => {
     setModalOpen(false); // 모달 닫기

@@ -86,14 +86,14 @@ const ArtistIntro = ({ artistId, userId, name, bio, imageUrl }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/artist/${userId}`);
+    navigate(`/artist/${userId}`, { state: { artistId } });
   };
 
   const handleChat = async (e) => {
     e.stopPropagation();
 
     try {
-      const res =  await axiosInstance.post(`/chat-room/${userId}`);
+      const res = await axiosInstance.post(`/chat-room/${userId}`);
       navigate(`/artist/${userId}/chat`, {
         state: { room: res.data },
       });
