@@ -247,12 +247,7 @@ function AdminArtAdd() {
                   onChange={(e) => setYear(e.target.value)}
                 />
 
-                <InputField
-                  type="date"
-                  placeholder="업로드 날짜"
-                  value={uploadDate}
-                  onChange={(e) => setUploadDate(e.target.value)}
-                />
+           
               </InputContainer>
             </FlexContainer>
           </AdminContent>
