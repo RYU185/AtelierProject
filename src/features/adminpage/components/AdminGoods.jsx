@@ -4,20 +4,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import axios from "../../../api/axiosInstance";
 
-// 정적 이미지 불러오기
-const goodsImages = import.meta.glob("/public/images/goods-images/*", {
-  eager: true,
-});
-
-const getGoodsImageUrl = (filename) => {
-  if (!filename) return "/default.jpg";
-  const matched = Object.entries(goodsImages).find(([path]) => path.endsWith(filename));
-  if (matched) {
-    return matched[1].default;
-  }
-  return `/uploads/${filename.replace(/^\/uploads\//, "")}`;
-};
-
 const AdminGoodsWrapper = styled.div``;
 
 const TitleWrapper = styled.div`
@@ -60,7 +46,7 @@ const ThLast = styled.th`
 `;
 
 const Td = styled.td`
-color: #e1e1e1;
+  color: #e1e1e1;
   font-size: 16px;
   vertical-align: middle;
   border-right: 1px solid #686868;
@@ -68,7 +54,7 @@ color: #e1e1e1;
 `;
 
 const TdLast = styled.td`
-color: #e1e1e1;
+  color: #e1e1e1;
   font-size: 16px;
   vertical-align: middle;
   border-right: none;
@@ -143,8 +129,16 @@ function AdminGoods() {
           {goodsData.map((item) => (
             <ProductRow key={item.id}>
               <ProductCell>
-                <Link to={`/goods/${item.id}`} style={{ display: "inline-block" }}>
-                  <ProductImage src={getGoodsImageUrl(item.imgUrlList?.[0])} alt={item.name} />
+                <Link
+                  to={`/goods/${item.id}`}
+                  style={{ display: "inline-block" }}
+                >
+                  <ProductImage
+                    src={`${import.meta.env.VITE_API_URL}${
+                      item.imgUrlList?.[0]
+                    }`}
+                    alt={item.name}
+                  />
                 </Link>
                 <ProductInfo>
                   <strong>{item.name}</strong>

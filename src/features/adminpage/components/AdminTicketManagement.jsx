@@ -4,21 +4,17 @@ import styled from "styled-components";
 
 import AdminTicketMenubar from "./AdminTicketMenubar";
 
-const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", { eager: true });
-const getImageUrl = (filename) => {
-  if (!filename) return "/images/default-image.png";
-  const matched = Object.entries(artImages).find(([path]) => path.endsWith(filename));
-  return matched ? matched[1].default : "/images/default-image.png";
-};
+const artImages = import.meta.glob("/public/images/ArtistGalleryIMG/*", {
+  eager: true,
+});
+
 const AdminTicketWrapper = styled.div`
   flex: 1;
   flex-direction: column;
   color: white;
 `;
 
-const AdminGoodsMenubarWrapper = styled.div`
-
-`;
+const AdminGoodsMenubarWrapper = styled.div``;
 
 const MainContent = styled.div`
   flex: 1;
@@ -29,8 +25,8 @@ const Title = styled.h1`
   margin-top: 43px;
   margin-bottom: 24px;
   font-weight: 500;
-  `
-  const Table = styled.table`
+`;
+const Table = styled.table`
   width: 100%;
   max-width: 1300px;
   border-collapse: collapse;
@@ -63,11 +59,19 @@ const ActionButton = styled.button`
   cursor: pointer;
   color: #333;
   background-color: ${(props) =>
-    props.variant === "edit" ? "#a4d4f3" : props.variant === "delete" ? "#f7b6b6" : "#d6ccf7"};
+    props.variant === "edit"
+      ? "#a4d4f3"
+      : props.variant === "delete"
+      ? "#f7b6b6"
+      : "#d6ccf7"};
 
   &:hover {
     background-color: ${(props) =>
-      props.variant === "edit" ? "#7dc5f3" : props.variant === "delete" ? "#f48c8c" : "#c4b8f0"};
+      props.variant === "edit"
+        ? "#7dc5f3"
+        : props.variant === "delete"
+        ? "#f48c8c"
+        : "#c4b8f0"};
   }
 `;
 
@@ -105,7 +109,7 @@ const AdminTicketManagement = () => {
     id: data.galleryId,
     title: data.title,
     dateRange: `${data.startDate} - ${data.endDate}`,
-    image: getImageUrl(data.posterUrl),
+    image: data.posterUrl,
     visitors: data.totalReserved,
     reservationLimit: data.capacity,
     remaining: data.capacity - data.totalReserved,
@@ -179,7 +183,7 @@ const AdminTicketManagement = () => {
                 <tr key={ticket.id}>
                   <Td>
                     <Thumbnail
-                      src={ticket.image}
+                      src={`${import.meta.env.VITE_API_URL}${ticket.image}`}
                       alt="전시 이미지"
                       onClick={() => handleThumbnailClick(ticket.id)}
                     />
@@ -205,7 +209,9 @@ const AdminTicketManagement = () => {
                       <input
                         type="date"
                         value={formData.deadline}
-                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, deadline: e.target.value })
+                        }
                       />
                     ) : (
                       ticket.deadline
@@ -213,15 +219,24 @@ const AdminTicketManagement = () => {
                   </Td>
                   <Td>
                     {editingId === ticket.id ? (
-                      <ActionButton variant="edit" onClick={() => handleSave(ticket.id)}>
+                      <ActionButton
+                        variant="edit"
+                        onClick={() => handleSave(ticket.id)}
+                      >
                         저장
                       </ActionButton>
                     ) : (
-                      <ActionButton variant="edit" onClick={() => handleEditClick(ticket)}>
+                      <ActionButton
+                        variant="edit"
+                        onClick={() => handleEditClick(ticket)}
+                      >
                         수정
                       </ActionButton>
                     )}
-                    <ActionButton variant="delete" onClick={() => handleDelete(ticket.id)}>
+                    <ActionButton
+                      variant="delete"
+                      onClick={() => handleDelete(ticket.id)}
+                    >
                       삭제
                     </ActionButton>
                   </Td>
