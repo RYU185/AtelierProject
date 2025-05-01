@@ -5,28 +5,14 @@ import Header from "../Header";
 import Footer from "../Footer";
 import axiosInstance from "../../api/axiosInstance";
 
-// import.meta.glob 사용하여 정적 이미지 처리
-const importImages = import.meta.glob("/src/assets/ArtListIMG/*");
-
-const getImageUrl = (filename) => {
-  if (!filename) return "/path/to/default-image.png"; // 기본 이미지 처리
-
-  // 정적 이미지 처리
-  if (filename.startsWith("images/") || filename.startsWith("src/assets/")) {
-    return importImages[`/src/assets/ArtListIMG/${filename}`];
-  }
-
-  // 업로드된 이미지 처리 (서버 경로에 있는 이미지들)
-  if (filename.startsWith("/uploads/")) {
-    return `http://localhost:8081${filename}`; // 서버의 업로드 이미지 경로
-  }
-
-  return filename;
-};
-
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const DetailWrapper = styled.div`
@@ -267,7 +253,10 @@ const ArtistDetail = () => {
       <DetailWrapper>
         <DetailContainer>
           <ImageContainer>
-            <ArtistImage src={getImageUrl(artist.profile_img)} alt={artist.name} />
+            <ArtistImage
+              src={`${import.meta.env.VITE_API_URL}${artist.profile_img}`}
+              alt={artist.name}
+            />
           </ImageContainer>
           <DescriptionContainer>
             <p>{artist.description}</p>
@@ -304,7 +293,10 @@ const ArtistDetail = () => {
                 };
                 return (
                   <WorkCard key={art.id} onClick={handleWorkClick}>
-                    <WorkImage src={getImageUrl(art.imgUrl)} alt={art.title} />
+                    <WorkImage
+                      src={`${import.meta.env.VITE_API_URL}${art.imgUrl}`}
+                      alt={art.title}
+                    />
                   </WorkCard>
                 );
               })
@@ -320,7 +312,10 @@ const ArtistDetail = () => {
         <Overlay onClick={handleOverlayClick}>
           <Modal onClick={(e) => e.stopPropagation()}>
             <ArtDetailImageContainer>
-              <img src={getImageUrl(selectedWork.imgUrl)} alt={selectedWork.title} />
+              <img
+                src={getImageUrl(selectedWork.imgUrl)}
+                alt={selectedWork.title}
+              />
             </ArtDetailImageContainer>
             <ArtDetailDescriptionContainer>
               <h2>{selectedWork.title}</h2>
