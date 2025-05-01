@@ -199,12 +199,12 @@ const AdminArtistAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!name || (!profileImg && !editMode) || !description || !userId) {
       alert("모든 항목을 입력해주세요.");
       return;
     }
-
+  
     const formData = new FormData();
     if (editMode) {
       formData.append("id", id);
@@ -224,13 +224,13 @@ const AdminArtistAdd = () => {
         }))
       )
     );
-
+  
     try {
       await axiosInstance.post("/artist", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("작가가 성공적으로 등록되었습니다.");
-      navigate("/adminpage?tab=artist");
+      navigate("/AdminPage?tab=artist"); // ✅ 여기로 수정됨
     } catch (err) {
       console.error("작가 등록 실패: ", err);
       alert("등록 중 오류가 발생했습니다.");
