@@ -132,12 +132,13 @@ export default function WhatsOn() {
     const fetchArtistGalleries = async () => {
       try {
         const response = await axios.get("/api/artistgallery");
-        setArtistGalleries(response.data);
+        const visibleGalleries = response.data.filter(g => !g.deleted); // 삭제된 전시 제외
+        setArtistGalleries(visibleGalleries);
       } catch (error) {
         console.error("Error fetching artist galleries:", error);
       }
     };
-
+  
     fetchArtistGalleries();
   }, []);
 

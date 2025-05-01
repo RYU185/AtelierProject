@@ -65,7 +65,7 @@ const TitleWrapper = styled.div`
 `;
 
 const FilterSelect = styled.select`
-  top: 30px;
+  top: -80px;
   margin-left: 1140px;
   font-size: 16px;
   padding: 5px 10px;
