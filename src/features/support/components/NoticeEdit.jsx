@@ -32,7 +32,7 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-size: 16px;
-  color: #333;
+  color: #e1e1e1;
   font-weight: 500;
 `;
 
