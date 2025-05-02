@@ -11,7 +11,7 @@ const Container = styled.div`
 
 const Title = styled.h2`
   font-size: 24px;
-  color: #333;
+  color: #e1e1e1;
   margin-bottom: 30px;
   padding-bottom: 15px;
   border-bottom: 2px solid #007aff;
@@ -31,7 +31,7 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   font-size: 16px;
-  color: #333;
+  color: #e1e1e1;
   font-weight: 500;
 `;
 
@@ -40,6 +40,7 @@ const Input = styled.input`
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  resize: none;
 
   &:focus {
     outline: none;
@@ -53,7 +54,7 @@ const TextArea = styled.textarea`
   border-radius: 4px;
   font-size: 16px;
   min-height: 200px;
-  resize: vertical;
+  resize: none;
 
   &:focus {
     outline: none;
