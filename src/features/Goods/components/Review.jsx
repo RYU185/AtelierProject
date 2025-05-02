@@ -72,7 +72,9 @@ function Review() {
     const fetchReviews = async () => {
       try {
         const res = await axiosInstance.get(`/review/goods/${goodsId}`);
-        const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const sorted = res.data.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
         setReviews(res.data);
       } catch (err) {
         console.error("리뷰 불러오기 실패:", err);
@@ -87,10 +89,12 @@ function Review() {
       const res = await axiosInstance.post(`/review/add/${goodsId}`, {
         text: reviewText,
       });
+      alert("리뷰작성이 완료 되었습니다.");
       setReviews([res.data, ...reviews]);
       setReviewText("");
       setCurrentPage(1);
     } catch (err) {
+      alert("구매한 상품만 리뷰작성이 가능합니다.");
       console.error("리뷰 등록 실패:", err);
     }
   };
@@ -106,7 +110,7 @@ function Review() {
       <ReviewList>
         {currentReviews.map((review, index) => (
           <ReviewBlock
-            key={review.id || `${review.user}-${review.createdAt}-${index}`} // fallback 키
+            key={review.id || `${review.nickname}-${review.createdAt}-${index}`} // fallback 키
             review={review}
             setReviews={setReviews}
           />
@@ -117,7 +121,9 @@ function Review() {
             onChange={(e) => setReviewText(e.target.value)}
             placeholder="상품평을 작성해주세요..."
           />
-          <ReviewInputButton onClick={handleSubmit}>리뷰 등록</ReviewInputButton>
+          <ReviewInputButton onClick={handleSubmit}>
+            리뷰 등록
+          </ReviewInputButton>
         </ReviewInputContainer>
       </ReviewList>
       <PaginationContainer>

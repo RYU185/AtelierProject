@@ -25,7 +25,6 @@ const ReviewContent = styled.div`
   font-weight: 400;
   font-size: 15px;
   color: #e1e1e1;
-
 `;
 
 const MoreButton = styled.button`
@@ -60,7 +59,11 @@ const MenuButton = styled.button`
   text-align: left;
   cursor: pointer;
   color: ${(props) =>
-    props.type === "edit" ? "#0068ca" : props.type === "delete" ? "#ff4d4f" : "#333"};
+    props.type === "edit"
+      ? "#0068ca"
+      : props.type === "delete"
+      ? "#ff4d4f"
+      : "#333"};
   &:hover {
     background: #f5f5f5;
   }
@@ -76,7 +79,7 @@ function ReviewBlock({ review }) {
   return (
     <div>
       <ReviewItem>
-        <ReviewerName>{review.user}</ReviewerName>
+        <ReviewerName>{review.nickname}</ReviewerName>
         <ReviewDate>{review.createdAt}</ReviewDate>
         <ReviewContent>{review.text}</ReviewContent>
         <MoreButton onClick={handleMoreClick}>⋮</MoreButton>
