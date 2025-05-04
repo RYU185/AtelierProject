@@ -195,6 +195,17 @@ const ArtistDetail = () => {
   const [arts, setArts] = useState([]);
   const artistId = location.state?.artistId || id;
 
+  const splitTextByLineCount = (text, maxLinesPerBlock = 3) => {
+    const lines = text.split(/\n|(?<=\.)\s+/); // 줄바꿈 또는 마침표 뒤 공백으로 분리하겠다
+    const result = [];
+
+    for (let i = 0; i < lines.length; i += maxLinesPerBlock) {
+      result.push(lines.slice(i, i + maxLinesPerBlock).join(" "));
+    }
+
+    return result;
+  };
+
   useEffect(() => {
     const fetchArtistDetail = async () => {
       try {
@@ -259,7 +270,9 @@ const ArtistDetail = () => {
             />
           </ImageContainer>
           <DescriptionContainer>
-            <p>{artist.description}</p>
+            {splitTextByLineCount(artist.description, 2).map((chunk, index) => (
+              <p key={index}>{chunk}</p>
+            ))}
           </DescriptionContainer>
         </DetailContainer>
 
