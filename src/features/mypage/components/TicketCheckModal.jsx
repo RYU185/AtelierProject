@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import axiosInstance from "../../../api/axiosInstance";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -101,9 +102,11 @@ const TicketCheckModal = ({ isOpen, onClose, ticketInfo }) => {
           <TicketWrapper>
             <TicketLeft>
               <BarCode>6789</BarCode>
-              <TicketTitle>TICKET</TicketTitle>
-              <TicketType>GRAPHIC</TicketType>
-              <TicketDate>2025.03.24 성인 1인</TicketDate>
+              <TicketTitle>{ticketInfo.galleryTitle}</TicketTitle>
+              <TicketDate>
+                {" "}
+                {ticketInfo.date} 성인 {ticketInfo.headcount}
+              </TicketDate>
               <BarCode>012345</BarCode>
             </TicketLeft>
           </TicketWrapper>
