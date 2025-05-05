@@ -54,18 +54,21 @@ const Icon = styled.div`
   opacity: 0.6;
 `;
 
-
-
 const services = [
   { title: "공지사항", eng: "NOTICE", icon: "📢", path: "/support/notice" },
   { title: "시설 안내", eng: "GUIDE", icon: "🏢", path: "/support/guide" },
   {
     title: "오시는 길",
-    eng: "CONTACT US",
+    eng: "LOCATION",
     icon: "🗺️",
     path: "/support/Location",
   },
-  { title: "고객센터", eng: "FAQ", icon: "💬", path: "/support/contactus" },
+  {
+    title: "문의하기",
+    eng: "CONTACTUS",
+    icon: "💬",
+    path: "/support/contactus",
+  },
 ];
 
 const ServiceMenu = () => {
