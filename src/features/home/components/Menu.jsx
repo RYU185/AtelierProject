@@ -217,7 +217,7 @@ const Menu = ({ isOpen, onClose }) => {
       subs: [{ name: "GalleryGoods", path: "/goods" }],
     },
     {
-      main: "고객 지원",
+      main: "Notice",
       subs: [
         { name: "공지사항", path: "/support/notice" },
         { name: "이용안내", path: "/support/guide" },
