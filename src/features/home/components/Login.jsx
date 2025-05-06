@@ -219,7 +219,7 @@ const Login = () => {
     <Container>
       <LeftSection />
       <GradientBackground>
-        <HomeLink to="/">홈페이지로 이동 ➡️</HomeLink>
+        <HomeLink to="/">홈페이지로 이동</HomeLink>
         <RightSection>
           <FormWrapper>
             <Logo>

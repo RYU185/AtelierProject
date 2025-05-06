@@ -149,7 +149,7 @@ const FindId = () => {
   useEffect(() => {
     if (!hasFoundId) return;
 
-    setCountdown(3);
+    setCountdown(5);
     setProgress(0);
 
     const interval = 100;
@@ -175,7 +175,7 @@ const FindId = () => {
 
   const handleFindId = async () => {
     if (!isValidEmail(email)) {
-      setMessage("❌ 이메일 형식이 올바르지 않습니다.");
+      setMessage("이메일 형식이 올바르지 않습니다.");
       setIsSuccess(false);
       setHasFoundId(false);
       return;
@@ -187,7 +187,7 @@ const FindId = () => {
       const response = await axios.post("/user/findid", { email }); // ✅ response 정의됨
 
       if (response.data.status === "success") {
-        setMessage(`✅ 찾은 아이디는 ${response.data.data.userId} 입니다!`);
+        setMessage(`찾은 아이디는 ${response.data.data.userId} 입니다!`);
         setIsSuccess(true);
         setHasFoundId(true); // 이동 트리거
       } else {
@@ -248,7 +248,7 @@ const FindId = () => {
                   <MotionProgress
                     initial={{ width: 0 }}
                     animate={{ width: "100%" }}
-                    transition={{ duration: 3, ease: "easeInOut" }}
+                    transition={{ duration: 5, ease: "easeInOut" }}
                   />
                 </ProgressBarWrapper>
                 <p
