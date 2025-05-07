@@ -16,6 +16,11 @@ export const useSocketStore = create((set) => ({
       notifications: [...state.notifications, notification],
     })),
 
+  clearNotifications: () =>
+    set({
+      notifications: [],
+    }),
+
   addInquiry: (inquiry) =>
     set((state) => ({
       inquiries: [...state.inquiries, inquiry],

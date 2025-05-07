@@ -5,6 +5,7 @@ import Menu from "./home/components/Menu";
 import LogoIconFinal from "./LogoIconFinal";
 import { useAuth } from "../components/AuthContext";
 import { useNotification } from "../features/Notification/NotificationContext";
+import useSocketStore from "../socket/useSocketStore";
 
 const HeaderWrapper = styled.header`
   position: relative;
@@ -99,9 +100,7 @@ const DropdownMenu = styled.ul`
   top: 100%;
   left: 50%;
   transform: ${(props) =>
-    props.$show
-      ? "translateX(-50%) translateY(0px)"
-      : "translateX(-50%) translateY(-10px)"};
+    props.$show ? "translateX(-50%) translateY(0px)" : "translateX(-50%) translateY(-10px)"};
   background-color: rgba(47, 47, 47, 1);
   border-radius: 23px;
   list-style: none;
@@ -175,16 +174,15 @@ const Header = () => {
   const { user, logout } = useAuth();
   const username = user?.username;
   const role = user?.roles?.[0];
-  const { reservationAlarms, clearNotification, addNotification } =
-    useNotification();
+  const { notifications: reservationAlarms, clearNotifications: clearNotification } =
+    useSocketStore();
 
   const [showDropdown, setShowDropdown] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const timeoutRef = useRef(null);
 
-  useEffect(() => {}, [reservationAlarms]);
-
   useEffect(() => {
+    console.log("badge 조건 확인:", reservationAlarms.length);
     if (reservationAlarms.length > 0) {
     }
   }, [reservationAlarms]);
@@ -274,8 +272,7 @@ const Header = () => {
                   >
                     {dropdownItems[menu]
                       .filter((item) => {
-                        if (item.label === "채팅 문의함" && !user?.isArtist)
-                          return false;
+                        if (item.label === "채팅 문의함" && !user?.isArtist) return false;
                         return true;
                       })
 
@@ -300,9 +297,7 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem>
-                {role === "ADMIN" ? "관리자 님" : `${username}님`}
-              </RightNavItem>
+              <RightNavItem>{role === "ADMIN" ? "관리자 님" : `${username}님`}</RightNavItem>
               <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>
 
               {/* 일반 유저 메뉴 */}
@@ -318,27 +313,19 @@ const Header = () => {
                     MYPAGE
                     {reservationAlarms.length > 0 && <AlertBadge />}
                   </RightNavItem>
-                  <RightNavItem onClick={() => navigate("/cart")}>
-                    CART
-                  </RightNavItem>
+                  <RightNavItem onClick={() => navigate("/cart")}>CART</RightNavItem>
                 </>
               )}
 
               {/* 관리자 메뉴 */}
               {role === "ADMIN" && (
-                <RightNavItem onClick={() => navigate("/adminpage")}>
-                  ADMINPAGE
-                </RightNavItem>
+                <RightNavItem onClick={() => navigate("/adminpage")}>ADMINPAGE</RightNavItem>
               )}
             </>
           ) : (
             <>
-              <RightNavItem onClick={() => navigate("/join")}>
-                REGISTER
-              </RightNavItem>
-              <RightNavItem onClick={() => navigate("/login")}>
-                LOGIN
-              </RightNavItem>
+              <RightNavItem onClick={() => navigate("/join")}>REGISTER</RightNavItem>
+              <RightNavItem onClick={() => navigate("/login")}>LOGIN</RightNavItem>
             </>
           )}
 
