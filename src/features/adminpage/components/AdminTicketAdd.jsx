@@ -77,6 +77,7 @@ const Input = styled.input`
   font-size: 14px;
   width: 100%;
   margin-bottom: 10px;
+  color:#e1e1e1;
 `;
 
 const Button = styled.button`
