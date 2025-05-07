@@ -182,12 +182,10 @@ function AdminArtAdd({ setTab }) {
         setYear("");
         setUploadDate("");
         setArtistId("");
-
-        // ✅ art 탭으로 이동
         setTab("art");
       }
     } catch (err) {
-      console.error("❌ 업로드 실패:", err);
+      console.error("업로드 실패:", err);
       alert("작품 등록 실패. 관리자에게 문의해주세요.");
     }
   };
