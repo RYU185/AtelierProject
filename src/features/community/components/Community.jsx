@@ -33,12 +33,12 @@ const UserInfo = styled.div`
 const Nickname = styled.span`
   font-size: 16px;
   font-weight: bold;
-  color:rgb(230, 230, 230);
+  color: rgb(126, 126, 126);
 `;
 
 const DateText = styled.span`
   font-size: 11px;
-  color:#e1e1e1;
+  color: rgb(126, 126, 126);
 `;
 
 const Divider = styled.hr`
@@ -50,7 +50,7 @@ const Divider = styled.hr`
 
 const Content = styled.p`
   font-size: 14px;
-  color:rgb(237, 237, 237);
+  color: rgb(126, 126, 126);
   line-height: 1.4;
   overflow: hidden;
   display: -webkit-box;

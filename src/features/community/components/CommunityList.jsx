@@ -95,7 +95,7 @@ const Grid = styled.div`
   padding: 24px;
 
   & > div {
-    background:rgb(23, 27, 37);
+    background: rgb(23, 27, 37);
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
