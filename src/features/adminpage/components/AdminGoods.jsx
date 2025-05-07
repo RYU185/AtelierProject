@@ -25,6 +25,7 @@ const Table = styled.table`
   font-size: 16px;
   text-align: center;
   table-layout: fixed;
+  margin-bottom: 200px;
 `;
 
 const Th = styled.th`

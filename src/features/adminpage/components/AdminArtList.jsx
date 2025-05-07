@@ -30,6 +30,7 @@ const ArtListContainer = styled.div`
   width: 1200px;
   margin: 0 auto;
   border-radius: 8px;
+  margin-bottom: 200px;
 `;
 
 const ArtListHeader = styled.div`

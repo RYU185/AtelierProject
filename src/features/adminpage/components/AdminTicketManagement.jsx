@@ -18,6 +18,7 @@ const AdminGoodsMenubarWrapper = styled.div``;
 
 const MainContent = styled.div`
   flex: 1;
+  margin-bottom:200px;
 `;
 const Title = styled.h1`
   font-size: 30px;
