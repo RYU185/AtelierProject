@@ -424,7 +424,7 @@ const ChatRoom = ({ room: incomingRoom }) => {
 
     addChatMessage(newMsgObj);
 
-    if (typeof sendMessage === "function" && sendMessage !== (() => {})) {
+    if (typeof sendMessage === "function") {
       const payload = {
         type: "CHAT",
         sender: senderId.toString(),

@@ -63,8 +63,6 @@ const AdminPage = () => {
         return <AdminGoods />;
       case "goodsChart":
         return <AdminGoodsChart />;
-      case "goodsAdd":
-        return <AdminGoodsAdd />;
       case "ticket":
         return <AdminTicketManagement />;
       case "ticketChart":
