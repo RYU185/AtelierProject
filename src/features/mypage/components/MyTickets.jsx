@@ -24,6 +24,12 @@ const TicketList = styled.div`
   flex-direction: column;
   gap: 16px;
   width: 722px;
+
+  & > p {
+    display: flex;
+    justify-content: center;
+    color: #808080;
+  }
 `;
 
 const TicketCard = styled.div`
