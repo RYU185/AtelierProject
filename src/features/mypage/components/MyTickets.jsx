@@ -33,6 +33,7 @@ const TicketList = styled.div`
 `;
 
 const TicketCard = styled.div`
+  display: flex;
   background-color: rgba(255, 255, 255, 0.07);
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -76,9 +77,11 @@ const TicketActions = styled.div`
   gap: 8px;
   align-self: flex-end;
   justify-content: end;
+  margin: 20px 20px 20px 0;
 `;
 
 const ActionButton = styled.button`
+width: 120px;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -86,7 +89,6 @@ const ActionButton = styled.button`
   color: #666;
   cursor: pointer;
   font-size: 14px;
-  margin: 0 30px 20px 0;
   transition: 0.3s ease-in-out;
 
   &:hover {
