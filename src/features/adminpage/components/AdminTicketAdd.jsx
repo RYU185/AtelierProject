@@ -106,8 +106,8 @@ const AdminTicketAdd = () => {
     startDate: "",
     endDate: "",
     deadline: "",
-    capacity: 0,
-    price: 0,
+    capacity: "",
+    price: "",
     poster: "",
     artistIdList: [],
     artIdList: [],
@@ -138,13 +138,15 @@ const AdminTicketAdd = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const parsedValue = ["capacity", "price"].includes(name)
-      ? Number(value)
-      : value;
+    let newValue = value;
+
+    if (["capacity", "price"].includes(name)) {
+      newValue = value.replace(/\D/g, "");
+    }
 
     setForm((prev) => ({
       ...prev,
-      [name]: parsedValue,
+      [name]: newValue,
     }));
   };
 
@@ -199,6 +201,11 @@ const AdminTicketAdd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (form.capacity === "" || form.price === "") {
+      alert("정원과 가격은 반드시 입력해야 합니다.");
+      return;
+    }
+
     try {
       const formData = new FormData();
 
@@ -210,8 +217,8 @@ const AdminTicketAdd = () => {
             startDate: form.startDate,
             endDate: form.endDate,
             deadline: form.deadline,
-            capacity: form.capacity,
-            price: form.price,
+            capacity: parseInt(form.capacity, 10),
+            price: parseInt(form.price, 10),
             artistIdList: form.artistIdList,
             artIdList: form.artIdList,
           }),
@@ -260,19 +267,9 @@ const AdminTicketAdd = () => {
           <FormWrapper onSubmit={handleSubmit}>
             <CardSection>
               <Label>전시명</Label>
-              <Input
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
+              <Input name="title" value={form.title} onChange={handleChange} required />
               <Label>전시 설명</Label>
-              <Input
-                name="description"
-                value={form.description}
-                onChange={handleChange}
-                required
-              />
+              <Input name="description" value={form.description} onChange={handleChange} required />
               <Label>시작일</Label>
               <Input
                 type="date"
@@ -303,6 +300,8 @@ const AdminTicketAdd = () => {
                 name="capacity"
                 value={form.capacity}
                 onChange={handleChange}
+                inputMode="numeric"
+                pattern="\d*"
                 required
               />
               <Label>티켓 가격</Label>
@@ -311,6 +310,8 @@ const AdminTicketAdd = () => {
                 name="price"
                 value={form.price}
                 onChange={handleChange}
+                inputMode="numeric"
+                pattern="\d*"
                 required
               />
             </CardSection>
@@ -356,11 +357,7 @@ const AdminTicketAdd = () => {
                   </ul>
                 </CardSection>
               )}
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handlePosterChange}
-              />
+              <Input type="file" accept="image/*" onChange={handlePosterChange} />
 
               <Button type="submit">티켓 추가</Button>
             </CardSection>
