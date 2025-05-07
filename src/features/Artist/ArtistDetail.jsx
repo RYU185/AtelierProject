@@ -223,7 +223,8 @@ const ArtistDetail = () => {
   
     const fetchArt = async () => {
       try {
-        const res = await axiosInstance.get(`/art/artist/${id}`); // 🔥 수정된 라인
+        // ✔️ 수정된 요청
+const res = await axiosInstance.get(`/art/artist/${artistId}`); 
         setArts(res.data);
       } catch (err) {
         console.error("참여작품 불러오기 실패:", err);
