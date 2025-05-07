@@ -4,6 +4,7 @@ import { AdminContentLayout } from "./AdminContentLayout";
 import TitleWrapper from "./Titlewrapper";
 import { Link } from "react-router-dom";
 import api from "../../../api/axiosInstance";
+import { useNavigate } from "react-router-dom";
 
 const artImages = import.meta.glob("/public/images/ArtListIMG/*", { eager: true });
 const API_URL = import.meta.env.VITE_API_URL;
@@ -245,6 +246,7 @@ const AdminArtList = () => {
   const [menuOpen, setMenuOpen] = useState({});
   const [selectedArt, setSelectedArt] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchArtList();
@@ -276,6 +278,9 @@ const AdminArtList = () => {
       await api.post(`/art/${id}/delete`);
       setMenuOpen({});
       setArtList((prev) => prev.filter((art) => art.id !== id));
+  
+      // 현재 페이지를 강제로 새로고침 (선택적)
+      navigate(0); // 또는 window.location.reload();
     } catch (error) {
       console.error("삭제 중 오류 발생:", error);
     }

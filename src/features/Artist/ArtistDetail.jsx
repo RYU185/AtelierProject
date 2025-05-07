@@ -220,10 +220,10 @@ const ArtistDetail = () => {
 
   useEffect(() => {
     if (!artistId) return;
-
+  
     const fetchArt = async () => {
       try {
-        const res = await axiosInstance.get(`/artist/user/${id}`);
+        const res = await axiosInstance.get(`/art/artist/${id}`); // 🔥 수정된 라인
         setArts(res.data);
       } catch (err) {
         console.error("참여작품 불러오기 실패:", err);
