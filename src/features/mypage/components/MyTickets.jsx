@@ -38,7 +38,7 @@ const TicketCard = styled.div`
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
-  height: 200px;
+  height: 12.5rem;
 `;
 
 
