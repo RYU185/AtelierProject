@@ -41,8 +41,6 @@ const TicketCard = styled.div`
   height: 12.5rem;
 `;
 
-
-
 const TicketInfo = styled.div`
   display: flex;
   gap: 24px;
@@ -82,7 +80,7 @@ const TicketActions = styled.div`
 `;
 
 const ActionButton = styled.button`
-width: 120px;
+  width: 120px;
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -102,19 +100,28 @@ const MyTickets = ({ onTicketClick }) => {
   const [reserve, setReserve] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const activeReservations = reserve.filter((rv) => rv.status !== "CANCELED");
 
   const isTomorrow = (dateStr) => {
     const targetDate = new Date(dateStr);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
 
-    return (
-      targetDate.getFullYear() === tomorrow.getFullYear() &&
-      targetDate.getMonth() === tomorrow.getMonth() &&
-      targetDate.getDate() === tomorrow.getDate()
-    );
+    return targetDate.getTime() === tomorrow.getTime();
   };
+
+  const isPastDate = (dateStr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const targetDate = new Date(dateStr);
+    targetDate.setHours(0, 0, 0, 0);
+    return targetDate < today;
+  };
+
+  const activeReservations = reserve.filter(
+    (rv) => rv.status !== "CANCELED" && !isPastDate(rv.date)
+  );
 
   const fetchMyReservations = async () => {
     try {
@@ -137,22 +144,18 @@ const MyTickets = ({ onTicketClick }) => {
     if (!confirmed) return;
 
     try {
-      const res = await axiosInstance.delete(
-        `/reservation/${reservation.reservationId}`
-      );
+      const res = await axiosInstance.delete(`/reservation/${reservation.reservationId}`);
       alert("예약이 성공적으로 취소되었습니다.");
       fetchMyReservations();
     } catch (err) {
       console.error("예약 취소 실패:", err);
-      alert("예약 취소에 실패했습니다.");
+      alert("지난 날짜나 당일 예약은 취소하실 수 없습니다. 고객센터에 연락해주세요.");
     }
   };
 
   return (
     <Container>
-      <TicketCount>
-        총 {activeReservations.length}개의 전시가 예약되어 있습니다.
-      </TicketCount>
+      <TicketCount>총 {activeReservations.length}개의 전시가 예약되어 있습니다.</TicketCount>
 
       <TicketList>
         {loading ? (
@@ -189,12 +192,8 @@ const MyTickets = ({ onTicketClick }) => {
                 </TicketDetails>
               </TicketInfo>
               <TicketActions>
-                <ActionButton onClick={() => onTicketClick(rv)}>
-                  티켓 확인하기
-                </ActionButton>
-                <ActionButton onClick={() => onRefundClick(rv)}>
-                  티켓 취소하기
-                </ActionButton>
+                <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>티켓 취소하기</ActionButton>
               </TicketActions>
             </TicketCard>
           ))
