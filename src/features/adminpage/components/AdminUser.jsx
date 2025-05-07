@@ -152,6 +152,9 @@ const AdminUser = () => {
     if (sortType === "recent") {
       return new Date(b.enrolmentDate) - new Date(a.enrolmentDate);
     }
+    if (sortType === "birthday") {
+      return new Date(a.birthday) - new Date(b.birthday); // 생일 오름차순
+    }
     return 0;
   });
 
@@ -181,6 +184,15 @@ const AdminUser = () => {
                   }}
                 >
                   최근 가입순
+                </SortOption>
+                <SortOption
+                  onClick={() => {
+                    setSortType("birthday");
+                    setGenderFilter(null);
+                    setSortOpen(false);
+                  }}
+                >
+                  생일 순
                 </SortOption>
                 <SortOption
                   onClick={() => {
