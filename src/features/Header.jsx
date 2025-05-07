@@ -182,7 +182,6 @@ const Header = () => {
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    console.log("badge 조건 확인:", reservationAlarms.length);
     if (reservationAlarms.length > 0) {
     }
   }, [reservationAlarms]);

@@ -46,8 +46,6 @@ export const useWebSocket = () => {
           try {
             const notification = JSON.parse(message.body);
             addNotification(notification);
-            console.log("수신된 예약 알림", notification);
-
           } catch (error) {
             console.error("[Notification Parsing Error]", error);
           }
