@@ -33,30 +33,18 @@ const TicketList = styled.div`
 `;
 
 const TicketCard = styled.div`
-  display: flex;
   background-color: rgba(255, 255, 255, 0.07);
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: relative;
 `;
 
-const MoreButton = styled.button`
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-  font-size: 20px;
-  padding: 0;
-`;
+
 
 const TicketInfo = styled.div`
   display: flex;
   gap: 24px;
   flex: 1;
-  margin-right: 40px;
 `;
 
 const TicketImage = styled.img`
@@ -67,6 +55,7 @@ const TicketImage = styled.img`
 
 const TicketDetails = styled.div`
   flex: 1;
+  width: 17rem;
 
   h3 {
     font-size: 23px;
@@ -86,6 +75,7 @@ const TicketActions = styled.div`
   display: flex;
   gap: 8px;
   align-self: flex-end;
+  justify-content: end;
 `;
 
 const ActionButton = styled.button`
@@ -169,7 +159,6 @@ const MyTickets = ({ onTicketClick }) => {
         ) : (
           activeReservations.map((rv) => (
             <TicketCard key={rv.reservationId}>
-              <MoreButton>⋮</MoreButton>
               <TicketInfo>
                 <TicketImage
                   src={`${import.meta.env.VITE_API_URL}${rv.posterImg}`}
