@@ -202,7 +202,8 @@ const AdminArtist = () => {
         {paginatedData.map((artist) => (
           <Link
             key={artist.id}
-            to={`/artist/${artist.userId}`}
+            to="/adminpage?tab=artistAdd"
+            state={{ artist }}
             style={{ textDecoration: "none" }}
           >
             <ArtistContainer>
