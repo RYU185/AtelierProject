@@ -123,6 +123,7 @@ const AdminUser = () => {
   const [sortOpen, setSortOpen] = useState(false);
   const [sortType, setSortType] = useState(null);
   const [userData, setUserData] = useState([]);
+  const [genderFilter, setGenderFilter] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -137,15 +138,19 @@ const AdminUser = () => {
     fetchUsers();
   }, []);
 
-  const filteredUsers = userData.filter((user) =>
-    user.nickName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = userData
+    .filter((user) =>
+      user.nickName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((user) => {
+      if (genderFilter === "female") return user.gender === "FEMALE";
+      if (genderFilter === "male") return user.gender === "MALE";
+      return true;
+    });
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (sortType === "recent") {
       return new Date(b.enrolmentDate) - new Date(a.enrolmentDate);
-    } else if (sortType === "points") {
-      return b.point - a.point;
     }
     return 0;
   });
@@ -164,11 +169,14 @@ const AdminUser = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <div style={{ position: "relative" }}>
-              <SortButton onClick={() => setSortOpen(!sortOpen)}>검색 정렬</SortButton>
+              <SortButton onClick={() => setSortOpen(!sortOpen)}>
+                검색 정렬
+              </SortButton>
               <SortOptions open={sortOpen}>
                 <SortOption
                   onClick={() => {
                     setSortType("recent");
+                    setGenderFilter(null);
                     setSortOpen(false);
                   }}
                 >
@@ -176,11 +184,30 @@ const AdminUser = () => {
                 </SortOption>
                 <SortOption
                   onClick={() => {
-                    setSortType("points");
+                    setGenderFilter("female");
+                    setSortType(null);
                     setSortOpen(false);
                   }}
                 >
-                  포인트 많은 순
+                  여성 유저
+                </SortOption>
+                <SortOption
+                  onClick={() => {
+                    setGenderFilter("male");
+                    setSortType(null);
+                    setSortOpen(false);
+                  }}
+                >
+                  남성 유저
+                </SortOption>
+                <SortOption
+                  onClick={() => {
+                    setGenderFilter(null);
+                    setSortType(null);
+                    setSortOpen(false);
+                  }}
+                >
+                  전체 보기
                 </SortOption>
               </SortOptions>
             </div>

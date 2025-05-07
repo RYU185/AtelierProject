@@ -80,7 +80,9 @@ const AdminMenu = ({ tab }) => {
           <MenuItem active={["goods", "goodsAdd", "goodsChart"].includes(tab)}>
             <StyledLink to="/AdminPage?tab=goods">굿즈 판매 내역</StyledLink>
           </MenuItem>
-          <MenuItem active={["ticket", "ticketAdd", "ticketChart"].includes(tab)}>
+          <MenuItem
+            active={["ticket", "ticketAdd", "ticketChart"].includes(tab)}
+          >
             <StyledLink to="/AdminPage?tab=ticket">티켓 관리</StyledLink>
           </MenuItem>
           <MenuItem active={tab === "contact"}>
@@ -90,7 +92,7 @@ const AdminMenu = ({ tab }) => {
             <StyledLink to="/AdminPage?tab=user">유저 관리</StyledLink>
           </MenuItem>
           <MenuItem active={["artist", "artistAdd"].includes(tab)}>
-            <StyledLink to="/AdminPage?tab=artist">작가 관리</StyledLink>
+            <StyledLink to="/AdminPage?tab=artist">작가 등록</StyledLink>
           </MenuItem>
         </MenuList>
       </Sidebar>
