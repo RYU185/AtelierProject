@@ -3,10 +3,16 @@ import styled from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../../Header";
 import Footer from "../../Footer";
+import useSocketStore from "../../../socket/useSocketStore";
 
 const GradientBackground = styled.div`
   min-height: 100vh;
-  background: radial-gradient(ellipse at 0% 0%, rgb(0, 0, 0), rgb(1, 9, 26) 40%, #000000 100%);
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    rgb(0, 0, 0),
+    rgb(1, 9, 26) 40%,
+    #000000 100%
+  );
 `;
 
 const Wrapper = styled.div`
@@ -69,7 +75,7 @@ const Label = styled.span`
 
 const Value = styled.span`
   color: #d8d8d8;
-  font-weight:300;
+  font-weight: 300;
   font-size: 25px;
   flex: 1;
   text-align: left;
@@ -104,6 +110,8 @@ const StyledFooter = styled(Footer)`
 const TicketComplete = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { clearNotifications: clearNotification } = useSocketStore();
+
   const ticketInfo = location.state || {
     title: "GRAPHIC",
     price: 30000,
@@ -153,10 +161,19 @@ const TicketComplete = () => {
           <Divider />
 
           <ButtonContainer>
-            <Button onClick={() => navigate("/gallery/artistgallery")} primary={false}>
+            <Button
+              onClick={() => navigate("/gallery/artistgallery")}
+              primary={false}
+            >
               전시회 목록
             </Button>
-            <Button onClick={() => navigate("/mypage")} primary={true}>
+            <Button
+              onClick={() => {
+                navigate("/mypage");
+                clearNotification();
+              }}
+              primary={true}
+            >
               나의 티켓 확인하기
             </Button>
           </ButtonContainer>
