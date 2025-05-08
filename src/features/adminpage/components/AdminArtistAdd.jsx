@@ -244,15 +244,10 @@ const AdminArtistAdd = () => {
         <FormRow>
           <ProfilePreviewBox>
             {profileImg ? (
+              <PreviewImage src={URL.createObjectURL(profileImg)} alt="미리보기" />
+            ) : editMode && location.state?.artist?.profile_img ? (
               <PreviewImage
-                src={URL.createObjectURL(profileImg)}
-                alt="미리보기"
-              />
-            ) : editMode ? (
-              <PreviewImage
-                src={`${import.meta.env.VITE_API_URL}${
-                  location.state.artist.profile_img
-                }`}
+                src={`${import.meta.env.VITE_API_URL}${location.state.artist.profile_img}`}
                 alt="기존 이미지"
               />
             ) : null}
@@ -264,16 +259,11 @@ const AdminArtistAdd = () => {
                 <Label>유저 선택</Label>
                 <Select
                   options={userOptions}
-                  value={
-                    userOptions.find((option) => option.value === userId) ||
-                    null
-                  }
+                  value={userOptions.find((option) => option.value === userId) || null}
                   onChange={(selected) => {
                     if (selected) {
                       setUserId(selected.value);
-                      const selectedUser = users.find(
-                        (u) => u.userId === selected.value
-                      );
+                      const selectedUser = users.find((u) => u.userId === selected.value);
                       if (selectedUser) {
                         setName(selectedUser.realName);
                       }
@@ -305,23 +295,13 @@ const AdminArtistAdd = () => {
             )}
 
             <Label>이름</Label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              readOnly={!!userId}
-            />
+            <Input value={name} onChange={(e) => setName(e.target.value)} readOnly={!!userId} />
 
             <Label>프로필 이미지</Label>
-            <Input
-              type="file"
-              onChange={(e) => setProfileImg(e.target.files[0])}
-            />
+            <Input type="file" onChange={(e) => setProfileImg(e.target.files[0])} />
 
             <Label>소개</Label>
-            <TextArea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <TextArea value={description} onChange={(e) => setDescription(e.target.value)} />
 
             <SmallWrapper>
               <BioLabel>수상 경력 / 이력</BioLabel>
@@ -335,29 +315,20 @@ const AdminArtistAdd = () => {
                 <DateInput
                   type="date"
                   value={bio.date}
-                  onChange={(e) =>
-                    handleBioChange(index, "date", e.target.value)
-                  }
+                  onChange={(e) => handleBioChange(index, "date", e.target.value)}
                 />
                 <TitleInput
                   placeholder="내용 또는 수상 기록을 입력해주세요"
                   value={bio.title}
-                  onChange={(e) =>
-                    handleBioChange(index, "title", e.target.value)
-                  }
+                  onChange={(e) => handleBioChange(index, "title", e.target.value)}
                 />
-                <DeleteButton
-                  type="button"
-                  onClick={() => removeBiography(index)}
-                >
+                <DeleteButton type="button" onClick={() => removeBiography(index)}>
                   ㅡ
                 </DeleteButton>
               </BiographyRow>
             ))}
 
-            <SubmitButton type="submit">
-              {editMode ? "수정하기" : "등록하기"}
-            </SubmitButton>
+            <SubmitButton type="submit">{editMode ? "수정하기" : "등록하기"}</SubmitButton>
           </FormColumn>
         </FormRow>
       </Form>
