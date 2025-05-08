@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axiosInstance from "../../../api/axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { getImageUrl } from "./AdminArtist";
 
 const Wrapper = styled.div`
   width: 1300px;
@@ -53,6 +54,7 @@ const Input = styled.input`
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-bottom: 15px;
+  color: #e1e1e1;
 `;
 const TextArea = styled.textarea`
   padding: 10px;
@@ -250,7 +252,7 @@ const AdminArtistAdd = () => {
               />
             ) : editMode ? (
               <PreviewImage
-                src={`/uploads/${location.state.artist.profile_img}`}
+                src={getImageUrl(location.state.artist?.profileImg)}
                 alt="기존 이미지"
               />
             ) : null}
