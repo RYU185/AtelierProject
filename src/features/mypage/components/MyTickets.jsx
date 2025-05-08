@@ -155,7 +155,9 @@ const MyTickets = ({ onTicketClick }) => {
 
   return (
     <Container>
-      <TicketCount>총 {activeReservations.length}개의 전시가 예약되어 있습니다.</TicketCount>
+      <TicketCount>
+        총 {activeReservations.length}개의 전시가 예약되어 있습니다.
+      </TicketCount>
 
       <TicketList>
         {loading ? (
@@ -170,6 +172,7 @@ const MyTickets = ({ onTicketClick }) => {
                   src={`${import.meta.env.VITE_API_URL}${rv.posterImg}`}
                   alt={rv.galleryTitle}
                 />
+
                 <TicketDetails>
                   <h3>
                     {rv.galleryTitle}
@@ -182,6 +185,7 @@ const MyTickets = ({ onTicketClick }) => {
                           fontWeight: "400",
                         }}
                       >
+                        <br />
                         내일 예정된 전시입니다!
                       </span>
                     )}
@@ -192,8 +196,12 @@ const MyTickets = ({ onTicketClick }) => {
                 </TicketDetails>
               </TicketInfo>
               <TicketActions>
-                <ActionButton onClick={() => onTicketClick(rv)}>티켓 확인하기</ActionButton>
-                <ActionButton onClick={() => onRefundClick(rv)}>티켓 취소하기</ActionButton>
+                <ActionButton onClick={() => onTicketClick(rv)}>
+                  티켓 확인하기
+                </ActionButton>
+                <ActionButton onClick={() => onRefundClick(rv)}>
+                  티켓 취소하기
+                </ActionButton>
               </TicketActions>
             </TicketCard>
           ))
