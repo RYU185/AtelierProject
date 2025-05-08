@@ -95,21 +95,47 @@ const ProductInfo = styled.div`
   color: #e1e1e1;
 `;
 
+const DeleteButton = styled.button`
+  padding: 8px 12px;
+  background-color: #ef4565;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: #d63447;
+  }
+`;
+
 function AdminGoods() {
   const [goodsData, setGoodsData] = useState([]);
 
   useEffect(() => {
-    const fetchGoods = async () => {
-      try {
-        const response = await axios.get("/goods/admin");
-        setGoodsData(response.data);
-      } catch (error) {
-        console.error("굿즈 데이터를 불러오는 중 오류 발생:", error);
-      }
-    };
-
     fetchGoods();
   }, []);
+
+  const fetchGoods = async () => {
+    try {
+      const response = await axios.get("/goods/admin");
+      setGoodsData(response.data);
+    } catch (error) {
+      console.error("굿즈 데이터를 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("정말로 이 굿즈를 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`/goods/${id}`);
+      alert("굿즈가 성공적으로 삭제되었습니다.");
+      fetchGoods(); // 삭제 후 데이터 다시 불러오기
+    } catch (error) {
+      console.error("굿즈 삭제 중 오류 발생:", error);
+      alert("삭제에 실패했습니다.");
+    }
+  };
 
   return (
     <AdminGoodsWrapper>
@@ -123,21 +149,17 @@ function AdminGoods() {
           <tr>
             <Th>상품정보</Th>
             <Th>재고량</Th>
-            <ThLast>누적 판매량</ThLast>
+            <Th>누적 판매량</Th>
+            <ThLast>관리</ThLast>
           </tr>
         </thead>
         <tbody>
           {goodsData.map((item) => (
             <ProductRow key={item.id}>
               <ProductCell>
-                <Link
-                  to={`/goods/${item.id}`}
-                  style={{ display: "inline-block" }}
-                >
+                <Link to={`/goods/${item.id}`}>
                   <ProductImage
-                    src={`${import.meta.env.VITE_API_URL}${
-                      item.imgUrlList?.[0]
-                    }`}
+                    src={`${import.meta.env.VITE_API_URL}${item.imgUrlList?.[0]}`}
                     alt={item.name}
                   />
                 </Link>
@@ -146,7 +168,12 @@ function AdminGoods() {
                 </ProductInfo>
               </ProductCell>
               <Td>{item.stock}</Td>
-              <TdLast>{item.totalSales}</TdLast>
+              <Td>{item.totalSales}</Td>
+              <TdLast>
+                <DeleteButton onClick={() => handleDelete(item.id)}>
+                  삭제
+                </DeleteButton>
+              </TdLast>
             </ProductRow>
           ))}
         </tbody>
