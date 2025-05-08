@@ -33,7 +33,6 @@ const Th = styled.th`
   padding: 9px 0;
   font-weight: bold;
   border-top: 3px solid #686868;
-  border-bottom: 2px solid #686868;
   border-right: 1px solid #686868;
 `;
 
@@ -43,35 +42,31 @@ const ThLast = styled.th`
   font-weight: bold;
   border-top: 3px solid #686868;
   border-bottom: 2px solid #686868;
-  border-right: none;
 `;
 
 const Td = styled.td`
   color: #e1e1e1;
   font-size: 16px;
   vertical-align: middle;
-  border-right: 1px solid #686868;
-  border-bottom: 1px solid #686868;
+  border: 1px solid #686868;
 `;
 
 const TdLast = styled.td`
   color: #e1e1e1;
   font-size: 16px;
   vertical-align: middle;
-  border-right: none;
-  border-bottom: 1px solid #686868;
+  border: 1px solid #686868;
 `;
 
 const ProductRow = styled.tr`
   height: 140px;
+  border: 1px solid #686868;
 `;
 
 const ProductCell = styled.td`
   display: flex;
   align-items: center;
   gap: 30px;
-  border-right: 1px solid #686868;
-  border-bottom: 1px solid #686868;
 `;
 
 const ProductImage = styled.img`
@@ -127,13 +122,16 @@ function AdminGoods() {
     console.log("삭제할 ID:", id); // 여기 찍어봐야 함 ❗
     const confirmDelete = window.confirm("정말로 이 굿즈를 삭제하시겠습니까?");
     if (!confirmDelete) return;
-  
+
     try {
       await axios.delete(`/goods/${id}`);
       alert("굿즈가 성공적으로 삭제되었습니다.");
       fetchGoods();
     } catch (error) {
-      console.error("굿즈 삭제 중 오류 발생:", error.response?.data || error.message);
+      console.error(
+        "굿즈 삭제 중 오류 발생:",
+        error.response?.data || error.message
+      );
       alert("삭제에 실패했습니다.");
     }
   };
@@ -160,7 +158,9 @@ function AdminGoods() {
               <ProductCell>
                 <Link to={`/goods/${item.id}`}>
                   <ProductImage
-                    src={`${import.meta.env.VITE_API_URL}${item.imgUrlList?.[0]}`}
+                    src={`${import.meta.env.VITE_API_URL}${
+                      item.imgUrlList?.[0]
+                    }`}
                     alt={item.name}
                   />
                 </Link>
