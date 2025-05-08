@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export const getImageUrl = (filename) => {
-  if (!filename) return "/default.png";
+  if (!filename) return `${VITE_API_URL}/default.png`;
 
   if (filename.startsWith("/uploads/")) {
     return `${VITE_API_URL}${filename}`;
