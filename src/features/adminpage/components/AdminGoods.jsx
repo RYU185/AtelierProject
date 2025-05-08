@@ -118,23 +118,7 @@ function AdminGoods() {
     }
   };
 
-  const handleDelete = async (id) => {
-    console.log("삭제할 ID:", id); // 여기 찍어봐야 함 ❗
-    const confirmDelete = window.confirm("정말로 이 굿즈를 삭제하시겠습니까?");
-    if (!confirmDelete) return;
 
-    try {
-      await axios.delete(`/goods/${id}`);
-      alert("굿즈가 성공적으로 삭제되었습니다.");
-      fetchGoods();
-    } catch (error) {
-      console.error(
-        "굿즈 삭제 중 오류 발생:",
-        error.response?.data || error.message
-      );
-      alert("삭제에 실패했습니다.");
-    }
-  };
 
   return (
     <AdminGoodsWrapper>
@@ -170,11 +154,7 @@ function AdminGoods() {
               </ProductCell>
               <Td>{item.stock}</Td>
               <Td>{item.totalSales}</Td>
-              <TdLast>
-                <DeleteButton onClick={() => handleDelete(item.id)}>
-                  삭제
-                </DeleteButton>
-              </TdLast>
+            
             </ProductRow>
           ))}
         </tbody>
