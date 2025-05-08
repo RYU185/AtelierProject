@@ -36,13 +36,6 @@ const Th = styled.th`
   border-right: 1px solid #686868;
 `;
 
-const ThLast = styled.th`
-  color: #e1e1e1;
-  padding: 9px 0;
-  font-weight: bold;
-  border-top: 3px solid #686868;
-  border-bottom: 2px solid #686868;
-`;
 
 const Td = styled.td`
   color: #e1e1e1;
@@ -51,12 +44,7 @@ const Td = styled.td`
   border: 1px solid #686868;
 `;
 
-const TdLast = styled.td`
-  color: #e1e1e1;
-  font-size: 16px;
-  vertical-align: middle;
-  border: 1px solid #686868;
-`;
+
 
 const ProductRow = styled.tr`
   height: 140px;
@@ -90,17 +78,7 @@ const ProductInfo = styled.div`
   color: #e1e1e1;
 `;
 
-const DeleteButton = styled.button`
-  padding: 8px 12px;
-  background-color: #ef4565;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  &:hover {
-    background-color: #d63447;
-  }
-`;
+
 
 function AdminGoods() {
   const [goodsData, setGoodsData] = useState([]);
@@ -133,7 +111,7 @@ function AdminGoods() {
             <Th>상품정보</Th>
             <Th>재고량</Th>
             <Th>누적 판매량</Th>
-            <ThLast>관리</ThLast>
+            
           </tr>
         </thead>
         <tbody>
