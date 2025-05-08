@@ -197,6 +197,8 @@ const Goods = () => {
     fetchGoods();
   }, []);
 
+  
+
   const handleInputChange = (e) => setSearchTerm(e.target.value);
   const handleKeyDown = (e) => {
     if (e.key === "Enter") setSearchQuery(searchTerm);
