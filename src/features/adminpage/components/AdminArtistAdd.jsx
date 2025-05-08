@@ -3,7 +3,6 @@ import styled from "styled-components";
 import axiosInstance from "../../../api/axiosInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { getImageUrl } from "./AdminArtist";
 
 const Wrapper = styled.div`
   width: 1300px;
@@ -54,7 +53,6 @@ const Input = styled.input`
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-bottom: 15px;
-  color: #e1e1e1;
 `;
 const TextArea = styled.textarea`
   padding: 10px;
@@ -201,12 +199,12 @@ const AdminArtistAdd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!name || (!profileImg && !editMode) || !description || !userId) {
       alert("모든 항목을 입력해주세요.");
       return;
     }
-  
+
     const formData = new FormData();
     if (editMode) {
       formData.append("id", id);
@@ -226,7 +224,7 @@ const AdminArtistAdd = () => {
         }))
       )
     );
-  
+
     try {
       await axiosInstance.post("/artist", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -252,7 +250,9 @@ const AdminArtistAdd = () => {
               />
             ) : editMode ? (
               <PreviewImage
-                src={getImageUrl(location.state.artist?.profileImg)}
+                src={`${import.meta.env.VITE_API_URL}${
+                  location.state.artist.profile_img
+                }`}
                 alt="기존 이미지"
               />
             ) : null}
