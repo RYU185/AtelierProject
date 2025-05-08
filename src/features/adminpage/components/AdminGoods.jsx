@@ -33,9 +33,7 @@ const Th = styled.th`
   padding: 9px 0;
   font-weight: bold;
   border-top: 3px solid #686868;
-  border-right: 1px solid #686868;
 `;
-
 
 const Td = styled.td`
   color: #e1e1e1;
@@ -43,8 +41,6 @@ const Td = styled.td`
   vertical-align: middle;
   border: 1px solid #686868;
 `;
-
-
 
 const ProductRow = styled.tr`
   height: 140px;
@@ -78,8 +74,6 @@ const ProductInfo = styled.div`
   color: #e1e1e1;
 `;
 
-
-
 function AdminGoods() {
   const [goodsData, setGoodsData] = useState([]);
 
@@ -96,8 +90,6 @@ function AdminGoods() {
     }
   };
 
-
-
   return (
     <AdminGoodsWrapper>
       <TitleWrapper>전체 굿즈 판매량 통계</TitleWrapper>
@@ -111,7 +103,6 @@ function AdminGoods() {
             <Th>상품정보</Th>
             <Th>재고량</Th>
             <Th>누적 판매량</Th>
-            
           </tr>
         </thead>
         <tbody>
@@ -132,7 +123,6 @@ function AdminGoods() {
               </ProductCell>
               <Td>{item.stock}</Td>
               <Td>{item.totalSales}</Td>
-            
             </ProductRow>
           ))}
         </tbody>
