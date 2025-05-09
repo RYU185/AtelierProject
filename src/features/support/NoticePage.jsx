@@ -121,6 +121,11 @@ const SearchTypeSelect = styled.select`
   }
 `;
 
+const SelectOption = styled.option`
+  background-color: #1e1e1e;
+  color: white;
+`;
+
 const SearchBox = styled.div`
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -137,6 +142,7 @@ const SearchInput = styled.input`
   width: 100%;
   padding: 0.25rem 0;
   background-color: #0f0f0f2d;
+  color: #e1e1e1;
 
   &::placeholder {
     color: #999;
@@ -254,8 +260,7 @@ const NoticePage = () => {
           params: {
             page: currentPage - 1,
             size: itemsPerPage,
-            sort:
-              sortOrder === "newest" ? "createdDate,desc" : "createdDate,asc",
+            sort: sortOrder === "newest" ? "createdDate,desc" : "createdDate,asc",
           },
         });
 
@@ -326,35 +331,24 @@ const NoticePage = () => {
       <TabContainer />
       <SearchContainer>
         <SearchGroup>
-          <SearchTypeSelect
-            value={searchType}
-            onChange={handleSearchTypeChange}
-          >
-            <option value="title">제목별</option>
-            <option value="date">날짜별</option>
+          <SearchTypeSelect value={searchType} onChange={handleSearchTypeChange}>
+            <SelectOption value="title">제목별</SelectOption>
+            <SelectOption value="date">날짜별</SelectOption>
           </SearchTypeSelect>
           <SearchBox>
             <SearchInput
               type="text"
-              placeholder={
-                searchType === "date" ? "YYYY-MM-DD" : "검색어를 입력하세요"
-              }
+              placeholder={searchType === "date" ? "YYYY-MM-DD" : "검색어를 입력하세요"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </SearchBox>
         </SearchGroup>
         <FilterContainer>
-          <FilterButton onClick={handleFilterClick}>
-            정렬 {showFilter ? "▲" : "▼"}
-          </FilterButton>
+          <FilterButton onClick={handleFilterClick}>정렬 {showFilter ? "▲" : "▼"}</FilterButton>
           <FilterDropdown $show={showFilter}>
-            <FilterOption onClick={() => handleSortChange("newest")}>
-              최신순
-            </FilterOption>
-            <FilterOption onClick={() => handleSortChange("oldest")}>
-              오래된 순
-            </FilterOption>
+            <FilterOption onClick={() => handleSortChange("newest")}>최신순</FilterOption>
+            <FilterOption onClick={() => handleSortChange("oldest")}>오래된 순</FilterOption>
           </FilterDropdown>
         </FilterContainer>
       </SearchContainer>
@@ -362,10 +356,7 @@ const NoticePage = () => {
       <NoticeList>
         {paginatedNotices.length > 0 ? (
           paginatedNotices.map((notice) => (
-            <NoticeItem
-              key={notice.id}
-              onClick={() => handleNoticeClick(notice.id)}
-            >
+            <NoticeItem key={notice.id} onClick={() => handleNoticeClick(notice.id)}>
               <NoticeDate>{notice.createdDate}</NoticeDate>
               <NoticeTitle>{notice.title}</NoticeTitle>
               <Arrow>›</Arrow>
@@ -382,11 +373,7 @@ const NoticePage = () => {
         <PageButtonGroup>
           <PageButton onClick={() => goToPage(currentPage - 1)}>‹</PageButton>
           {Array.from({ length: totalPages }, (_, i) => (
-            <PageButton
-              key={i + 1}
-              $active={currentPage === i + 1}
-              onClick={() => goToPage(i + 1)}
-            >
+            <PageButton key={i + 1} $active={currentPage === i + 1} onClick={() => goToPage(i + 1)}>
               {i + 1}
             </PageButton>
           ))}
