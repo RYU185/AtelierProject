@@ -32,7 +32,7 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.95);
+  background-color: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(5px);
   transform-origin: top;
   transform: ${(props) => (props.$show ? "scaleY(1)" : "scaleY(0)")};
