@@ -272,6 +272,7 @@ const EditProfile = () => {
       localStorage.setItem("userId", formData.id);
       alert("회원 정보가 수정되었습니다.");
       navigate("/mypage");
+      window.location.reload();
     } catch (error) {
       console.error("❌ 회원정보 수정 실패:", error);
       alert(
