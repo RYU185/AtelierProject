@@ -173,6 +173,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const username = user?.username;
+  const nickname = user?.nickname;
   const role = user?.roles?.[0];
   const { notifications: reservationAlarms, clearNotifications: clearNotification } =
     useSocketStore();
@@ -296,7 +297,7 @@ const Header = () => {
         <Right>
           {username ? (
             <>
-              <RightNavItem>{role === "ADMIN" ? "관리자 님" : `${username}님`}</RightNavItem>
+              <RightNavItem>{role === "ADMIN" ? "관리자 님" : `${nickname}님`}</RightNavItem>
               <RightNavItem onClick={handleLogout}>LOGOUT</RightNavItem>
 
               {/* 일반 유저 메뉴 */}
