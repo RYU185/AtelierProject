@@ -92,7 +92,7 @@ const AdminMenu = ({ tab }) => {
             <StyledLink to="/AdminPage?tab=user">유저 관리</StyledLink>
           </MenuItem>
           <MenuItem active={["artist", "artistAdd"].includes(tab)}>
-            <StyledLink to="/AdminPage?tab=artist">작가 등록</StyledLink>
+            <StyledLink to="/AdminPage?tab=artist">작가 관리</StyledLink>
           </MenuItem>
         </MenuList>
       </Sidebar>
