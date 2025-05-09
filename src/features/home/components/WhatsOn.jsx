@@ -132,13 +132,19 @@ export default function WhatsOn() {
     const fetchArtistGalleries = async () => {
       try {
         const response = await axios.get("/api/artistgallery");
-        const visibleGalleries = response.data.filter(g => !g.deleted); // 삭제된 전시 제외
+        const today = new Date();
+
+        const visibleGalleries = response.data.filter((g) => {
+          const notDeleted = !g.deleted;
+          const notEnded = new Date(g.endDate) >= today;
+          return notDeleted && notEnded;
+        });
         setArtistGalleries(visibleGalleries);
       } catch (error) {
         console.error("Error fetching artist galleries:", error);
       }
     };
-  
+
     fetchArtistGalleries();
   }, []);
 
@@ -160,19 +166,14 @@ export default function WhatsOn() {
             if (offset < -half) offset += total;
             if (offset > half) offset -= total;
 
-            const { transform, transformOrigin, opacity, zIndex } =
-              getSlideStyle(offset);
+            const { transform, transformOrigin, opacity, zIndex } = getSlideStyle(offset);
             const displayDate =
               gallery.startDate && gallery.endDate
-                ? `${new Date(
-                    gallery.startDate
-                  ).toLocaleDateString()} ~ ${new Date(
+                ? `${new Date(gallery.startDate).toLocaleDateString()} ~ ${new Date(
                     gallery.endDate
                   ).toLocaleDateString()}`
                 : "";
-            const imageUrl = gallery.posterUrl
-              ? IMAGE_BASE_URL + gallery.posterUrl
-              : "";
+            const imageUrl = gallery.posterUrl ? IMAGE_BASE_URL + gallery.posterUrl : "";
 
             return (
               <Slide
