@@ -264,6 +264,12 @@ const EditProfile = () => {
 
     try {
       await axios.put("/user/me", payload);
+      localStorage.setItem("nickname", formData.nickName);
+      localStorage.setItem("username", formData.id); // 혹은 userId라면 수정
+      localStorage.setItem("isArtist", "false"); // 필요 시 서버 응답으로부터 가져오도록 수정 가능
+      localStorage.setItem("inquiries", JSON.stringify([])); // 필요한 형태로
+      localStorage.setItem("role", "USER"); // 혹은 formData.role
+      localStorage.setItem("userId", formData.id);
       alert("회원 정보가 수정되었습니다.");
       navigate("/mypage");
     } catch (error) {
