@@ -54,7 +54,7 @@ const InquiryItem = styled.li`
 
 const InquiryDetail = styled.div`
   position: relative;
-  margin-top: -26rem;
+  margin-top: -29.3rem;
   margin-right: 1.875rem;
   padding: 1.875rem;
   height: 500px;
